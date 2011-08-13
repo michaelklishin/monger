@@ -1,6 +1,7 @@
 (ns monger.convertion
   (:import (com.mongodb DBObject BasicDBObject)
-           (clojure.lang IPersistentMap Keyword)))
+           (clojure.lang IPersistentMap Keyword)
+           (java.util List Map)))
 
 (defprotocol ConvertToDBObject
   (to-db-object [input] "Converts given piece of Clojure data to BasicDBObject MongoDB Java driver uses"))
@@ -15,14 +16,18 @@
     input)
 
   Keyword
-  (to-db-object [#^Keyword o] (.getName o))
-  
+  (to-db-object [#^Keyword input] (.getName input))
+
   IPersistentMap
   (to-db-object [#^IPersistentMap input]
     (let [o (BasicDBObject.)]
       (doseq [[k v] input]
         (.put o (to-db-object k) (to-db-object v)))
-      o)))
+      o))
+
+  List
+  (to-db-object [#^List input] (map to-db-object input)))
+  
 
 
 
