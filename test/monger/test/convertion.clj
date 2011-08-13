@@ -27,4 +27,5 @@
   (let [input  { :int 1, :string "Mongo", :float 22.23 }
         output (monger.convertion/to-db-object input)]
     (is (= 1 (.get output "int")))
-    ))
+    (is (= "Mongo" (.get output "string")))
+    (is (= 22.23 (.get output "float")))))
