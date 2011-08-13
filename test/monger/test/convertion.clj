@@ -94,10 +94,15 @@
 
 (deftest convert-flat-db-object-to-nested-map
   (let [did    "b38b357f5014a3250d813a16376ca2ff4837e8e1"
-        nested (doto (BasicDBObject.) (.put "int" 101) (.put "dblist" (doto (BasicDBList.) (.put "0" 0) (.put "1" 1))) (.put "list" (ArrayList. ["red" "green" "blue"])) (.put "nil" nil))
+        nested (doto (BasicDBObject.)
+                 (.put "int" 101)
+                 (.put "dblist" (doto (BasicDBList.) (.put "0" 0) (.put "1" 1))) (.put "list" (ArrayList. ["red" "green" "blue"])))
         input (doto (BasicDBObject.)
                 (.put "_id" did)
-                (.put "nested"  nested))]
-    (is (= (monger.convertion/from-db-object input false) { "_id" did, "nested" { "int" 101, "dblist" {"0" 0, "1" 1}, "list" ["red" "green" "blue"], "nil" nil } }))
-    (is (= (monger.convertion/from-db-object input true)  { :_id  did, :nested  { :int  101, :dblist  {:0  0, :1  1}, :list  ["red" "green" "blue"], :nil nil } }))
-    ))
+                (.put "nested"  nested))
+        output (monger.convertion/from-db-object input false)]
+    (is (= (output "_id") did))
+    (is (= (-> output (get "nested") (get "int")) 101))
+    (is (= (-> output (get "nested") (get "list")) ["red" "green" "blue"]))
+    (is (= (-> output (get "nested") (get "dblist")) [0 1]))))
+

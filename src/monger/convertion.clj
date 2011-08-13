@@ -50,6 +50,10 @@
   (from-db-object [#^List input keywordize]
     (vec (map #(from-db-object % keywordize) input)))
 
+  BasicDBList
+  (from-db-object [#^BasicDBList input keywordize]
+    (vec (map #(from-db-object % keywordize) input)))
+
   DBObject
   (from-db-object [#^DBObject input keywordize]
     ;; DBObject provides .toMap, but the implementation in
