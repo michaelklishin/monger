@@ -89,6 +89,11 @@
 ;; monger.collection/drop-index
 
 
+
+;;
+;; Implementation
+;;
+
 (defn- fields-to-db-object
   [fields]
   (let [n             (clojure.core/count fields)
