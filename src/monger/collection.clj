@@ -44,6 +44,12 @@
   ([^String collection, ^Map ref]
      (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
        (.find coll (to-db-object ref))))
+  ([^String collection, ^Map ref, ^List fields]
+     (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)
+           n             (count fields)
+           ones          (replicate n 1)
+           map-of-fields (zipmap fields ones)]
+       (.find coll (to-db-object ref) (to-db-object map-of-fields))))
   )
 
 
@@ -54,7 +60,7 @@
   ([^String collection, ^String id, ^List fields]
      (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)
            n             (count fields)
-           ones          (replicate 10 1)
+           ones          (replicate n 1)
            map-of-fields (zipmap fields ones)]
        (.findOne coll (to-db-object { :_id id }) (to-db-object map-of-fields))))
   )
