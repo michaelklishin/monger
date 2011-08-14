@@ -40,3 +40,13 @@
      (.getDB *mongodb-connection* name))
   ([^Mongo connection, ^String name]
      (.getDB connection name)))
+
+
+
+(defprotocol Countable
+  (count [this] "Returns size of the object"))
+
+(extend-protocol Countable
+  com.mongodb.DBCursor
+  (count [^com.mongodb.DBCursor this]
+    (.count this)))

@@ -138,7 +138,7 @@
     (monger.collection/insert collection { :language "Clojure", :name "langohr" })
     (monger.collection/insert collection { :language "Clojure", :name "incanter" })
     (monger.collection/insert collection { :language "Scala",   :name "akka" })
-    (is (= 1 (.count (monger.collection/find collection { :language "Scala"   }))))
+    (is (= 1 (monger.core/count (monger.collection/find collection { :language "Scala"   }))))
     (is (= 3 (.count (monger.collection/find collection { :language "Clojure" }))))
     (is (empty? (monger.collection/find collection      { :language "Java"    })))))
 
