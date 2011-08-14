@@ -93,10 +93,10 @@
     (monger.collection/insert collection doc)
     (is (= (doc (monger.collection/find-by-id collection doc-id))))))
 
-;; (deftest find-partial-document-by-id-when-document-exists
-;;   (let [collection "libraries"
-;;         doc-id     (monger.util/random-str 140 16)
-;;         doc        { :data-store "MongoDB", :language "Clojure", :_id doc-id }]
-;;     (monger.collection/remove collection)
-;;     (monger.collection/insert collection doc)
-;;     (is (= (doc (monger.collection/find-by-id collection doc-id []))))))
+(deftest find-partial-document-by-id-when-document-exists
+  (let [collection "libraries"
+        doc-id     (monger.util/random-str 140 16)
+        doc        { :data-store "MongoDB", :language "Clojure", :_id doc-id }]
+    (monger.collection/remove collection)
+    (monger.collection/insert collection doc)
+    (is (= ({ :language "Clojure" } (monger.collection/find-by-id collection doc-id [ :language ]))))))
