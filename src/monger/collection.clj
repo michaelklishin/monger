@@ -19,14 +19,28 @@
 ;; THE SOFTWARE.
 
 (ns monger.collection
-  (:import (com.mongodb Mongo DB))
-  )
+  (:import (com.mongodb Mongo DB WriteResult DBObject WriteConcern) (java.util List))
+  (:require [monger core convertion errors]))
 
 ;;
 ;; API
 ;;
 
 ;; monger.collection/insert
+
+(defn ^WriteResult insert
+  ([^DB db, ^String collection, ^DBObject doc]
+     (.insert (.getCollection db collection) (monger.convertion/to-db-object doc) WriteConcern/NORMAL))
+  ([^DB db, ^String collection, ^DBObject doc, ^WriteConcern concern]
+     (.insert (.getCollection db collection) (monger.convertion/to-db-object doc) concern)))
+
+
+(defn ^WriteResult insert-batch
+  ([^DB db, ^String collection, ^List docs]
+     (.insert (.getCollection db collection) (monger.convertion/to-db-object docs) WriteConcern/NORMAL))
+  ([^DB db, ^String collection, ^List docs, ^WriteConcern concern]
+     (.insert (.getCollection db collection) (monger.convertion/to-db-object docs) concern)))
+
 ;; monger.collection/find
 ;; monger.collection/group
 
@@ -38,6 +52,13 @@
 ;; monger.collection/update
 ;; monger.collection/update-multi
 ;; monger.collection/remove
+
+(defn ^WriteResult remove
+([^DB db, ^String collection]
+     (.remove (.getCollection db collection) (monger.convertion/to-db-object {})))
+  ([^DB db, ^String collection, ^DBObject conditions]
+     (.remove (.getCollection db collection) (monger.convertion/to-db-object conditions)))
+  )
 
 ;; monger.collection/ensure-index
 ;; monger.collection/drop-index
