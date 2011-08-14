@@ -103,14 +103,14 @@
 
 (deftest find-full-document-by-id-when-document-does-not-exist
   (let [collection "libraries"
-        doc-id     (monger.util/random-str 140 16)]
+        doc-id     (monger.util/random-uuid)]
     (monger.collection/remove collection)
     (is (nil? (monger.collection/find-by-id collection doc-id)))))
 
 
 (deftest find-full-document-by-id-when-document-exists
   (let [collection "libraries"
-        doc-id     (monger.util/random-str 140 16)
+        doc-id     (monger.util/random-uuid)
         doc        { :data-store "MongoDB", :language "Clojure", :_id doc-id }]
     (monger.collection/remove collection)
     (monger.collection/insert collection doc)
@@ -118,7 +118,7 @@
 
 (deftest find-partial-document-by-id-when-document-exists
   (let [collection "libraries"
-        doc-id     (monger.util/random-str 140 16)
+        doc-id     (monger.util/random-uuid)
         doc        { :data-store "MongoDB", :language "Clojure", :_id doc-id }]
     (monger.collection/remove collection)
     (monger.collection/insert collection doc)

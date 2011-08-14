@@ -8,11 +8,16 @@
 ;; You must not remove this notice, or any other, from this software.
 
 (ns monger.util
-  (:import (java.security SecureRandom) (java.math.BigInteger)))
+  (:import (java.security SecureRandom) (java.math BigInteger)))
 
 ;;
 ;; API
 ;;
+
+(defn ^String random-uuid
+  "Generates a secure random UUID string"
+  []
+  (.toString (java.util.UUID/randomUUID)))
 
 (defn ^String random-str
   "Generates a secure random string"
