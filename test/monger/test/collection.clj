@@ -54,11 +54,34 @@
 
 
 ;;
-;; count
+;; count, remove
 ;;
 
 (deftest get-collection-size
   (is 0 (monger.collection/count "things")))
+
+(deftest remove-all-documents-from-collection
+  (let [collection "libraries"]
+    (monger.collection/remove collection)
+    (monger.collection/insert collection { :language "Clojure", :name "monger" })
+    (monger.collection/insert collection { :language "Clojure", :name "langohr" })
+    (monger.collection/insert collection { :language "Clojure", :name "incanter" })
+    (monger.collection/insert collection { :language "Scala",   :name "akka" })
+    (is (= 4 (monger.collection/count collection)))
+    (monger.collection/remove collection)
+    (is (= 0 (monger.collection/count collection)))))
+
+
+(deftest remove-some-documents-from-collection
+  (let [collection "libraries"]
+    (monger.collection/remove collection)
+    (monger.collection/insert collection { :language "Clojure", :name "monger" })
+    (monger.collection/insert collection { :language "Clojure", :name "langohr" })
+    (monger.collection/insert collection { :language "Clojure", :name "incanter" })
+    (monger.collection/insert collection { :language "Scala",   :name "akka" })
+    (is (= 4 (monger.collection/count collection)))
+    (monger.collection/remove collection { :language "Clojure" })
+    (is (= 1 (monger.collection/count collection)))))
 
 
 
@@ -100,3 +123,21 @@
     (monger.collection/remove collection)
     (monger.collection/insert collection doc)
     (is (= ({ :language "Clojure" } (monger.collection/find-by-id collection doc-id [ :language ]))))))
+
+
+(deftest find-multiple-documents-when-collection-is-empty
+  (let [collection "libraries"]
+    (monger.collection/remove collection)
+    (is (empty? (monger.collection/find collection { :language "Scala" })))))
+
+
+(deftest find-multiple-documents
+  (let [collection "libraries"]
+    (monger.collection/remove collection)
+    (monger.collection/insert collection { :language "Clojure", :name "monger" })
+    (monger.collection/insert collection { :language "Clojure", :name "langohr" })
+    (monger.collection/insert collection { :language "Clojure", :name "incanter" })
+    (monger.collection/insert collection { :language "Scala",   :name "akka" })
+    (is (= 1 (.count (monger.collection/find collection { :language "Scala"   }))))
+    (is (= 3 (.count (monger.collection/find collection { :language "Clojure" }))))
+    (is (empty? (monger.collection/find collection      { :language "Java"    })))))
