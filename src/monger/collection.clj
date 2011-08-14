@@ -36,6 +36,7 @@
        (.insert coll (to-db-object docs) concern))))
 
 ;; monger.collection/find
+(declare fields-to-db-object)
 
 (defn ^DBCursor find
   ([^String collection]
@@ -46,9 +47,7 @@
        (.find coll (to-db-object ref))))
   ([^String collection, ^Map ref, ^List fields]
      (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)
-           n             (count fields)
-           ones          (replicate n 1)
-           map-of-fields (zipmap fields ones)]
+           map-of-fields (fields-to-db-object fields)]
        (.find coll (to-db-object ref) (to-db-object map-of-fields))))
   )
 
@@ -59,9 +58,7 @@
        (.findOne coll (to-db-object { :_id id }))))
   ([^String collection, ^String id, ^List fields]
      (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)
-           n             (count fields)
-           ones          (replicate n 1)
-           map-of-fields (zipmap fields ones)]
+           map-of-fields (fields-to-db-object fields)]
        (.findOne coll (to-db-object { :_id id }) (to-db-object map-of-fields))))
   )
 
@@ -90,3 +87,11 @@
 
 ;; monger.collection/ensure-index
 ;; monger.collection/drop-index
+
+
+(defn- fields-to-db-object
+  [fields]
+  (let [n             (clojure.core/count fields)
+        ones          (replicate n 1)
+        map-of-fields (zipmap fields ones)]
+    map-of-fields))
