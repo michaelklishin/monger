@@ -29,31 +29,31 @@
 ;; monger.collection/insert
 
 (defn ^WriteResult insert
-  ([^DB db, ^String collection, ^DBObject doc]
-     (.insert (.getCollection db collection) (monger.convertion/to-db-object doc) WriteConcern/NORMAL))
-  ([^DB db, ^String collection, ^DBObject doc, ^WriteConcern concern]
-     (.insert (.getCollection db collection) (monger.convertion/to-db-object doc) concern)))
+  ([^String collection, ^DBObject doc]
+     (.insert (.getCollection monger.core/*mongodb-database* collection) (monger.convertion/to-db-object doc) monger.core/*mongodb-write-concern*))
+  ([^String collection, ^DBObject doc, ^WriteConcern concern]
+     (.insert (.getCollection monger.core/*mongodb-database* collection) (monger.convertion/to-db-object doc) concern)))
 
 
 (defn ^WriteResult insert-batch
-  ([^DB db, ^String collection, ^List docs]
-     (.insert (.getCollection db collection) (monger.convertion/to-db-object docs) WriteConcern/NORMAL))
-  ([^DB db, ^String collection, ^List docs, ^WriteConcern concern]
-     (.insert (.getCollection db collection) (monger.convertion/to-db-object docs) concern)))
+  ([^String collection, ^List docs]
+     (.insert (.getCollection monger.core/*mongodb-database* collection) (monger.convertion/to-db-object docs) WriteConcern/NORMAL))
+  ([^String collection, ^List docs, ^WriteConcern concern]
+     (.insert (.getCollection monger.core/*mongodb-database* collection) (monger.convertion/to-db-object docs) concern)))
 
 ;; monger.collection/find
 
 (defn ^DBCursor find
-  ([^DB db, ^String collection]
-     (.find (.getCollection db collection)))
-  ([^DB db, ^String collection, ^Map ref]
-     (.find (.getCollection db collection) (monger.convertion/to-db-object ref)))
+  ([^String collection]
+     (.find (.getCollection monger.core/*mongodb-database* collection)))
+  ([^String collection, ^Map ref]
+     (.find (.getCollection monger.core/*mongodb-database* collection) (monger.convertion/to-db-object ref)))
   )
 
 
 (defn ^DBObject find-by-id
-  ([^DB db, ^String collection, ^String id]
-     (.findOne (.getCollection db collection) (monger.convertion/to-db-object { :_id id })))
+  ([^String collection, ^String id]
+     (.findOne (.getCollection monger.core/*mongodb-database* collection) (monger.convertion/to-db-object { :_id id })))
   )
 
 
@@ -62,18 +62,18 @@
 
 ;; monger.collection/count
 (defn ^long count
-  [^DB db, ^String collection]
-  (.count (.getCollection db collection)))
+  [^String collection]
+  (.count (.getCollection monger.core/*mongodb-database* collection)))
 
 ;; monger.collection/update
 ;; monger.collection/update-multi
 ;; monger.collection/remove
 
 (defn ^WriteResult remove
-([^DB db, ^String collection]
-     (.remove (.getCollection db collection) (monger.convertion/to-db-object {})))
-  ([^DB db, ^String collection, ^DBObject conditions]
-     (.remove (.getCollection db collection) (monger.convertion/to-db-object conditions)))
+  ([^String collection]
+     (.remove (.getCollection monger.core/*mongodb-database* collection) (monger.convertion/to-db-object {})))
+  ([^String collection, ^DBObject conditions]
+     (.remove (.getCollection monger.core/*mongodb-database* collection) (monger.convertion/to-db-object conditions)))
   )
 
 ;; monger.collection/ensure-index

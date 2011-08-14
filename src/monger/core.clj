@@ -19,15 +19,19 @@
 ;; THE SOFTWARE.
 
 (ns monger.core
-  (:import (com.mongodb Mongo DB))
+  (:import (com.mongodb Mongo DB WriteConcern))
   )
 
 ;;
 ;; Defaults
 ;;
 
-(def ^:dynamic *default-host* "localhost")
-(def ^:dynamic *default-port* 27017)
+(def ^:dynamic ^String *mongodb-host* "localhost")
+(def ^:dynamic ^long   *mongodb-port* 27017)
+
+(def ^:dynamic ^Mongo        *mongodb-connection*)
+(def ^:dynamic ^DB           *mongodb-database*)
+(def ^:dynamic ^WriteConcern *mongodb-write-concern* WriteConcern/NORMAL)
 
 
 ;;
@@ -45,11 +49,13 @@
   "Connects to MongoDB"
   ([]
      (Mongo.))
-  ([{ :keys [host port] :or { host *default-host*, port *default-port* }}]
+  ([{ :keys [host port] :or { host *mongodb-host*, port *mongodb-port* }}]
      (Mongo. host port)))
 
 (defn ^DB get-db
   "Get database reference by name"
-  [^Mongo connection, ^String name]
-  (.getDB connection name))
+  ([^String name]
+     (.getDB *mongodb-connection* name))
+  ([^Mongo connection, ^String name]
+     (.getDB connection name)))
 
