@@ -19,7 +19,7 @@
 ;; THE SOFTWARE.
 
 (ns monger.collection
-  (:import (com.mongodb Mongo DB WriteResult DBObject WriteConcern) (java.util List))
+  (:import (com.mongodb Mongo DB WriteResult DBObject WriteConcern DBCursor) (java.util List Map))
   (:require [monger core convertion errors]))
 
 ;;
@@ -42,6 +42,22 @@
      (.insert (.getCollection db collection) (monger.convertion/to-db-object docs) concern)))
 
 ;; monger.collection/find
+
+(defn ^DBCursor find
+  ([^DB db, ^String collection]
+     (.find (.getCollection db collection)))
+  ([^DB db, ^String collection, ^Map ref]
+     (.find (.getCollection db collection) (monger.convertion/to-db-object ref)))
+  )
+
+
+(defn ^DBObject find-by-id
+  ([^DB db, ^String collection, ^String id]
+     (.findOne (.getCollection db collection) (monger.convertion/to-db-object { :_id id })))
+  )
+
+
+
 ;; monger.collection/group
 
 ;; monger.collection/count
