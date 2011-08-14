@@ -141,3 +141,20 @@
     (is (= 1 (.count (monger.collection/find collection { :language "Scala"   }))))
     (is (= 3 (.count (monger.collection/find collection { :language "Clojure" }))))
     (is (empty? (monger.collection/find collection      { :language "Java"    })))))
+
+
+(deftest find-multiple-partial-documents
+  (let [collection "libraries"]
+    (monger.collection/remove collection)
+    (monger.collection/insert collection { :language "Clojure", :name "monger" })
+    (monger.collection/insert collection { :language "Clojure", :name "langohr" })
+    (monger.collection/insert collection { :language "Clojure", :name "incanter" })
+    (monger.collection/insert collection { :language "Scala",   :name "akka" })
+    (let [scala-libs   (monger.collection/find collection { :language "Scala" } [:name])
+          clojure-libs (monger.collection/find collection { :language "Clojure"} [:language])]
+      (is (= 1 (.count scala-libs)))
+      (is (= 3 (.count clojure-libs)))
+      (doseq [i clojure-libs]
+        (let [doc (monger.convertion/from-db-object i true)]
+          (is (= (:language doc) "Clojure"))))
+      (is (empty? (monger.collection/find collection { :language "Erlang" } [:name]))))))

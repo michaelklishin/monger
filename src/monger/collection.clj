@@ -20,19 +20,19 @@
 
 (defn ^WriteResult insert
   ([^String collection, ^DBObject doc]
-     (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
+     (let [#^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
        (.insert coll (to-db-object doc) monger.core/*mongodb-write-concern*)))
   ([^String collection, ^DBObject doc, ^WriteConcern concern]
-     (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
+     (let [#^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
        (.insert coll (to-db-object doc) concern))))
 
 
 (defn ^WriteResult insert-batch
   ([^String collection, ^List docs]
-     (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
+     (let [#^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
        (.insert coll (to-db-object docs) WriteConcern/NORMAL)))
   ([^String collection, ^List docs, ^WriteConcern concern]
-     (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
+     (let [#^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
        (.insert coll (to-db-object docs) concern))))
 
 ;; monger.collection/find
@@ -40,13 +40,13 @@
 
 (defn ^DBCursor find
   ([^String collection]
-     (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
+     (let [#^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
        (.find coll)))
   ([^String collection, ^Map ref]
-     (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
+     (let [#^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
        (.find coll (to-db-object ref))))
   ([^String collection, ^Map ref, ^List fields]
-     (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)
+     (let [#^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)
            map-of-fields (fields-to-db-object fields)]
        (.find coll (to-db-object ref) (to-db-object map-of-fields))))
   )
@@ -54,10 +54,10 @@
 
 (defn ^DBObject find-by-id
   ([^String collection, ^String id]
-     (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
+     (let [#^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
        (.findOne coll (to-db-object { :_id id }))))
   ([^String collection, ^String id, ^List fields]
-     (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)
+     (let [#^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)
            map-of-fields (fields-to-db-object fields)]
        (.findOne coll (to-db-object { :_id id }) (to-db-object map-of-fields))))
   )
@@ -95,8 +95,5 @@
 ;;
 
 (defn- fields-to-db-object
-  [fields]
-  (let [n             (clojure.core/count fields)
-        ones          (replicate n 1)
-        map-of-fields (zipmap fields ones)]
-    map-of-fields))
+  [^List fields]
+  (zipmap fields (repeat 1)))
