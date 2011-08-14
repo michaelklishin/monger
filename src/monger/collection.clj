@@ -49,12 +49,14 @@
 
 (defn ^DBObject find-by-id
   ([^String collection, ^String id]
-     (.findOne (.getCollection monger.core/*mongodb-database* collection) (to-db-object { :_id id })))
+     (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
+       (.findOne coll (to-db-object { :_id id }))))
   ([^String collection, ^String id, ^List fields]
-     (let [n             (count fields)
+     (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)
+           n             (count fields)
            ones          (replicate 10 1)
            map-of-fields (zipmap fields ones)]
-       (.findOne (.getCollection monger.core/*mongodb-database* collection) (to-db-object { :_id id }) (to-db-object map-of-fields))))
+       (.findOne coll (to-db-object { :_id id }) (to-db-object map-of-fields))))
   )
 
 
