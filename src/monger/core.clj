@@ -24,13 +24,6 @@
 
 
 ;;
-;; Protocols
-;;
-
-
-
-
-;;
 ;; API
 ;;
 
@@ -47,4 +40,3 @@
      (.getDB *mongodb-connection* name))
   ([^Mongo connection, ^String name]
      (.getDB connection name)))
-
