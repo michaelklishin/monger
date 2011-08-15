@@ -76,6 +76,13 @@
        (.count coll (to-db-object conditions)))))
 
 ;; monger.collection/update
+
+(defn ^WriteResult update
+  [^String collection, ^Map conditions, ^Map document, & { :keys [upsert multi write-concern] :or { upsert false, multi false, write-concern monger.core/*mongodb-write-concern* } }]
+  (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
+    (.update coll (to-db-object conditions) (to-db-object document) upsert multi write-concern)))
+
+
 ;; monger.collection/update-multi
 ;; monger.collection/remove
 

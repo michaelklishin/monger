@@ -169,3 +169,35 @@
         (let [doc (monger.convertion/from-db-object i true)]
           (is (= (:language doc) "Clojure"))))
       (is (empty? (monger.collection/find collection { :language "Erlang" } [:name]))))))
+
+
+;;
+;; update
+;;
+
+(deftest update-document-by-id-without-upsert
+  (let [collection "libraries"
+        doc-id       (monger.util/random-uuid)
+        doc          { :data-store "MongoDB", :language "Clojure", :_id doc-id }
+        modified-doc { :data-store "MongoDB", :language "Erlang",  :_id doc-id }]
+    (monger.collection/remove collection)
+    (monger.collection/insert collection doc)
+    (is (= (doc (monger.collection/find-by-id collection doc-id))))
+    (monger.collection/update collection { :_id doc-id } { :language "Erlang" })
+    (is (= (modified-doc (monger.collection/find-by-id collection doc-id))))))
+
+
+(deftest update-multiple-documents
+    (let [collection "libraries"]
+    (monger.collection/remove collection)
+    (monger.collection/insert collection { :language "Clojure", :name "monger" })
+    (monger.collection/insert collection { :language "Clojure", :name "langohr" })
+    (monger.collection/insert collection { :language "Clojure", :name "incanter" })
+    (monger.collection/insert collection { :language "Scala",   :name "akka" })
+    (is (= 3 (monger.collection/count collection { :language "Clojure" })))
+    (is (= 1 (monger.collection/count collection { :language "Scala"   })))
+    (is (= 0 (monger.collection/count collection { :language "Python"  })))
+    (monger.collection/update collection { :language "Clojure" } { "$set" { :language "Python" } } :multi true)
+    (is (= 0 (monger.collection/count collection { :language "Clojure" })))
+    (is (= 1 (monger.collection/count collection { :language "Scala"   })))
+    (is (= 3 (monger.collection/count collection { :language "Python"  })))))
