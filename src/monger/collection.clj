@@ -68,9 +68,12 @@
 
 ;; monger.collection/count
 (defn ^long count
-  [^String collection]
-  (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
-    (.count coll)))
+  ([^String collection]
+     (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
+       (.count coll)))
+  ([^String collection, ^Map conditions]
+     (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
+       (.count coll (to-db-object conditions)))))
 
 ;; monger.collection/update
 ;; monger.collection/update-multi

@@ -58,7 +58,18 @@
 ;;
 
 (deftest get-collection-size
-  (is 0 (monger.collection/count "things")))
+  (let [collection "things"]
+    (monger.collection/remove collection)
+    (is (= 0 (monger.collection/count collection)))
+    (monger.collection/insert collection { :language "Clojure", :name "monger" })
+    (monger.collection/insert collection { :language "Clojure", :name "langohr" })
+    (monger.collection/insert collection { :language "Clojure", :name "incanter" })
+    (monger.collection/insert collection { :language "Scala",   :name "akka" })
+    (is (= 4 (monger.collection/count collection)))
+    (is (= 3 (monger.collection/count collection { :language "Clojure" })))
+    (is (= 1 (monger.collection/count collection { :language "Scala"   })))
+    (is (= 0 (monger.collection/count collection { :language "Python"  })))))
+
 
 (deftest remove-all-documents-from-collection
   (let [collection "libraries"]
