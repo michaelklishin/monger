@@ -188,7 +188,7 @@
 
 
 (deftest update-multiple-documents
-    (let [collection "libraries"]
+  (let [collection "libraries"]
     (monger.collection/remove collection)
     (monger.collection/insert collection { :language "Clojure", :name "monger" })
     (monger.collection/insert collection { :language "Clojure", :name "langohr" })
@@ -201,3 +201,22 @@
     (is (= 0 (monger.collection/count collection { :language "Clojure" })))
     (is (= 1 (monger.collection/count collection { :language "Scala"   })))
     (is (= 3 (monger.collection/count collection { :language "Python"  })))))
+
+
+(deftest save-a-new-document
+  (let [collection "people"
+        document       { :name "Joe", :age 30 }]
+    (monger.collection/remove collection)
+    (is (monger.errors/ok? (monger.collection/save "people" document)))
+    (is (= 1 (monger.collection/count collection)))))
+
+
+(deftest update-an-existing-document-using-save
+  (let [collection "people"
+        doc-id            "people-1"
+        document          { :_id doc-id, :name "Joe",   :age 30 }]
+    (monger.collection/remove collection)
+    (is (monger.errors/ok? (monger.collection/insert "people" document)))
+    (is (= 1 (monger.collection/count collection)))
+    (monger.collection/save collection { :_id doc-id, :name "Alan", :age 40 })
+    (is (= 1 (monger.collection/count collection { :name "Alan", :age 40 })))))

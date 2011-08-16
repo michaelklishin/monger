@@ -19,21 +19,21 @@
 ;; monger.collection/insert
 
 (defn ^WriteResult insert
-  ([^String collection, ^DBObject doc]
+  ([^String collection, ^DBObject document]
      (let [#^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
-       (.insert coll (to-db-object doc) monger.core/*mongodb-write-concern*)))
-  ([^String collection, ^DBObject doc, ^WriteConcern concern]
+       (.insert coll (to-db-object document) monger.core/*mongodb-write-concern*)))
+  ([^String collection, ^DBObject document, ^WriteConcern concern]
      (let [#^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
-       (.insert coll (to-db-object doc) concern))))
+       (.insert coll (to-db-object document) concern))))
 
 
 (defn ^WriteResult insert-batch
-  ([^String collection, ^List docs]
+  ([^String collection, ^List documents]
      (let [#^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
-       (.insert coll (to-db-object docs) WriteConcern/NORMAL)))
-  ([^String collection, ^List docs, ^WriteConcern concern]
+       (.insert coll (to-db-object documents) WriteConcern/NORMAL)))
+  ([^String collection, ^List documents, ^WriteConcern concern]
      (let [#^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
-       (.insert coll (to-db-object docs) concern))))
+       (.insert coll (to-db-object documents) concern))))
 
 ;; monger.collection/find
 (declare fields-to-db-object)
@@ -59,8 +59,7 @@
   ([^String collection, ^String id, ^List fields]
      (let [#^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)
            map-of-fields (fields-to-db-object fields)]
-       (.findOne coll (to-db-object { :_id id }) (to-db-object map-of-fields))))
-  )
+       (.findOne coll (to-db-object { :_id id }) (to-db-object map-of-fields)))))
 
 
 
@@ -83,6 +82,17 @@
     (.update coll (to-db-object conditions) (to-db-object document) upsert multi write-concern)))
 
 
+;; monger.collection/save
+
+(defn ^WriteResult save
+  ([^String collection, ^Map document]
+     (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
+       (.save coll (to-db-object document) monger.core/*mongodb-write-concern*)))
+  ([^String collection, ^Map document, ^WriteConcern write-concern]
+     (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
+       (.save coll document write-concern))))
+
+
 ;; monger.collection/update-multi
 ;; monger.collection/remove
 
@@ -92,8 +102,7 @@
        (.remove coll (to-db-object {}))))
   ([^String collection, ^Map conditions]
      (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
-       (.remove coll (to-db-object conditions))))
-  )
+       (.remove coll (to-db-object conditions)))))
 
 ;; monger.collection/ensure-index
 ;; monger.collection/drop-index
