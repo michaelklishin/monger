@@ -3,7 +3,7 @@
 (ns monger.test.collection
   (:import  [com.mongodb WriteResult WriteConcern DBCursor])
   (:require [monger core collection errors util] [clojure stacktrace])
-  (:use [clojure.test] [monger.core]))
+  (:use [clojure.test]))
 
 (monger.util/with-ns 'monger.core
   (defonce ^:dynamic *mongodb-connection* (monger.core/connect))
