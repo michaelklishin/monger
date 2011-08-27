@@ -32,7 +32,7 @@
   ([]
      (Mongo.))
   ([{ :keys [host port] :or { host *mongodb-host*, port *mongodb-port* }}]
-     (Mongo. host port)))
+     (Mongo. #^String host #^Long port)))
 
 (defn ^DB get-db
   "Get database reference by name"

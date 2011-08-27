@@ -21,19 +21,19 @@
 (defn ^WriteResult insert
   ([^String collection, ^DBObject document]
      (let [#^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
-       (.insert coll (to-db-object document) monger.core/*mongodb-write-concern*)))
+       (.insert #^DBCollection coll #^DBObject (to-db-object document) #^WriteConcern monger.core/*mongodb-write-concern*)))
   ([^String collection, ^DBObject document, ^WriteConcern concern]
      (let [#^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
-       (.insert coll (to-db-object document) concern))))
+       (.insert #^DBCollection coll #^DBObject (to-db-object document) #^WriteConcern concern))))
 
 
 (defn ^WriteResult insert-batch
   ([^String collection, ^List documents]
-     (let [#^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
-       (.insert coll (to-db-object documents) WriteConcern/NORMAL)))
+     (let [#^DBCollection coll #^DBObject (.getCollection monger.core/*mongodb-database* collection)]
+       (.insert #^DBCollection coll #^DBObject (to-db-object documents) #^WriteConcern WriteConcern/NORMAL)))
   ([^String collection, ^List documents, ^WriteConcern concern]
-     (let [#^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
-       (.insert coll (to-db-object documents) concern))))
+     (let [#^DBCollection coll #^DBObject (.getCollection monger.core/*mongodb-database* collection)]
+       (.insert #^DBCollection coll #^DBObject (to-db-object documents) #^WriteConcern concern))))
 
 ;; monger.collection/find
 (declare fields-to-db-object)
@@ -44,11 +44,11 @@
        (.find coll)))
   ([^String collection, ^Map ref]
      (let [#^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
-       (.find coll (to-db-object ref))))
+       (.find #^DBCollection coll #^DBObject (to-db-object ref))))
   ([^String collection, ^Map ref, ^List fields]
      (let [#^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)
            map-of-fields (fields-to-db-object fields)]
-       (.find coll (to-db-object ref) (to-db-object map-of-fields))))
+       (.find #^DBCollection coll #^DBObject (to-db-object ref) #^DBObject (to-db-object map-of-fields))))
   )
 
 
@@ -59,7 +59,7 @@
   ([^String collection, ^String id, ^List fields]
      (let [#^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)
            map-of-fields (fields-to-db-object fields)]
-       (.findOne coll (to-db-object { :_id id }) (to-db-object map-of-fields)))))
+       (.findOne #^DBCollection coll #^DBObject (to-db-object { :_id id }) #^DBObject (to-db-object map-of-fields)))))
 
 
 
