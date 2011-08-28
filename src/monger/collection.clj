@@ -29,11 +29,11 @@
 
 (defn ^WriteResult insert-batch
   ([^String collection, ^List documents]
-     (let [#^DBCollection coll #^DBObject (.getCollection monger.core/*mongodb-database* collection)]
-       (.insert #^DBCollection coll #^DBObject (to-db-object documents) #^WriteConcern WriteConcern/NORMAL)))
+     (let [#^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
+       (.insert #^DBCollection coll #^List (to-db-object documents) #^WriteConcern WriteConcern/NORMAL)))
   ([^String collection, ^List documents, ^WriteConcern concern]
-     (let [#^DBCollection coll #^DBObject (.getCollection monger.core/*mongodb-database* collection)]
-       (.insert #^DBCollection coll #^DBObject (to-db-object documents) #^WriteConcern concern))))
+     (let [#^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
+       (.insert #^DBCollection coll #^List (to-db-object documents) #^WriteConcern concern))))
 
 ;; monger.collection/find
 (declare fields-to-db-object)
