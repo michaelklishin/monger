@@ -1,7 +1,7 @@
 (set! *warn-on-reflection* true)
 
 (ns monger.test.collection
-  (:import  [com.mongodb WriteResult WriteConcern DBCursor DBObject])
+  (:import  [com.mongodb WriteResult WriteConcern DBCursor DBObject] [java.util Date])
   (:require [monger core collection errors util] [clojure stacktrace])
   (:use [clojure.test]))
 
@@ -213,8 +213,9 @@
 (deftest update-document-by-id-without-upsert
   (let [collection "libraries"
         doc-id       (monger.util/random-uuid)
-        doc          { :data-store "MongoDB", :language "Clojure", :_id doc-id }
-        modified-doc { :data-store "MongoDB", :language "Erlang",  :_id doc-id }]
+        date         (Date.)
+        doc          { :created-at date, :data-store "MongoDB", :language "Clojure", :_id doc-id }
+        modified-doc { :created-at date, :data-store "MongoDB", :language "Erlang",  :_id doc-id }]
     (monger.collection/remove collection)
     (monger.collection/insert collection doc)
     (is (= (doc (monger.collection/find-by-id collection doc-id))))
