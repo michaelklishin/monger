@@ -16,7 +16,9 @@
 ;; API
 ;;
 
+;;
 ;; monger.collection/insert
+;;
 
 (defn ^WriteResult insert
   ([^String collection, ^DBObject document]
@@ -35,7 +37,9 @@
      (let [#^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
        (.insert #^DBCollection coll #^List (to-db-object documents) #^WriteConcern concern))))
 
+;;
 ;; monger.collection/find
+;;
 (declare fields-to-db-object)
 
 (defn ^DBCursor find
@@ -48,9 +52,26 @@
   ([^String collection, ^Map ref, ^List fields]
      (let [#^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)
            map-of-fields (fields-to-db-object fields)]
-       (.find #^DBCollection coll #^DBObject (to-db-object ref) #^DBObject (to-db-object map-of-fields))))
-  )
+       (.find #^DBCollection coll #^DBObject (to-db-object ref) #^DBObject (to-db-object map-of-fields)))))
 
+
+;;
+;; monger.collection/find-one
+;;
+
+(defn ^DBCursor find-one
+  ([^String collection, ^Map ref]
+     (let [#^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
+       (.find #^DBCollection coll #^DBObject (to-db-object ref))))
+  ([^String collection, ^Map ref, ^List fields]
+     (let [#^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)
+           map-of-fields (fields-to-db-object fields)]
+       (.find #^DBCollection coll #^DBObject (to-db-object ref) #^DBObject (to-db-object map-of-fields)))))
+
+
+;;
+;; monger.collection/find-by-id
+;;
 
 (defn ^DBObject find-by-id
   ([^String collection, ^String id]
@@ -62,10 +83,16 @@
        (.findOne #^DBCollection coll #^DBObject (to-db-object { :_id id }) #^DBObject (to-db-object map-of-fields)))))
 
 
-
+;;
 ;; monger.collection/group
+;;
 
+;; TBD
+
+
+;;
 ;; monger.collection/count
+;;
 (defn ^long count
   ([^String collection]
      (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
