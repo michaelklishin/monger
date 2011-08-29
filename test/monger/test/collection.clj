@@ -33,7 +33,7 @@
 
 
 ;;
-;; insert
+;; insert-batch
 ;;
 
 (deftest insert-a-batch-of-basic-documents-without-ids-and-with-default-write-concern
@@ -61,10 +61,10 @@
   (let [collection "things"]
     (monger.collection/remove collection)
     (is (= 0 (monger.collection/count collection)))
-    (monger.collection/insert collection { :language "Clojure", :name "monger" })
-    (monger.collection/insert collection { :language "Clojure", :name "langohr" })
-    (monger.collection/insert collection { :language "Clojure", :name "incanter" })
-    (monger.collection/insert collection { :language "Scala",   :name "akka" })
+    (monger.collection/insert-batch collection [{ :language "Clojure", :name "langohr" },
+                                                { :language "Clojure", :name "monger" },
+                                                { :language "Clojure", :name "incanter" },
+                                                { :language "Scala",   :name "akka" }] )
     (is (= 4 (monger.collection/count collection)))
     (is (= 3 (monger.collection/count collection { :language "Clojure" })))
     (is (= 1 (monger.collection/count collection { :language "Scala"   })))
