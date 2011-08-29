@@ -31,7 +31,7 @@
 
 (deftest convert-map-to-dbobject
   (let [input  { :int 1, :string "Mongo", :float 22.23 }
-        output (monger.convertion/to-db-object input)]
+        output #^DBObject (monger.convertion/to-db-object input)]
     (is (= 1 (.get output "int")))
     (is (= "Mongo" (.get output "string")))
     (is (= 22.23 (.get output "float")))))
@@ -39,8 +39,8 @@
 
 (deftest convert-nested-map-to-dbobject
   (let [input  { :int 1, :string "Mongo", :float 22.23, :map { :int 10, :string "Clojure", :float 11.9, :list '(1 "a" :b), :map { :key "value" } } }
-        output (monger.convertion/to-db-object input)
-        inner  (.get output "map")]
+        output #^DBObject (monger.convertion/to-db-object input)
+        inner  #^DBObject (.get output "map")]
     (is (= 10           (.get inner "int")))
     (is (= "Clojure"    (.get inner "string")))
     (is (= 11.9         (.get inner "float")))
