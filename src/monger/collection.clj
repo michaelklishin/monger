@@ -101,6 +101,7 @@
      (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
        (.count coll (to-db-object conditions)))))
 
+
 ;; monger.collection/update
 
 (defn ^WriteResult update

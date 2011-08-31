@@ -8,7 +8,7 @@
 ;; You must not remove this notice, or any other, from this software.
 
 (ns monger.util
-  (:import (java.security SecureRandom) (java.math BigInteger)))
+  (:import (java.security SecureRandom) (java.math BigInteger) (org.bson.types ObjectId)))
 
 ;;
 ;; API
@@ -24,6 +24,10 @@
   [^long n, ^long num-base]
   (.toString (new BigInteger n (SecureRandom.)) num-base))
 
+(defn ^ObjectId object-id
+  "Returns a new BSON object id"
+  []
+  (ObjectId.))
 
 (defmacro with-ns
   "Evaluates body in another namespace.  ns is either a namespace object or a symbol.
