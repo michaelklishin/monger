@@ -256,3 +256,17 @@
     (is (= 1 (monger.collection/count collection)))
     (monger.collection/save collection { :_id doc-id, :name "Alan", :age 40 })
     (is (= 1 (monger.collection/count collection { :name "Alan", :age 40 })))))
+
+
+(deftest upsert-a-document
+  (let [collection "libraries"
+        doc-id       (monger.util/random-uuid)
+        date         (Date.)
+        doc          { :created-at date, :data-store "MongoDB", :language "Clojure", :_id doc-id }
+        modified-doc { :created-at date, :data-store "MongoDB", :language "Erlang",  :_id doc-id }]
+    (monger.collection/remove collection)
+    (monger.collection/update collection { :language "Clojure" } doc :upsert true)
+    (is (= 1 (monger.collection/count collection)))
+    (monger.collection/update collection { :language "Clojure" } modified-doc :multi false :upsert true)
+    (is (= 1 (monger.collection/count collection)))
+    (is (= (modified-doc (monger.collection/find-by-id collection doc-id))))))
