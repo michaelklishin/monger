@@ -121,9 +121,7 @@
 (deftest find-one-full-document-when-collection-is-empty
   (let [collection "docs"]
     (monger.collection/remove collection)
-    (def cursor (monger.collection/find-one collection {}))
-    (is (instance? DBCursor cursor))
-    (is (empty? cursor))))
+    (is (nil? (monger.collection/find-one collection {})))))
 
 (deftest find-one-full-document-when-collection-has-matches
   (let [collection "docs"
@@ -131,19 +129,19 @@
         doc        { :data-store "MongoDB", :language "Clojure", :_id doc-id }]
     (monger.collection/remove collection)
     (monger.collection/insert collection doc)
-    (def cursor (monger.collection/find-one collection { :language "Clojure" }))
-    (is (= (:_id doc) (.get (.next #^DBCursor cursor) "_id")))))
+    (def #^DBObject found-one (monger.collection/find-one collection { :language "Clojure" }))
+    (is (= (:_id doc) (.get found-one "_id")))
+    (is (= (monger.convertion/to-db-object doc) found-one))))
 
 
-(deftest find-one-full-document-when-collection-has-matches
+(deftest find-one-partial-document-when-collection-has-matches
   (let [collection "docs"
         doc-id     (monger.util/random-uuid)
         doc        { :data-store "MongoDB", :language "Clojure", :_id doc-id }
         fields     [:language]]
     (monger.collection/remove collection)
     (monger.collection/insert collection doc)
-    (def cursor (monger.collection/find-one collection { :language "Clojure" } fields))
-    (def #^DBObject loaded (.next #^DBCursor cursor))
+    (def #^DBObject loaded (monger.collection/find-one collection { :language "Clojure" } fields))
     (is (nil? (.get #^DBObject loaded "data-stire")))
     (is (= doc-id (.get #^DBObject loaded "_id")))
     (is (= "Clojure" (.get #^DBObject loaded "language")))))

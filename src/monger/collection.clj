@@ -59,14 +59,14 @@
 ;; monger.collection/find-one
 ;;
 
-(defn ^DBCursor find-one
+(defn ^DBObject find-one
   ([^String collection, ^Map ref]
      (let [#^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
-       (.find #^DBCollection coll #^DBObject (to-db-object ref))))
+       (.findOne #^DBCollection coll #^DBObject (to-db-object ref))))
   ([^String collection, ^Map ref, ^List fields]
      (let [#^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)
            map-of-fields (fields-to-db-object fields)]
-       (.find #^DBCollection coll #^DBObject (to-db-object ref) #^DBObject (to-db-object map-of-fields)))))
+       (.findOne #^DBCollection coll #^DBObject (to-db-object ref) #^DBObject (to-db-object map-of-fields)))))
 
 
 ;;
