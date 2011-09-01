@@ -29,7 +29,7 @@
     (is (monger.result/ok? (monger.collection/insert "people" doc WriteConcern/SAFE)))
     (is (= 1 (monger.collection/count collection)))))
 
-(deftest insert-a-basic-db-boject-without-id-and-with-default-write-concern
+(deftest insert-a-basic-db-object-without-id-and-with-default-write-concern
   (let [collection "people"
         doc        (monger.convertion/to-db-object { :name "Joe", :age 30 })]
     (monger.collection/remove collection)
@@ -214,7 +214,7 @@
 
 
 ;;
-;; update
+;; update, save
 ;;
 
 (deftest update-document-by-id-without-upsert
@@ -252,6 +252,16 @@
     (monger.collection/remove collection)
     (is (monger.result/ok? (monger.collection/save "people" document)))
     (is (= 1 (monger.collection/count collection)))))
+
+
+(deftest save-a-new-basic-db-object
+  (let [collection "people"
+        doc        (monger.convertion/to-db-object { :name "Joe", :age 30 })]
+    (monger.collection/remove collection)
+    (is (nil? (.get doc "_id")))
+    (monger.collection/save "people" doc)
+    (is (not (nil? (.get doc "_id"))))))
+
 
 
 (deftest update-an-existing-document-using-save
