@@ -7,8 +7,8 @@
 ;; the terms of this license.
 ;; You must not remove this notice, or any other, from this software.
 
-(ns monger.errors
-  (:import (com.mongodb DBObject WriteResult)
+(ns monger.result
+  (:import (com.mongodb DBObject BasicDBObject WriteResult CommandResult)
            (clojure.lang IPersistentMap))
   (:require [monger convertion]))
 
@@ -18,16 +18,25 @@
 ;;
 
 (defprotocol MongoCommandResult
-  (ok? [input] "Returns true if command result is a success"))
+  (ok?               [input] "Returns true if command result is a success")
+  (has-error?        [input] "Returns true if command result indicates an error")
+  (updated-existing? [input] "Returns true if command result has `updatedExisting` field set to true"))
 
 (extend-protocol MongoCommandResult
   DBObject
   (ok?
     [^DBObject result]
     (.contains [true "true" 1 1.0] (.get result "ok")))
+  (has-error?
+    [^DBObject result]
+    ;; yes, this is exactly the logic MongoDB Java driver uses.
+    (> (count (str (.get result "err"))) 0))
+
 
   WriteResult
   (ok?
     [^WriteResult result]
-    (ok? (.getLastError result))))
-
+    (and (not (nil? result)) (ok? (.getLastError result))))
+  (has-error?
+    [^WriteResult result]
+    (has-error? (.getLastError result))))
