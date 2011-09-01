@@ -5,7 +5,7 @@
 
 
 ;;
-;; DBObject to Clojure
+;; Clojure to DBObject
 ;;
 
 (deftest convert-nil-to-dbobject
@@ -47,9 +47,18 @@
     (is (= '(1 "a" "b") (.get inner "list")))
     (is (= { "key" "value" } (.get inner "map")))))
 
+;; for cases when you want to pass in a DBObject, for example,
+;; to obtain _id that was generated. MK.
+(deftest convert-dbobject-to-dbobject
+  (let [input  (BasicDBObject.)
+        output (monger.convertion/to-db-object input)]
+    (is (= input output))))
+
+
+
 
 ;;
-;; Clojure to DBObject
+;; DBObject to Clojure
 ;;
 
 (deftest convert-nil-from-db-object

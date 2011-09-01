@@ -2,7 +2,7 @@
 
 (ns monger.test.collection
   (:import  [com.mongodb WriteResult WriteConcern DBCursor DBObject] [java.util Date])
-  (:require [monger core collection result util] [clojure stacktrace])
+  (:require [monger core collection result util convertion] [clojure stacktrace])
   (:use [clojure.test]))
 
 (monger.util/with-ns 'monger.core
@@ -22,13 +22,20 @@
     (is (monger.result/ok? (monger.collection/insert "people" doc)))
     (is (= 1 (monger.collection/count collection)))))
 
-
 (deftest insert-a-basic-document-without-id-and-with-explicit-write-concern
   (let [collection "people"
         doc        { :name "Joe", :age 30 }]
     (monger.collection/remove collection)
     (is (monger.result/ok? (monger.collection/insert "people" doc WriteConcern/SAFE)))
     (is (= 1 (monger.collection/count collection)))))
+
+(deftest insert-a-basic-db-boject-without-id-and-with-default-write-concern
+  (let [collection "people"
+        doc        (monger.convertion/to-db-object { :name "Joe", :age 30 })]
+    (monger.collection/remove collection)
+    (is (nil? (.get doc "_id")))
+    (monger.collection/insert "people" doc)
+    (is (not (nil? (.get doc "_id"))))))
 
 
 

@@ -22,7 +22,7 @@
 ;; THE SOFTWARE.
 
 (ns monger.convertion
-  (:import (com.mongodb DBObject BasicDBObject BasicDBList)
+  (:import (com.mongodb DBObject BasicDBObject BasicDBList DBCursor)
            (clojure.lang IPersistentMap Keyword)
            (java.util List Map)))
 
@@ -49,7 +49,10 @@
       o))
 
   List
-  (to-db-object [#^List input] (map to-db-object input)))
+  (to-db-object [#^List input] (map to-db-object input))
+
+  DBObject
+  (to-db-object [#^DBObject input] input))
 
 
 
@@ -83,7 +86,16 @@
     ;; subclass GridFSFile unhelpfully throws
     ;; UnsupportedOperationException
     (associate-pairs (for [key-set (.keySet input)] [key-set (.get input key-set)])
-                     keywordize)))
+                     keywordize))
+
+  ;; this idea needs to be tested out first, we will see how well
+  ;; it works. MK.
+  ;; DBCursor
+  ;; (from-db-object [^DBCursor input]
+  ;;   (if (empty? input)
+  ;;     []
+  ;;     (lazy-seq (seq input))))
+  )
 
 
 (defn- associate-pairs [pairs keywordize]
