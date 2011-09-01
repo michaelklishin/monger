@@ -29,3 +29,12 @@
         (is (not (monger.result/has-error? result-that-has-no-error1)))
         (is (not (monger.result/has-error? result-that-has-no-error2)))
         (is (monger.result/has-error?      result-that-has-error1))))
+
+
+(deftest test-updated-existing?
+  (let [input1 (doto (BasicDBObject.) (.put "updatedExisting" true))
+        input2 (doto (BasicDBObject.) (.put "updatedExisting" false))
+        input3 (BasicDBObject.)]
+        (is (monger.result/updated-existing?      input1))
+        (is (not (monger.result/updated-existing? input2)))
+        (is (not (monger.result/updated-existing? input3)))))

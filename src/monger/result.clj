@@ -8,7 +8,7 @@
 ;; You must not remove this notice, or any other, from this software.
 
 (ns monger.result
-  (:import (com.mongodb DBObject BasicDBObject WriteResult CommandResult)
+  (:import (com.mongodb DBObject WriteResult)
            (clojure.lang IPersistentMap))
   (:require [monger convertion]))
 
@@ -31,6 +31,10 @@
     [^DBObject result]
     ;; yes, this is exactly the logic MongoDB Java driver uses.
     (> (count (str (.get result "err"))) 0))
+  (updated-existing?
+    [^DBObject result]
+    (let [v (.get result "updatedExisting")]
+      (and v (Boolean/valueOf v))))
 
 
   WriteResult
@@ -39,4 +43,7 @@
     (and (not (nil? result)) (ok? (.getLastError result))))
   (has-error?
     [^WriteResult result]
-    (has-error? (.getLastError result))))
+    (has-error? (.getLastError result)))
+  (updated-existing?
+    [^WriteResult result]
+    (updated-existing? (.getLastError result))))

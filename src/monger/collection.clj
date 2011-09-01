@@ -9,7 +9,7 @@
 
 (ns monger.collection
   (:import (com.mongodb Mongo DB DBCollection WriteResult DBObject WriteConcern DBCursor) (java.util List Map))
-  (:require [monger core errors])
+  (:require [monger core result])
   (:use     [monger.convertion]))
 
 ;;

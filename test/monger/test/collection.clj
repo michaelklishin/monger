@@ -2,7 +2,7 @@
 
 (ns monger.test.collection
   (:import  [com.mongodb WriteResult WriteConcern DBCursor DBObject] [java.util Date])
-  (:require [monger core collection errors util] [clojure stacktrace])
+  (:require [monger core collection result util] [clojure stacktrace])
   (:use [clojure.test]))
 
 (monger.util/with-ns 'monger.core
@@ -19,7 +19,7 @@
   (let [collection "people"
         doc        { :name "Joe", :age 30 }]
     (monger.collection/remove collection)
-    (is (monger.errors/ok? (monger.collection/insert "people" doc)))
+    (is (monger.result/ok? (monger.collection/insert "people" doc)))
     (is (= 1 (monger.collection/count collection)))))
 
 
@@ -27,7 +27,7 @@
   (let [collection "people"
         doc        { :name "Joe", :age 30 }]
     (monger.collection/remove collection)
-    (is (monger.errors/ok? (monger.collection/insert "people" doc WriteConcern/SAFE)))
+    (is (monger.result/ok? (monger.collection/insert "people" doc WriteConcern/SAFE)))
     (is (= 1 (monger.collection/count collection)))))
 
 
@@ -40,14 +40,14 @@
   (let [collection "people"
         docs       [{ :name "Joe", :age 30 }, { :name "Paul", :age 27 }]]
     (monger.collection/remove collection)
-    (is (monger.errors/ok? (monger.collection/insert-batch "people" docs)))
+    (is (monger.result/ok? (monger.collection/insert-batch "people" docs)))
     (is (= 2 (monger.collection/count collection)))))
 
 (deftest insert-a-batch-of-basic-documents-without-ids-and-with-explicit-write-concern
   (let [collection "people"
         docs       [{ :name "Joe", :age 30 }, { :name "Paul", :age 27 }]]
     (monger.collection/remove collection)
-    (is (monger.errors/ok? (monger.collection/insert-batch "people" docs WriteConcern/NORMAL)))
+    (is (monger.result/ok? (monger.collection/insert-batch "people" docs WriteConcern/NORMAL)))
     (is (= 2 (monger.collection/count collection)))))
 
 
@@ -243,7 +243,7 @@
   (let [collection "people"
         document       { :name "Joe", :age 30 }]
     (monger.collection/remove collection)
-    (is (monger.errors/ok? (monger.collection/save "people" document)))
+    (is (monger.result/ok? (monger.collection/save "people" document)))
     (is (= 1 (monger.collection/count collection)))))
 
 
@@ -252,7 +252,7 @@
         doc-id            "people-1"
         document          { :_id doc-id, :name "Joe",   :age 30 }]
     (monger.collection/remove collection)
-    (is (monger.errors/ok? (monger.collection/insert "people" document)))
+    (is (monger.result/ok? (monger.collection/insert "people" document)))
     (is (= 1 (monger.collection/count collection)))
     (monger.collection/save collection { :_id doc-id, :name "Alan", :age 40 })
     (is (= 1 (monger.collection/count collection { :name "Alan", :age 40 })))))
@@ -265,8 +265,8 @@
         doc          { :created-at date, :data-store "MongoDB", :language "Clojure", :_id doc-id }
         modified-doc { :created-at date, :data-store "MongoDB", :language "Erlang",  :_id doc-id }]
     (monger.collection/remove collection)
-    (monger.collection/update collection { :language "Clojure" } doc :upsert true)
+    (is (not (monger.result/updated-existing? (monger.collection/update collection { :language "Clojure" } doc :upsert true))))
     (is (= 1 (monger.collection/count collection)))
-    (monger.collection/update collection { :language "Clojure" } modified-doc :multi false :upsert true)
+    (is (monger.result/updated-existing? (monger.collection/update collection { :language "Clojure" } modified-doc :multi false :upsert true)))
     (is (= 1 (monger.collection/count collection)))
     (is (= (modified-doc (monger.collection/find-by-id collection doc-id))))))
