@@ -1,7 +1,13 @@
 (ns monger.test.result
-  (:import (com.mongodb BasicDBObject WriteResult WriteConcern))
+  (:import (com.mongodb BasicDBObject WriteResult WriteConcern) (java.util Date))
   (:require [monger core collection convertion])
   (:use [clojure.test]))
+
+
+(monger.util/with-ns 'monger.core
+  (defonce ^:dynamic *mongodb-connection* (monger.core/connect))
+  (defonce ^:dynamic *mongodb-database*   (monger.core/get-db "monger-test")))
+
 
 
 ;;
@@ -31,10 +37,22 @@
         (is (monger.result/has-error?      result-that-has-error1))))
 
 
-(deftest test-updated-existing?
+(deftest test-updated-existing?-with-db-object
   (let [input1 (doto (BasicDBObject.) (.put "updatedExisting" true))
         input2 (doto (BasicDBObject.) (.put "updatedExisting" false))
         input3 (BasicDBObject.)]
         (is (monger.result/updated-existing?      input1))
         (is (not (monger.result/updated-existing? input2)))
         (is (not (monger.result/updated-existing? input3)))))
+
+(deftest test-updated-existing?-with-write-result
+  (monger.collection/remove "libraries")
+  (let [collection "libraries"
+        doc-id       (monger.util/random-uuid)
+        date         (Date.)
+        doc          { :created-at date, :data-store "MongoDB", :language "Clojure", :_id doc-id }
+        modified-doc { :created-at date, :data-store "MongoDB", :language "Erlang",  :_id doc-id }]
+    (is (not (monger.result/updated-existing? (monger.collection/update collection { :language "Clojure" } doc :upsert true))))
+    (is (monger.result/updated-existing? (monger.collection/update collection { :language "Clojure" }      doc :upsert true)))
+    (monger.result/updated-existing? (monger.collection/update collection { :language "Clojure" } modified-doc :multi false :upsert true))
+    (monger.collection/remove collection)))
