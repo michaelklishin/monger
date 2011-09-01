@@ -192,7 +192,7 @@
 (deftest find-multiple-partial-documents
   (let [collection "libraries"]
     (monger.collection/remove collection)
-        (monger.collection/insert-batch collection [{ :language "Clojure", :name "monger" }
+    (monger.collection/insert-batch collection [{ :language "Clojure", :name "monger" }
                                                 { :language "Clojure", :name "langohr" },
                                                 { :language "Clojure", :name "incanter" },
                                                 { :language "Scala",   :name "akka" }])
@@ -259,14 +259,15 @@
 
 
 (deftest upsert-a-document
+  (monger.collection/remove "libraries")
   (let [collection "libraries"
         doc-id       (monger.util/random-uuid)
         date         (Date.)
         doc          { :created-at date, :data-store "MongoDB", :language "Clojure", :_id doc-id }
         modified-doc { :created-at date, :data-store "MongoDB", :language "Erlang",  :_id doc-id }]
-    (monger.collection/remove collection)
     (is (not (monger.result/updated-existing? (monger.collection/update collection { :language "Clojure" } doc :upsert true))))
     (is (= 1 (monger.collection/count collection)))
     (is (monger.result/updated-existing? (monger.collection/update collection { :language "Clojure" } modified-doc :multi false :upsert true)))
     (is (= 1 (monger.collection/count collection)))
-    (is (= (modified-doc (monger.collection/find-by-id collection doc-id))))))
+    (is (= (modified-doc (monger.collection/find-by-id collection doc-id))))
+    (monger.collection/remove collection)))
