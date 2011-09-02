@@ -10,6 +10,37 @@
   (defonce ^:dynamic *mongodb-database*   (monger.core/get-db "monger-test")))
 
 
+;;
+;; fixture functions
+;;
+
+(defn purge-people-collection
+  [f]
+  (monger.collection/remove "people")
+  (f)
+  (monger.collection/remove "people"))
+
+(defn purge-docs-collection
+  [f]
+  (monger.collection/remove "docs")
+  (f)
+  (monger.collection/remove "docs"))
+
+(defn purge-things-collection
+  [f]
+  (monger.collection/remove "things")
+  (f)
+  (monger.collection/remove "things"))
+
+(defn purge-libraries-collection
+  [f]
+  (monger.collection/remove "libraries")
+  (f)
+  (monger.collection/remove "libraries"))
+
+
+(use-fixtures :each purge-people-collection purge-docs-collection purge-things-collection purge-libraries-collection)
+
 
 ;;
 ;; insert
@@ -18,21 +49,18 @@
 (deftest insert-a-basic-document-without-id-and-with-default-write-concern
   (let [collection "people"
         doc        { :name "Joe", :age 30 }]
-    (monger.collection/remove collection)
     (is (monger.result/ok? (monger.collection/insert "people" doc)))
     (is (= 1 (monger.collection/count collection)))))
 
 (deftest insert-a-basic-document-without-id-and-with-explicit-write-concern
   (let [collection "people"
         doc        { :name "Joe", :age 30 }]
-    (monger.collection/remove collection)
     (is (monger.result/ok? (monger.collection/insert "people" doc WriteConcern/SAFE)))
     (is (= 1 (monger.collection/count collection)))))
 
 (deftest insert-a-basic-db-object-without-id-and-with-default-write-concern
   (let [collection "people"
         doc        (monger.convertion/to-db-object { :name "Joe", :age 30 })]
-    (monger.collection/remove collection)
     (is (nil? (.get ^DBObject doc "_id")))
     (monger.collection/insert "people" doc)
     (is (not (nil? (.get ^DBObject doc "_id"))))))
@@ -46,14 +74,12 @@
 (deftest insert-a-batch-of-basic-documents-without-ids-and-with-default-write-concern
   (let [collection "people"
         docs       [{ :name "Joe", :age 30 }, { :name "Paul", :age 27 }]]
-    (monger.collection/remove collection)
     (is (monger.result/ok? (monger.collection/insert-batch "people" docs)))
     (is (= 2 (monger.collection/count collection)))))
 
 (deftest insert-a-batch-of-basic-documents-without-ids-and-with-explicit-write-concern
   (let [collection "people"
         docs       [{ :name "Joe", :age 30 }, { :name "Paul", :age 27 }]]
-    (monger.collection/remove collection)
     (is (monger.result/ok? (monger.collection/insert-batch "people" docs WriteConcern/NORMAL)))
     (is (= 2 (monger.collection/count collection)))))
 
@@ -66,7 +92,6 @@
 
 (deftest get-collection-size
   (let [collection "things"]
-    (monger.collection/remove collection)
     (is (= 0 (monger.collection/count collection)))
     (monger.collection/insert-batch collection [{ :language "Clojure", :name "langohr" },
                                                 { :language "Clojure", :name "monger" },
@@ -80,11 +105,10 @@
 
 (deftest remove-all-documents-from-collection
   (let [collection "libraries"]
-    (monger.collection/remove collection)
-    (monger.collection/insert collection { :language "Clojure", :name "monger" })
-    (monger.collection/insert collection { :language "Clojure", :name "langohr" })
-    (monger.collection/insert collection { :language "Clojure", :name "incanter" })
-    (monger.collection/insert collection { :language "Scala",   :name "akka" })
+    (monger.collection/insert-batch collection [{ :language "Clojure", :name "monger" }
+                                                { :language "Clojure", :name "langohr" }
+                                                { :language "Clojure", :name "incanter" }
+                                                { :language "Scala",   :name "akka" }])
     (is (= 4 (monger.collection/count collection)))
     (monger.collection/remove collection)
     (is (= 0 (monger.collection/count collection)))))
@@ -92,11 +116,10 @@
 
 (deftest remove-some-documents-from-collection
   (let [collection "libraries"]
-    (monger.collection/remove collection)
-    (monger.collection/insert collection { :language "Clojure", :name "monger" })
-    (monger.collection/insert collection { :language "Clojure", :name "langohr" })
-    (monger.collection/insert collection { :language "Clojure", :name "incanter" })
-    (monger.collection/insert collection { :language "Scala",   :name "akka" })
+    (monger.collection/insert-batch collection [{ :language "Clojure", :name "monger" }
+                                                { :language "Clojure", :name "langohr" }
+                                                { :language "Clojure", :name "incanter" }
+                                                { :language "Scala",   :name "akka" }])
     (is (= 4 (monger.collection/count collection)))
     (monger.collection/remove collection { :language "Clojure" })
     (is (= 1 (monger.collection/count collection)))))
@@ -109,7 +132,6 @@
 
 (deftest find-full-document-when-collection-is-empty
   (let [collection "docs"]
-    (monger.collection/remove collection)
     (def cursor (monger.collection/find collection))
     (is (instance? DBCursor cursor))))
 
@@ -120,12 +142,10 @@
 
 (deftest find-one-full-document-when-collection-is-empty
   (let [collection "docs"]
-    (monger.collection/remove collection)
     (is (nil? (monger.collection/find-one collection {})))))
 
 (deftest find-one-full-document-as-map-when-collection-is-empty
   (let [collection "docs"]
-    (monger.collection/remove collection)
     (is (nil? (monger.collection/find-one-as-map collection {})))))
 
 
@@ -133,7 +153,6 @@
   (let [collection "docs"
         doc-id     (monger.util/random-uuid)
         doc        { :data-store "MongoDB", :language "Clojure", :_id doc-id }]
-    (monger.collection/remove collection)
     (monger.collection/insert collection doc)
     (def #^DBObject found-one (monger.collection/find-one collection { :language "Clojure" }))
     (is (= (:_id doc) (.get ^DBObject found-one "_id")))
@@ -145,7 +164,6 @@
   (let [collection "docs"
         doc-id     (monger.util/random-uuid)
         doc        { :data-store "MongoDB", :language "Clojure", :_id doc-id }]
-    (monger.collection/remove collection)
     (monger.collection/insert collection doc)
     (is (= doc (monger.collection/find-one-as-map collection { :language "Clojure" })))))
 
@@ -156,7 +174,6 @@
         doc-id     (monger.util/random-uuid)
         doc        { :data-store "MongoDB", :language "Clojure", :_id doc-id }
         fields     [:language]]
-    (monger.collection/remove collection)
     (monger.collection/insert collection doc)
     (def #^DBObject loaded (monger.collection/find-one collection { :language "Clojure" } fields))
     (is (nil? (.get #^DBObject loaded "data-store")))
@@ -169,7 +186,6 @@
         doc-id     (monger.util/random-uuid)
         doc        { :data-store "MongoDB", :language "Clojure", :_id doc-id }
         fields     [:data-store]]
-    (monger.collection/remove collection)
     (monger.collection/insert collection doc)
     (is (= { :data-store "MongoDB", :_id doc-id } (monger.collection/find-one-as-map collection { :language "Clojure" } fields true)))))
 
@@ -182,14 +198,12 @@
 (deftest find-full-document-by-id-when-that-document-does-not-exist
   (let [collection "libraries"
         doc-id     (monger.util/random-uuid)]
-    (monger.collection/remove collection)
     (is (nil? (monger.collection/find-by-id collection doc-id)))))
 
 
 (deftest find-full-document-by-id-as-map-when-that-document-does-not-exist
   (let [collection "libraries"
         doc-id     (monger.util/random-uuid)]
-    (monger.collection/remove collection)
     (is (nil? (monger.collection/find-map-by-id collection doc-id)))))
 
 
@@ -197,7 +211,6 @@
   (let [collection "libraries"
         doc-id     (monger.util/random-uuid)
         doc        { :data-store "MongoDB", :language "Clojure", :_id doc-id }]
-    (monger.collection/remove collection)
     (monger.collection/insert collection doc)
     (is (= (doc (monger.collection/find-by-id collection doc-id))))))
 
@@ -205,7 +218,6 @@
   (let [collection "libraries"
         doc-id     (monger.util/random-uuid)
         doc        { :data-store "MongoDB", :language "Clojure", :_id doc-id }]
-    (monger.collection/remove collection)
     (monger.collection/insert collection doc)
     (is (= (doc (monger.collection/find-map-by-id collection doc-id))))))
 
@@ -214,7 +226,6 @@
   (let [collection "libraries"
         doc-id     (monger.util/random-uuid)
         doc        { :data-store "MongoDB", :language "Clojure", :_id doc-id }]
-    (monger.collection/remove collection)
     (monger.collection/insert collection doc)
     (is (= ({ :language "Clojure" } (monger.collection/find-by-id collection doc-id [ :language ]))))))
 
@@ -223,7 +234,6 @@
   (let [collection "libraries"
         doc-id     (monger.util/random-uuid)
         doc        { :data-store "MongoDB", :language "Clojure", :_id doc-id }]
-    (monger.collection/remove collection)
     (monger.collection/insert collection doc)
     (is (= ({ :language "Clojure" } (monger.collection/find-map-by-id collection doc-id [ :language ]))))))
 
@@ -234,13 +244,11 @@
 
 (deftest find-multiple-documents-when-collection-is-empty
   (let [collection "libraries"]
-    (monger.collection/remove collection)
     (is (empty? (monger.collection/find collection { :language "Scala" })))))
 
 
 (deftest find-multiple-documents
   (let [collection "libraries"]
-    (monger.collection/remove collection)
     (monger.collection/insert-batch collection [{ :language "Clojure", :name "monger" }
                                                 { :language "Clojure", :name "langohr" },
                                                 { :language "Clojure", :name "incanter" },
@@ -252,7 +260,6 @@
 
 (deftest find-multiple-partial-documents
   (let [collection "libraries"]
-    (monger.collection/remove collection)
     (monger.collection/insert-batch collection [{ :language "Clojure", :name "monger" }
                                                 { :language "Clojure", :name "langohr" },
                                                 { :language "Clojure", :name "incanter" },
@@ -277,7 +284,6 @@
         date         (Date.)
         doc          { :created-at date, :data-store "MongoDB", :language "Clojure", :_id doc-id }
         modified-doc { :created-at date, :data-store "MongoDB", :language "Erlang",  :_id doc-id }]
-    (monger.collection/remove collection)
     (monger.collection/insert collection doc)
     (is (= (doc (monger.collection/find-by-id collection doc-id))))
     (monger.collection/update collection { :_id doc-id } { :language "Erlang" })
@@ -286,7 +292,6 @@
 
 (deftest update-multiple-documents
   (let [collection "libraries"]
-    (monger.collection/remove collection)
     (monger.collection/insert collection { :language "Clojure", :name "monger" })
     (monger.collection/insert collection { :language "Clojure", :name "langohr" })
     (monger.collection/insert collection { :language "Clojure", :name "incanter" })
@@ -303,7 +308,6 @@
 (deftest save-a-new-document
   (let [collection "people"
         document       { :name "Joe", :age 30 }]
-    (monger.collection/remove collection)
     (is (monger.result/ok? (monger.collection/save "people" document)))
     (is (= 1 (monger.collection/count collection)))))
 
@@ -311,7 +315,6 @@
 (deftest save-a-new-basic-db-object
   (let [collection "people"
         doc        (monger.convertion/to-db-object { :name "Joe", :age 30 })]
-    (monger.collection/remove collection)
     (is (nil? (.get ^DBObject doc "_id")))
     (monger.collection/save "people" doc)
     (is (not (nil? (.get ^DBObject doc "_id"))))))
@@ -322,7 +325,6 @@
   (let [collection "people"
         doc-id            "people-1"
         document          { :_id doc-id, :name "Joe",   :age 30 }]
-    (monger.collection/remove collection)
     (is (monger.result/ok? (monger.collection/insert "people" document)))
     (is (= 1 (monger.collection/count collection)))
     (monger.collection/save collection { :_id doc-id, :name "Alan", :age 40 })
@@ -330,7 +332,6 @@
 
 
 (deftest upsert-a-document
-  (monger.collection/remove "libraries")
   (let [collection "libraries"
         doc-id       (monger.util/random-uuid)
         date         (Date.)
