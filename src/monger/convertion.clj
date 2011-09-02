@@ -95,7 +95,7 @@
   ;;   (if (empty? input)
   ;;     []
   ;;     (lazy-seq (seq input))))
-  )
+    )
 
 
 (defn- associate-pairs [pairs keywordize]
