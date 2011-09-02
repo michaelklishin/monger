@@ -91,6 +91,14 @@
            map-of-fields (fields-to-db-object fields)]
        (.findOne #^DBCollection coll #^DBObject (to-db-object { :_id id }) #^DBObject (to-db-object map-of-fields)))))
 
+(defn ^IPersistentMap find-map-by-id
+  ([^String collection, ^String id]
+     (from-db-object ^DBObject (find-by-id collection id) true))
+  ([^String collection, ^String id, keywordize]
+     (from-db-object ^DBObject (find-by-id collection id) keywordize))
+  ([^String collection, ^String id, ^List fields, keywordize]
+     (from-db-object ^DBObject (find-by-id collection id fields) keywordize)))
+
 
 ;;
 ;; monger.collection/group

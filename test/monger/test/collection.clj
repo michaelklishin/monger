@@ -179,14 +179,21 @@
 ;; find-by-id
 ;;
 
-(deftest find-full-document-by-id-when-document-does-not-exist
+(deftest find-full-document-by-id-when-that-document-does-not-exist
   (let [collection "libraries"
         doc-id     (monger.util/random-uuid)]
     (monger.collection/remove collection)
     (is (nil? (monger.collection/find-by-id collection doc-id)))))
 
 
-(deftest find-full-document-by-id-when-document-exists
+(deftest find-full-document-by-id-as-map-when-that-document-does-not-exist
+  (let [collection "libraries"
+        doc-id     (monger.util/random-uuid)]
+    (monger.collection/remove collection)
+    (is (nil? (monger.collection/find-map-by-id collection doc-id)))))
+
+
+(deftest find-full-document-by-id-when-document-does-exist
   (let [collection "libraries"
         doc-id     (monger.util/random-uuid)
         doc        { :data-store "MongoDB", :language "Clojure", :_id doc-id }]
@@ -194,7 +201,16 @@
     (monger.collection/insert collection doc)
     (is (= (doc (monger.collection/find-by-id collection doc-id))))))
 
-(deftest find-partial-document-by-id-when-document-exists
+(deftest find-full-document-map-by-id-when-document-does-exist
+  (let [collection "libraries"
+        doc-id     (monger.util/random-uuid)
+        doc        { :data-store "MongoDB", :language "Clojure", :_id doc-id }]
+    (monger.collection/remove collection)
+    (monger.collection/insert collection doc)
+    (is (= (doc (monger.collection/find-map-by-id collection doc-id))))))
+
+
+(deftest find-partial-document-by-id-when-document-does-exist
   (let [collection "libraries"
         doc-id     (monger.util/random-uuid)
         doc        { :data-store "MongoDB", :language "Clojure", :_id doc-id }]
@@ -202,6 +218,19 @@
     (monger.collection/insert collection doc)
     (is (= ({ :language "Clojure" } (monger.collection/find-by-id collection doc-id [ :language ]))))))
 
+
+(deftest find-partial-document-as-map-by-id-when-document-does-exist
+  (let [collection "libraries"
+        doc-id     (monger.util/random-uuid)
+        doc        { :data-store "MongoDB", :language "Clojure", :_id doc-id }]
+    (monger.collection/remove collection)
+    (monger.collection/insert collection doc)
+    (is (= ({ :language "Clojure" } (monger.collection/find-map-by-id collection doc-id [ :language ]))))))
+
+
+;;
+;; monger.collection/find
+;;
 
 (deftest find-multiple-documents-when-collection-is-empty
   (let [collection "libraries"]
