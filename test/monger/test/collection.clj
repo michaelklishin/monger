@@ -33,9 +33,9 @@
   (let [collection "people"
         doc        (monger.convertion/to-db-object { :name "Joe", :age 30 })]
     (monger.collection/remove collection)
-    (is (nil? (.get doc "_id")))
+    (is (nil? (.get ^DBObject doc "_id")))
     (monger.collection/insert "people" doc)
-    (is (not (nil? (.get doc "_id"))))))
+    (is (not (nil? (.get ^DBObject doc "_id"))))))
 
 
 
@@ -123,6 +123,12 @@
     (monger.collection/remove collection)
     (is (nil? (monger.collection/find-one collection {})))))
 
+(deftest find-one-full-document-as-map-when-collection-is-empty
+  (let [collection "docs"]
+    (monger.collection/remove collection)
+    (is (nil? (monger.collection/find-one-as-map collection {})))))
+
+
 (deftest find-one-full-document-when-collection-has-matches
   (let [collection "docs"
         doc-id     (monger.util/random-uuid)
@@ -130,8 +136,19 @@
     (monger.collection/remove collection)
     (monger.collection/insert collection doc)
     (def #^DBObject found-one (monger.collection/find-one collection { :language "Clojure" }))
-    (is (= (:_id doc) (.get found-one "_id")))
+    (is (= (:_id doc) (.get ^DBObject found-one "_id")))
+    (is (= (monger.convertion/from-db-object found-one true) doc))
     (is (= (monger.convertion/to-db-object doc) found-one))))
+
+
+(deftest find-one-full-document-as-map-when-collection-has-matches
+  (let [collection "docs"
+        doc-id     (monger.util/random-uuid)
+        doc        { :data-store "MongoDB", :language "Clojure", :_id doc-id }]
+    (monger.collection/remove collection)
+    (monger.collection/insert collection doc)
+    (is (= doc (monger.collection/find-one-as-map collection { :language "Clojure" })))))
+
 
 
 (deftest find-one-partial-document-when-collection-has-matches
@@ -142,9 +159,19 @@
     (monger.collection/remove collection)
     (monger.collection/insert collection doc)
     (def #^DBObject loaded (monger.collection/find-one collection { :language "Clojure" } fields))
-    (is (nil? (.get #^DBObject loaded "data-stire")))
+    (is (nil? (.get #^DBObject loaded "data-store")))
     (is (= doc-id (.get #^DBObject loaded "_id")))
     (is (= "Clojure" (.get #^DBObject loaded "language")))))
+
+
+(deftest find-one-partial-document-as-map-when-collection-has-matches
+  (let [collection "docs"
+        doc-id     (monger.util/random-uuid)
+        doc        { :data-store "MongoDB", :language "Clojure", :_id doc-id }
+        fields     [:data-store]]
+    (monger.collection/remove collection)
+    (monger.collection/insert collection doc)
+    (is (= { :data-store "MongoDB", :_id doc-id } (monger.collection/find-one-as-map collection { :language "Clojure" } fields true)))))
 
 
 
@@ -256,9 +283,9 @@
   (let [collection "people"
         doc        (monger.convertion/to-db-object { :name "Joe", :age 30 })]
     (monger.collection/remove collection)
-    (is (nil? (.get doc "_id")))
+    (is (nil? (.get ^DBObject doc "_id")))
     (monger.collection/save "people" doc)
-    (is (not (nil? (.get doc "_id"))))))
+    (is (not (nil? (.get ^DBObject doc "_id"))))))
 
 
 
