@@ -8,7 +8,7 @@
 ;; You must not remove this notice, or any other, from this software.
 
 (ns monger.collection
-  (:import (com.mongodb Mongo DB DBCollection WriteResult DBObject WriteConcern DBCursor) (java.util List Map) (clojure.lang IPersistentMap))
+  (:import (com.mongodb Mongo DB DBCollection WriteResult DBObject WriteConcern DBCursor) (java.util List Map) (clojure.lang IPersistentMap ISeq))
   (:require [monger core result])
   (:use     [monger.convertion]))
 
@@ -54,6 +54,13 @@
            map-of-fields (fields-to-db-object fields)]
        (.find #^DBCollection coll #^DBObject (to-db-object ref) #^DBObject (to-db-object map-of-fields)))))
 
+(defn ^ISeq find-maps
+  ([^String collection]
+     (map (fn [x] (from-db-object x true)) (seq (find collection))))
+  ([^String collection, ^Map ref]
+     (map (fn [x] (from-db-object x true)) (seq (find collection ref))))
+  ([^String collection, ^Map ref, ^List fields]
+     (map (fn [x] (from-db-object x true)) (seq (find collection ref fields)))))
 
 ;;
 ;; monger.collection/find-one

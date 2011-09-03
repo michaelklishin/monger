@@ -246,6 +246,10 @@
   (let [collection "libraries"]
     (is (empty? (monger.collection/find collection { :language "Scala" })))))
 
+(deftest find-multiple-maps-when-collection-is-empty
+  (let [collection "libraries"]
+    (is (empty? (monger.collection/find-maps collection { :language "Scala" })))))
+
 
 (deftest find-multiple-documents
   (let [collection "libraries"]
@@ -256,6 +260,17 @@
     (is (= 1 (monger.core/count (monger.collection/find collection { :language "Scala"   }))))
     (is (= 3 (.count (monger.collection/find collection { :language "Clojure" }))))
     (is (empty? (monger.collection/find collection      { :language "Java"    })))))
+
+(deftest find-multiple-maps
+  (let [collection "libraries"]
+    (monger.collection/insert-batch collection [{ :language "Clojure", :name "monger" }
+                                                { :language "Clojure", :name "langohr" },
+                                                { :language "Clojure", :name "incanter" },
+                                                { :language "Scala",   :name "akka" }])
+    (is (= 1 (clojure.core/count (monger.collection/find-maps collection { :language "Scala" }))))
+    (is (= 3 (.count (monger.collection/find-maps collection { :language "Clojure" }))))
+    (is (empty? (monger.collection/find-maps collection      { :language "Java"    })))))
+
 
 
 (deftest find-multiple-partial-documents
