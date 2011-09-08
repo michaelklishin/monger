@@ -6,6 +6,13 @@ Monger is an experimental idiomatic Clojure wrapper around MongoDB Java driver
 
 TBD
 
+## Samples
+
+To run sample, install lein-exec (https://github.com/kumarshantanu/lein-exec) and execute:
+
+  lein exec examples/basic_operations.clj
+
+
 ## License
 
 Copyright (C) 2011 Orceo GmbH
