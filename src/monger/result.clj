@@ -33,7 +33,7 @@
     (> (count (str (.get result "err"))) 0))
   (updated-existing?
     [^DBObject result]
-    (let [v (.get result "updatedExisting")]
+    (let [v ^Boolean (.get result "updatedExisting")]
       (and v (Boolean/valueOf v))))
 
 
