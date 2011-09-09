@@ -105,7 +105,10 @@
   (let [did    "b38b357f5014a3250d813a16376ca2ff4837e8e1"
         nested (doto (BasicDBObject.)
                  (.put "int" 101)
-                 (.put "dblist" (doto (BasicDBList.) (.put "0" 0) (.put "1" 1))) (.put "list" (ArrayList. ["red" "green" "blue"])))
+                 (.put "dblist" (doto (BasicDBList.)
+                                  (.put "0" 0)
+                                  (.put "1" 1)))
+                 (.put "list" (ArrayList. ["red" "green" "blue"])))
         input (doto (BasicDBObject.)
                 (.put "_id" did)
                 (.put "nested"  nested))
