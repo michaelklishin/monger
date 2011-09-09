@@ -8,8 +8,8 @@
 ;; You must not remove this notice, or any other, from this software.
 
 (ns monger.core
-  (:import (com.mongodb Mongo DB WriteConcern))
-  )
+  (:refer-clojure :exclude [count])
+  (:import (com.mongodb Mongo DB WriteConcern)))
 
 ;;
 ;; Defaults

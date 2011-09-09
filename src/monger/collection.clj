@@ -8,6 +8,7 @@
 ;; You must not remove this notice, or any other, from this software.
 
 (ns monger.collection
+  (:refer-clojure :exclude [find remove count])
   (:import (com.mongodb Mongo DB DBCollection WriteResult DBObject WriteConcern DBCursor) (java.util List Map) (clojure.lang IPersistentMap ISeq))
   (:require [monger core result])
   (:use     [monger.convertion]))
