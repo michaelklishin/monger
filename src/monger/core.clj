@@ -7,10 +7,14 @@
 ;; the terms of this license.
 ;; You must not remove this notice, or any other, from this software.
 
-(ns monger.core
+(ns ^{:author "Michael S. Klishin"
+      :doc "Thin idiomatic wrapper around MongoDB Java client. monger.core includes
+       fundamental functions that work with connections & databases. Most of functionality
+       is in the monger.collection namespace."}
+    monger.core
   (:refer-clojure :exclude [count])
   (:use [monger.convertion])
-  (:import (com.mongodb Mongo DB WriteConcern DBObject)
+  (:import (com.mongodb Mongo DB WriteConcern DBObject DBCursor)
            (java.util Map)))
 
 ;;
@@ -30,14 +34,27 @@
 ;;
 
 (defn ^Mongo connect
-  "Connects to MongoDB"
+  "Connects to MongoDB. When used without arguments, connects to *mongodb-host* and
+   *mongodb-test*.
+
+
+   EXAMPLES
+
+       (monger.core/connect)
+       (monger.core/connect { :host \"db3.intranet.local\", :port 27787 })
+   "
   ([]
      (Mongo.))
   ([{ :keys [host port] :or { host *mongodb-host*, port *mongodb-port* }}]
-     (Mongo. #^String host #^Long port)))
+     (Mongo. ^String host ^Long port)))
 
 (defn ^DB get-db
-  "Get database reference by name"
+  "Get database reference by name.
+
+   EXAMPLES
+
+       (monger.core/get-db \"myapp_production\")
+       (monger.core/get-db connection \"myapp_production\")"
   ([^String name]
      (.getDB *mongodb-connection* name))
   ([^Mongo connection, ^String name]
@@ -49,7 +66,7 @@
   (count [this] "Returns size of the object"))
 
 (extend-protocol Countable
-  com.mongodb.DBCursor
+  DBCursor
   (count [^com.mongodb.DBCursor this]
     (.count this)))
 
