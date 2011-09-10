@@ -146,7 +146,6 @@
        (.save coll document write-concern))))
 
 
-;; monger.collection/update-multi
 ;; monger.collection/remove
 
 (defn ^WriteResult remove
