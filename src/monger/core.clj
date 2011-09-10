@@ -9,7 +9,9 @@
 
 (ns monger.core
   (:refer-clojure :exclude [count])
-  (:import (com.mongodb Mongo DB WriteConcern)))
+  (:use [monger.convertion])
+  (:import (com.mongodb Mongo DB WriteConcern DBObject)
+           (java.util Map)))
 
 ;;
 ;; Defaults
@@ -50,3 +52,8 @@
   com.mongodb.DBCursor
   (count [^com.mongodb.DBCursor this]
     (.count this)))
+
+
+(defn command
+  [^Map cmd]
+  (.command ^DB *mongodb-database* ^DBObject (to-db-object cmd)))

@@ -1,7 +1,13 @@
 (ns monger.test.core
-  (:require [monger.core])
+  (:require [monger core collection util])
   (:import (com.mongodb Mongo DB))
   (:use [clojure.test]))
+
+
+(monger.util/with-ns 'monger.core
+  (defonce ^:dynamic *mongodb-connection* (monger.core/connect))
+  (defonce ^:dynamic *mongodb-database*   (monger.core/get-db "monger-test")))
+
 
 (deftest connect-to-mongo-with-default-host-and-port
   (let [connection (monger.core/connect)]
@@ -27,3 +33,7 @@
 ;;   (let [connection (monger.core/connect)
 ;;         db         (monger.core/get-db connection "monger-test" "monger" "test_password")]
 ;;     (is (instance? com.mongodb.DB db))))
+
+(deftest issuing-a-profiling-command
+  (let [collection "things"]
+    (monger.core/command { :profile 1 })))
