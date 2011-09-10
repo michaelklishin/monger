@@ -1,8 +1,10 @@
 (set! *warn-on-reflection* true)
 
 (ns monger.test.collection
-  (:import  [com.mongodb WriteResult WriteConcern DBCursor DBObject] [java.util Date])
-  (:require [monger core collection result util convertion] [clojure stacktrace])
+  (:import  [com.mongodb WriteResult WriteConcern DBCursor DBObject CommandResult$CommandFailure]
+            [java.util Date])
+  (:require [monger core collection result util convertion]
+            [clojure stacktrace])
   (:use [clojure.test]))
 
 (monger.util/with-ns 'monger.core
@@ -239,7 +241,7 @@
 
 
 ;;
-;; monger.collection/find
+;; find
 ;;
 
 (deftest find-multiple-documents-when-collection-is-empty
@@ -358,3 +360,25 @@
     (is (= 1 (monger.collection/count collection)))
     (is (= (modified-doc (monger.collection/find-by-id collection doc-id))))
     (monger.collection/remove collection)))
+
+
+;;
+;; indexes
+;;
+
+(deftest index-operations
+  (let [collection "libraries"]
+    (monger.collection/drop-indexes collection)
+    (is (= "_id_"
+           (:name (first (monger.collection/indexes-on collection)))))
+    (is (nil? (second (monger.collection/indexes-on collection))))
+    (monger.collection/create-index collection { "language" 1 })
+    (is (= "language_1"
+           (:name (second (monger.collection/indexes-on collection)))))
+    (monger.collection/drop-index collection "language_1")
+    (is (nil? (second (monger.collection/indexes-on collection))))
+    (monger.collection/ensure-index collection { "language" 1 })
+    (is (= "language_1"
+           (:name (second (monger.collection/indexes-on collection)))))
+    (monger.collection/ensure-index collection { "language" 1 })))
+

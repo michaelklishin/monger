@@ -157,9 +157,53 @@
      (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
        (.remove coll (to-db-object conditions)))))
 
-;; monger.collection/ensure-index
-;; monger.collection/drop-index
 
+
+;;
+;; monger.collection/create-index
+;;
+
+(defn create-index
+  [^String collection, ^Map keys]
+  (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
+    (.createIndex coll (to-db-object keys))))
+
+
+;;
+;; monger.collection/ensure-index
+;;
+
+(defn ensure-index
+  ([^String collection, ^Map keys]
+     (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
+       (.ensureIndex coll (to-db-object keys))))
+  ([^String collection, ^Map keys, ^String name]
+     (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
+       (.ensureIndex coll (to-db-object keys) name))))
+
+
+;;
+;; monger.collection/indexes-on
+;;
+
+(defn indexes-on
+  [^String collection]
+  (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
+    (from-db-object (.getIndexInfo coll) true)))
+
+
+;;
+;; monger.collection/drop-index
+;;
+
+(defn drop-index
+  [^String collection, ^String name]
+  (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
+    (.dropIndex coll name)))
+
+(defn drop-indexes
+  [^String collection]
+  (.dropIndexes ^DBCollection (.getCollection monger.core/*mongodb-database* collection)))
 
 
 ;;
