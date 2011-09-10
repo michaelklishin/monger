@@ -205,9 +205,18 @@
   (.dropIndexes ^DBCollection (.getCollection monger.core/*mongodb-database* collection)))
 
 
+;;
+;; monger.collection/exists?, monger.collection/create, monger.collection/drop
+;;
+
+
 (defn exists?
   [^String collection]
   (.collectionExists monger.core/*mongodb-database* collection))
+
+(defn create
+  [^String collection, ^Map options]
+  (.createCollection monger.core/*mongodb-database* collection (to-db-object options)))
 
 (defn drop
   [^String collection]

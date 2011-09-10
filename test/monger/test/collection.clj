@@ -384,7 +384,7 @@
 
 
 ;;
-;; exists?, drop
+;; exists?, drop, create
 ;;
 
 (deftest checking-for-collection-existence-when-it-does-not-exist
@@ -397,4 +397,10 @@
     (monger.collection/drop collection)
     (monger.collection/insert-batch collection [{ :name "widget1" }
                                                 { :name "widget2" }])
-    (is (monger.collection/exists? collection))))
+    (is (monger.collection/exists? collection))
+    (monger.collection/drop collection)
+    (is (false? (monger.collection/exists? collection)))
+    (monger.collection/create "widgets" { :capped true :max 100 })
+    (is (monger.collection/exists? collection))
+    (monger.collection/drop collection)
+    ))
