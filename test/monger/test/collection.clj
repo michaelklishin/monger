@@ -382,3 +382,19 @@
            (:name (second (monger.collection/indexes-on collection)))))
     (monger.collection/ensure-index collection { "language" 1 })))
 
+
+;;
+;; exists?, drop
+;;
+
+(deftest checking-for-collection-existence-when-it-does-not-exist
+  (let [collection "widgets"]
+    (monger.collection/drop collection)
+    (is (false? (monger.collection/exists? collection)))))
+
+(deftest checking-for-collection-existence-when-it-does-exist
+  (let [collection "widgets"]
+    (monger.collection/drop collection)
+    (monger.collection/insert-batch collection [{ :name "widget1" }
+                                                { :name "widget2" }])
+    (is (monger.collection/exists? collection))))

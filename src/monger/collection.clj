@@ -8,7 +8,7 @@
 ;; You must not remove this notice, or any other, from this software.
 
 (ns monger.collection
-  (:refer-clojure :exclude [find remove count])
+  (:refer-clojure :exclude [find remove count drop])
   (:import (com.mongodb Mongo DB DBCollection WriteResult DBObject WriteConcern DBCursor) (java.util List Map) (clojure.lang IPersistentMap ISeq))
   (:require [monger core result])
   (:use     [monger.convertion]))
@@ -174,11 +174,11 @@
 
 (defn ensure-index
   ([^String collection, ^Map keys]
-     (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
-       (.ensureIndex coll (to-db-object keys))))
+     (let [coll ^DBCollection (.getCollection monger.core/*mongodb-database* collection)]
+       (.ensureIndex ^DBCollection coll ^DBObject (to-db-object keys))))
   ([^String collection, ^Map keys, ^String name]
-     (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
-       (.ensureIndex coll (to-db-object keys) name))))
+     (let [coll ^DBCollection (.getCollection monger.core/*mongodb-database* collection)]
+       (.ensureIndex coll ^DBObject (to-db-object keys) ^String name))))
 
 
 ;;
@@ -203,6 +203,16 @@
 (defn drop-indexes
   [^String collection]
   (.dropIndexes ^DBCollection (.getCollection monger.core/*mongodb-database* collection)))
+
+
+(defn exists?
+  [^String collection]
+  (.collectionExists monger.core/*mongodb-database* collection))
+
+(defn drop
+  [^String collection]
+  (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
+    (.drop coll)))
 
 
 ;;
