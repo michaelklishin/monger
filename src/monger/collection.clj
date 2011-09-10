@@ -206,7 +206,7 @@
 
 
 ;;
-;; monger.collection/exists?, monger.collection/create, monger.collection/drop
+;; monger.collection/exists?, /create, /drop, /rename
 ;;
 
 
@@ -223,6 +223,13 @@
   (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
     (.drop coll)))
 
+(defn rename
+  ([^String from, ^String to]
+     (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* from)]
+       (.rename coll to)))
+  ([^String from, ^String to, ^Boolean drop-target]
+     (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* from)]
+       (.rename coll to drop-target))))
 
 ;;
 ;; Implementation
