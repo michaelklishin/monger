@@ -130,6 +130,17 @@
 ;; monger.collection/update
 
 (defn ^WriteResult update
+  "Please note that update is potentially destructive operation. It will update your document with the given set
+  emptying the fields not mentioned in (^Map document). In order to only change certain fields, please use
+  \"$set\", for example:
+
+      (monger.collection/update \"people\" { :first_name \"Raul\" } { \"$set\" { :first_name \"Paul\" } })
+
+  You can use all the Mongodb Modifier Operations here, as well:
+
+    (monger.collection/update \"people\" { :first_name \"Paul\" } { \"$set\" { :index 1 } })
+    (monger.collection/update \"people\" { :first_name \"Paul\" } { \"$inc\" { :index 5 } })"
+
   [^String collection, ^Map conditions, ^Map document, & { :keys [upsert multi write-concern] :or { upsert false, multi false, write-concern monger.core/*mongodb-write-concern* } }]
   (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
     (.update coll (to-db-object conditions) (to-db-object document) upsert multi write-concern)))
