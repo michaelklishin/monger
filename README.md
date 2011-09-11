@@ -18,6 +18,6 @@ To run code examples, install [lein-exec](https://github.com/kumarshantanu/lein-
 
 ## License
 
-Copyright (C) 2011 Orceo GmbH
+Copyright (C) 2011 Michael S. Klishin
 
 Distributed under the Eclipse Public License, the same as Clojure.
