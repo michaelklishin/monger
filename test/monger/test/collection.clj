@@ -16,30 +16,27 @@
 ;; fixture functions
 ;;
 
+(defn purge-collection
+  [collection-name, f]
+  (monger.collection/remove collection-name)
+  (f)
+  (monger.collection/remove collection-name))
+
 (defn purge-people-collection
   [f]
-  (monger.collection/remove "people")
-  (f)
-  (monger.collection/remove "people"))
+  (purge-collection "people" f))
 
 (defn purge-docs-collection
   [f]
-  (monger.collection/remove "docs")
-  (f)
-  (monger.collection/remove "docs"))
+  (purge-collection "docs" f))
 
 (defn purge-things-collection
   [f]
-  (monger.collection/remove "things")
-  (f)
-  (monger.collection/remove "things"))
+  (purge-collection "things" f))
 
 (defn purge-libraries-collection
   [f]
-  (monger.collection/remove "libraries")
-  (f)
-  (monger.collection/remove "libraries"))
-
+  (purge-collection "libraries" f))
 
 (use-fixtures :each purge-people-collection purge-docs-collection purge-things-collection purge-libraries-collection)
 
@@ -95,9 +92,9 @@
 (deftest get-collection-size
   (let [collection "things"]
     (is (= 0 (monger.collection/count collection)))
-    (monger.collection/insert-batch collection [{ :language "Clojure", :name "langohr" },
-                                                { :language "Clojure", :name "monger" },
-                                                { :language "Clojure", :name "incanter" },
+    (monger.collection/insert-batch collection [{ :language "Clojure", :name "langohr" }
+                                                { :language "Clojure", :name "monger" }
+                                                { :language "Clojure", :name "incanter" }
                                                 { :language "Scala",   :name "akka" }] )
     (is (= 4 (monger.collection/count collection)))
     (is (= 3 (monger.collection/count collection { :language "Clojure" })))
@@ -256,8 +253,8 @@
 (deftest find-multiple-documents
   (let [collection "libraries"]
     (monger.collection/insert-batch collection [{ :language "Clojure", :name "monger" }
-                                                { :language "Clojure", :name "langohr" },
-                                                { :language "Clojure", :name "incanter" },
+                                                { :language "Clojure", :name "langohr" }
+                                                { :language "Clojure", :name "incanter" }
                                                 { :language "Scala",   :name "akka" }])
     (is (= 1 (monger.core/count (monger.collection/find collection { :language "Scala"   }))))
     (is (= 3 (.count (monger.collection/find collection { :language "Clojure" }))))
@@ -266,8 +263,8 @@
 (deftest find-multiple-maps
   (let [collection "libraries"]
     (monger.collection/insert-batch collection [{ :language "Clojure", :name "monger" }
-                                                { :language "Clojure", :name "langohr" },
-                                                { :language "Clojure", :name "incanter" },
+                                                { :language "Clojure", :name "langohr" }
+                                                { :language "Clojure", :name "incanter" }
                                                 { :language "Scala",   :name "akka" }])
     (is (= 1 (clojure.core/count (monger.collection/find-maps collection { :language "Scala" }))))
     (is (= 3 (.count (monger.collection/find-maps collection { :language "Clojure" }))))
@@ -278,8 +275,8 @@
 (deftest find-multiple-partial-documents
   (let [collection "libraries"]
     (monger.collection/insert-batch collection [{ :language "Clojure", :name "monger" }
-                                                { :language "Clojure", :name "langohr" },
-                                                { :language "Clojure", :name "incanter" },
+                                                { :language "Clojure", :name "langohr" }
+                                                { :language "Clojure", :name "incanter" }
                                                 { :language "Scala",   :name "akka" }])
     (let [scala-libs   (monger.collection/find collection { :language "Scala" } [:name])
           clojure-libs (monger.collection/find collection { :language "Clojure"} [:language])]
