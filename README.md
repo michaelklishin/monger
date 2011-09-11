@@ -1,19 +1,23 @@
-# What is Monger
+# Monger
 
-Monger is an experimental idiomatic Clojure wrapper around MongoDB Java driver
+Monger is an experimental idiomatic Clojure wrapper around MongoDB Java driver.
 
 
 ## Usage
 
-TBD
+Since these are very early days of the library, it is fair to say that it is *completely unusable* to anyone
+other than the author.
 
 
+## This is a Work In Progress
 
-## Code examples
+Monger is very much a work in progress and right now, there is nothing to
+see here, really.
 
-To run code examples, install [lein-exec](https://github.com/kumarshantanu/lein-exec) plugin and run:
 
-    lein exec examples/basic_operations.clj
+## Supported Clojure versions
+
+Monger is built from the ground up for Clojure 1.3 and up.
 
 
 ## License
