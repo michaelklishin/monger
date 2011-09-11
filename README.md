@@ -15,6 +15,15 @@ Monger is very much a work in progress and right now, there is nothing to
 see here, really.
 
 
+## Continuous Integration
+
+[![Continuous Integration status](https://secure.travis-ci.org/michaelklishin/monger.png)](http://travis-ci.org/michaelklishin/monger)
+
+
+CI is hosted by [travis-ci.org](http://travis-ci.org)
+
+
+
 ## Supported Clojure versions
 
 Monger is built from the ground up for Clojure 1.3 and up.
