@@ -10,7 +10,7 @@
 (ns monger.result
   (:import (com.mongodb DBObject WriteResult)
            (clojure.lang IPersistentMap))
-  (:require [monger convertion]))
+  (:require [monger conversion]))
 
 
 ;;

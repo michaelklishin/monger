@@ -11,7 +11,7 @@
   (:refer-clojure :exclude [find remove count drop])
   (:import (com.mongodb Mongo DB DBCollection WriteResult DBObject WriteConcern DBCursor) (java.util List Map) (clojure.lang IPersistentMap ISeq))
   (:require [monger core result])
-  (:use     [monger.convertion]))
+  (:use     [monger.conversion]))
 
 ;;
 ;; API

@@ -21,7 +21,7 @@
 ;; OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 ;; THE SOFTWARE.
 
-(ns monger.convertion
+(ns monger.conversion
   (:import (com.mongodb DBObject BasicDBObject BasicDBList DBCursor)
            (clojure.lang IPersistentMap Keyword)
            (java.util List Map)))

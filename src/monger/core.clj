@@ -13,7 +13,7 @@
        is in the monger.collection namespace."}
     monger.core
   (:refer-clojure :exclude [count])
-  (:use [monger.convertion])
+  (:use [monger.conversion])
   (:import (com.mongodb Mongo DB WriteConcern DBObject DBCursor)
            (java.util Map)))
 

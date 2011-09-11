@@ -1,6 +1,6 @@
 (ns monger.test.result
   (:import (com.mongodb BasicDBObject WriteResult WriteConcern) (java.util Date))
-  (:require [monger core collection convertion])
+  (:require [monger core collection conversion])
   (:use [clojure.test]))
 
 

@@ -3,7 +3,7 @@
 (ns monger.test.collection
   (:import  [com.mongodb WriteResult WriteConcern DBCursor DBObject CommandResult$CommandFailure]
             [java.util Date])
-  (:require [monger core collection result util convertion]
+  (:require [monger core collection result util conversion]
             [clojure stacktrace])
   (:use [clojure.test]))
 
@@ -59,8 +59,8 @@
 
 (deftest insert-a-basic-db-object-without-id-and-with-default-write-concern
   (let [collection "people"
-        doc        (monger.convertion/to-db-object { :name "Joe", :age 30 })]
-    (is (nil? (monger.util/get-id doc)))
+        doc        (monger.conversion/to-db-object { :name "Joe", :age 30 })]
+    (is (nil? (.get ^DBObject doc "_id")))
     (monger.collection/insert "people" doc)
     (is (not (nil? (monger.util/get-id doc))))))
 
@@ -155,8 +155,8 @@
     (monger.collection/insert collection doc)
     (def #^DBObject found-one (monger.collection/find-one collection { :language "Clojure" }))
     (is (= (:_id doc) (monger.util/get-id found-one)))
-    (is (= (monger.convertion/from-db-object found-one true) doc))
-    (is (= (monger.convertion/to-db-object doc) found-one))))
+    (is (= (monger.conversion/from-db-object found-one true) doc))
+    (is (= (monger.conversion/to-db-object doc) found-one))))
 
 
 (deftest find-one-full-document-as-map-when-collection-has-matches
@@ -283,7 +283,7 @@
       (is (= 1 (.count scala-libs)))
       (is (= 3 (.count clojure-libs)))
       (doseq [i clojure-libs]
-        (let [doc (monger.convertion/from-db-object i true)]
+        (let [doc (monger.conversion/from-db-object i true)]
           (is (= (:language doc) "Clojure"))))
       (is (empty? (monger.collection/find collection { :language "Erlang" } [:name]))))))
 
@@ -328,7 +328,7 @@
 
 (deftest save-a-new-basic-db-object
   (let [collection "people"
-        doc        (monger.convertion/to-db-object { :name "Joe", :age 30 })]
+        doc        (monger.conversion/to-db-object { :name "Joe", :age 30 })]
     (is (nil? (monger.util/get-id doc)))
     (monger.collection/save "people" doc)
     (is (not (nil? (monger.util/get-id doc))))))
