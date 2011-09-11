@@ -8,7 +8,7 @@
 ;; You must not remove this notice, or any other, from this software.
 
 (ns monger.util
-  (:import (java.security SecureRandom) (java.math BigInteger) (org.bson.types ObjectId) (com.mongodb DBObject)))
+  (:import (java.security SecureRandom) (java.math BigInteger) (org.bson.types ObjectId) (com.mongodb DBObject) (clojure.lang IPersistentMap) (java.util Map)))
 
 ;;
 ;; API
@@ -36,11 +36,16 @@
   `(binding [*ns* (the-ns ~ns)]
      ~@(map (fn [form] `(eval '~form)) body)))
 
-(defprotocol GetDBObjectId
-  (get-id  [input] "Returns object id"))
+(defprotocol GetDocumentId
+  (get-id  [input] "Returns document id"))
 
-(extend-protocol GetDBObjectId
+(extend-protocol GetDocumentId
   DBObject
   (get-id
    [^DBObject object]
-   (.get ^DBObject object "_id")))
+    (.get object "_id"))
+
+  IPersistentMap
+  (get-id
+    [^IPersistentMap object]
+    (or (:_id object) ("_id" object))))

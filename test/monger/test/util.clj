@@ -5,9 +5,10 @@
 
 
 (deftest get-object-id
-  (let [id     ^ObjectId (monger.util/object-id)
-        input  ^DBObject (monger.conversion/to-db-object { :_id id })
-        output (monger.util/get-id input)]
-    (is (not (nil? output)))))
+  (let [clj-map   { :_id (monger.util/object-id) }
+        db-object ^DBObject (monger.conversion/to-db-object clj-map)
+        _id       (:_id clj-map)]
+    (is (= _id (monger.util/get-id clj-map)))
+    (is (= _id (monger.util/get-id db-object)))))
 
 
