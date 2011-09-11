@@ -130,17 +130,32 @@
 ;; monger.collection/update
 
 (defn ^WriteResult update
-  "Please note that update is potentially destructive operation. It will update your document with the given set
+  "Performs an update operation.
+
+  Please note that update is potentially destructive operation. It will update your document with the given set
   emptying the fields not mentioned in (^Map document). In order to only change certain fields, please use
   \"$set\", for example:
 
       (monger.collection/update \"people\" { :first_name \"Raul\" } { \"$set\" { :first_name \"Paul\" } })
 
-  You can use all the Mongodb Modifier Operations here, as well:
+  You can use all the Mongodb Modifier Operations ($inc, $set, $unset, $push, $pushAll, $addToSet, $pop, $pull
+  $pullAll, $rename, $bit) here, as well. Few examples:
 
     (monger.collection/update \"people\" { :first_name \"Paul\" } { \"$set\" { :index 1 } })
-    (monger.collection/update \"people\" { :first_name \"Paul\" } { \"$inc\" { :index 5 } })"
+    (monger.collection/update \"people\" { :first_name \"Paul\" } { \"$inc\" { :index 5 } })
 
+    (monger.collection/update \"people\" { :first_name \"Paul\" } { \"$unset\" { :years_on_stage 1} })
+
+  It also takes modifiers, such as :upsert and :multi.
+
+    ;; add :band field to all the records found in \"people\" collection, otherwise only the first matched record
+    ;; will be updated
+    (monger.collection/update \"people\" { } { \"$set\" { :band \"The Beatles\" }} :multi true)
+
+    ;; inserts the record if it did not exist in the collection
+    (monger.collection/update \"people\" { :first_name \"Yoko\" } { :first_name \"Yoko\" :last_name \"Ono\" } :upsert true)
+
+  By default :upsert and :multi are false."
   [^String collection, ^Map conditions, ^Map document, & { :keys [upsert multi write-concern] :or { upsert false, multi false, write-concern monger.core/*mongodb-write-concern* } }]
   (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
     (.update coll (to-db-object conditions) (to-db-object document) upsert multi write-concern)))
@@ -149,6 +164,21 @@
 ;; monger.collection/save
 
 (defn ^WriteResult save
+  "Saves an object to the given collection (does insert or update based on the object _id).
+
+   If the object is not present in the database, insert operation will be performed:
+
+    (def ian_gillian
+         (monger.convertion/to-db-object
+                             { :first_name \"Ian\" :last_name \"Gillan\" }))
+    (monger.collection/save \"people\" ian_gillian)
+
+   If the object is already in the database, update operation will be performed:
+
+    (monger.collection/save \"people\"
+       { :_id (.get ^DBObject ian_gillian \"_id\")
+         :first_name \"Ian\"
+         :last_name \"Gillan\" :band \"Deep Purple\" })"
   ([^String collection, ^Map document]
      (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
        (.save coll (to-db-object document) monger.core/*mongodb-write-concern*)))

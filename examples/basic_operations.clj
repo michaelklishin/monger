@@ -1,7 +1,7 @@
 (ns examples.basic_operations
   (:gen-class)
   (:require [monger core collection util])
-  (:import  (com.mongodb Mongo DB))
+  (:import  (com.mongodb Mongo DB DBObject))
   (:use     [clojure.tools.cli]))
 
 ;; Make mongodb-settings accessible from the monger.core namespace
@@ -55,13 +55,34 @@
     (println (monger.collection/find-one "people" { :first_name "Paul" }))
 
     ;; Now, let's add the index to that record
-    (monger.collection/update "people" { :first_name "Paul" } { "$set" { :years_on_stage 1 } })
+    (monger.collection/update "people" { :first_name "Paul" } { "$push" { :years_on_stage 1 } })
 
     ;; Increment record 45 times
     (dotimes [n 45]
             (monger.collection/update "people" { :first_name "Paul" } { "$inc" { :years_on_stage 1 } }))
 
-    (println (monger.collection/find-one "people" { :first_name "Paul" }))
+    ;; Remove years_on_stage field
+    (monger.collection/update "people" { :first_name "Paul" } { "$unset" { :years_on_stage 1} })
+
+    ;; Insert the record to the data set if it wasn't there yet
+    (monger.collection/update "people" { :first_name "Yoko" } { :first_name "Yoko" :last_name "Ono" } :upsert true)
+
+    ;; Update multiple records
+    (monger.collection/update "people" { } { "$set" { :band "The Beatles" }} :multi true)
+
+    ;; Save can act both like insert and update
+    (def ian_gillian
+         (monger.convertion/to-db-object
+          { :first_name "Ian" :last_name "Gillan" }))
+
+    ;; Performs insert
+    (monger.collection/save "people" ian_gillian)
+
+    ;; Performs update
+    (monger.collection/save "people"
+       { :_id (monger.util/get-id ian_gillian)
+         :first_name "Ian"
+         :last_name "Gillan" :band "Deep Purple" })
 
     ;; Remove people collection
     (monger.collection/drop "people")
