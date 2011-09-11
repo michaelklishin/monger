@@ -60,9 +60,9 @@
 (deftest insert-a-basic-db-object-without-id-and-with-default-write-concern
   (let [collection "people"
         doc        (monger.convertion/to-db-object { :name "Joe", :age 30 })]
-    (is (nil? (.get ^DBObject doc "_id")))
+    (is (nil? (monger.util/get-id doc)))
     (monger.collection/insert "people" doc)
-    (is (not (nil? (.get ^DBObject doc "_id"))))))
+    (is (not (nil? (monger.util/get-id doc))))))
 
 
 
@@ -154,7 +154,7 @@
         doc        { :data-store "MongoDB", :language "Clojure", :_id doc-id }]
     (monger.collection/insert collection doc)
     (def #^DBObject found-one (monger.collection/find-one collection { :language "Clojure" }))
-    (is (= (:_id doc) (.get ^DBObject found-one "_id")))
+    (is (= (:_id doc) (monger.util/get-id found-one)))
     (is (= (monger.convertion/from-db-object found-one true) doc))
     (is (= (monger.convertion/to-db-object doc) found-one))))
 
@@ -176,7 +176,7 @@
     (monger.collection/insert collection doc)
     (def #^DBObject loaded (monger.collection/find-one collection { :language "Clojure" } fields))
     (is (nil? (.get #^DBObject loaded "data-store")))
-    (is (= doc-id (.get #^DBObject loaded "_id")))
+    (is (= doc-id (monger.util/get-id loaded)))
     (is (= "Clojure" (.get #^DBObject loaded "language")))))
 
 
@@ -329,9 +329,9 @@
 (deftest save-a-new-basic-db-object
   (let [collection "people"
         doc        (monger.convertion/to-db-object { :name "Joe", :age 30 })]
-    (is (nil? (.get ^DBObject doc "_id")))
+    (is (nil? (monger.util/get-id doc)))
     (monger.collection/save "people" doc)
-    (is (not (nil? (.get ^DBObject doc "_id"))))))
+    (is (not (nil? (monger.util/get-id doc))))))
 
 
 
