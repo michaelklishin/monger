@@ -39,20 +39,20 @@
     input)
 
   Keyword
-  (to-db-object [#^Keyword input] (.getName input))
+  (to-db-object [^Keyword input] (.getName input))
 
   IPersistentMap
-  (to-db-object [#^IPersistentMap input]
+  (to-db-object [^IPersistentMap input]
     (let [o (BasicDBObject.)]
       (doseq [[k v] input]
         (.put o (to-db-object k) (to-db-object v)))
       o))
 
   List
-  (to-db-object [#^List input] (map to-db-object input))
+  (to-db-object [^List input] (map to-db-object input))
 
   DBObject
-  (to-db-object [#^DBObject input] input))
+  (to-db-object [^DBObject input] input))
 
 
 
@@ -69,19 +69,19 @@
   (from-db-object [input keywordize] input)
 
   Map
-  (from-db-object [#^Map input keywordize]
+  (from-db-object [^Map input keywordize]
     (associate-pairs (.entrySet input) keywordize))
 
   List
-  (from-db-object [#^List input keywordize]
+  (from-db-object [^List input keywordize]
     (vec (map #(from-db-object % keywordize) input)))
 
   BasicDBList
-  (from-db-object [#^BasicDBList input keywordize]
+  (from-db-object [^BasicDBList input keywordize]
     (vec (map #(from-db-object % keywordize) input)))
 
   DBObject
-  (from-db-object [#^DBObject input keywordize]
+  (from-db-object [^DBObject input keywordize]
     ;; DBObject provides .toMap, but the implementation in
     ;; subclass GridFSFile unhelpfully throws
     ;; UnsupportedOperationException
@@ -103,9 +103,9 @@
   ;; dramatically, which was the main barrier to matching pure-Java
   ;; performance for this marshalling
   (reduce (if keywordize
-            (fn [m [#^String k v]]
+            (fn [m [^String k v]]
               (assoc m (keyword k) (from-db-object v true)))
-            (fn [m [#^String k v]]
+            (fn [m [^String k v]]
               (assoc m k (from-db-object v false))))
           {} (reverse pairs)))
 
