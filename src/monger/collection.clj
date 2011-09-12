@@ -168,17 +168,9 @@
 
    If the object is not present in the database, insert operation will be performed:
 
-    (def ian_gillian
-         (monger.convertion/to-db-object
-                             { :first_name \"Ian\" :last_name \"Gillan\" }))
-    (monger.collection/save \"people\" ian_gillian)
+       (monger.collection/save \"people\" { :first_name \"Ian\" :last_name \"Gillan\" })
 
-   If the object is already in the database, update operation will be performed:
-
-    (monger.collection/save \"people\"
-       { :_id (.get ^DBObject ian_gillian \"_id\")
-         :first_name \"Ian\"
-         :last_name \"Gillan\" :band \"Deep Purple\" })"
+   If the object is already in the database, it will be updated."
   ([^String collection, ^Map document]
      (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
        (.save coll (to-db-object document) monger.core/*mongodb-write-concern*)))
