@@ -345,6 +345,18 @@
     (is (= 1 (monger.collection/count collection { :name "Alan", :age 40 })))))
 
 
+(deftest set-an-attribute-on-existing-document-using-update
+  (let [collection "people"
+        doc-id            (monger.util/object-id)
+        document          { :_id doc-id, :name "Joe",   :age 30 }]
+    (is (monger.result/ok? (monger.collection/insert "people" document)))
+    (is (= 1 (monger.collection/count collection)))
+    (is (= 0 (monger.collection/count collection { :has_kids true })))
+    (monger.collection/update collection { :_id doc-id } { "$set" { :has_kids true } })
+    (is (= 1 (monger.collection/count collection { :has_kids true })))))
+
+
+
 (deftest upsert-a-document
   (let [collection "libraries"
         doc-id       (monger.util/random-uuid)
