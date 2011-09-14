@@ -427,7 +427,7 @@
     (is (monger.collection/exists? collection))
     (monger.collection/drop collection)
     (is (false? (monger.collection/exists? collection)))
-    (monger.collection/create "widgets" { :capped true :n 100 })
+    (monger.collection/create "widgets" { :capped true :size 100000 :max 10 })
     (is (monger.collection/exists? collection))
     (monger.collection/rename collection "gadgets")
     (is (not (monger.collection/exists? collection)))
