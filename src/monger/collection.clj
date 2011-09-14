@@ -91,20 +91,20 @@
 ;;
 
 (defn ^DBObject find-by-id
-  ([^String collection, ^String id]
+  ([^String collection, id]
      (let [#^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
        (.findOne coll (to-db-object { :_id id }))))
-  ([^String collection, ^String id, ^List fields]
+  ([^String collection, id, ^List fields]
      (let [#^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)
            map-of-fields (fields-to-db-object fields)]
        (.findOne #^DBCollection coll #^DBObject (to-db-object { :_id id }) #^DBObject (to-db-object map-of-fields)))))
 
 (defn ^IPersistentMap find-map-by-id
-  ([^String collection, ^String id]
+  ([^String collection, id]
      (from-db-object ^DBObject (find-by-id collection id) true))
-  ([^String collection, ^String id, keywordize]
+  ([^String collection, id, keywordize]
      (from-db-object ^DBObject (find-by-id collection id) keywordize))
-  ([^String collection, ^String id, ^List fields, keywordize]
+  ([^String collection, id, ^List fields, keywordize]
      (from-db-object ^DBObject (find-by-id collection id fields) keywordize)))
 
 
