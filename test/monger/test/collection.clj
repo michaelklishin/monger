@@ -2,6 +2,7 @@
 
 (ns monger.test.collection
   (:import  [com.mongodb WriteResult WriteConcern DBCursor DBObject CommandResult$CommandFailure]
+            [org.bson.types ObjectId]
             [java.util Date])
   (:require [monger core collection result util conversion]
             [clojure stacktrace])
@@ -194,11 +195,15 @@
 ;; find-by-id
 ;;
 
-(deftest find-full-document-by-id-when-that-document-does-not-exist
+(deftest find-full-document-by-string-id-when-that-document-does-not-exist
   (let [collection "libraries"
         doc-id     (monger.util/random-uuid)]
     (is (nil? (monger.collection/find-by-id collection doc-id)))))
 
+(deftest find-full-document-by-object-id-when-that-document-does-not-exist
+  (let [collection "libraries"
+        doc-id     (ObjectId.)]
+    (is (nil? (monger.collection/find-by-id collection doc-id)))))
 
 (deftest find-full-document-by-id-as-map-when-that-document-does-not-exist
   (let [collection "libraries"
@@ -206,20 +211,33 @@
     (is (nil? (monger.collection/find-map-by-id collection doc-id)))))
 
 
-(deftest find-full-document-by-id-when-document-does-exist
+(deftest find-full-document-by-string-id-when-document-does-exist
   (let [collection "libraries"
         doc-id     (monger.util/random-uuid)
         doc        { :data-store "MongoDB", :language "Clojure", :_id doc-id }]
     (monger.collection/insert collection doc)
     (is (= (doc (monger.collection/find-by-id collection doc-id))))))
 
-(deftest find-full-document-map-by-id-when-document-does-exist
+(deftest find-full-document-by-object-id-when-document-does-exist
+  (let [collection "libraries"
+        doc-id     (ObjectId.)
+        doc        { :data-store "MongoDB", :language "Clojure", :_id doc-id }]
+    (monger.collection/insert collection doc)
+    (is (= (doc (monger.collection/find-by-id collection doc-id))))))
+
+(deftest find-full-document-map-by-string-id-when-document-does-exist
   (let [collection "libraries"
         doc-id     (monger.util/random-uuid)
         doc        { :data-store "MongoDB", :language "Clojure", :_id doc-id }]
     (monger.collection/insert collection doc)
     (is (= (doc (monger.collection/find-map-by-id collection doc-id))))))
 
+(deftest find-full-document-map-by-object-id-when-document-does-exist
+  (let [collection "libraries"
+        doc-id     (ObjectId.)
+        doc        { :data-store "MongoDB", :language "Clojure", :_id doc-id }]
+    (monger.collection/insert collection doc)
+    (is (= (doc (monger.collection/find-map-by-id collection doc-id))))))
 
 (deftest find-partial-document-by-id-when-document-does-exist
   (let [collection "libraries"
