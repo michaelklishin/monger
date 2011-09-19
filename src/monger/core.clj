@@ -62,6 +62,18 @@
      (.getDB connection name)))
 
 
+(defmacro with-connection
+  [conn & body]
+  `(binding [*mongodb-connection* conn]
+     (do ~@body)))
+
+
+(defmacro with-db
+  [db & body]
+  `(binding [*mongodb-database* db]
+     (do ~@body)))
+
+
 (defn connect!
   ^Mongo [& args]
   (def ^:dynamic *mongodb-connection* (apply connect args)))
