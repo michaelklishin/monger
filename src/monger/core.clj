@@ -24,9 +24,9 @@
 (def ^:dynamic ^String *mongodb-host* "localhost")
 (def ^:dynamic ^long   *mongodb-port* 27017)
 
-(def ^:dynamic ^Mongo        *mongodb-connection*)
-(def ^:dynamic ^DB           *mongodb-database*)
-(def ^:dynamic ^WriteConcern *mongodb-write-concern* WriteConcern/NORMAL)
+(declare ^:dynamic ^Mongo        *mongodb-connection*)
+(declare ^:dynamic ^DB           *mongodb-database*)
+(def     ^:dynamic ^WriteConcern *mongodb-write-concern* WriteConcern/NORMAL)
 
 
 ;;
