@@ -11,7 +11,7 @@
       :doc "Thin idiomatic wrapper around MongoDB Java client. monger.core includes
        fundamental functions that work with connections & databases. Most of functionality
        is in the monger.collection namespace."}
-    monger.core
+  monger.core
   (:refer-clojure :exclude [count])
   (:use [monger.conversion])
   (:import (com.mongodb Mongo DB WriteConcern DBObject DBCursor)
@@ -48,6 +48,7 @@
   ([{ :keys [host port] :or { host *mongodb-host*, port *mongodb-port* }}]
      (Mongo. ^String host ^Long port)))
 
+
 (defn ^DB get-db
   "Get database reference by name.
 
@@ -59,6 +60,16 @@
      (.getDB *mongodb-connection* name))
   ([^Mongo connection, ^String name]
      (.getDB connection name)))
+
+
+(defn connect!
+  ^Mongo [& args]
+  (def ^:dynamic *mongodb-connection* (apply connect args)))
+
+
+(defn set-db!
+  [db]
+  (def ^:dynamic *mongodb-database* db))
 
 
 

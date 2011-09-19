@@ -4,9 +4,8 @@
   (:use [clojure.test]))
 
 
-(monger.util/with-ns 'monger.core
-  (defonce ^:dynamic *mongodb-connection* (monger.core/connect))
-  (defonce ^:dynamic *mongodb-database*   (monger.core/get-db "monger-test")))
+(monger.core/connect!)
+(monger.core/set-db! (monger.core/get-db "monger-test"))
 
 
 (deftest connect-to-mongo-with-default-host-and-port
