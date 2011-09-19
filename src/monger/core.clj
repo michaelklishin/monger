@@ -64,13 +64,13 @@
 
 (defmacro with-connection
   [conn & body]
-  `(binding [*mongodb-connection* conn]
+  `(binding [*mongodb-connection* ~conn]
      (do ~@body)))
 
 
 (defmacro with-db
   [db & body]
-  `(binding [*mongodb-database* db]
+  `(binding [*mongodb-database* ~db]
      (do ~@body)))
 
 
