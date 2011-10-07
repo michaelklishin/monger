@@ -277,6 +277,18 @@
     (is (= 3 (.count (monger.collection/find collection { :language "Clojure" }))))
     (is (empty? (monger.collection/find collection      { :language "Java"    })))))
 
+(deftest find-and-iterate-over-multiple-documents
+  (let [collection "libraries"]
+    (monger.collection/insert-batch collection [{ :language "Clojure", :name "monger" }
+                                                { :language "Clojure", :name "langohr" }
+                                                { :language "Clojure", :name "incanter" }
+                                                { :language "Scala",   :name "akka" }])
+    (doseq [doc (take 3 (map (fn [dbo]
+                               (monger.conversion/from-db-object dbo true))
+                             (iterator-seq (monger.collection/find collection { :language "Clojure" }))))]
+      (is (= "Clojure" (:language doc))))))
+
+
 (deftest find-multiple-maps
   (let [collection "libraries"]
     (monger.collection/insert-batch collection [{ :language "Clojure", :name "monger" }
