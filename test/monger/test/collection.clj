@@ -94,9 +94,9 @@
   (let [collection "things"]
     (is (= 0 (mgcol/count collection)))
     (mgcol/insert-batch collection [{ :language "Clojure", :name "langohr" }
-                                                { :language "Clojure", :name "monger" }
-                                                { :language "Clojure", :name "incanter" }
-                                                { :language "Scala",   :name "akka" }] )
+                                    { :language "Clojure", :name "monger" }
+                                    { :language "Clojure", :name "incanter" }
+                                    { :language "Scala",   :name "akka" }] )
     (is (= 4 (mgcol/count collection)))
     (is (= 3 (mgcol/count collection { :language "Clojure" })))
     (is (= 1 (mgcol/count collection { :language "Scala"   })))
@@ -106,9 +106,9 @@
 (deftest remove-all-documents-from-collection
   (let [collection "libraries"]
     (mgcol/insert-batch collection [{ :language "Clojure", :name "monger" }
-                                                { :language "Clojure", :name "langohr" }
-                                                { :language "Clojure", :name "incanter" }
-                                                { :language "Scala",   :name "akka" }])
+                                    { :language "Clojure", :name "langohr" }
+                                    { :language "Clojure", :name "incanter" }
+                                    { :language "Scala",   :name "akka" }])
     (is (= 4 (mgcol/count collection)))
     (mgcol/remove collection)
     (is (= 0 (mgcol/count collection)))))
@@ -117,9 +117,9 @@
 (deftest remove-some-documents-from-collection
   (let [collection "libraries"]
     (mgcol/insert-batch collection [{ :language "Clojure", :name "monger" }
-                                                { :language "Clojure", :name "langohr" }
-                                                { :language "Clojure", :name "incanter" }
-                                                { :language "Scala",   :name "akka" }])
+                                    { :language "Clojure", :name "langohr" }
+                                    { :language "Clojure", :name "incanter" }
+                                    { :language "Scala",   :name "akka" }])
     (is (= 4 (mgcol/count collection)))
     (mgcol/remove collection { :language "Clojure" })
     (is (= 1 (mgcol/count collection)))))
@@ -134,6 +134,10 @@
   (let [collection "docs"
         cursor     (mgcol/find collection)]
     (is (empty? (iterator-seq cursor)))))
+
+(deftest find-document-seq-when-collection-is-empty
+  (let [collection "docs"]
+    (is (empty? (mgcol/find-seq collection)))))
 
 
 ;;
@@ -271,31 +275,40 @@
 (deftest find-multiple-documents
   (let [collection "libraries"]
     (mgcol/insert-batch collection [{ :language "Clojure", :name "monger" }
-                                                { :language "Clojure", :name "langohr" }
-                                                { :language "Clojure", :name "incanter" }
-                                                { :language "Scala",   :name "akka" }])
+                                    { :language "Clojure", :name "langohr" }
+                                    { :language "Clojure", :name "incanter" }
+                                    { :language "Scala",   :name "akka" }])
     (is (= 1 (monger.core/count (mgcol/find collection { :language "Scala"   }))))
     (is (= 3 (.count (mgcol/find collection { :language "Clojure" }))))
     (is (empty? (mgcol/find collection      { :language "Java"    })))))
 
+(deftest find-and-iterate-over-multiple-documents-the-hard-way
+  (let [collection "libraries"]
+    (mgcol/insert-batch collection [{ :language "Clojure", :name "monger" }
+                                    { :language "Clojure", :name "langohr" }
+                                    { :language "Clojure", :name "incanter" }
+                                    { :language "Scala",   :name "akka" }])
+    (doseq [doc (take 3 (map (fn [dbo]
+                               (monger.conversion/from-db-object dbo true))
+                             (mgcol/find-seq collection { :language "Clojure" })))]
+      (is (= "Clojure" (:language doc))))))
+
 (deftest find-and-iterate-over-multiple-documents
   (let [collection "libraries"]
     (mgcol/insert-batch collection [{ :language "Clojure", :name "monger" }
-                                                { :language "Clojure", :name "langohr" }
-                                                { :language "Clojure", :name "incanter" }
-                                                { :language "Scala",   :name "akka" }])
-    (doseq [doc (take 3 (map (fn [dbo]
-                               (monger.conversion/from-db-object dbo true))
-                             (iterator-seq (mgcol/find collection { :language "Clojure" }))))]
+                                    { :language "Clojure", :name "langohr" }
+                                    { :language "Clojure", :name "incanter" }
+                                    { :language "Scala",   :name "akka" }])
+    (doseq [doc (take 3 (mgcol/find-maps collection { :language "Clojure" }))]
       (is (= "Clojure" (:language doc))))))
 
 
 (deftest find-multiple-maps
   (let [collection "libraries"]
     (mgcol/insert-batch collection [{ :language "Clojure", :name "monger" }
-                                                { :language "Clojure", :name "langohr" }
-                                                { :language "Clojure", :name "incanter" }
-                                                { :language "Scala",   :name "akka" }])
+                                    { :language "Clojure", :name "langohr" }
+                                    { :language "Clojure", :name "incanter" }
+                                    { :language "Scala",   :name "akka" }])
     (is (= 1 (clojure.core/count (mgcol/find-maps collection { :language "Scala" }))))
     (is (= 3 (.count (mgcol/find-maps collection { :language "Clojure" }))))
     (is (empty? (mgcol/find-maps collection      { :language "Java"    })))))
@@ -305,9 +318,9 @@
 (deftest find-multiple-partial-documents
   (let [collection "libraries"]
     (mgcol/insert-batch collection [{ :language "Clojure", :name "monger" }
-                                                { :language "Clojure", :name "langohr" }
-                                                { :language "Clojure", :name "incanter" }
-                                                { :language "Scala",   :name "akka" }])
+                                    { :language "Clojure", :name "langohr" }
+                                    { :language "Clojure", :name "incanter" }
+                                    { :language "Scala",   :name "akka" }])
     (let [scala-libs   (mgcol/find collection { :language "Scala" } [:name])
           clojure-libs (mgcol/find collection { :language "Clojure"} [:language])]
       (is (= 1 (.count scala-libs)))
@@ -435,7 +448,7 @@
   (let [collection "widgets"]
     (mgcol/drop collection)
     (mgcol/insert-batch collection [{ :name "widget1" }
-                                                { :name "widget2" }])
+                                    { :name "widget2" }])
     (is (mgcol/exists? collection))
     (mgcol/drop collection)
     (is (false? (mgcol/exists? collection)))

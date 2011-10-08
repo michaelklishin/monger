@@ -63,6 +63,14 @@
   ([^String collection, ^Map ref, ^List fields]
      (map (fn [x] (from-db-object x true)) (seq (find collection ref fields)))))
 
+(defn ^ISeq find-seq
+  ([^String collection]
+     (seq (find collection)))
+  ([^String collection, ^Map ref]
+     (seq (find collection ref)))
+  ([^String collection, ^Map ref, ^List fields]
+     (seq (find collection ref fields))))
+
 ;;
 ;; monger.collection/find-one
 ;;
