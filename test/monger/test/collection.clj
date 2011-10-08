@@ -130,9 +130,9 @@
 ;;
 
 (deftest find-full-document-when-collection-is-empty
-  (let [collection "docs"]
-    (def cursor (monger.collection/find collection))
-    (is (instance? DBCursor cursor))))
+  (let [collection "docs"
+        cursor     (monger.collection/find collection)]
+    (is (empty? (iterator-seq cursor)))))
 
 
 ;;
