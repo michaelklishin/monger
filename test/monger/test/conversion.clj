@@ -1,5 +1,6 @@
 (ns monger.test.conversion
-  (:require [monger core collection conversion])
+  (:require [monger core collection]
+            [monger.conversion :as cnv])
   (:import (com.mongodb DBObject BasicDBObject BasicDBList) (java.util List ArrayList))
   (:use [clojure.test]))
 
@@ -10,28 +11,28 @@
 
 (deftest convert-nil-to-dbobject
   (let [input  nil
-        output (monger.conversion/to-db-object input)]
+        output (cnv/to-db-object input)]
     (is (nil? output))))
 
 (deftest convert-integer-to-dbobject
   (let [input  1
-        output (monger.conversion/to-db-object input)]
+        output (cnv/to-db-object input)]
     (is (= input output))))
 
 (deftest convert-float-to-dbobject
   (let [input  11.12
-        output (monger.conversion/to-db-object input)]
+        output (cnv/to-db-object input)]
     (is (= input output))))
 
 (deftest convert-string-to-dbobject
   (let [input  "MongoDB"
-        output (monger.conversion/to-db-object input)]
+        output (cnv/to-db-object input)]
     (is (= input output))))
 
 
 (deftest convert-map-to-dbobject
   (let [input  { :int 1, :string "Mongo", :float 22.23 }
-        output #^DBObject (monger.conversion/to-db-object input)]
+        output ^DBObject (cnv/to-db-object input)]
     (is (= 1 (.get output "int")))
     (is (= "Mongo" (.get output "string")))
     (is (= 22.23 (.get output "float")))))
@@ -39,8 +40,8 @@
 
 (deftest convert-nested-map-to-dbobject
   (let [input  { :int 1, :string "Mongo", :float 22.23, :map { :int 10, :string "Clojure", :float 11.9, :list '(1 "a" :b), :map { :key "value" } } }
-        output #^DBObject (monger.conversion/to-db-object input)
-        inner  #^DBObject (.get output "map")]
+        output ^DBObject (cnv/to-db-object input)
+        inner  ^DBObject (.get output "map")]
     (is (= 10           (.get inner "int")))
     (is (= "Clojure"    (.get inner "string")))
     (is (= 11.9         (.get inner "float")))
@@ -51,7 +52,7 @@
 ;; to obtain _id that was generated. MK.
 (deftest convert-dbobject-to-dbobject
   (let [input  (BasicDBObject.)
-        output (monger.conversion/to-db-object input)]
+        output (cnv/to-db-object input)]
     (is (= input output))))
 
 
@@ -62,16 +63,16 @@
 ;;
 
 (deftest convert-nil-from-db-object
-  (is (nil? (monger.conversion/from-db-object nil false)))
-  (is (nil? (monger.conversion/from-db-object nil true))))
+  (is (nil? (cnv/from-db-object nil false)))
+  (is (nil? (cnv/from-db-object nil true))))
 
 (deftest convert-integer-from-dbobject
-  (is (= 2 (monger.conversion/from-db-object 2 false)))
-  (is (= 2 (monger.conversion/from-db-object 2 true))))
+  (is (= 2 (cnv/from-db-object 2 false)))
+  (is (= 2 (cnv/from-db-object 2 true))))
 
 (deftest convert-float-from-dbobject
-  (is (= 3.3 (monger.conversion/from-db-object 3.3 false)))
-  (is (= 3.3 (monger.conversion/from-db-object 3.3 true))))
+  (is (= 3.3 (cnv/from-db-object 3.3 false)))
+  (is (= 3.3 (cnv/from-db-object 3.3 true))))
 
 (deftest convert-flat-db-object-to-map-without-keywordizing
   (let [name   "Michael"
@@ -79,13 +80,12 @@
         input (doto (BasicDBObject.)
                 (.put "name" name)
                 (.put "age"  age))
-        output (monger.conversion/from-db-object input false)]
+        output (cnv/from-db-object input false)]
     (is (= (output { "name" name, "age" age })))
     (is (= (output "name") name))
     (is (nil? (output :name)))
     (is (= (output "age") age))
-    (is (nil? (output "points")))
-    ))
+    (is (nil? (output "points")))))
 
 (deftest convert-flat-db-object-to-map-without-keywordizing
   (let [name   "Michael"
@@ -93,7 +93,7 @@
         input (doto (BasicDBObject.)
                 (.put "name" name)
                 (.put "age"  age))
-        output (monger.conversion/from-db-object input true)]
+        output (cnv/from-db-object input true)]
     (is (= (output { :name name, :age age })))
     (is (= (output :name) name))
     (is (nil? (output "name")))
@@ -112,7 +112,7 @@
         input (doto (BasicDBObject.)
                 (.put "_id" did)
                 (.put "nested"  nested))
-        output (monger.conversion/from-db-object input false)]
+        output (cnv/from-db-object input false)]
     (is (= (output "_id") did))
     (is (= (-> output (get "nested") (get "int")) 101))
     (is (= (-> output (get "nested") (get "list")) ["red" "green" "blue"]))
