@@ -153,7 +153,7 @@
         doc-id     (monger.util/random-uuid)
         doc        { :data-store "MongoDB", :language "Clojure", :_id doc-id }]
     (monger.collection/insert collection doc)
-    (def #^DBObject found-one (monger.collection/find-one collection { :language "Clojure" }))
+    (def ^DBObject found-one (monger.collection/find-one collection { :language "Clojure" }))
     (is (= (:_id doc) (monger.util/get-id found-one)))
     (is (= (monger.conversion/from-db-object found-one true) doc))
     (is (= (monger.conversion/to-db-object doc) found-one))))
@@ -174,10 +174,10 @@
         doc        { :data-store "MongoDB", :language "Clojure", :_id doc-id }
         fields     [:language]]
     (monger.collection/insert collection doc)
-    (def #^DBObject loaded (monger.collection/find-one collection { :language "Clojure" } fields))
-    (is (nil? (.get #^DBObject loaded "data-store")))
+    (def ^DBObject loaded (monger.collection/find-one collection { :language "Clojure" } fields))
+    (is (nil? (.get ^DBObject loaded "data-store")))
     (is (= doc-id (monger.util/get-id loaded)))
-    (is (= "Clojure" (.get #^DBObject loaded "language")))))
+    (is (= "Clojure" (.get ^DBObject loaded "language")))))
 
 
 (deftest find-one-partial-document-as-map-when-collection-has-matches
