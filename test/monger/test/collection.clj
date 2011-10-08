@@ -4,8 +4,9 @@
   (:import  [com.mongodb WriteResult WriteConcern DBCursor DBObject CommandResult$CommandFailure]
             [org.bson.types ObjectId]
             [java.util Date])
-  (:require [monger core collection result util conversion]
-            [clojure stacktrace])
+  (:require [monger core result util conversion]
+            [clojure stacktrace]
+            [monger.collection :as mgcol])
   (:use [clojure.test]))
 
 (monger.core/connect!)
@@ -18,9 +19,9 @@
 
 (defn purge-collection
   [collection-name, f]
-  (monger.collection/remove collection-name)
+  (mgcol/remove collection-name)
   (f)
-  (monger.collection/remove collection-name))
+  (mgcol/remove collection-name))
 
 (defn purge-people-collection
   [f]
@@ -48,20 +49,20 @@
 (deftest insert-a-basic-document-without-id-and-with-default-write-concern
   (let [collection "people"
         doc        { :name "Joe", :age 30 }]
-    (is (monger.result/ok? (monger.collection/insert "people" doc)))
-    (is (= 1 (monger.collection/count collection)))))
+    (is (monger.result/ok? (mgcol/insert "people" doc)))
+    (is (= 1 (mgcol/count collection)))))
 
 (deftest insert-a-basic-document-without-id-and-with-explicit-write-concern
   (let [collection "people"
         doc        { :name "Joe", :age 30 }]
-    (is (monger.result/ok? (monger.collection/insert "people" doc WriteConcern/SAFE)))
-    (is (= 1 (monger.collection/count collection)))))
+    (is (monger.result/ok? (mgcol/insert "people" doc WriteConcern/SAFE)))
+    (is (= 1 (mgcol/count collection)))))
 
 (deftest insert-a-basic-db-object-without-id-and-with-default-write-concern
   (let [collection "people"
         doc        (monger.conversion/to-db-object { :name "Joe", :age 30 })]
     (is (nil? (.get ^DBObject doc "_id")))
-    (monger.collection/insert "people" doc)
+    (mgcol/insert "people" doc)
     (is (not (nil? (monger.util/get-id doc))))))
 
 
@@ -73,14 +74,14 @@
 (deftest insert-a-batch-of-basic-documents-without-ids-and-with-default-write-concern
   (let [collection "people"
         docs       [{ :name "Joe", :age 30 }, { :name "Paul", :age 27 }]]
-    (is (monger.result/ok? (monger.collection/insert-batch "people" docs)))
-    (is (= 2 (monger.collection/count collection)))))
+    (is (monger.result/ok? (mgcol/insert-batch "people" docs)))
+    (is (= 2 (mgcol/count collection)))))
 
 (deftest insert-a-batch-of-basic-documents-without-ids-and-with-explicit-write-concern
   (let [collection "people"
         docs       [{ :name "Joe", :age 30 }, { :name "Paul", :age 27 }]]
-    (is (monger.result/ok? (monger.collection/insert-batch "people" docs WriteConcern/NORMAL)))
-    (is (= 2 (monger.collection/count collection)))))
+    (is (monger.result/ok? (mgcol/insert-batch "people" docs WriteConcern/NORMAL)))
+    (is (= 2 (mgcol/count collection)))))
 
 
 
@@ -91,37 +92,37 @@
 
 (deftest get-collection-size
   (let [collection "things"]
-    (is (= 0 (monger.collection/count collection)))
-    (monger.collection/insert-batch collection [{ :language "Clojure", :name "langohr" }
+    (is (= 0 (mgcol/count collection)))
+    (mgcol/insert-batch collection [{ :language "Clojure", :name "langohr" }
                                                 { :language "Clojure", :name "monger" }
                                                 { :language "Clojure", :name "incanter" }
                                                 { :language "Scala",   :name "akka" }] )
-    (is (= 4 (monger.collection/count collection)))
-    (is (= 3 (monger.collection/count collection { :language "Clojure" })))
-    (is (= 1 (monger.collection/count collection { :language "Scala"   })))
-    (is (= 0 (monger.collection/count collection { :language "Python"  })))))
+    (is (= 4 (mgcol/count collection)))
+    (is (= 3 (mgcol/count collection { :language "Clojure" })))
+    (is (= 1 (mgcol/count collection { :language "Scala"   })))
+    (is (= 0 (mgcol/count collection { :language "Python"  })))))
 
 
 (deftest remove-all-documents-from-collection
   (let [collection "libraries"]
-    (monger.collection/insert-batch collection [{ :language "Clojure", :name "monger" }
+    (mgcol/insert-batch collection [{ :language "Clojure", :name "monger" }
                                                 { :language "Clojure", :name "langohr" }
                                                 { :language "Clojure", :name "incanter" }
                                                 { :language "Scala",   :name "akka" }])
-    (is (= 4 (monger.collection/count collection)))
-    (monger.collection/remove collection)
-    (is (= 0 (monger.collection/count collection)))))
+    (is (= 4 (mgcol/count collection)))
+    (mgcol/remove collection)
+    (is (= 0 (mgcol/count collection)))))
 
 
 (deftest remove-some-documents-from-collection
   (let [collection "libraries"]
-    (monger.collection/insert-batch collection [{ :language "Clojure", :name "monger" }
+    (mgcol/insert-batch collection [{ :language "Clojure", :name "monger" }
                                                 { :language "Clojure", :name "langohr" }
                                                 { :language "Clojure", :name "incanter" }
                                                 { :language "Scala",   :name "akka" }])
-    (is (= 4 (monger.collection/count collection)))
-    (monger.collection/remove collection { :language "Clojure" })
-    (is (= 1 (monger.collection/count collection)))))
+    (is (= 4 (mgcol/count collection)))
+    (mgcol/remove collection { :language "Clojure" })
+    (is (= 1 (mgcol/count collection)))))
 
 
 
@@ -131,7 +132,7 @@
 
 (deftest find-full-document-when-collection-is-empty
   (let [collection "docs"
-        cursor     (monger.collection/find collection)]
+        cursor     (mgcol/find collection)]
     (is (empty? (iterator-seq cursor)))))
 
 
@@ -141,19 +142,19 @@
 
 (deftest find-one-full-document-when-collection-is-empty
   (let [collection "docs"]
-    (is (nil? (monger.collection/find-one collection {})))))
+    (is (nil? (mgcol/find-one collection {})))))
 
 (deftest find-one-full-document-as-map-when-collection-is-empty
   (let [collection "docs"]
-    (is (nil? (monger.collection/find-one-as-map collection {})))))
+    (is (nil? (mgcol/find-one-as-map collection {})))))
 
 
 (deftest find-one-full-document-when-collection-has-matches
   (let [collection "docs"
         doc-id     (monger.util/random-uuid)
         doc        { :data-store "MongoDB", :language "Clojure", :_id doc-id }]
-    (monger.collection/insert collection doc)
-    (def ^DBObject found-one (monger.collection/find-one collection { :language "Clojure" }))
+    (mgcol/insert collection doc)
+    (def ^DBObject found-one (mgcol/find-one collection { :language "Clojure" }))
     (is (= (:_id doc) (monger.util/get-id found-one)))
     (is (= (monger.conversion/from-db-object found-one true) doc))
     (is (= (monger.conversion/to-db-object doc) found-one))))
@@ -163,8 +164,8 @@
   (let [collection "docs"
         doc-id     (monger.util/random-uuid)
         doc        { :data-store "MongoDB", :language "Clojure", :_id doc-id }]
-    (monger.collection/insert collection doc)
-    (is (= doc (monger.collection/find-one-as-map collection { :language "Clojure" })))))
+    (mgcol/insert collection doc)
+    (is (= doc (mgcol/find-one-as-map collection { :language "Clojure" })))))
 
 
 
@@ -173,8 +174,8 @@
         doc-id     (monger.util/random-uuid)
         doc        { :data-store "MongoDB", :language "Clojure", :_id doc-id }
         fields     [:language]]
-    (monger.collection/insert collection doc)
-    (def ^DBObject loaded (monger.collection/find-one collection { :language "Clojure" } fields))
+    (mgcol/insert collection doc)
+    (def ^DBObject loaded (mgcol/find-one collection { :language "Clojure" } fields))
     (is (nil? (.get ^DBObject loaded "data-store")))
     (is (= doc-id (monger.util/get-id loaded)))
     (is (= "Clojure" (.get ^DBObject loaded "language")))))
@@ -185,8 +186,8 @@
         doc-id     (monger.util/random-uuid)
         doc        { :data-store "MongoDB", :language "Clojure", :_id doc-id }
         fields     [:data-store]]
-    (monger.collection/insert collection doc)
-    (is (= { :data-store "MongoDB", :_id doc-id } (monger.collection/find-one-as-map collection { :language "Clojure" } fields true)))))
+    (mgcol/insert collection doc)
+    (is (= { :data-store "MongoDB", :_id doc-id } (mgcol/find-one-as-map collection { :language "Clojure" } fields true)))))
 
 
 
@@ -197,61 +198,61 @@
 (deftest find-full-document-by-string-id-when-that-document-does-not-exist
   (let [collection "libraries"
         doc-id     (monger.util/random-uuid)]
-    (is (nil? (monger.collection/find-by-id collection doc-id)))))
+    (is (nil? (mgcol/find-by-id collection doc-id)))))
 
 (deftest find-full-document-by-object-id-when-that-document-does-not-exist
   (let [collection "libraries"
         doc-id     (ObjectId.)]
-    (is (nil? (monger.collection/find-by-id collection doc-id)))))
+    (is (nil? (mgcol/find-by-id collection doc-id)))))
 
 (deftest find-full-document-by-id-as-map-when-that-document-does-not-exist
   (let [collection "libraries"
         doc-id     (monger.util/random-uuid)]
-    (is (nil? (monger.collection/find-map-by-id collection doc-id)))))
+    (is (nil? (mgcol/find-map-by-id collection doc-id)))))
 
 
 (deftest find-full-document-by-string-id-when-document-does-exist
   (let [collection "libraries"
         doc-id     (monger.util/random-uuid)
         doc        { :data-store "MongoDB", :language "Clojure", :_id doc-id }]
-    (monger.collection/insert collection doc)
-    (is (= (doc (monger.collection/find-by-id collection doc-id))))))
+    (mgcol/insert collection doc)
+    (is (= (doc (mgcol/find-by-id collection doc-id))))))
 
 (deftest find-full-document-by-object-id-when-document-does-exist
   (let [collection "libraries"
         doc-id     (ObjectId.)
         doc        { :data-store "MongoDB", :language "Clojure", :_id doc-id }]
-    (monger.collection/insert collection doc)
-    (is (= (doc (monger.collection/find-by-id collection doc-id))))))
+    (mgcol/insert collection doc)
+    (is (= (doc (mgcol/find-by-id collection doc-id))))))
 
 (deftest find-full-document-map-by-string-id-when-document-does-exist
   (let [collection "libraries"
         doc-id     (monger.util/random-uuid)
         doc        { :data-store "MongoDB", :language "Clojure", :_id doc-id }]
-    (monger.collection/insert collection doc)
-    (is (= (doc (monger.collection/find-map-by-id collection doc-id))))))
+    (mgcol/insert collection doc)
+    (is (= (doc (mgcol/find-map-by-id collection doc-id))))))
 
 (deftest find-full-document-map-by-object-id-when-document-does-exist
   (let [collection "libraries"
         doc-id     (ObjectId.)
         doc        { :data-store "MongoDB", :language "Clojure", :_id doc-id }]
-    (monger.collection/insert collection doc)
-    (is (= (doc (monger.collection/find-map-by-id collection doc-id))))))
+    (mgcol/insert collection doc)
+    (is (= (doc (mgcol/find-map-by-id collection doc-id))))))
 
 (deftest find-partial-document-by-id-when-document-does-exist
   (let [collection "libraries"
         doc-id     (monger.util/random-uuid)
         doc        { :data-store "MongoDB", :language "Clojure", :_id doc-id }]
-    (monger.collection/insert collection doc)
-    (is (= ({ :language "Clojure" } (monger.collection/find-by-id collection doc-id [ :language ]))))))
+    (mgcol/insert collection doc)
+    (is (= ({ :language "Clojure" } (mgcol/find-by-id collection doc-id [ :language ]))))))
 
 
 (deftest find-partial-document-as-map-by-id-when-document-does-exist
   (let [collection "libraries"
         doc-id     (monger.util/random-uuid)
         doc        { :data-store "MongoDB", :language "Clojure", :_id doc-id }]
-    (monger.collection/insert collection doc)
-    (is (= ({ :language "Clojure" } (monger.collection/find-map-by-id collection doc-id [ :language ]))))))
+    (mgcol/insert collection doc)
+    (is (= ({ :language "Clojure" } (mgcol/find-map-by-id collection doc-id [ :language ]))))))
 
 
 ;;
@@ -260,61 +261,61 @@
 
 (deftest find-multiple-documents-when-collection-is-empty
   (let [collection "libraries"]
-    (is (empty? (monger.collection/find collection { :language "Scala" })))))
+    (is (empty? (mgcol/find collection { :language "Scala" })))))
 
 (deftest find-multiple-maps-when-collection-is-empty
   (let [collection "libraries"]
-    (is (empty? (monger.collection/find-maps collection { :language "Scala" })))))
+    (is (empty? (mgcol/find-maps collection { :language "Scala" })))))
 
 
 (deftest find-multiple-documents
   (let [collection "libraries"]
-    (monger.collection/insert-batch collection [{ :language "Clojure", :name "monger" }
+    (mgcol/insert-batch collection [{ :language "Clojure", :name "monger" }
                                                 { :language "Clojure", :name "langohr" }
                                                 { :language "Clojure", :name "incanter" }
                                                 { :language "Scala",   :name "akka" }])
-    (is (= 1 (monger.core/count (monger.collection/find collection { :language "Scala"   }))))
-    (is (= 3 (.count (monger.collection/find collection { :language "Clojure" }))))
-    (is (empty? (monger.collection/find collection      { :language "Java"    })))))
+    (is (= 1 (monger.core/count (mgcol/find collection { :language "Scala"   }))))
+    (is (= 3 (.count (mgcol/find collection { :language "Clojure" }))))
+    (is (empty? (mgcol/find collection      { :language "Java"    })))))
 
 (deftest find-and-iterate-over-multiple-documents
   (let [collection "libraries"]
-    (monger.collection/insert-batch collection [{ :language "Clojure", :name "monger" }
+    (mgcol/insert-batch collection [{ :language "Clojure", :name "monger" }
                                                 { :language "Clojure", :name "langohr" }
                                                 { :language "Clojure", :name "incanter" }
                                                 { :language "Scala",   :name "akka" }])
     (doseq [doc (take 3 (map (fn [dbo]
                                (monger.conversion/from-db-object dbo true))
-                             (iterator-seq (monger.collection/find collection { :language "Clojure" }))))]
+                             (iterator-seq (mgcol/find collection { :language "Clojure" }))))]
       (is (= "Clojure" (:language doc))))))
 
 
 (deftest find-multiple-maps
   (let [collection "libraries"]
-    (monger.collection/insert-batch collection [{ :language "Clojure", :name "monger" }
+    (mgcol/insert-batch collection [{ :language "Clojure", :name "monger" }
                                                 { :language "Clojure", :name "langohr" }
                                                 { :language "Clojure", :name "incanter" }
                                                 { :language "Scala",   :name "akka" }])
-    (is (= 1 (clojure.core/count (monger.collection/find-maps collection { :language "Scala" }))))
-    (is (= 3 (.count (monger.collection/find-maps collection { :language "Clojure" }))))
-    (is (empty? (monger.collection/find-maps collection      { :language "Java"    })))))
+    (is (= 1 (clojure.core/count (mgcol/find-maps collection { :language "Scala" }))))
+    (is (= 3 (.count (mgcol/find-maps collection { :language "Clojure" }))))
+    (is (empty? (mgcol/find-maps collection      { :language "Java"    })))))
 
 
 
 (deftest find-multiple-partial-documents
   (let [collection "libraries"]
-    (monger.collection/insert-batch collection [{ :language "Clojure", :name "monger" }
+    (mgcol/insert-batch collection [{ :language "Clojure", :name "monger" }
                                                 { :language "Clojure", :name "langohr" }
                                                 { :language "Clojure", :name "incanter" }
                                                 { :language "Scala",   :name "akka" }])
-    (let [scala-libs   (monger.collection/find collection { :language "Scala" } [:name])
-          clojure-libs (monger.collection/find collection { :language "Clojure"} [:language])]
+    (let [scala-libs   (mgcol/find collection { :language "Scala" } [:name])
+          clojure-libs (mgcol/find collection { :language "Clojure"} [:language])]
       (is (= 1 (.count scala-libs)))
       (is (= 3 (.count clojure-libs)))
       (doseq [i clojure-libs]
         (let [doc (monger.conversion/from-db-object i true)]
           (is (= (:language doc) "Clojure"))))
-      (is (empty? (monger.collection/find collection { :language "Erlang" } [:name]))))))
+      (is (empty? (mgcol/find collection { :language "Erlang" } [:name]))))))
 
 
 ;;
@@ -327,39 +328,39 @@
         date         (Date.)
         doc          { :created-at date, :data-store "MongoDB", :language "Clojure", :_id doc-id }
         modified-doc { :created-at date, :data-store "MongoDB", :language "Erlang",  :_id doc-id }]
-    (monger.collection/insert collection doc)
-    (is (= (doc (monger.collection/find-by-id collection doc-id))))
-    (monger.collection/update collection { :_id doc-id } { :language "Erlang" })
-    (is (= (modified-doc (monger.collection/find-by-id collection doc-id))))))
+    (mgcol/insert collection doc)
+    (is (= (doc (mgcol/find-by-id collection doc-id))))
+    (mgcol/update collection { :_id doc-id } { :language "Erlang" })
+    (is (= (modified-doc (mgcol/find-by-id collection doc-id))))))
 
 
 (deftest update-multiple-documents
   (let [collection "libraries"]
-    (monger.collection/insert collection { :language "Clojure", :name "monger" })
-    (monger.collection/insert collection { :language "Clojure", :name "langohr" })
-    (monger.collection/insert collection { :language "Clojure", :name "incanter" })
-    (monger.collection/insert collection { :language "Scala",   :name "akka" })
-    (is (= 3 (monger.collection/count collection { :language "Clojure" })))
-    (is (= 1 (monger.collection/count collection { :language "Scala"   })))
-    (is (= 0 (monger.collection/count collection { :language "Python"  })))
-    (monger.collection/update collection { :language "Clojure" } { "$set" { :language "Python" } } :multi true)
-    (is (= 0 (monger.collection/count collection { :language "Clojure" })))
-    (is (= 1 (monger.collection/count collection { :language "Scala"   })))
-    (is (= 3 (monger.collection/count collection { :language "Python"  })))))
+    (mgcol/insert collection { :language "Clojure", :name "monger" })
+    (mgcol/insert collection { :language "Clojure", :name "langohr" })
+    (mgcol/insert collection { :language "Clojure", :name "incanter" })
+    (mgcol/insert collection { :language "Scala",   :name "akka" })
+    (is (= 3 (mgcol/count collection { :language "Clojure" })))
+    (is (= 1 (mgcol/count collection { :language "Scala"   })))
+    (is (= 0 (mgcol/count collection { :language "Python"  })))
+    (mgcol/update collection { :language "Clojure" } { "$set" { :language "Python" } } :multi true)
+    (is (= 0 (mgcol/count collection { :language "Clojure" })))
+    (is (= 1 (mgcol/count collection { :language "Scala"   })))
+    (is (= 3 (mgcol/count collection { :language "Python"  })))))
 
 
 (deftest save-a-new-document
   (let [collection "people"
         document       { :name "Joe", :age 30 }]
-    (is (monger.result/ok? (monger.collection/save "people" document)))
-    (is (= 1 (monger.collection/count collection)))))
+    (is (monger.result/ok? (mgcol/save "people" document)))
+    (is (= 1 (mgcol/count collection)))))
 
 
 (deftest save-a-new-basic-db-object
   (let [collection "people"
         doc        (monger.conversion/to-db-object { :name "Joe", :age 30 })]
     (is (nil? (monger.util/get-id doc)))
-    (monger.collection/save "people" doc)
+    (mgcol/save "people" doc)
     (is (not (nil? (monger.util/get-id doc))))))
 
 
@@ -368,21 +369,21 @@
   (let [collection "people"
         doc-id            "people-1"
         document          { :_id doc-id, :name "Joe",   :age 30 }]
-    (is (monger.result/ok? (monger.collection/insert "people" document)))
-    (is (= 1 (monger.collection/count collection)))
-    (monger.collection/save collection { :_id doc-id, :name "Alan", :age 40 })
-    (is (= 1 (monger.collection/count collection { :name "Alan", :age 40 })))))
+    (is (monger.result/ok? (mgcol/insert "people" document)))
+    (is (= 1 (mgcol/count collection)))
+    (mgcol/save collection { :_id doc-id, :name "Alan", :age 40 })
+    (is (= 1 (mgcol/count collection { :name "Alan", :age 40 })))))
 
 
 (deftest set-an-attribute-on-existing-document-using-update
   (let [collection "people"
         doc-id            (monger.util/object-id)
         document          { :_id doc-id, :name "Joe",   :age 30 }]
-    (is (monger.result/ok? (monger.collection/insert "people" document)))
-    (is (= 1 (monger.collection/count collection)))
-    (is (= 0 (monger.collection/count collection { :has_kids true })))
-    (monger.collection/update collection { :_id doc-id } { "$set" { :has_kids true } })
-    (is (= 1 (monger.collection/count collection { :has_kids true })))))
+    (is (monger.result/ok? (mgcol/insert "people" document)))
+    (is (= 1 (mgcol/count collection)))
+    (is (= 0 (mgcol/count collection { :has_kids true })))
+    (mgcol/update collection { :_id doc-id } { "$set" { :has_kids true } })
+    (is (= 1 (mgcol/count collection { :has_kids true })))))
 
 
 
@@ -392,12 +393,12 @@
         date         (Date.)
         doc          { :created-at date, :data-store "MongoDB", :language "Clojure", :_id doc-id }
         modified-doc { :created-at date, :data-store "MongoDB", :language "Erlang",  :_id doc-id }]
-    (is (not (monger.result/updated-existing? (monger.collection/update collection { :language "Clojure" } doc :upsert true))))
-    (is (= 1 (monger.collection/count collection)))
-    (is (monger.result/updated-existing? (monger.collection/update collection { :language "Clojure" } modified-doc :multi false :upsert true)))
-    (is (= 1 (monger.collection/count collection)))
-    (is (= (modified-doc (monger.collection/find-by-id collection doc-id))))
-    (monger.collection/remove collection)))
+    (is (not (monger.result/updated-existing? (mgcol/update collection { :language "Clojure" } doc :upsert true))))
+    (is (= 1 (mgcol/count collection)))
+    (is (monger.result/updated-existing? (mgcol/update collection { :language "Clojure" } modified-doc :multi false :upsert true)))
+    (is (= 1 (mgcol/count collection)))
+    (is (= (modified-doc (mgcol/find-by-id collection doc-id))))
+    (mgcol/remove collection)))
 
 
 ;;
@@ -406,19 +407,19 @@
 
 (deftest index-operations
   (let [collection "libraries"]
-    (monger.collection/drop-indexes collection)
+    (mgcol/drop-indexes collection)
     (is (= "_id_"
-           (:name (first (monger.collection/indexes-on collection)))))
-    (is (nil? (second (monger.collection/indexes-on collection))))
-    (monger.collection/create-index collection { "language" 1 })
+           (:name (first (mgcol/indexes-on collection)))))
+    (is (nil? (second (mgcol/indexes-on collection))))
+    (mgcol/create-index collection { "language" 1 })
     (is (= "language_1"
-           (:name (second (monger.collection/indexes-on collection)))))
-    (monger.collection/drop-index collection "language_1")
-    (is (nil? (second (monger.collection/indexes-on collection))))
-    (monger.collection/ensure-index collection { "language" 1 })
+           (:name (second (mgcol/indexes-on collection)))))
+    (mgcol/drop-index collection "language_1")
+    (is (nil? (second (mgcol/indexes-on collection))))
+    (mgcol/ensure-index collection { "language" 1 })
     (is (= "language_1"
-           (:name (second (monger.collection/indexes-on collection)))))
-    (monger.collection/ensure-index collection { "language" 1 })))
+           (:name (second (mgcol/indexes-on collection)))))
+    (mgcol/ensure-index collection { "language" 1 })))
 
 
 ;;
@@ -427,20 +428,20 @@
 
 (deftest checking-for-collection-existence-when-it-does-not-exist
   (let [collection "widgets"]
-    (monger.collection/drop collection)
-    (is (false? (monger.collection/exists? collection)))))
+    (mgcol/drop collection)
+    (is (false? (mgcol/exists? collection)))))
 
 (deftest checking-for-collection-existence-when-it-does-exist
   (let [collection "widgets"]
-    (monger.collection/drop collection)
-    (monger.collection/insert-batch collection [{ :name "widget1" }
+    (mgcol/drop collection)
+    (mgcol/insert-batch collection [{ :name "widget1" }
                                                 { :name "widget2" }])
-    (is (monger.collection/exists? collection))
-    (monger.collection/drop collection)
-    (is (false? (monger.collection/exists? collection)))
-    (monger.collection/create "widgets" { :capped true :size 100000 :max 10 })
-    (is (monger.collection/exists? collection))
-    (monger.collection/rename collection "gadgets")
-    (is (not (monger.collection/exists? collection)))
-    (is (monger.collection/exists? "gadgets"))
-    (monger.collection/drop "gadgets")))
+    (is (mgcol/exists? collection))
+    (mgcol/drop collection)
+    (is (false? (mgcol/exists? collection)))
+    (mgcol/create "widgets" { :capped true :size 100000 :max 10 })
+    (is (mgcol/exists? collection))
+    (mgcol/rename collection "gadgets")
+    (is (not (mgcol/exists? collection)))
+    (is (mgcol/exists? "gadgets"))
+    (mgcol/drop "gadgets")))
