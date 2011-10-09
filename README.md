@@ -1,18 +1,17 @@
 # Monger
 
-Monger is an experimental idiomatic Clojure wrapper around MongoDB Java driver.
+Monger is an idiomatic Clojure wrapper around MongoDB Java driver.
 
 
 ## Usage
 
-Since these are very early days of the library, it is fair to say that it is *completely unusable* to anyone
+Unless documentation guides & examples are written (targeted for the 1.0 release), it is fair to say that it is *likely to be unusable* to anyone
 other than the author.
 
 
 ## This is a Work In Progress
 
-Monger is very much a work in progress and right now, there is nothing to
-see here, really.
+Core Monger APIs are stabilized but it is still a work in progress. Keep that in mind.
 
 
 ## Artifacts
@@ -21,7 +20,7 @@ Snapshot artifacts are [released to Clojars](https://clojars.org/com.novemberain
 
 With Leiningen:
 
-    [com.novemberain/monger "0.9.0-SNAPSHOT"]
+    [com.novemberain/monger "0.10.0-SNAPSHOT"]
 
 
 With Maven:
@@ -29,7 +28,7 @@ With Maven:
     <dependency>
       <groupId>com.novemberain</groupId>
       <artifactId>monger</artifactId>
-      <version>0.9.0-SNAPSHOT</version>
+      <version>0.10.0-SNAPSHOT</version>
     </dependency>
 
 
