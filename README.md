@@ -15,6 +15,24 @@ Monger is very much a work in progress and right now, there is nothing to
 see here, really.
 
 
+## Artifacts
+
+Snapshot artifacts are [released to Clojars](https://clojars.org/com.novemberain/monger) every few days.
+
+With Leiningen:
+
+    [com.novemberain/monger "0.9.0-SNAPSHOT"]
+
+
+With Maven:
+
+    <dependency>
+      <groupId>com.novemberain</groupId>
+      <artifactId>monger</artifactId>
+      <version>0.9.0-SNAPSHOT</version>
+    </dependency>
+
+
 ## Continuous Integration
 
 [![Continuous Integration status](https://secure.travis-ci.org/michaelklishin/monger.png)](http://travis-ci.org/michaelklishin/monger)
