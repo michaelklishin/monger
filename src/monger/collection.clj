@@ -22,6 +22,7 @@
 ;;
 
 (defn ^WriteResult insert
+  "Saves document to database"
   ([^String collection, ^DBObject document]
      (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
        (.insert ^DBCollection coll ^DBObject (to-db-object document) ^WriteConcern monger.core/*mongodb-write-concern*)))
@@ -31,9 +32,10 @@
 
 
 (defn ^WriteResult insert-batch
+  "Saves documents do database"
   ([^String collection, ^List documents]
      (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
-       (.insert ^DBCollection coll ^List (to-db-object documents) ^WriteConcern WriteConcern/NORMAL)))
+       (.insert ^DBCollection coll ^List (to-db-object documents) ^WriteConcern monger.core/*mongodb-write-concern*)))
   ([^String collection, ^List documents, ^WriteConcern concern]
      (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
        (.insert ^DBCollection coll ^List (to-db-object documents) ^WriteConcern concern))))
@@ -44,6 +46,7 @@
 (declare fields-to-db-object)
 
 (defn ^DBCursor find
+  "Queries for an object in this collection."
   ([^String collection]
      (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
        (.find coll)))
@@ -76,6 +79,7 @@
 ;;
 
 (defn ^DBObject find-one
+  "Returns a single object from this collection matching the query."
   ([^String collection, ^Map ref]
      (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
        (.findOne ^DBCollection coll ^DBObject (to-db-object ref))))
@@ -117,6 +121,7 @@
 ;; monger.collection/group
 ;;
 
+
 ;; TBD
 
 
@@ -124,6 +129,13 @@
 ;; monger.collection/count
 ;;
 (defn ^long count
+  "Returns the number of documents in this collection.
+
+  Takes optional conditions as an argument.
+
+      (monger.collection/count collection)
+
+      (monger.collection/count collection { :first_name \"Paul\" })"
   ([^String collection]
      (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
        (.count coll)))

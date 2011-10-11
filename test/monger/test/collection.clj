@@ -330,6 +330,46 @@
           (is (= (:language doc) "Clojure"))))
       (is (empty? (mgcol/find collection { :language "Erlang" } [:name]))))))
 
+;; more sophisticated examples
+(deftest find-with-conditional-operators-comparison
+  (let [collection "libraries"]
+    (monger.collection/insert-batch collection [{ :language "Clojure", :name "monger"   :users 1}
+                                                { :language "Clojure", :name "langohr"  :users 5 }
+                                                { :language "Clojure", :name "incanter" :users 15 }
+                                                { :language "Scala",   :name "akka"     :users 150}])
+
+    (is (= 2 (.count (monger.collection/find collection { :users { "$gt" 10 }}))))
+    (is (= 3 (.count (monger.collection/find collection { :users { "$gte" 5 }}))))
+    (is (= 2 (.count (monger.collection/find collection { :users { "$lt" 10 }}))))
+    (is (= 2 (.count (monger.collection/find collection { :users { "$lte" 5 }}))))
+    (is (= 1 (.count (monger.collection/find collection { :users { "$gt" 10 "$lt" 150 }}))))
+
+    ))
+
+(deftest find-on-embedded-arrays
+  (let [collection "libraries"]
+    (monger.collection/insert-batch collection [{ :language "Clojure", :tags [ "functional" ] }
+                                                { :language "Scala",   :tags [ "functional" "object-oriented" ] }
+                                                { :language "Ruby",    :tags [ "object-oriented" "dynamic" ] }])
+
+    (is (= "Scala" (:language (first (monger.collection/find-maps collection { :tags { "$all" [ "functional" "object-oriented" ] } } )))))
+    (is (= 3 (.count (monger.collection/find-maps collection { :tags { "$in" [ "functional" "object-oriented" ] } } ))))))
+
+
+(deftest find-with-conditional-operators-on-embedded-documents
+  (let [collection "people"]
+    (monger.collection/insert-batch collection [{ :name "Bob", :comments [ { :text "Nice!" :rating 1 }
+                                                                           { :text "Love it" :rating 4 }
+                                                                           { :text "What?":rating -5 } ] }
+                                                { :name "Alice", :comments [ { :text "Yeah" :rating 2 }
+                                                                             { :text "Doh" :rating 1 }
+                                                                             { :text "Agreed" :rating 3 }
+                                                                             ] } ])
+
+    (is (= 1 (.count (monger.collection/find collection { :comments { "$elemMatch" { :text "Nice!" :rating { "$gte" 1 } } } }))))
+
+    (is (= 2 (.count (monger.collection/find collection { "comments.rating" 1 } ))))
+    (is (= 1 (.count (monger.collection/find collection { "comments.rating" { "$gt" 3 } }))))))
 
 ;;
 ;; update, save
