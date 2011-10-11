@@ -28,7 +28,7 @@
 ;;
 
 (deftest insert-large-batches-of-documents-without-object-ids
-  (doseq [n [1000 10000 100000 1000000]]
+  (doseq [n [1000 10000 100000]]
     (let [collection "things"
           docs       (map (fn [i]
                             (monger.conversion/to-db-object { :title "Untitled" :created-at (Date.) :number i }))
