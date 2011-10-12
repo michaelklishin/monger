@@ -5,7 +5,7 @@ Monger is an idiomatic Clojure wrapper around MongoDB Java driver.
 
 ## Usage
 
-Unless documentation guides & examples are written (targeted for the 1.0 release), it is fair to say that it is *likely to be unusable* to anyone
+Before documentation guides & examples are written (targeted for the 1.0 release), it is fair to say that it is *likely to be unusable* to anyone
 other than the author.
 
 
