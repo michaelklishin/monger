@@ -84,24 +84,16 @@
   (from-db-object [^DBObject input keywordize]
     ;; DBObject provides .toMap, but the implementation in
     ;; subclass GridFSFile unhelpfully throws
-    ;; UnsupportedOperationException
+    ;; UnsupportedOperationException. This part is taken from congomongo and
+    ;; may need revisiting at a later point. MK.
     (associate-pairs (for [key-set (.keySet input)] [key-set (.get input key-set)])
-                     keywordize))
-
-  ;; this idea needs to be tested out first, we will see how well
-  ;; it works. MK.
-  ;; DBCursor
-  ;; (from-db-object [^DBCursor input]
-  ;;   (if (empty? input)
-  ;;     []
-  ;;     (lazy-seq (seq input))))
-    )
+                     keywordize)))
 
 
 (defn- associate-pairs [pairs keywordize]
   ;; Taking the keywordize test out of the fn reduces derefs
   ;; dramatically, which was the main barrier to matching pure-Java
-  ;; performance for this marshalling
+  ;; performance for this marshalling. Take from congomongo. MK.
   (reduce (if keywordize
             (fn [m [^String k v]]
               (assoc m (keyword k) (from-db-object v true)))
