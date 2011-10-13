@@ -20,7 +20,7 @@ Snapshot artifacts are [released to Clojars](https://clojars.org/com.novemberain
 
 With Leiningen:
 
-    [com.novemberain/monger "0.10.0-SNAPSHOT"]
+    [com.novemberain/monger "0.11.0-SNAPSHOT"]
 
 
 With Maven:
@@ -28,7 +28,7 @@ With Maven:
     <dependency>
       <groupId>com.novemberain</groupId>
       <artifactId>monger</artifactId>
-      <version>0.10.0-SNAPSHOT</version>
+      <version>0.11.0-SNAPSHOT</version>
     </dependency>
 
 
