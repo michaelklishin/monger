@@ -1,5 +1,6 @@
 (ns monger.joda-time
-  (:import (org.joda.time DateTime DateTimeZone))
+  (:import [org.joda.time DateTime DateTimeZone ReadableInstant]
+           [org.joda.time.format ISODateTimeFormat])
   (:use [monger.conversion])
   (:require [clojure.data.json :as json]))
 
@@ -9,7 +10,7 @@
 
 (extend-protocol ConvertToDBObject
   org.joda.time.DateTime
-  (to-db-object [^org.joda.time.DateTime input]
+  (to-db-object [^DateTime input]
     (to-db-object (.toDate input))))
 
 (extend-protocol ConvertFromDBObject
@@ -20,7 +21,5 @@
 
 (extend-protocol json/Write-JSON
   org.joda.time.DateTime
-  (write-json [^org.joda.time.DateTime object out escape-unicode?]
-    ;; TODO: use .printTo(Writer) here instead of ignoring
-    ;;       out parameter. MK.
-    (.print (org.joda.time.format.ISODateTimeFormat/dateTime) object)))
+  (write-json [^DateTime object out escape-unicode?]
+    (json/write-json (.print (ISODateTimeFormat/dateTime) ^ReadableInstant object) out escape-unicode?)))
