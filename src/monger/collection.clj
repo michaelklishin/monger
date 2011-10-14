@@ -9,7 +9,9 @@
 
 (ns monger.collection
   (:refer-clojure :exclude [find remove count drop])
-  (:import (com.mongodb Mongo DB DBCollection WriteResult DBObject WriteConcern DBCursor) (java.util List Map) (clojure.lang IPersistentMap ISeq))
+  (:import [com.mongodb Mongo DB DBCollection WriteResult DBObject WriteConcern DBCursor MapReduceCommand MapReduceCommand$OutputType]
+           [java.util List Map]
+           [clojure.lang IPersistentMap ISeq])
   (:require [monger core result])
   (:use     [monger.conversion]))
 
@@ -280,6 +282,20 @@
   ([^String from, ^String to, ^Boolean drop-target]
      (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* from)]
        (.rename coll to drop-target))))
+
+;;
+;; Map/Reduce
+;;
+
+(defn map-reduce
+  ([^String collection, ^String js-mapper, ^String js-reducer, ^String output, ^Map query]
+     (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
+       (.mapReduce coll js-mapper js-reducer output (to-db-object query))))
+  ([^String collection, ^String js-mapper, ^String js-reducer, ^String output, ^MapReduceCommand$OutputType output-type, ^Map query]
+     (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
+       (.mapReduce coll js-mapper js-reducer output output-type (to-db-object query)))))
+
+
 
 ;;
 ;; Implementation
