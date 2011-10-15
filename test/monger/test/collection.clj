@@ -539,7 +539,7 @@
              (map #(mgcnv/from-db-object % true) (seq results))))
       (is (= expected
              (map #(mgcnv/from-db-object % true) (mgcol/find "mr_outputs"))))
-      (.drop output)))
+      (.drop ^MapReduceOutput output)))
 
   (deftest basic-map-reduce-example-that-merged-results-into-named-collection
     (mgcol/remove collection)
@@ -551,4 +551,4 @@
       (is (= 4 (monger.core/count (.results ^MapReduceOutput output))))
       (is (= ["CA" "IL" "NY" "OR"]
              (map :_id (mgcol/find-maps "merged_mr_outputs"))))
-      (.drop output))))
+      (.drop ^MapReduceOutput output))))
