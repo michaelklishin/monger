@@ -3,7 +3,7 @@
         [monger.json]
         [monger.joda-time]
         [monger.conversion])
-  (:import [org.joda.time ReadableInstant]
+  (:import [org.joda.time DateTime ReadableInstant]
            [org.joda.time.format ISODateTimeFormat]
            [java.io StringWriter PrintWriter])
   (:require [clojure.data.json :as json]
@@ -21,7 +21,7 @@
 
 
 (deftest conversion-of-java-util-date-to-joda-datetime
-  (let [input  (.toDate (t/date-time 2011 10 13 23 55 0))
+  (let [input  (.toDate ^DateTime (t/date-time 2011 10 13 23 55 0))
         output (from-db-object input false)]
     (is (instance? org.joda.time.DateTime output))
-    (is (= input (.toDate output)))))
+    (is (= input (.toDate ^DateTime output)))))
