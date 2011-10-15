@@ -1,12 +1,14 @@
 (set! *warn-on-reflection* true)
 
 (ns monger.test.collection
-  (:import  [com.mongodb WriteResult WriteConcern DBCursor DBObject CommandResult$CommandFailure]
+  (:import  [com.mongodb WriteResult WriteConcern DBCursor DBObject CommandResult$CommandFailure MapReduceOutput MapReduceCommand MapReduceCommand$OutputType]
             [org.bson.types ObjectId]
             [java.util Date])
-  (:require [monger core result util conversion]
+  (:require [monger core util]
             [clojure stacktrace]
-            [monger.collection :as mgcol])
+            [monger.collection :as mgcol]
+            [monger.result     :as mgres]
+            [monger.conversion :as mgcnv])
   (:use [clojure.test]))
 
 (monger.core/connect!)
@@ -60,7 +62,7 @@
 
 (deftest insert-a-basic-db-object-without-id-and-with-default-write-concern
   (let [collection "people"
-        doc        (monger.conversion/to-db-object { :name "Joe", :age 30 })]
+        doc        (mgcnv/to-db-object { :name "Joe", :age 30 })]
     (is (nil? (.get ^DBObject doc "_id")))
     (mgcol/insert "people" doc)
     (is (not (nil? (monger.util/get-id doc))))))
@@ -160,8 +162,8 @@
     (mgcol/insert collection doc)
     (def ^DBObject found-one (mgcol/find-one collection { :language "Clojure" }))
     (is (= (:_id doc) (monger.util/get-id found-one)))
-    (is (= (monger.conversion/from-db-object found-one true) doc))
-    (is (= (monger.conversion/to-db-object doc) found-one))))
+    (is (= (mgcnv/from-db-object found-one true) doc))
+    (is (= (mgcnv/to-db-object doc) found-one))))
 
 
 (deftest find-one-full-document-as-map-when-collection-has-matches
@@ -289,7 +291,7 @@
                                     { :language "Clojure", :name "incanter" }
                                     { :language "Scala",   :name "akka" }])
     (doseq [doc (take 3 (map (fn [dbo]
-                               (monger.conversion/from-db-object dbo true))
+                               (mgcnv/from-db-object dbo true))
                              (mgcol/find-seq collection { :language "Clojure" })))]
       (is (= "Clojure" (:language doc))))))
 
@@ -326,7 +328,7 @@
       (is (= 1 (.count scala-libs)))
       (is (= 3 (.count clojure-libs)))
       (doseq [i clojure-libs]
-        (let [doc (monger.conversion/from-db-object i true)]
+        (let [doc (mgcnv/from-db-object i true)]
           (is (= (:language doc) "Clojure"))))
       (is (empty? (mgcol/find collection { :language "Erlang" } [:name]))))))
 
@@ -408,7 +410,7 @@
 
 (deftest save-a-new-basic-db-object
   (let [collection "people"
-        doc        (monger.conversion/to-db-object { :name "Joe", :age 30 })]
+        doc        (mgcnv/to-db-object { :name "Joe", :age 30 })]
     (is (nil? (monger.util/get-id doc)))
     (mgcol/save "people" doc)
     (is (not (nil? (monger.util/get-id doc))))))
@@ -495,3 +497,58 @@
     (is (not (mgcol/exists? collection)))
     (is (mgcol/exists? "gadgets"))
     (mgcol/drop "gadgets")))
+
+
+;;
+;; Map/Reduce
+;;
+
+(let [collection "widgets"
+      mapper     "function() {
+                      emit(this.state, this.price * this.quantity)
+                   }"
+      reducer    "function(key, values) {
+                     var result = 0;
+                     values.forEach(function(v) { result += v });
+
+                     return result;
+                   }"
+      batch      [{ :state "CA" :quantity 1 :price 199.00 }
+                  { :state "NY" :quantity 2 :price 199.00 }
+                  { :state "NY" :quantity 1 :price 299.00 }
+                  { :state "IL" :quantity 2 :price 11.50  }
+                  { :state "CA" :quantity 2 :price 2.95   }
+                  { :state "IL" :quantity 3 :price 5.50   }]
+      expected    [{:_id "CA", :value 204.9} {:_id "IL", :value 39.5} {:_id "NY", :value 697.0}]]
+  (deftest basic-inline-map-reduce-example
+    (mgcol/remove collection)
+    (is (mgres/ok? (mgcol/insert-batch collection batch)))
+    (let [output  (mgcol/map-reduce collection mapper reducer nil MapReduceCommand$OutputType/INLINE {})
+          results (mgcnv/from-db-object ^DBObject (.results ^MapReduceOutput output) true)]
+      (mgres/ok? output)
+      (is (= expected results))))
+
+  (deftest basic-map-reduce-example-that-replaces-named-collection
+    (mgcol/remove collection)
+    (is (mgres/ok? (mgcol/insert-batch collection batch)))
+    (let [output  (mgcol/map-reduce collection mapper reducer "mr_outputs" {})
+          results (mgcnv/from-db-object ^DBObject (.results ^MapReduceOutput output) true)]
+      (mgres/ok? output)
+      (is (= 3 (monger.core/count results)))
+      (is (= expected
+             (map #(mgcnv/from-db-object % true) (seq results))))
+      (is (= expected
+             (map #(mgcnv/from-db-object % true) (mgcol/find "mr_outputs"))))
+      (.drop ^MapReduceOutput output)))
+
+  (deftest basic-map-reduce-example-that-merged-results-into-named-collection
+    (mgcol/remove collection)
+    (is (mgres/ok? (mgcol/insert-batch collection batch)))
+    (mgcol/map-reduce collection mapper reducer "merged_mr_outputs" MapReduceCommand$OutputType/MERGE {})
+    (is (mgres/ok? (mgcol/insert       collection { :state "OR" :price 17.95 :quantity 4 })))
+    (let [output  (mgcol/map-reduce collection mapper reducer "merged_mr_outputs" MapReduceCommand$OutputType/MERGE {})]
+      (mgres/ok? output)
+      (is (= 4 (monger.core/count (.results ^MapReduceOutput output))))
+      (is (= ["CA" "IL" "NY" "OR"]
+             (map :_id (mgcol/find-maps "merged_mr_outputs"))))
+      (.drop ^MapReduceOutput output))))
