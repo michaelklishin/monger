@@ -8,7 +8,7 @@
 ;; You must not remove this notice, or any other, from this software.
 
 (ns monger.collection
-  (:refer-clojure :exclude [find remove count drop])
+  (:refer-clojure :exclude [find remove count drop distinct])
   (:import [com.mongodb Mongo DB DBCollection WriteResult DBObject WriteConcern DBCursor MapReduceCommand MapReduceCommand$OutputType]
            [java.util List Map]
            [clojure.lang IPersistentMap ISeq])
@@ -294,6 +294,19 @@
   ([^String collection, ^String js-mapper, ^String js-reducer, ^String output, ^MapReduceCommand$OutputType output-type, ^Map query]
      (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
        (.mapReduce coll js-mapper js-reducer output output-type (to-db-object query)))))
+
+
+;;
+;; monger.collection/distinct
+;;
+
+(defn distinct
+  ([^String collection, ^String key]
+     (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
+       (.distinct coll ^String (to-db-object key))))
+  ([^String collection, ^String key, ^Map query]
+     (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
+       (.distinct coll ^String (to-db-object key) ^DBObject (to-db-object query)))))
 
 
 

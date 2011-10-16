@@ -552,3 +552,20 @@
       (is (= ["CA" "IL" "NY" "OR"]
              (map :_id (mgcol/find-maps "merged_mr_outputs"))))
       (.drop ^MapReduceOutput output))))
+
+
+;;
+;; distinct
+;;
+
+(deftest distinct-values
+  (let [collection "widgets"
+        batch      [{ :state "CA" :quantity 1 :price 199.00 }
+                    { :state "NY" :quantity 2 :price 199.00 }
+                    { :state "NY" :quantity 1 :price 299.00 }
+                    { :state "IL" :quantity 2 :price 11.50  }
+                    { :state "CA" :quantity 2 :price 2.95   }
+                    { :state "IL" :quantity 3 :price 5.50   }]]
+    (mgcol/insert-batch collection batch)
+    (is (= ["CA" "IL" "NY"] (sort (mgcol/distinct collection :state))))
+    (is (= ["CA" "NY"] (sort (mgcol/distinct collection :state { :price { "$gt" 100.00 } }))))))
