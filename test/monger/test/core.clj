@@ -1,5 +1,5 @@
 (ns monger.test.core
-  (:require [monger core collection util])
+  (:require [monger core collection util result])
   (:import (com.mongodb Mongo DB))
   (:use [clojure.test]))
 
@@ -36,10 +36,9 @@
 (deftest issuing-a-command
   "Some commands require administrative priviledges or complex data / checks or heavily depend on DB version. They will be ommited here."
   (let [collection "things"]
-    (are [a b] (= a (.ok (monger.core/command b)))
-         true { :profile 1 }
-         true { :listCommands 1 }
-         true { :dbStats 1 }
-         true { :collstats "things" :scale (* 1024 1024) }
-         true { :getLastError 1 }
-         )))
+    (doseq [c [{ :profile 1 }
+               { :listCommands 1 }
+               { :dbStats 1 }
+               { :collstats "things" :scale (* 1024 1024) }
+               { :getLastError 1 }]]
+      (is (monger.result/ok? (monger.core/command c))))))
