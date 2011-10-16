@@ -6,4 +6,5 @@
                  [com.novemberain/validateur    "1.0.0-SNAPSHOT"]]
   :dev-dependencies [[org.clojure/data.json "0.1.1"]
                      [clj-time              "0.3.1"]]
+  :dev-resources-path "test/resources"
   :warn-on-reflection true)
