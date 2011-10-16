@@ -153,12 +153,16 @@
 
   Please note that update is potentially destructive operation. It will update your document with the given set
   emptying the fields not mentioned in (^Map document). In order to only change certain fields, please use
-  \"$set\", for example:
+  \"$set\".
+
+  EXAMPLES
 
       (monger.collection/update \"people\" { :first_name \"Raul\" } { \"$set\" { :first_name \"Paul\" } })
 
   You can use all the Mongodb Modifier Operations ($inc, $set, $unset, $push, $pushAll, $addToSet, $pop, $pull
-  $pullAll, $rename, $bit) here, as well. Few examples:
+  $pullAll, $rename, $bit) here, as well
+
+  EXAMPLES
 
     (monger.collection/update \"people\" { :first_name \"Paul\" } { \"$set\" { :index 1 } })
     (monger.collection/update \"people\" { :first_name \"Paul\" } { \"$inc\" { :index 5 } })
@@ -166,6 +170,8 @@
     (monger.collection/update \"people\" { :first_name \"Paul\" } { \"$unset\" { :years_on_stage 1} })
 
   It also takes modifiers, such as :upsert and :multi.
+
+  EXAMPLES
 
     ;; add :band field to all the records found in \"people\" collection, otherwise only the first matched record
     ;; will be updated
@@ -185,11 +191,13 @@
 (defn ^WriteResult save
   "Saves an object to the given collection (does insert or update based on the object _id).
 
-   If the object is not present in the database, insert operation will be performed:
+   If the object is not present in the database, insert operation will be performed.
+   If the object is already in the database, it will be updated.
+
+   EXAMPLES
 
        (monger.collection/save \"people\" { :first_name \"Ian\" :last_name \"Gillan\" })
-
-   If the object is already in the database, it will be updated."
+   "
   ([^String collection, ^Map document]
      (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
        (.save coll (to-db-object document) monger.core/*mongodb-write-concern*)))
@@ -201,6 +209,15 @@
 ;; monger.collection/remove
 
 (defn ^WriteResult remove
+  "Removes objects from the database.
+
+  EXAMPLES
+
+      (monger.collection/remove collection) ;; Removes all documents from DB
+
+      (monger.collection/remove collection { :language \"Clojure\" }) ;; Removes documents based on given query
+
+  "
   ([^String collection]
      (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
        (.remove coll (to-db-object {}))))
@@ -215,6 +232,14 @@
 ;;
 
 (defn create-index
+  "Forces creation of index on a set of fields, if one does not already exists.
+
+  EXAMPLES
+
+      ;; Will create an index on \"language\" field
+      (monger.collection/create-index collection { \"language\" 1 })
+
+  "
   [^String collection, ^Map keys]
   (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
     (.createIndex coll (to-db-object keys))))
@@ -225,6 +250,14 @@
 ;;
 
 (defn ensure-index
+  "Creates an index on a set of fields, if one does not already exist.
+   ensureIndex in Java driver is optimized and is inexpensive if the index already exists.
+
+   EXAMPLES
+
+     (monger.collection/ensure-index collection { \"language\" 1 })
+
+  "
   ([^String collection, ^Map keys]
      (let [coll ^DBCollection (.getCollection monger.core/*mongodb-database* collection)]
        (.ensureIndex ^DBCollection coll ^DBObject (to-db-object keys))))
@@ -238,6 +271,13 @@
 ;;
 
 (defn indexes-on
+  "Return a list of the indexes for this collection.
+
+   EXAMPLES
+
+     (monger.collection/indexes-on collection)
+
+  "
   [^String collection]
   (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
     (from-db-object (.getIndexInfo coll) true)))

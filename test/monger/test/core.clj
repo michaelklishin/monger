@@ -33,6 +33,13 @@
 ;;         db         (monger.core/get-db connection "monger-test" "monger" "test_password")]
 ;;     (is (instance? com.mongodb.DB db))))
 
-(deftest issuing-a-profiling-command
+(deftest issuing-a-command
+  "Some commands require administrative priviledges or complex data / checks or heavily depend on DB version. They will be ommited here."
   (let [collection "things"]
-    (monger.core/command { :profile 1 })))
+    (are [a b] (= a (.ok (monger.core/command b)))
+         true { :profile 1 }
+         true { :listCommands 1 }
+         true { :dbStats 1 }
+         true { :collstats "things" :scale (* 1024 1024) }
+         true { :getLastError 1 }
+         )))
