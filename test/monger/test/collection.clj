@@ -505,13 +505,13 @@
 
 (let [collection "widgets"
       mapper     "function() {
-                      emit(this.state, this.price * this.quantity)
+                    emit(this.state, this.price * this.quantity)
                    }"
       reducer    "function(key, values) {
-                     var result = 0;
-                     values.forEach(function(v) { result += v });
+                    var result = 0;
+                    values.forEach(function(v) { result += v });
 
-                     return result;
+                    return result;
                    }"
       batch      [{ :state "CA" :quantity 1 :price 199.00 }
                   { :state "NY" :quantity 2 :price 199.00 }
