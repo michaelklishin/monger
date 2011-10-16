@@ -8,7 +8,8 @@
             [clojure stacktrace]
             [monger.collection :as mgcol]
             [monger.result     :as mgres]
-            [monger.conversion :as mgcnv])
+            [monger.conversion :as mgcnv]
+            [monger.js         :as js])
   (:use [clojure.test]))
 
 (monger.core/connect!)
@@ -504,14 +505,12 @@
 ;;
 
 (let [collection "widgets"
-      mapper     "function() {
-                      emit(this.state, this.price * this.quantity)
-                   }"
+      mapper     (js/load-resource "resources/mongo/js/mapfun1.js")
       reducer    "function(key, values) {
-                     var result = 0;
-                     values.forEach(function(v) { result += v });
+                    var result = 0;
+                    values.forEach(function(v) { result += v });
 
-                     return result;
+                    return result;
                    }"
       batch      [{ :state "CA" :quantity 1 :price 199.00 }
                   { :state "NY" :quantity 2 :price 199.00 }
