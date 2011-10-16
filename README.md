@@ -50,4 +50,4 @@ Monger is built from the ground up for Clojure 1.3 and up.
 
 Copyright (C) 2011 Michael S. Klishin
 
-Distributed under the Eclipse Public License, the same as Clojure.
+Distributed under the [Eclipse Public License](http://www.eclipse.org/legal/epl-v10.html), the same as Clojure.
