@@ -95,5 +95,62 @@
 
 
 (defn command
+  "Available commands (please check MongoDB documentation for a complete list of commands for particular DB version.
+   Returns CommandResult.
+     Use (.ok result) to get response status.
+     It implements AbstractMap interface, so you can access it's internals:
+
+        (get (monger.core/command { :collstats \"things\") \"ns\")) ;; => monger-test.things
+
+   { :buildinfo 1 } returns version number and build information about the current MongoDB server, should be executed via admin DB.
+
+   { :collstats collection-name [ :scale scale ] } returns stats about given collection.
+
+   { :dbStats 1 } returns the stats of current database
+
+   { :dropDatabase 1 }  deletes the current database
+
+   { :findAndModify find-and-modify-config } runs find, modify and return for the given query.
+       Takes :query, :sory, :remove, :update, :new, :fields and :upsert arguments.
+       Please refer MongoDB documentation for details. http://www.mongodb.org/display/DOCS/findAndModify+Command
+
+   { :fsync config } performs a full fsync, that flushes all pending writes to database, provides an optional write lock that will make
+      backups easier.
+      Please refer MongoDB documentation for details :http://www.mongodb.org/display/DOCS/fsync+Command
+
+   { :getLastError 1 } returns the status of the last operation on current connection.
+
+   { :group group-config } performs grouping aggregation, docs and support for grouping are TBD in Monger.
+
+   { :listCommands 1 }  displays the list of available commands.
+
+   { :profile new-profile-level } sets the database profiler to profile level N.
+
+   { :reIndex coll } performs re-index on a given collection.
+
+   { :renameCollection old-name :to new-name } renames collection from old-name to new-name
+
+   { :repairDatabase 1 } repair and compact the current database (may be very time-consuming, depending on DB size)
+
+   Replica set commands
+     { :isMaster 1 } checks if this server is a master server.
+     { :replSetGetStatus 1 } get the status of a replica set.
+     { :replSetInitiate replica-config } initiate a replica set with given config.
+     { :replSetReconfig replica-config } set a given config for replica set.
+     { :replSetStepDown seconds } manually tell a member to step down as primary. It will become primary again after specified amount of seconds.
+     { :replSetFreeze seconds } freeze state of member, call with 0 to unfreeze.
+     { :resync 1 } start a full resync of a replica slave
+        For more information, please refer Mongodb Replica Set Command guide: http://www.mongodb.org/display/DOCS/Replica+Set+Commands
+
+   { :serverStatus 1 } gets administrative statistics about the server.
+
+   { :shutdown 1 } shuts the MongoDB server down.
+
+   { :top 1 } get a breakdown of usage by collection.
+
+   { :validate namespace-name } validate the namespace (collection or index). May be very time-consuming, depending on DB size.
+
+   For :distinct, :count, :drop, :dropIndexes, :mapReduce we suggest to use monger/collection #distinct, #count,  #drop, #dropIndexes, :mapReduce respectively.
+  "
   [^Map cmd]
   (.command ^DB *mongodb-database* ^DBObject (to-db-object cmd)))
