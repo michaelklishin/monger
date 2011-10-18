@@ -4,7 +4,7 @@
   :dependencies [[org.clojure/clojure           "1.3.0"]
                  [org.mongodb/mongo-java-driver "2.6.5"]
                  [com.novemberain/validateur    "1.0.0-SNAPSHOT"]]
-  :dev-dependencies [[org.clojure/data.json "0.1.1"]
-                     [clj-time              "0.3.1"]]
+  :dev-dependencies [[org.clojure/data.json "0.1.2"]
+                     [clj-time              "0.3.1" :exclusions [org.clojure/clojure]]]
   :dev-resources-path "test/resources"
   :warn-on-reflection true)
