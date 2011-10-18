@@ -84,7 +84,7 @@
   (def ^:dynamic *mongodb-database* db))
 
 
-(defn set-write-concern!
+(defn set-default-write-concern!
   [wc]
   (def ^:dynamic *mongodb-write-concern* wc))
 

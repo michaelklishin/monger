@@ -27,7 +27,7 @@
 ;; Tests
 ;;
 
-(monger.core/set-write-concern! WriteConcern/NORMAL)
+(monger.core/set-default-write-concern! WriteConcern/NORMAL)
 
 (deftest insert-large-batches-of-documents-without-object-ids
   (doseq [n [1000 10000 100000]]

@@ -44,7 +44,7 @@
 
 (use-fixtures :each purge-people-collection purge-docs-collection purge-things-collection purge-libraries-collection)
 
-(monger.core/set-write-concern! WriteConcern/SAFE)
+(monger.core/set-default-write-concern! WriteConcern/SAFE)
 
 ;;
 ;; insert
