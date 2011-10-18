@@ -26,7 +26,7 @@
 
 (declare ^:dynamic ^Mongo        *mongodb-connection*)
 (declare ^:dynamic ^DB           *mongodb-database*)
-(def     ^:dynamic ^WriteConcern *mongodb-write-concern* WriteConcern/NORMAL)
+(def     ^:dynamic ^WriteConcern *mongodb-write-concern* WriteConcern/SAFE)
 
 
 ;;
@@ -82,6 +82,11 @@
 (defn set-db!
   [db]
   (def ^:dynamic *mongodb-database* db))
+
+
+(defn set-write-concern!
+  [wc]
+  (def ^:dynamic *mongodb-write-concern* wc))
 
 
 
