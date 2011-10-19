@@ -11,10 +11,10 @@ wanted a client that will
  * Support most of MongoDB 2.0+ features but only those that really matter. Grouping the way it is done today, for example, does not (it is easier to just use Map/Reduce directly).
  * Be well documented.
  * Be well tested.
- * Be maintained, not carry technical debt from 2009 on and on.
- * Will integrate usage of JavaScript files and ClojureScript (as soon as the compiler gets artifact it is possible to depend on for easy embedding).
- * Will learn from other clients like the Java and Ruby ones.
- * Will target Clojure 1.3.0 and later from the ground up.
+ * Be maintained, not carry technical debt from 2009 forever.
+ * Integrate usage of JavaScript files and ClojureScript (as soon as the compiler gets artifact it is possible to depend on for easy embedding).
+ * Learn from other clients like the Java and Ruby ones.
+ * Target Clojure 1.3.0 and later from the ground up.
 
 ## Usage
 
