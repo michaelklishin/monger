@@ -3,6 +3,19 @@
 Monger is an idiomatic Clojure wrapper around MongoDB Java driver.
 
 
+## Project Goals
+
+There is one MongoDB client for Clojure that has been around since 2009. So, why create another one? Monger authors
+wanted a client that will
+
+ * Support most of MongoDB 2.0+ features but only those that really matter. Grouping the way it is done today, for example, does not (it is easier to just use Map/Reduce directly).
+ * Be well documented.
+ * Be well tested.
+ * Be maintained, not carry technical debt from 2009 on and on.
+ * Will integrate usage of JavaScript files and ClojureScript (as soon as the compiler gets artifact it is possible to depend on for easy embedding).
+ * Will learn from other clients like the Java and Ruby ones.
+ * Will target Clojure 1.3.0 and later from the ground up.
+
 ## Usage
 
 Before documentation guides & examples are written (targeted for the 1.0 release), it is fair to say that it is *likely to be unusable* to anyone
@@ -11,7 +24,7 @@ other than the author.
 
 ## This is a Work In Progress
 
-Core Monger APIs are stabilized but it is still a work in progress. Keep that in mind.
+Core Monger APIs are stabilized but it is still a work in progress. Keep that in mind. 1.0 will be released in late 2011.
 
 
 ## Artifacts
