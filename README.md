@@ -29,7 +29,7 @@ Core Monger APIs are stabilized but it is still a work in progress. Keep that in
 
 ## Artifacts
 
-Snapshot artifacts are [released to Clojars](https://clojars.org/com.novemberain/monger) every few days.
+Snapshot artifacts are [released to Clojars](https://clojars.org/com.novemberain/monger) every 24 hours.
 
 With Leiningen:
 
