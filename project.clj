@@ -5,6 +5,6 @@
                  [org.mongodb/mongo-java-driver "2.6.5"]
                  [com.novemberain/validateur    "1.0.0-SNAPSHOT"]]
   :dev-dependencies [[org.clojure/data.json "0.1.2"]
-                     [clj-time              "0.3.1" :exclusions [org.clojure/clojure]]]
+                     [clj-time              "0.3.2-SNAPSHOT" :exclusions [org.clojure/clojure]]]
   :dev-resources-path "test/resources"
   :warn-on-reflection true)
