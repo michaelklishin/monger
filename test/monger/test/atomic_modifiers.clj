@@ -221,3 +221,32 @@
     (mgcol/update coll { :_id oid } { "$addToSet" { :tags "modifiers" } })
     (mgcol/update coll { :_id oid } { "$addToSet" { :tags "modifiers" } })
     (is (= { :_id oid :title title :tags ["mongodb" "modifiers"] } (mgcol/find-map-by-id coll oid)))))
+
+
+;;
+;; $pop
+;;
+
+(deftest pop-last-value-in-the-array-using-$pop-modifier
+  (let [coll   "docs"
+        oid    (ObjectId.)
+        title "$pop modifier removes last or first value in the array"]
+    (mgcol/insert coll { :_id oid :title title :tags ["products" "apple" "reviews"] })
+    (mgcol/update coll { :_id oid } { "$pop" { :tags 1 } })
+    (is (= { :_id oid :title title :tags ["products" "apple"] } (mgcol/find-map-by-id coll oid)))))
+
+(deftest unshift-first-value-in-the-array-using-$pop-modifier
+  (let [coll   "docs"
+        oid    (ObjectId.)
+        title "$pop modifier removes last or first value in the array"]
+    (mgcol/insert coll { :_id oid :title title :tags ["products" "apple" "reviews"] })
+    (mgcol/update coll { :_id oid } { "$pop" { :tags -1 } })
+    (is (= { :_id oid :title title :tags ["apple" "reviews"] } (mgcol/find-map-by-id coll oid)))))
+
+(deftest pop-last-values-from-multiple-arrays-using-$pop-modifier
+  (let [coll   "docs"
+        oid    (ObjectId.)
+        title "$pop modifier removes last or first value in the array"]
+    (mgcol/insert coll { :_id oid :title title :tags ["products" "apple" "reviews"] :categories ["apple" "reviews" "drafts"] })
+    (mgcol/update coll { :_id oid } { "$pop" { :tags 1 :categories 1 } })
+    (is (= { :_id oid :title title :tags ["products" "apple"] :categories ["apple" "reviews"] } (mgcol/find-map-by-id coll oid)))))
