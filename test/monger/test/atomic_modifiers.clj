@@ -117,3 +117,34 @@
     (mgcol/insert coll { :_id oid :title "Document 1" :published true })
     (is (mgres/ok? (mgcol/update coll { :_id oid } { "$unset" { :published 1 :featured true } })))
     (is (= { :_id oid :title "Document 1" } (mgcol/find-map-by-id coll oid)))))
+
+
+;;
+;; $push
+;;
+
+(deftest initialize-an-array-using-$push-modifier
+  (let [coll  "docs"
+        oid   (ObjectId.)
+        title "$push modifier appends value to field"]
+    (mgcol/insert coll { :_id oid :title title })
+    (mgcol/update coll { :_id oid } { "$push" { :tags "modifiers" } })
+    (is (= { :_id oid :title title :tags ["modifiers"] } (mgcol/find-map-by-id coll oid)))))
+
+(deftest add-value-to-an-existing-array-using-$push-modifier
+  (let [coll  "docs"
+        oid   (ObjectId.)
+        title "$push modifier appends value to field"]
+    (mgcol/insert coll { :_id oid :title title :tags ["mongodb"] })
+    (mgcol/update coll { :_id oid } { "$push" { :tags "modifiers" } })
+    (is (= { :_id oid :title title :tags ["mongodb" "modifiers"] } (mgcol/find-map-by-id coll oid)))))
+
+
+(deftest double-add-value-to-an-existing-array-using-$push-modifier
+  (let [coll  "docs"
+        oid   (ObjectId.)
+        title "$push modifier appends value to field"]
+    (mgcol/insert coll { :_id oid :title title :tags ["mongodb"] })
+    (mgcol/update coll { :_id oid } { "$push" { :tags "modifiers" } })
+    (mgcol/update coll { :_id oid } { "$push" { :tags "modifiers" } })
+    (is (= { :_id oid :title title :tags ["mongodb" "modifiers" "modifiers"] } (mgcol/find-map-by-id coll oid)))))
