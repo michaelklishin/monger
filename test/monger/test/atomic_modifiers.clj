@@ -2,7 +2,8 @@
 
 (ns monger.test.atomic-modifiers
   (:import  [com.mongodb WriteResult WriteConcern DBCursor DBObject CommandResult$CommandFailure]
-            [org.bson.types ObjectId])
+            [org.bson.types ObjectId]
+            [java.util Date])
   (:require [monger core util]
             [monger.collection :as mgcol]
             [monger.result     :as mgres])
@@ -250,3 +251,29 @@
     (mgcol/insert coll { :_id oid :title title :tags ["products" "apple" "reviews"] :categories ["apple" "reviews" "drafts"] })
     (mgcol/update coll { :_id oid } { "$pop" { :tags 1 :categories 1 } })
     (is (= { :_id oid :title title :tags ["products" "apple"] :categories ["apple" "reviews"] } (mgcol/find-map-by-id coll oid)))))
+
+
+;;
+;; $pull
+;;
+
+(deftest remove-all-value-entries-from-array-using-$pull-modifier
+  (let [coll   "docs"
+        oid    (ObjectId.)
+        title "$pull modifier removes all value entries in the array"]
+    (mgcol/insert coll { :_id oid :title title :measurements [1.0 1.2 1.2 1.2 1.1 1.1 1.2 1.3 1.0] })
+    (mgcol/update coll { :_id oid } { "$pull" { :measurements 1.2 } })
+    (is (= { :_id oid :title title :measurements [1.0 1.1 1.1 1.3 1.0] } (mgcol/find-map-by-id coll oid)))))
+
+
+;;
+;; $pullAll
+;;
+
+(deftest remove-all-value-entries-from-array-using-$pullAll-modifier
+  (let [coll   "docs"
+        oid    (ObjectId.)
+        title "$pull modifier removes all value entries in the array"]
+    (mgcol/insert coll { :_id oid :title title :measurements [1.0 1.2 1.2 1.2 1.1 1.1 1.2 1.3 1.0] })
+    (mgcol/update coll { :_id oid } { "$pullAll" { :measurements [1.0 1.1 1.2] } })
+    (is (= { :_id oid :title title :measurements [1.3] } (mgcol/find-map-by-id coll oid)))))
