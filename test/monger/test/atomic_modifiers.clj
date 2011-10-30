@@ -89,3 +89,31 @@
     (mgcol/insert coll { :_id oid :weight 10.0 })
     (mgcol/update coll { :_id oid } { "$set" { :weight 20.5 :height 25.6 } })
     (is (= { :_id oid :weight 20.5 :height 25.6 } (mgcol/find-map-by-id coll oid [:weight])))))
+
+
+;;
+;; $unset
+;;
+
+(deftest unset-a-single-existing-field-using-$unset-modifier
+  (let [coll "docs"
+        oid  (ObjectId.)]
+    (mgcol/insert coll { :_id oid :title "Document 1" :published true })
+    (mgcol/update coll { :_id oid } { "$unset" { :published 1 } })
+    (is (= { :_id oid :title "Document 1" } (mgcol/find-map-by-id coll oid)))))
+
+
+(deftest unset-multiple-existing-fields-using-$unset-modifier
+  (let [coll "docs"
+        oid  (ObjectId.)]
+    (mgcol/insert coll { :_id oid :title "Document 1" :published true :featured true })
+    (mgcol/update coll { :_id oid } { "$unset" { :published 1 :featured true } })
+    (is (= { :_id oid :title "Document 1" } (mgcol/find-map-by-id coll oid)))))
+
+
+(deftest unsetting-an-unexisting-field-using-$unset-modifier-is-not-considered-an-issue
+  (let [coll "docs"
+        oid  (ObjectId.)]
+    (mgcol/insert coll { :_id oid :title "Document 1" :published true })
+    (is (mgres/ok? (mgcol/update coll { :_id oid } { "$unset" { :published 1 :featured true } })))
+    (is (= { :_id oid :title "Document 1" } (mgcol/find-map-by-id coll oid)))))
