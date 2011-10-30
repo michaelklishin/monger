@@ -140,6 +140,18 @@
     (is (= { :_id oid :title title :tags ["mongodb" "modifiers"] } (mgcol/find-map-by-id coll oid)))))
 
 
+;; this is a common mistake, I leave it here to demonstrate it. You almost never
+;; actually want to do this! What you really want is to use $pushAll instead of $push. MK.
+(deftest add-array-value-to-an-existing-array-using-$push-modifier
+  (let [coll  "docs"
+        oid   (ObjectId.)
+        title "$push modifier appends value to field"]
+    (mgcol/insert coll { :_id oid :title title :tags ["mongodb"] })
+    (mgcol/update coll { :_id oid } { "$push" { :tags ["modifiers"] } })
+    (is (= { :_id oid :title title :tags ["mongodb" ["modifiers"]] } (mgcol/find-map-by-id coll oid)))))
+
+
+
 (deftest double-add-value-to-an-existing-array-using-$push-modifier
   (let [coll  "docs"
         oid   (ObjectId.)
@@ -148,3 +160,33 @@
     (mgcol/update coll { :_id oid } { "$push" { :tags "modifiers" } })
     (mgcol/update coll { :_id oid } { "$push" { :tags "modifiers" } })
     (is (= { :_id oid :title title :tags ["mongodb" "modifiers" "modifiers"] } (mgcol/find-map-by-id coll oid)))))
+
+
+;;
+;; $pushAll
+;;
+
+(deftest initialize-an-array-using-$pushAll-modifier
+  (let [coll  "docs"
+        oid   (ObjectId.)
+        title "$pushAll modifier appends multiple values to field"]
+    (mgcol/insert coll { :_id oid :title title })
+    (mgcol/update coll { :_id oid } { "$pushAll" { :tags ["mongodb" "docs"] } })
+    (is (= { :_id oid :title title :tags ["mongodb" "docs"] } (mgcol/find-map-by-id coll oid)))))
+
+(deftest add-value-to-an-existing-array-using-$pushAll-modifier
+  (let [coll  "docs"
+        oid   (ObjectId.)
+        title "$pushAll modifier appends multiple values to field"]
+    (mgcol/insert coll { :_id oid :title title :tags ["mongodb"] })
+    (mgcol/update coll { :_id oid } { "$pushAll" { :tags ["modifiers" "docs"] } })
+    (is (= { :_id oid :title title :tags ["mongodb" "modifiers" "docs"] } (mgcol/find-map-by-id coll oid)))))
+
+
+(deftest double-add-value-to-an-existing-array-using-$pushAll-modifier
+  (let [coll  "docs"
+        oid   (ObjectId.)
+        title "$pushAll modifier appends multiple values to field"]
+    (mgcol/insert coll { :_id oid :title title :tags ["mongodb" "docs"] })
+    (mgcol/update coll { :_id oid } { "$pushAll" { :tags ["modifiers" "docs"] } })
+    (is (= { :_id oid :title title :tags ["mongodb" "docs" "modifiers" "docs"] } (mgcol/find-map-by-id coll oid)))))
