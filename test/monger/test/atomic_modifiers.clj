@@ -190,3 +190,34 @@
     (mgcol/insert coll { :_id oid :title title :tags ["mongodb" "docs"] })
     (mgcol/update coll { :_id oid } { "$pushAll" { :tags ["modifiers" "docs"] } })
     (is (= { :_id oid :title title :tags ["mongodb" "docs" "modifiers" "docs"] } (mgcol/find-map-by-id coll oid)))))
+
+
+;;
+;; $addToSet
+;;
+
+(deftest initialize-an-array-using-$addToSet-modifier
+  (let [coll  "docs"
+        oid   (ObjectId.)
+        title "$addToSet modifier appends value to field unless it is already there"]
+    (mgcol/insert coll { :_id oid :title title })
+    (mgcol/update coll { :_id oid } { "$addToSet" { :tags "modifiers" } })
+    (is (= { :_id oid :title title :tags ["modifiers"] } (mgcol/find-map-by-id coll oid)))))
+
+(deftest add-value-to-an-existing-array-using-$addToSet-modifier
+  (let [coll  "docs"
+        oid   (ObjectId.)
+        title "$addToSet modifier appends value to field unless it is already there"]
+    (mgcol/insert coll { :_id oid :title title :tags ["mongodb"] })
+    (mgcol/update coll { :_id oid } { "$addToSet" { :tags "modifiers" } })
+    (is (= { :_id oid :title title :tags ["mongodb" "modifiers"] } (mgcol/find-map-by-id coll oid)))))
+
+
+(deftest double-add-value-to-an-existing-array-using-$addToSet-modifier
+  (let [coll  "docs"
+        oid   (ObjectId.)
+        title "$addToSet modifier appends value to field unless it is already there"]
+    (mgcol/insert coll { :_id oid :title title :tags ["mongodb"] })
+    (mgcol/update coll { :_id oid } { "$addToSet" { :tags "modifiers" } })
+    (mgcol/update coll { :_id oid } { "$addToSet" { :tags "modifiers" } })
+    (is (= { :_id oid :title title :tags ["mongodb" "modifiers"] } (mgcol/find-map-by-id coll oid)))))
