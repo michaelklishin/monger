@@ -10,37 +10,13 @@
             [monger.result     :as mgres]
             [monger.conversion :as mgcnv]
             [monger.js         :as js])
-  (:use [clojure.test]))
+  (:use [clojure.test]
+        [monger.test.fixtures]))
 
 (monger.core/connect!)
 (monger.core/set-db! (monger.core/get-db "monger-test"))
 
 
-;;
-;; fixture functions
-;;
-
-(defn purge-collection
-  [collection-name, f]
-  (mgcol/remove collection-name)
-  (f)
-  (mgcol/remove collection-name))
-
-(defn purge-people-collection
-  [f]
-  (purge-collection "people" f))
-
-(defn purge-docs-collection
-  [f]
-  (purge-collection "docs" f))
-
-(defn purge-things-collection
-  [f]
-  (purge-collection "things" f))
-
-(defn purge-libraries-collection
-  [f]
-  (purge-collection "libraries" f))
 
 (use-fixtures :each purge-people-collection purge-docs-collection purge-things-collection purge-libraries-collection)
 
