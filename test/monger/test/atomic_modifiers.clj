@@ -273,7 +273,21 @@
 (deftest remove-all-value-entries-from-array-using-$pullAll-modifier
   (let [coll   "docs"
         oid    (ObjectId.)
-        title "$pull modifier removes all value entries in the array"]
+        title "$pullAll modifier removes entries of multiple values in the array"]
     (mgcol/insert coll { :_id oid :title title :measurements [1.0 1.2 1.2 1.2 1.1 1.1 1.2 1.3 1.0] })
     (mgcol/update coll { :_id oid } { "$pullAll" { :measurements [1.0 1.1 1.2] } })
     (is (= { :_id oid :title title :measurements [1.3] } (mgcol/find-map-by-id coll oid)))))
+
+
+;;
+;; $rename
+;;
+
+(deftest rename-a-single-field-using-$rename-modifier
+  (let [coll   "docs"
+        oid    (ObjectId.)
+        title "$rename renames fields"
+        v     [1.0 1.2 1.2 1.2 1.1 1.1 1.2 1.3 1.0]]
+    (mgcol/insert coll { :_id oid :title title :measurements v })
+    (mgcol/update coll { :_id oid } { "$rename" { :measurements "results" } })
+    (is (= { :_id oid :title title :results v } (mgcol/find-map-by-id coll oid)))))
