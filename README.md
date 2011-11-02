@@ -18,8 +18,7 @@ wanted a client that will
 
 ## Usage
 
-Before documentation guides & examples are written (targeted for the 1.0 release), it is fair to say that it is *likely to be unusable* to anyone
-other than the author.
+We are working on documentation guides & examples site for 1.0 release. Please refer to the test suite for code examples.
 
 
 ## This is a Work In Progress
