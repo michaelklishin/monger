@@ -18,7 +18,7 @@ wanted a client that will
 
 ## Usage
 
-We are working on documentation guides & examples site for 1.0 release. Please refer to the test suite for code examples.
+We are working on documentation guides & examples site for the 1.0 release. Please refer to the test suite for code examples.
 
 
 ## This is a Work In Progress
