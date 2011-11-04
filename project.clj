@@ -2,7 +2,7 @@
   :description "Monger is an experimental idiomatic Clojure wrapper around MongoDB Java driver"
   :license { :name "Eclipse Public License" }
   :dependencies [[org.clojure/clojure           "1.3.0"]
-                 [org.mongodb/mongo-java-driver "2.6.5"]
+                 [org.mongodb/mongo-java-driver "2.7.0"]
                  [com.novemberain/validateur    "1.0.0-SNAPSHOT"]]
   :dev-dependencies [[org.clojure/data.json "0.1.2"]
                      [clj-time              "0.3.2-SNAPSHOT" :exclusions [org.clojure/clojure]]]
