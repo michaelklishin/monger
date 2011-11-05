@@ -93,7 +93,7 @@
 (defn- associate-pairs [pairs keywordize]
   ;; Taking the keywordize test out of the fn reduces derefs
   ;; dramatically, which was the main barrier to matching pure-Java
-  ;; performance for this marshalling. Take from congomongo. MK.
+  ;; performance for this marshalling. Taken from congomongo. MK.
   (reduce (if keywordize
             (fn [m [^String k v]]
               (assoc m (keyword k) (from-db-object v true)))
