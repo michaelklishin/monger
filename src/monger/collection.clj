@@ -58,7 +58,15 @@
   ([^String collection, ^Map ref, ^List fields]
      (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)
            map-of-fields (fields-to-db-object fields)]
-       (.find ^DBCollection coll ^DBObject (to-db-object ref) ^DBObject (to-db-object map-of-fields)))))
+       (.find ^DBCollection coll ^DBObject (to-db-object ref) ^DBObject (to-db-object map-of-fields))))
+  ([^String collection, ^Map ref, ^List fields, num-to-skip, limit]
+     (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)
+           map-of-fields (fields-to-db-object fields)]
+       (.find ^DBCollection coll ^DBObject (to-db-object ref) ^DBObject (to-db-object map-of-fields) ^long num-to-skip ^long limit)))
+  ([^String collection, ^Map ref, ^List fields, num-to-skip, batch-size, limit]
+     (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)
+           map-of-fields (fields-to-db-object fields)]
+       (.find ^DBCollection coll ^DBObject (to-db-object ref) ^DBObject (to-db-object map-of-fields) ^long num-to-skip ^long batch-size ^long limit))))
 
 (defn ^ISeq find-maps
   ([^String collection]
@@ -66,7 +74,11 @@
   ([^String collection, ^Map ref]
      (map (fn [x] (from-db-object x true)) (seq (find collection ref))))
   ([^String collection, ^Map ref, ^List fields]
-     (map (fn [x] (from-db-object x true)) (seq (find collection ref fields)))))
+     (map (fn [x] (from-db-object x true)) (seq (find collection ref fields))))
+  ([^String collection, ^Map ref, ^List fields, num-to-skip, limit]
+     (map (fn [x] (from-db-object x true)) (seq (find collection ref fields num-to-skip limit))))
+  ([^String collection, ^Map ref, ^List fields, num-to-skip, batch-size, limit]
+     (map (fn [x] (from-db-object x true)) (seq (find collection ref fields num-to-skip batch-size limit)))))
 
 (defn ^ISeq find-seq
   ([^String collection]
