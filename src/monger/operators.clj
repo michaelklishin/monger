@@ -2,27 +2,26 @@
 
 (defmacro defoperator
   [operator]
-  (let [operator-name (symbol (str operator))]
-  `(defn ~operator-name
-     [arg#]
-     { (str '~operator-name) arg# }
-        )))
+  (let [op#     (str operator)
+        op-sym# (symbol op#)]
+    `(def ~op-sym# (str ~op#))))
+
 (defoperator $gt)
 (defoperator $inc)
 (defoperator $set)
 (defoperator $unset)
 
-;; $lt
-;; $lte
-;; $all
-;; $in
-;; $set
-;; $unset
-;; $inc
-;; $push
-;; $pushAll
-;; $addToSet
-;; $pop
-;; $pull
-;; $pullAll
-;; $rename
+(defoperator $lt)
+(defoperator $lte)
+(defoperator $all)
+(defoperator $in)
+(defoperator $set)
+(defoperator $unset)
+(defoperator $inc)
+(defoperator $push)
+(defoperator $pushAll)
+(defoperator $addToSet)
+(defoperator $pop)
+(defoperator $pull)
+(defoperator $pullAll)
+(defoperator $rename)
