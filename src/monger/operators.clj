@@ -1,6 +1,6 @@
 (ns monger.operators)
 
-(defmacro defoperator
+(defmacro ^{:private true} defoperator
   [operator]
   (let [op#     (str operator)
         op-sym# (symbol op#)]
