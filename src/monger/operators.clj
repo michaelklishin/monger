@@ -4,7 +4,7 @@
   [operator]
   (let [op#     (str operator)
         op-sym# (symbol op#)]
-    `(def ~op-sym# (str ~op#))))
+    `(def ~op-sym# ~op#)))
 
 (defoperator $gt)
 (defoperator $gte)
