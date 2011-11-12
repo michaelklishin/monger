@@ -7,12 +7,14 @@
     `(def ~op-sym# (str ~op#))))
 
 (defoperator $gt)
+(defoperator $gte)
+(defoperator $lt)
+(defoperator $lte)
+
 (defoperator $inc)
 (defoperator $set)
 (defoperator $unset)
 
-(defoperator $lt)
-(defoperator $lte)
 (defoperator $all)
 (defoperator $in)
 (defoperator $set)
