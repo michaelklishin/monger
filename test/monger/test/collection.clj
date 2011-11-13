@@ -252,6 +252,13 @@
   (let [collection "libraries"]
     (is (empty? (mgcol/find-maps collection { :language "Scala" })))))
 
+(deftest find-multiple-documents-by-regex
+  (let [collection "libraries"]
+    (mgcol/insert-batch collection [{ :language "Clojure",    :name "monger" }
+                                    { :language "Java",       :name "nhibernate" }
+                                    { :language "JavaScript", :name "sprout-core" }])
+    (is (= 2 (monger.core/count (mgcol/find collection { :language #"Java*" }))))))
+
 
 (deftest find-multiple-documents
   (let [collection "libraries"]
