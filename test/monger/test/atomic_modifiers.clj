@@ -34,7 +34,6 @@
     (mgcol/update coll { :_id oid } { $inc { :score 20 } })
     (is (= 120 (:score (mgcol/find-map-by-id coll oid))))))
 
-
 (deftest set-a-single-non-existing-field-using-$inc-modifier
   (let [coll "scores"
         oid  (ObjectId.)]
@@ -150,8 +149,8 @@
         oid   (ObjectId.)
         title "$push modifier appends value to field"]
     (mgcol/insert coll { :_id oid :title title :tags ["mongodb"] })
-    (mgcol/update coll { :_id oid } { $push { :tags ["modifiers"] } })
-    (is (= { :_id oid :title title :tags ["mongodb" ["modifiers"]] } (mgcol/find-map-by-id coll oid)))))
+    (mgcol/update coll { :_id oid } { $push { :tags ["modifiers" "operators"] } })
+    (is (= { :_id oid :title title :tags ["mongodb" ["modifiers" "operators"]] } (mgcol/find-map-by-id coll oid)))))
 
 
 
@@ -163,7 +162,6 @@
     (mgcol/update coll { :_id oid } { $push { :tags "modifiers" } })
     (mgcol/update coll { :_id oid } { $push { :tags "modifiers" } })
     (is (= { :_id oid :title title :tags ["mongodb" "modifiers" "modifiers"] } (mgcol/find-map-by-id coll oid)))))
-
 
 ;;
 ;; $pushAll
@@ -267,7 +265,13 @@
     (mgcol/update coll { :_id oid } { $pull { :measurements 1.2 } })
     (is (= { :_id oid :title title :measurements [1.0 1.1 1.1 1.3 1.0] } (mgcol/find-map-by-id coll oid)))))
 
-
+(deftest remove-all-value-entries-from-array-using-$pull-modifier-based-on-a-condition
+  (let [coll   "docs"
+        oid    (ObjectId.)
+        title "$pull modifier removes all value entries in the array"]
+    (mgcol/insert coll { :_id oid :title title :measurements [1.0 1.2 1.2 1.2 1.1 1.1 1.2 1.3 1.0] })
+    (mgcol/update coll { :_id oid } { $pull { :measurements { $gte 1.2 } } })
+    (is (= { :_id oid :title title :measurements [1.0 1.1 1.1 1.0] } (mgcol/find-map-by-id coll oid)))))
 ;;
 ;; $pullAll
 ;;

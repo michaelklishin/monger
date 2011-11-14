@@ -11,6 +11,7 @@
             [monger.conversion :as mgcnv]
             [monger.js         :as js])
   (:use [clojure.test]
+        [monger.operators]
         [monger.test.fixtures]))
 
 (monger.core/connect!)
@@ -251,6 +252,13 @@
   (let [collection "libraries"]
     (is (empty? (mgcol/find-maps collection { :language "Scala" })))))
 
+(deftest find-multiple-documents-by-regex
+  (let [collection "libraries"]
+    (mgcol/insert-batch collection [{ :language "Clojure",    :name "monger" }
+                                    { :language "Java",       :name "nhibernate" }
+                                    { :language "JavaScript", :name "sprout-core" }])
+    (is (= 2 (monger.core/count (mgcol/find collection { :language #"Java*" }))))))
+
 
 (deftest find-multiple-documents
   (let [collection "libraries"]
@@ -310,44 +318,6 @@
           (is (= (:language doc) "Clojure"))))
       (is (empty? (mgcol/find collection { :language "Erlang" } [:name]))))))
 
-;; more sophisticated examples
-(deftest find-with-conditional-operators-comparison
-  (let [collection "libraries"]
-    (mgcol/insert-batch collection [{ :language "Clojure", :name "monger"   :users 1}
-                                    { :language "Clojure", :name "langohr"  :users 5 }
-                                    { :language "Clojure", :name "incanter" :users 15 }
-                                    { :language "Scala",   :name "akka"     :users 150}])
-    (are [a b] (= a (.count (mgcol/find collection b)))
-         2 { :users { "$gt" 10 }}
-         3 { :users { "$gte" 5 }}
-         2 { :users { "$lt" 10 }}
-         2 { :users { "$lte" 5 }}
-         1 { :users { "$gt" 10 "$lt" 150 }})))
-
-(deftest find-on-embedded-arrays
-  (let [collection "libraries"]
-    (mgcol/insert-batch collection [{ :language "Clojure", :tags [ "functional" ] }
-                                    { :language "Scala",   :tags [ "functional" "object-oriented" ] }
-                                    { :language "Ruby",    :tags [ "object-oriented" "dynamic" ] }])
-
-    (is (= "Scala" (:language (first (mgcol/find-maps collection { :tags { "$all" [ "functional" "object-oriented" ] } } )))))
-    (is (= 3 (.count (mgcol/find-maps collection { :tags { "$in" [ "functional" "object-oriented" ] } } ))))))
-
-
-(deftest find-with-conditional-operators-on-embedded-documents
-  (let [collection "people"]
-    (mgcol/insert-batch collection [{ :name "Bob", :comments [ { :text "Nice!" :rating 1 }
-                                                               { :text "Love it" :rating 4 }
-                                                               { :text "What?":rating -5 } ] }
-                                    { :name "Alice", :comments [ { :text "Yeah" :rating 2 }
-                                                                 { :text "Doh" :rating 1 }
-                                                                 { :text "Agreed" :rating 3 }
-                                                                 ] } ])
-    (are [a b] (= a (.count (mgcol/find collection b)))
-         1 { :comments { "$elemMatch" { :text "Nice!" :rating { "$gte" 1 } } } }
-         2 { "comments.rating" 1 }
-         1 { "comments.rating" { "$gt" 3 } })))
-
 ;;
 ;; update, save
 ;;
@@ -373,7 +343,7 @@
     (is (= 3 (mgcol/count collection { :language "Clojure" })))
     (is (= 1 (mgcol/count collection { :language "Scala"   })))
     (is (= 0 (mgcol/count collection { :language "Python"  })))
-    (mgcol/update collection { :language "Clojure" } { "$set" { :language "Python" } } :multi true)
+    (mgcol/update collection { :language "Clojure" } { $set { :language "Python" } } :multi true)
     (is (= 0 (mgcol/count collection { :language "Clojure" })))
     (is (= 1 (mgcol/count collection { :language "Scala"   })))
     (is (= 3 (mgcol/count collection { :language "Python"  })))))
@@ -412,7 +382,7 @@
     (is (monger.result/ok? (mgcol/insert "people" document)))
     (is (= 1 (mgcol/count collection)))
     (is (= 0 (mgcol/count collection { :has_kids true })))
-    (mgcol/update collection { :_id doc-id } { "$set" { :has_kids true } })
+    (mgcol/update collection { :_id doc-id } { $set { :has_kids true } })
     (is (= 1 (mgcol/count collection { :has_kids true })))))
 
 
@@ -544,4 +514,4 @@
                     { :state "IL" :quantity 3 :price 5.50   }]]
     (mgcol/insert-batch collection batch)
     (is (= ["CA" "IL" "NY"] (sort (mgcol/distinct collection :state))))
-    (is (= ["CA" "NY"] (sort (mgcol/distinct collection :state { :price { "$gt" 100.00 } }))))))
+    (is (= ["CA" "NY"] (sort (mgcol/distinct collection :state { :price { $gt 100.00 } }))))))
