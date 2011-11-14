@@ -39,7 +39,7 @@
 
 ;; exact match over string field
 
-(deftest query-full-document-with-find-maps-using-exact-matching-over-string-field
+(deftest query-full-document-using-exact-matching-over-string-field
   (let [coll "docs"
         doc  { :title "monger" :language "Clojure" :_id (ObjectId.) }]
     (mgcol/insert coll doc)
@@ -49,18 +49,22 @@
 
 ;; exact match over string field with limit
 
-(deftest query-full-document-with-find-maps-using-exact-matching-over-string-with-field-with-limit
+(deftest query-full-document-using-exact-matching-over-string-with-field-with-limit
   (let [coll "docs"
         doc1  { :title "monger"  :language "Clojure" :_id (ObjectId.) }
         doc2  { :title "langohr" :language "Clojure" :_id (ObjectId.) }
         doc3  { :title "netty"   :language "Java" :_id (ObjectId.) }
         _     (mgcol/insert-batch coll [doc1 doc2 doc3])
-        result (mgcol/find-maps coll { :title "monger" } {} 0 1)]
+        result (with-collection coll
+                 (find { :title "monger" })
+                 (fields [:title, :language, :_id])
+                 (skip 0)
+                 (limit 1))]
     (is (= 1 (count result)))
     (is (= [doc1] result))))
 
 
-(deftest query-full-document-with-find-maps-using-exact-matching-over-string-field-with-limit-and-offset
+(deftest query-full-document-using-exact-matching-over-string-field-with-limit-and-offset
   (let [coll "docs"
         doc1  { :title "lucene"    :language "Java" :_id (ObjectId.) }
         doc2  { :title "joda-time" :language "Java" :_id (ObjectId.) }
@@ -68,16 +72,18 @@
         _     (mgcol/insert-batch coll [doc1 doc2 doc3])
         ;; this example is indeed ugly, we need to come up with a DSL similar to what Casbah has
         ;; to make this easy to read and write. MK.
-        result (from-db-object (seq (.sort (mgcol/find coll { :language "Java" } {} 1 2)
-                                           (to-db-object { :title 1 })))
-                               true)]
+        result (with-collection coll
+                 (find { :language "Java" })
+                 (skip 1)
+                 (limit 2)
+                 (sort { :title 1 }))]
     (is (= 2 (count result)))
     (is (= [doc1 doc3] result))))
 
 
 ;; < ($lt), <= ($lte), > ($gt), >= ($gte)
 
-(deftest query-using-dsl-and-$lt-operator-1
+(deftest query-using-dsl-and-$lt-operator
   (let [coll "docs"
         doc1 { :language "Clojure" :_id (ObjectId.) :inception_year 2006 }
         doc2 { :language "Java"    :_id (ObjectId.) :inception_year 1992 }
@@ -88,28 +94,24 @@
                     (limit 2))]
     (is (= [doc2] lt-result))))
 
-(deftest query-using-dsl-and-$lt-operator-2
+
+
+(deftest query-using-$gt-$lt-$gte-$lte-operators
   (let [coll "docs"
         doc1 { :language "Clojure" :_id (ObjectId.) :inception_year 2006 }
         doc2 { :language "Java"    :_id (ObjectId.) :inception_year 1992 }
         doc3 { :language "Scala"   :_id (ObjectId.) :inception_year 2003 }
         _      (mgcol/insert-batch coll [doc1 doc2])
-        lt-result (with-collection "docs"
-                    (find { :inception_year { $lt 2000 } }))]
-    (is (= [doc2] lt-result))))
-
-
-
-(deftest query-with-find-maps-using-$lt-operator
-  (let [coll "docs"
-        doc1 { :language "Clojure" :_id (ObjectId.) :inception_year 2006 }
-        doc2 { :language "Java"    :_id (ObjectId.) :inception_year 1992 }
-        doc3 { :language "Scala"   :_id (ObjectId.) :inception_year 2003 }
-        _      (mgcol/insert-batch coll [doc1 doc2])
-        lt-result  (mgcol/find-maps coll { :inception_year { "$lt"  2000 } })
-        lte-result (mgcol/find-maps coll { :inception_year { "$lte" 1992 } })
-        gt-result  (mgcol/find-maps coll { :inception_year { "$gt"  2005 } })
-        gte-result (mgcol/find-maps coll { :inception_year { "$gte" 2006 } })]
+        lt-result  (with-collection coll
+                     (find { :inception_year { "$lt"  2000 } }))
+        lte-result (with-collection coll
+                     (find { :inception_year { "$lte" 1992 } }))
+        gt-result  (with-collection coll
+                     (find { :inception_year { "$gt"  2002 } })
+                     (limit 1)
+                     (sort { :inception_year -1 }))
+        gte-result (with-collection coll
+                     (find { :inception_year { "$gte" 2006 } }))]
     (is (= [doc2] lt-result))
     (is (= [doc2] lte-result))
     (is (= [doc1] gt-result))
@@ -118,18 +120,23 @@
 
 ;; $all
 
-(deftest query-with-find-maps-using-$all
+(deftest query-with-using-$all
   (let [coll "docs"
         doc1 { :_id (ObjectId.) :title "Clojure" :tags ["functional" "homoiconic" "syntax-oriented" "dsls" "concurrency features" "jvm"] }
         doc2 { :_id (ObjectId.) :title "Java"    :tags ["object-oriented" "jvm"] }
         doc3 { :_id (ObjectId.) :title "Scala"   :tags ["functional" "object-oriented" "dsls" "concurrency features" "jvm"] }
         -    (mgcol/insert-batch coll [doc1 doc2 doc3])
-        result1 (mgcol/find-maps coll { :tags { "$all" ["functional" "jvm" "homoiconic"] } })
-        result2 (mgcol/find-maps coll { :tags { "$all" ["functional" "native" "homoiconic"] } })
-        result3 (mgcol/find-maps coll { :tags { "$all" ["functional" "jvm" "dsls"] } })]
+        result1 (with-collection coll
+                  (find { :tags { "$all" ["functional" "jvm" "homoiconic"] } }))
+        result2 (with-collection coll
+                  (find { :tags { "$all" ["functional" "native" "homoiconic"] } }))
+        result3 (with-collection coll
+                  (find { :tags { "$all" ["functional" "jvm" "dsls"] } })
+                  (sort { :title 1 }))]
     (is (= [doc1] result1))
     (is (empty? result2))
-    (is (= 2 (count result3)))))
+    (is (= 2 (count result3)))
+    (is (= doc1 (first result3)))))
 
 
 ;; $exists
