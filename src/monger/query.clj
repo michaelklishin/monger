@@ -80,6 +80,10 @@
   [m]
   (merge m { :snapshot true }))
 
+(defn paginate
+  [m & { :keys [page per-page] :or { page 1 per-page 10 } }]
+  (merge m { :limit per-page :skip (monger.pagination/offset-for page per-page) }))
+
 (defmacro with-collection
   [^String coll & body]
   `(binding [*query-collection* (if (string? ~coll)

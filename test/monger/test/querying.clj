@@ -178,3 +178,34 @@
         result2 (mgcol/find-one-as-map coll { :counter { "$ne" 32 } })]
     (is (= doc2 result1))
     (is (= doc1 result2))))
+
+;;
+;; monger.query DSL features
+;;
+
+;; pagination
+(deftest query-using-pagination-dsl
+  (let [coll "docs"
+        doc1 { :_id (ObjectId.) :title "Clojure" :tags ["functional" "homoiconic" "syntax-oriented" "dsls" "concurrency features" "jvm"] }
+        doc2 { :_id (ObjectId.) :title "Java"    :tags ["object-oriented" "jvm"] }
+        doc3 { :_id (ObjectId.) :title "Scala"   :tags ["functional" "object-oriented" "dsls" "concurrency features" "jvm"] }
+        doc4 { :_id (ObjectId.) :title "Ruby"    :tags ["dynamic" "object-oriented" "dsls" "jvm"] }
+        doc5 { :_id (ObjectId.) :title "Groovy"  :tags ["dynamic" "object-oriented" "dsls" "jvm"] }
+        doc6 { :_id (ObjectId.) :title "OCaml"   :tags ["functional" "static" "dsls"] }
+        doc7 { :_id (ObjectId.) :title "Haskell" :tags ["functional" "static" "dsls" "concurrency features"] }
+        -    (mgcol/insert-batch coll [doc1 doc2 doc3 doc4 doc5 doc6 doc7])
+        result1 (with-collection coll
+                  (find {})
+                  (paginate :page 1 :per-page 3)
+                  (sort { :title 1 }))
+        result2 (with-collection coll
+                  (find {})
+                  (paginate :page 2 :per-page 3)
+                  (sort { :title 1 }))
+        result3 (with-collection coll
+                  (find {})
+                  (paginate :page 3 :per-page 3)
+                  (sort { :title 1 }))]
+    (is (= [doc1 doc5 doc7] result1))
+    (is (= [doc2 doc6 doc4] result2))
+    (is (= [doc3] result3))))
