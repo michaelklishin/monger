@@ -21,6 +21,21 @@ wanted a client that will
 
 We are working on documentation guides & examples site for the 1.0 release. Please refer to the test suite for code examples.
 
+Here is what monger.query DSL looks like right now:
+
+``` clojure
+(with-collection "docs"
+  (find { :inception_year { $lt 2000 $gte 2011 } })
+  (fields { :inception_year 1 :name 1 })
+  (skip 10)
+  (limit 20)
+  (batch-size 50)
+  (hint "my-index-name")
+  (snapshot))
+```
+
+More code examples can be found in our test suite.
+
 
 ## This is a Work In Progress
 
