@@ -1,7 +1,7 @@
 (set! *warn-on-reflection* true)
 
 (ns monger.test.querying
-  (:refer-clojure :exclude [select find])
+  (:refer-clojure :exclude [select find sort])
   (:import  [com.mongodb WriteResult WriteConcern DBCursor DBObject CommandResult$CommandFailure]
             [org.bson.types ObjectId]
             [java.util Date])
@@ -10,8 +10,7 @@
             [monger.result     :as mgres])
   (:use [clojure.test]
         [monger.test.fixtures]
-        ;; [monger.query]
-        [monger.conversion]))
+        [monger conversion query operators]))
 
 
 (defn purge-locations-collection
@@ -78,85 +77,97 @@
 
 ;; < ($lt), <= ($lte), > ($gt), >= ($gte)
 
-;; (deftest query-using-dsl-and-$lt-operator
-;;   (let [coll "docs"
-;;         doc1 { :language "Clojure" :_id (ObjectId.) :inception_year 2006 }
-;;         doc2 { :language "Java"    :_id (ObjectId.) :inception_year 1992 }
-;;         doc3 { :language "Scala"   :_id (ObjectId.) :inception_year 2003 }
-;;         _      (mgcol/insert-batch coll [doc1 doc2])
-;;         lt-result (in-collection "docs"
-;;                                  (find { :inception_year { "$lt" 2000 } })]
-;;         (is (= [doc2] lt-result))))
+(deftest query-using-dsl-and-$lt-operator-1
+  (let [coll "docs"
+        doc1 { :language "Clojure" :_id (ObjectId.) :inception_year 2006 }
+        doc2 { :language "Java"    :_id (ObjectId.) :inception_year 1992 }
+        doc3 { :language "Scala"   :_id (ObjectId.) :inception_year 2003 }
+        _      (mgcol/insert-batch coll [doc1 doc2])
+        lt-result (with-collection "docs"
+                    (find { :inception_year { $lt 2000 } })
+                    (limit 2))]
+    (is (= [doc2] lt-result))))
+
+(deftest query-using-dsl-and-$lt-operator-2
+  (let [coll "docs"
+        doc1 { :language "Clojure" :_id (ObjectId.) :inception_year 2006 }
+        doc2 { :language "Java"    :_id (ObjectId.) :inception_year 1992 }
+        doc3 { :language "Scala"   :_id (ObjectId.) :inception_year 2003 }
+        _      (mgcol/insert-batch coll [doc1 doc2])
+        lt-result (with-collection "docs"
+                    (find { :inception_year { $lt 2000 } }))]
+    (is (= [doc2] lt-result))))
 
 
-  (deftest query-with-find-maps-using-$lt-operator
-    (let [coll "docs"
-          doc1 { :language "Clojure" :_id (ObjectId.) :inception_year 2006 }
-          doc2 { :language "Java"    :_id (ObjectId.) :inception_year 1992 }
-          doc3 { :language "Scala"   :_id (ObjectId.) :inception_year 2003 }
-          _      (mgcol/insert-batch coll [doc1 doc2])
-          lt-result  (mgcol/find-maps coll { :inception_year { "$lt"  2000 } })
-          lte-result (mgcol/find-maps coll { :inception_year { "$lte" 1992 } })
-          gt-result  (mgcol/find-maps coll { :inception_year { "$gt"  2005 } })
-          gte-result (mgcol/find-maps coll { :inception_year { "$gte" 2006 } })]
-      (is (= [doc2] lt-result))
-      (is (= [doc2] lte-result))
-      (is (= [doc1] gt-result))
-      (is (= [doc1] gte-result))))
+
+(deftest query-with-find-maps-using-$lt-operator
+  (let [coll "docs"
+        doc1 { :language "Clojure" :_id (ObjectId.) :inception_year 2006 }
+        doc2 { :language "Java"    :_id (ObjectId.) :inception_year 1992 }
+        doc3 { :language "Scala"   :_id (ObjectId.) :inception_year 2003 }
+        _      (mgcol/insert-batch coll [doc1 doc2])
+        lt-result  (mgcol/find-maps coll { :inception_year { "$lt"  2000 } })
+        lte-result (mgcol/find-maps coll { :inception_year { "$lte" 1992 } })
+        gt-result  (mgcol/find-maps coll { :inception_year { "$gt"  2005 } })
+        gte-result (mgcol/find-maps coll { :inception_year { "$gte" 2006 } })]
+    (is (= [doc2] lt-result))
+    (is (= [doc2] lte-result))
+    (is (= [doc1] gt-result))
+    (is (= [doc1] gte-result))))
 
 
-  ;; $all
+;; $all
 
-  (deftest query-with-find-maps-using-$all
-    (let [coll "docs"
-          doc1 { :_id (ObjectId.) :title "Clojure" :tags ["functional" "homoiconic" "syntax-oriented" "dsls" "concurrency features" "jvm"] }
-          doc2 { :_id (ObjectId.) :title "Java"    :tags ["object-oriented" "jvm"] }
-          doc3 { :_id (ObjectId.) :title "Scala"   :tags ["functional" "object-oriented" "dsls" "concurrency features" "jvm"] }
-          -    (mgcol/insert-batch coll [doc1 doc2 doc3])
-          result1 (mgcol/find-maps coll { :tags { "$all" ["functional" "jvm" "homoiconic"] } })
-          result2 (mgcol/find-maps coll { :tags { "$all" ["functional" "native" "homoiconic"] } })
-          result3 (mgcol/find-maps coll { :tags { "$all" ["functional" "jvm" "dsls"] } })]
-      (is (= [doc1] result1))
-      (is (empty? result2))
-      (is (= 2 (count result3)))))
-
-
-  ;; $exists
-
-  (deftest query-with-find-one-as-map-using-$exists
-    (let [coll "docs"
-          doc1 { :_id (ObjectId.) :published-by "Jill The Blogger" :draft false :title "X announces another Y" }
-          doc2 { :_id (ObjectId.) :draft true :title "Z announces a Y competitor" }
-          _    (mgcol/insert-batch coll [doc1 doc2])
-          result1 (mgcol/find-one-as-map coll { :published-by { "$exists" true } })
-          result2 (mgcol/find-one-as-map coll { :published-by { "$exists" false } })]
-      (is (= doc1 result1))
-      (is (= doc2 result2))))
-
-  ;; $mod
-
-  (deftest query-with-find-one-as-map-using-$mod
-    (let [coll "docs"
-          doc1 { :_id (ObjectId.) :counter 25 }
-          doc2 { :_id (ObjectId.) :counter 32 }
-          doc3 { :_id (ObjectId.) :counter 63 }
-          _    (mgcol/insert-batch coll [doc1 doc2 doc3])
-          result1 (mgcol/find-one-as-map coll { :counter { "$mod" [10, 5] } })
-          result2 (mgcol/find-one-as-map coll { :counter { "$mod" [10, 2] } })
-          result3 (mgcol/find-one-as-map coll { :counter { "$mod" [11, 1] } })]
-      (is (= doc1 result1))
-      (is (= doc2 result2))
-      (is (empty? result3))))
+(deftest query-with-find-maps-using-$all
+  (let [coll "docs"
+        doc1 { :_id (ObjectId.) :title "Clojure" :tags ["functional" "homoiconic" "syntax-oriented" "dsls" "concurrency features" "jvm"] }
+        doc2 { :_id (ObjectId.) :title "Java"    :tags ["object-oriented" "jvm"] }
+        doc3 { :_id (ObjectId.) :title "Scala"   :tags ["functional" "object-oriented" "dsls" "concurrency features" "jvm"] }
+        -    (mgcol/insert-batch coll [doc1 doc2 doc3])
+        result1 (mgcol/find-maps coll { :tags { "$all" ["functional" "jvm" "homoiconic"] } })
+        result2 (mgcol/find-maps coll { :tags { "$all" ["functional" "native" "homoiconic"] } })
+        result3 (mgcol/find-maps coll { :tags { "$all" ["functional" "jvm" "dsls"] } })]
+    (is (= [doc1] result1))
+    (is (empty? result2))
+    (is (= 2 (count result3)))))
 
 
-  ;; $ne
+;; $exists
 
-  (deftest query-with-find-one-as-map-using-$ne
-    (let [coll "docs"
-          doc1 { :_id (ObjectId.) :counter 25 }
-          doc2 { :_id (ObjectId.) :counter 32 }
-          _    (mgcol/insert-batch coll [doc1 doc2])
-          result1 (mgcol/find-one-as-map coll { :counter { "$ne" 25 } })
-          result2 (mgcol/find-one-as-map coll { :counter { "$ne" 32 } })]
-      (is (= doc2 result1))
-      (is (= doc1 result2))))
+(deftest query-with-find-one-as-map-using-$exists
+  (let [coll "docs"
+        doc1 { :_id (ObjectId.) :published-by "Jill The Blogger" :draft false :title "X announces another Y" }
+        doc2 { :_id (ObjectId.) :draft true :title "Z announces a Y competitor" }
+        _    (mgcol/insert-batch coll [doc1 doc2])
+        result1 (mgcol/find-one-as-map coll { :published-by { "$exists" true } })
+        result2 (mgcol/find-one-as-map coll { :published-by { "$exists" false } })]
+    (is (= doc1 result1))
+    (is (= doc2 result2))))
+
+;; $mod
+
+(deftest query-with-find-one-as-map-using-$mod
+  (let [coll "docs"
+        doc1 { :_id (ObjectId.) :counter 25 }
+        doc2 { :_id (ObjectId.) :counter 32 }
+        doc3 { :_id (ObjectId.) :counter 63 }
+        _    (mgcol/insert-batch coll [doc1 doc2 doc3])
+        result1 (mgcol/find-one-as-map coll { :counter { "$mod" [10, 5] } })
+        result2 (mgcol/find-one-as-map coll { :counter { "$mod" [10, 2] } })
+        result3 (mgcol/find-one-as-map coll { :counter { "$mod" [11, 1] } })]
+    (is (= doc1 result1))
+    (is (= doc2 result2))
+    (is (empty? result3))))
+
+
+;; $ne
+
+(deftest query-with-find-one-as-map-using-$ne
+  (let [coll "docs"
+        doc1 { :_id (ObjectId.) :counter 25 }
+        doc2 { :_id (ObjectId.) :counter 32 }
+        _    (mgcol/insert-batch coll [doc1 doc2])
+        result1 (mgcol/find-one-as-map coll { :counter { "$ne" 25 } })
+        result2 (mgcol/find-one-as-map coll { :counter { "$ne" 32 } })]
+    (is (= doc2 result1))
+    (is (= doc1 result2))))
