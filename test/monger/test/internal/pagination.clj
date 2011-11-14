@@ -1,6 +1,6 @@
-(ns monger.test.pagination
+(ns monger.test.internal.pagination
   (:use [clojure.test]
-        [monger.pagination]))
+        [monger.internal.pagination]))
 
 (deftest test-pagination-offset
   (are [a b] (= a b)

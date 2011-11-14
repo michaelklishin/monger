@@ -1,4 +1,4 @@
-(ns monger.pagination)
+(ns monger.internal.pagination)
 
 (defn offset-for
   [^long page ^long per-page]

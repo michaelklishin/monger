@@ -1,6 +1,7 @@
 (ns monger.query
   (:refer-clojure :exclude [select find sort])
-  (:require monger.core)
+  (:require [monger.core]
+            [monger.internal pagination])
   (:import [com.mongodb DB DBCollection DBObject DBCursor]
            [java.util List])
   (:use [monger conversion operators]))
@@ -82,7 +83,7 @@
 
 (defn paginate
   [m & { :keys [page per-page] :or { page 1 per-page 10 } }]
-  (merge m { :limit per-page :skip (monger.pagination/offset-for page per-page) }))
+  (merge m { :limit per-page :skip (monger.internal.pagination/offset-for page per-page) }))
 
 (defmacro with-collection
   [^String coll & body]
