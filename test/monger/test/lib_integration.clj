@@ -5,13 +5,17 @@
         [monger.conversion])
   (:import [org.joda.time DateTime ReadableInstant]
            [org.joda.time.format ISODateTimeFormat]
-           [java.io StringWriter PrintWriter])
+           [java.io StringWriter PrintWriter]
+           [org.bson.types ObjectId])
   (:require [clojure.data.json :as json]
             [clj-time.core     :as t]))
 
 
-(deftest serialization-of-joda-datetime-to-json
+(deftest serialization-of-joda-datetime-to-json-with-clojure-data-json
   (is (= "\"2011-10-13T23:55:00.000Z\"" (json/json-str (t/date-time 2011 10 13 23 55 0)))))
+
+(deftest serialization-of-object-id-to-json-with-clojure-data-json
+  (is (= "\"4ec2d1a6b55634a935ea4ac8\"" (json/json-str (ObjectId. "4ec2d1a6b55634a935ea4ac8")))))
 
 
 (deftest conversion-of-joda-datetime-to-db-object
