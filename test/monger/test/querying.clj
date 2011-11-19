@@ -101,21 +101,19 @@
         doc1 { :language "Clojure" :_id (ObjectId.) :inception_year 2006 }
         doc2 { :language "Java"    :_id (ObjectId.) :inception_year 1992 }
         doc3 { :language "Scala"   :_id (ObjectId.) :inception_year 2003 }
-        _      (mgcol/insert-batch coll [doc1 doc2])
-        lt-result  (with-collection coll
-                     (find { :inception_year { "$lt"  2000 } }))
-        lte-result (with-collection coll
-                     (find { :inception_year { "$lte" 1992 } }))
-        gt-result  (with-collection coll
-                     (find { :inception_year { "$gt"  2002 } })
-                     (limit 1)
-                     (sort { :inception_year -1 }))
-        gte-result (with-collection coll
-                     (find { :inception_year { "$gte" 2006 } }))]
-    (is (= [doc2] lt-result))
-    (is (= [doc2] lte-result))
-    (is (= [doc1] gt-result))
-    (is (= [doc1] gte-result))))
+        _    (mgcol/insert-batch coll [doc1 doc2 doc3])]
+    (are [doc, result]
+         (= doc, result)
+         (doc2 (with-collection coll
+                 (find { :inception_year { "$lt"  2000 } })))
+         (doc2 (with-collection coll
+                 (find { :inception_year { "$lte" 1992 } })))
+         (doc1 (with-collection coll
+                 (find { :inception_year { "$gt"  2002 } })
+                 (limit 1)
+                 (sort { :inception_year -1 })))
+        (doc1 (with-collection coll
+                (find { :inception_year { "$gte" 2006 } }))))))
 
 
 ;; $all
