@@ -13,6 +13,24 @@
 
 (def ^{ :dynamic true } *query-collection*)
 
+;;
+;; Monger query is an auxiliary construction that helps to create funciton chains through cursors.
+;;   You can specify several chained actions that will be performed on the certain collection through
+;;   query fields.
+;;
+;; Existing query fields:
+;;
+;; :fields - selects which fields are returned. The default is all fields. _id is always returned.
+;; :sort - adds a sort to the query.
+;; :fields - set of fields to retrieve during query execution
+;; :skip - Skips the first N results.
+;; :limit - Returns a maximum of N results.
+;; :batch-size - limits the nubmer of elements returned in one batch.
+;; :hint - force Mongo to use a specific index for a query in order to improve performance.
+;; :snapshot - sses snapshot mode for the query. Snapshot mode assures no duplicates are returned, or objects missed
+;;    which were present at both the start and end of the query's execution (if an object is new during the query, or
+;;    deleted during the query, it may or may not be returned, even with snapshot mode). Note that short query responses
+;;    (less than 1MB) are always effectively snapshotted. Currently, snapshot mode may not be used with sorting or explicit hints.
 (defn empty-query
   [^DBCollection coll]
   {
