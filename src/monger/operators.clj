@@ -43,12 +43,40 @@
 ;;   (monger.collection/find "libraries" {$ne { :language "Clojure" }})
 (defoperator $ne)
 
+;; $elemMatch checks if an element in an array matches the specified expression
+;;
+;; EXAMPLES:
+;;   ;; Matches element with :text "Nice" and :rating greater than or equal 1
+;;   (monger.collection/find "comments" { $elemMatch { :text "Nice!" :rating { $gte 1 } } })
+(defoperator $elemMatch)
+
+
 ;;
 ;; LOGIC OPERATORS
 ;;
 
+;; $and lets you use a boolean and in the query. Logical and means that all the given expressions should be true for positive match.
+;;
+;; EXAMPLES:
+;;
+;;   ;; Matches all libraries where :language is "Clojure" and :users is greater than 10
+;;   (monger.collection/find "libraries" { $and [{ :language "Clojure" } { :users { $gt 10 } }] })
 (defoperator $and)
+
+;; $or lets you use a boolean or in the query. Logical or means that one of the given expressions should be true for positive match.
+;;
+;; EXAMPLES:
+;;
+;;   ;; Matches all libraries whose :name is "mongoid" or :language is "Ruby"
+;;   (monger.collection.find "libraries" { $or [ { :name "mongoid" } { :language "Ruby" } ] })
 (defoperator $or)
+
+;; @nor lets you use a boolean expression, opposite to "all" in the query (think: neither). Give $nor a list of expressions, all of which should
+;;   be false for positive match.
+;;
+;; EXAMPLES:
+;;
+;;   (monger.collection/find "libraries" { $nor [{ :language "Clojure" } {:users { $gt 10 } } ]})
 (defoperator $nor)
 
 ;;
@@ -125,7 +153,5 @@
 ;;   (mgcol/update coll { :_id oid } { $pull { :measurements 1.2 } })
 ;;   (mgcol/update coll { :_id oid } { $pull { :measurements { $gte 1.2 } } })
 (defoperator $pullAll)
-
-(defoperator $elemMatch)
 
 (defoperator $bit)
