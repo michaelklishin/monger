@@ -70,8 +70,6 @@
         doc2  { :title "joda-time" :language "Java" :_id (ObjectId.) }
         doc3  { :title "netty"     :language "Java" :_id (ObjectId.) }
         _     (mgcol/insert-batch coll [doc1 doc2 doc3])
-        ;; this example is indeed ugly, we need to come up with a DSL similar to what Casbah has
-        ;; to make this easy to read and write. MK.
         result (with-collection coll
                  (find { :language "Java" })
                  (skip 1)
