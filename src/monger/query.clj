@@ -14,6 +14,8 @@
 (def ^{ :dynamic true } *query-collection*)
 
 ;;
+;; Cursor/chain methods
+;;
 ;; Monger query is an auxiliary construction that helps to create funciton chains through cursors.
 ;;   You can specify several chained actions that will be performed on the certain collection through
 ;;   query fields.

@@ -34,9 +34,11 @@
 ;;
 
 (defn ^Mongo connect
-  "Connects to MongoDB. When used without arguments, connects to *mongodb-host* and
-   *mongodb-test*.
+  "Connects to MongoDB. When used without arguments, connects to
 
+   Arguments:
+     :host (*mongodb-host* by default)
+     :port (*mongodb-port* by default)
 
    EXAMPLES
 
@@ -75,29 +77,21 @@
 
 
 (defn connect!
+  "Connect to MongoDB, save connection to *mongodb-connection* dynamic variable"
   ^Mongo [& args]
   (def ^:dynamic *mongodb-connection* (apply connect args)))
 
 
 (defn set-db!
+  "Set dynamic *mongodb-database* variable to given :db"
   [db]
   (def ^:dynamic *mongodb-database* db))
 
 
 (defn set-default-write-concern!
   [wc]
+  "Set dynamic *mongodb-write-concert* to :wc"
   (def ^:dynamic *mongodb-write-concern* wc))
-
-
-
-(defprotocol Countable
-  (count [this] "Returns size of the object"))
-
-(extend-protocol Countable
-  DBCursor
-  (count [^com.mongodb.DBCursor this]
-    (.count this)))
-
 
 (defn command
   "Available commands (please check MongoDB documentation for a complete list of commands for particular DB version.
@@ -159,3 +153,12 @@
   "
   [^Map cmd]
   (.command ^DB *mongodb-database* ^DBObject (to-db-object cmd)))
+
+
+(defprotocol Countable
+  (count [this] "Returns size of the object"))
+
+(extend-protocol Countable
+  DBCursor
+  (count [^com.mongodb.DBCursor this]
+    (.count this)))
