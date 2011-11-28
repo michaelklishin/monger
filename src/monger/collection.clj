@@ -142,7 +142,7 @@
 ;;
 ;; monger.collection/count
 ;;
-(defn ^long count
+(defn count
   "Returns the number of documents in this collection.
 
   Takes optional conditions as an argument.
@@ -150,12 +150,18 @@
       (monger.collection/count collection)
 
       (monger.collection/count collection { :first_name \"Paul\" })"
+  (^long [^String collection]
+         (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
+           (.count coll)))
+  (^long [^String collection, ^Map conditions]
+         (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
+           (.count coll (to-db-object conditions)))))
+
+(defn any?
   ([^String collection]
-     (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
-       (.count coll)))
+     (> (count collection) 0))
   ([^String collection, ^Map conditions]
-     (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
-       (.count coll (to-db-object conditions)))))
+     (> (count collection conditions) 0)))
 
 
 ;; monger.collection/update
