@@ -46,6 +46,13 @@
     (mgcol/insert "people" doc)
     (is (not (nil? (monger.util/get-id doc))))))
 
+(deftest insert-a-map-with-id-and-with-default-write-concern
+  (let [collection "people"
+        id         (ObjectId.)
+        doc        { :name "Joe", :age 30 "_id" id }
+        result     (mgcol/insert "people" doc)]
+    (is (= id (monger.util/get-id doc)))))
+
 
 
 ;;
