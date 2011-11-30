@@ -90,7 +90,9 @@
 
 (defn set-default-write-concern!
   [wc]
-  "Set dynamic *mongodb-write-concert* to :wc"
+  "Set dynamic *mongodb-write-concert* to :wc
+
+  We recommend to use WriteConcern/SAFE by default to make sure your data was written."
   (def ^:dynamic *mongodb-write-concern* wc))
 
 (defn command
