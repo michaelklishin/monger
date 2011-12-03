@@ -46,6 +46,13 @@
     (mgcol/insert "people" doc)
     (is (not (nil? (monger.util/get-id doc))))))
 
+(deftest insert-a-map-with-id-and-with-default-write-concern
+  (let [collection "people"
+        id         (ObjectId.)
+        doc        { :name "Joe", :age 30 "_id" id }
+        result     (mgcol/insert "people" doc)]
+    (is (= id (monger.util/get-id doc)))))
+
 
 
 ;;
@@ -79,9 +86,13 @@
                                     { :language "Clojure", :name "incanter" }
                                     { :language "Scala",   :name "akka" }] )
     (is (= 4 (mgcol/count collection)))
+    (is (mgcol/any? collection))
     (is (= 3 (mgcol/count collection { :language "Clojure" })))
+    (is (mgcol/any? collection { :language "Clojure" }))
     (is (= 1 (mgcol/count collection { :language "Scala"   })))
-    (is (= 0 (mgcol/count collection { :language "Python"  })))))
+    (is (mgcol/any? collection { :language "Scala" }))
+    (is (= 0 (mgcol/count collection { :language "Python"  })))
+    (is (not (mgcol/any? collection { :language "Python" })))))
 
 
 (deftest remove-all-documents-from-collection

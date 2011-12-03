@@ -41,4 +41,4 @@
   IPersistentMap
   (get-id
     [^IPersistentMap object]
-    (or (:_id object) ("_id" object))))
+    (or (:_id object) (object "_id"))))
