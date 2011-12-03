@@ -1,6 +1,6 @@
 (ns monger.test.core
   (:require [monger core collection util result])
-  (:import (com.mongodb Mongo DB))
+  (:import (com.mongodb Mongo DB WriteConcern))
   (:use [clojure.test]))
 
 
@@ -42,3 +42,11 @@
                { :collstats "things" :scale (* 1024 1024) }
                { :getLastError 1 }]]
       (is (monger.result/ok? (monger.core/command c))))))
+
+(deftest get-last-error
+  (let [connection (monger.core/connect)
+        db         (monger.core/get-db connection "monger-test")]
+    (is (monger.result/ok? (monger.core/get-last-error)))
+    (is (monger.result/ok? (monger.core/get-last-error db)))
+    (is (monger.result/ok? (monger.core/get-last-error db WriteConcern/NORMAL)))
+    (is (monger.result/ok? (monger.core/get-last-error db 1 100 true)))))
