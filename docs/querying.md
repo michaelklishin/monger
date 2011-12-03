@@ -33,6 +33,8 @@ If you have more than one database to connect, use monger.core/connect and monge
           nonlocal-mongodb-connection (monger.core/connect :host "my-mongo-server.local")
           my-second-database (monger.core/get-db "my-second-database-name") ])
 
+TODO: How to authenticate
+
 So, now you have 2 connections and 2 databases, you can manipulate them independently.
 
 # Working with collections
@@ -57,6 +59,8 @@ If you know how to use MongoDB console, you already know how to write Monger que
 ## Querying collections
 
 ### find
+
+
 ### find-one
 ### find-by-id
 ### count
@@ -66,6 +70,16 @@ If you know how to use MongoDB console, you already know how to write Monger que
 
 ## Inserting records
 
+## Write Concerns
+
+Every write-related operation supports passing WriteConcern. WriteConcern specifies how much safety you want with for a given operation.
+
+You can find detailed, elaborate representation for WriteConcerns
+  * here http://www.littlelostmanuals.com/2011/11/overview-of-basic-mongodb-java-write.html
+  * and here http://api.mongodb.org/java/current/com/mongodb/WriteConcern.html
+
+
+
 ### Single
 ### Batch
 
@@ -74,6 +88,9 @@ If you know how to use MongoDB console, you already know how to write Monger que
 ## update
 
 ### Atomic modifiers
+
+Atomic modifiers are simple operations on a single document that are commited to database atomically.
+
 
 ## save
 

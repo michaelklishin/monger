@@ -315,6 +315,12 @@
 
 
 (defn exists?
+  "Checks weather collection with certain name exists.
+
+   EXAMPLE:
+
+      (monger.collection/exists? \"coll\")
+  "
   [^String collection]
   (.collectionExists monger.core/*mongodb-database* collection))
 
@@ -323,11 +329,23 @@
   (.createCollection monger.core/*mongodb-database* collection (to-db-object options)))
 
 (defn drop
+  "Deletes collection from database.
+
+   EXAMPLE:
+
+      (monger.collection/drop \"collection-to-drop\")
+  "
   [^String collection]
   (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
     (.drop coll)))
 
 (defn rename
+  "Renames collection.
+
+   EXAMPLE:
+
+      (monger.collection/rename \"old_name\" \"new_name\")
+   "
   ([^String from, ^String to]
      (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* from)]
        (.rename coll to)))
