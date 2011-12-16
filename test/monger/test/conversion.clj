@@ -1,7 +1,8 @@
 (ns monger.test.conversion
   (:require [monger core collection]
             [monger.conversion :as cnv])
-  (:import (com.mongodb DBObject BasicDBObject BasicDBList) (java.util List ArrayList))
+  (:import [com.mongodb DBObject BasicDBObject BasicDBList]
+           [java.util Date Calendar List ArrayList])
   (:use [clojure.test]))
 
 
@@ -54,6 +55,18 @@
   (let [input  (BasicDBObject.)
         output (cnv/to-db-object input)]
     (is (= input output))))
+
+(deftest convert-java-date-to-dbobject
+  (let [date   (Date.)
+        input  { :int 1, :string "Mongo", :date date }
+        output ^DBObject (cnv/to-db-object input)]
+    (is (= date (.get output "date")))))
+
+(deftest convert-java-calendar-instance-to-dbobject
+  (let [date   (Calendar/getInstance)
+        input  { :int 1, :string "Mongo", :date date }
+        output ^DBObject (cnv/to-db-object input)]
+    (is (= date (.get output "date")))))
 
 
 
