@@ -1,5 +1,5 @@
 (ns monger.js
-  (:require [clojure.java.io]))
+  (:require [clojure.java.io :as io]))
 
 ;;
 ;; Implementation
@@ -19,7 +19,4 @@
 
 (defn load-resource
   (^String [^String path]
-  (with-open [rdr (clojure.java.io/reader (-> (Thread/currentThread)
-                                              .getContextClassLoader
-                                              (.getResourceAsStream (normalize-resource path))))]
-    (reduce str "" (line-seq rdr)))))
+           (slurp (io/resource (normalize-resource path)))))

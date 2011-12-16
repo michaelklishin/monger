@@ -6,5 +6,5 @@
 
 (deftest load-js-resource-using-path-on-the-classpath
   (are [c path] (= c (count (monger.js/load-resource path)))
-       60 "resources/mongo/js/mapfun1.js"
-       60 "resources/mongo/js/mapfun1"))
+       62 "resources/mongo/js/mapfun1.js"
+       62 "resources/mongo/js/mapfun1"))
