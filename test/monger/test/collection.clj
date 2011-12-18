@@ -19,7 +19,7 @@
 
 
 
-(use-fixtures :each purge-people-collection purge-docs-collection purge-things-collection purge-libraries-collection)
+(use-fixtures :each purge-people purge-docs purge-things purge-libraries)
 
 (monger.core/set-default-write-concern! WriteConcern/SAFE)
 

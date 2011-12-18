@@ -13,12 +13,7 @@
         [monger.operators]
         [monger.test.fixtures]))
 
-(defn purge-scores-collection
-  [f]
-  (purge-collection "scores" f))
-
-
-(use-fixtures :each purge-docs-collection purge-things-collection purge-scores-collection)
+(use-fixtures :each purge-docs purge-things purge-scores)
 
 (monger.core/set-default-write-concern! WriteConcern/SAFE)
 

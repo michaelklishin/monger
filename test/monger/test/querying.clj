@@ -13,11 +13,7 @@
         [monger conversion query operators]))
 
 
-(defn purge-locations-collection
-  [f]
-  (purge-collection "locations" f))
-
-(use-fixtures :each purge-docs-collection purge-things-collection purge-locations-collection)
+(use-fixtures :each purge-docs purge-things purge-locations)
 
 (monger.core/set-default-write-concern! WriteConcern/SAFE)
 
