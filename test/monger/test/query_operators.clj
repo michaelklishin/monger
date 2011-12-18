@@ -9,7 +9,8 @@
             [monger.collection :as mgcol]
             [monger.result     :as mgres]
             [monger.conversion :as mgcnv]
-            [monger.js         :as js])
+            [monger.js         :as js]
+            [monger.test.helper :as helper])
   (:use [clojure.test]
         [monger.operators]
         [monger.test.fixtures]))
@@ -17,11 +18,7 @@
 (monger.core/connect!)
 (monger.core/set-db! (monger.core/get-db "monger-test"))
 
-
-
 (use-fixtures :each purge-people purge-docs purge-things purge-libraries)
-
-(monger.core/set-default-write-concern! WriteConcern/SAFE)
 
 ;;
 ;; $gt, $gte, $lt, lte

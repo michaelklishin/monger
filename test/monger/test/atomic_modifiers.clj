@@ -8,14 +8,13 @@
             )
   (:require [monger core util]
             [monger.collection :as mgcol]
-            [monger.result     :as mgres])
+            [monger.result     :as mgres]
+            [monger.test.helper :as helper])
   (:use [clojure.test]
         [monger.operators]
         [monger.test.fixtures]))
 
 (use-fixtures :each purge-docs purge-things purge-scores)
-
-(monger.core/set-default-write-concern! WriteConcern/SAFE)
 
 
 ;;

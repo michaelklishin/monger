@@ -7,15 +7,15 @@
             [java.util Date])
   (:require [monger core util]
             [monger.collection :as mgcol]
-            [monger.result     :as mgres])
+            [monger.result     :as mgres]
+            [monger.test.helper :as helper])
   (:use [clojure.test]
         [monger.test.fixtures]
         [monger conversion query operators]))
 
+(helper/connect!)
 
 (use-fixtures :each purge-docs purge-things purge-locations)
-
-(monger.core/set-default-write-concern! WriteConcern/SAFE)
 
 
 ;;
