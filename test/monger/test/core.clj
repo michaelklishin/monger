@@ -1,12 +1,10 @@
 (ns monger.test.core
-  (:require [monger core collection util result])
+  (:require [monger core collection util result]
+            [monger.test.helper :as helper])
   (:import (com.mongodb Mongo DB WriteConcern))
   (:use [clojure.test]))
 
-
-(monger.core/connect!)
-(monger.core/set-db! (monger.core/get-db "monger-test"))
-
+(helper/connect!)
 
 (deftest connect-to-mongo-with-default-host-and-port
   (let [connection (monger.core/connect)]
