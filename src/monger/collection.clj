@@ -24,7 +24,14 @@
 ;;
 
 (defn ^WriteResult insert
-  "Saves document to database"
+  "Saves @document@ to @collection@. You can optionally specify WriteConcern.
+
+   EXAMPLES:
+
+       (monger.collection/insert \"people\" { :name \"Joe\", :age 30 })
+
+       (monger.collection/insert \"people\" { :name \"Joe\", :age 30, WriteConcern/SAFE })
+  "
   ([^String collection, ^DBObject document]
      (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
        (.insert ^DBCollection coll ^DBObject (to-db-object document) ^WriteConcern monger.core/*mongodb-write-concern*)))
@@ -34,7 +41,15 @@
 
 
 (defn ^WriteResult insert-batch
-  "Saves documents do database"
+  "Saves @documents@ do @collection@. You can optionally specify WriteConcern as a third argument.
+
+  EXAMPLES:
+
+      (monger.collection/insert-batch \"people\" [{ :name \"Joe\", :age 30 }, { :name \"Paul\", :age 27 }])
+
+      (monger.collection/insert-batch \"people\" [{ :name \"Joe\", :age 30 }, { :name \"Paul\", :age 27 }] WriteConcern/NORMAL)
+
+  "
   ([^String collection, ^List documents]
      (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
        (.insert ^DBCollection coll ^List (to-db-object documents) ^WriteConcern monger.core/*mongodb-write-concern*)))
@@ -48,7 +63,20 @@
 (declare fields-to-db-object)
 
 (defn ^DBCursor find
-  "Queries for an object in this collection."
+  "Queries for objects in this collection.
+   This function returns DBCursor, which allows you to iterate over DBObjects.
+   If you want to manipulate clojure sequences maps, please @find-maps@.
+
+   EXAMPLES:
+      ;; return all objects in this collection.
+      (mgcol/find \"people\")
+
+      ;; return all objects matching query
+      (mgcol/find \"people\" { :company \"Comp Corp\"})
+
+      ;; return all objects matching query, taking only specified fields
+      (mgcol/find \"people\" { :company \"Comp Corp\"} [:first_name :last_name])
+  "
   ([^String collection]
      (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
        (.find coll)))
@@ -58,29 +86,22 @@
   ([^String collection, ^Map ref, ^List fields]
      (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)
            map-of-fields (fields-to-db-object fields)]
-       (.find ^DBCollection coll ^DBObject (to-db-object ref) ^DBObject (to-db-object map-of-fields))))
-  ([^String collection, ^Map ref, ^List fields, num-to-skip, limit]
-     (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)
-           map-of-fields (fields-to-db-object fields)]
-       (.find ^DBCollection coll ^DBObject (to-db-object ref) ^DBObject (to-db-object map-of-fields) ^long num-to-skip ^long limit)))
-  ([^String collection, ^Map ref, ^List fields, num-to-skip, batch-size, limit]
-     (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)
-           map-of-fields (fields-to-db-object fields)]
-       (.find ^DBCollection coll ^DBObject (to-db-object ref) ^DBObject (to-db-object map-of-fields) ^long num-to-skip ^long batch-size ^long limit))))
+       (.find ^DBCollection coll ^DBObject (to-db-object ref) ^DBObject (to-db-object map-of-fields)))))
 
 (defn ^ISeq find-maps
+  "Queries for objects in this collection.
+   This function returns clojure Seq of Maps.
+   If you want to work directly with DBObject, use find.
+  "
   ([^String collection]
-     (map (fn [x] (from-db-object x true)) (seq (find collection))))
+     (map (fn [x] (from-db-object x true)) (find collection)))
   ([^String collection, ^Map ref]
-     (map (fn [x] (from-db-object x true)) (seq (find collection ref))))
+     (map (fn [x] (from-db-object x true)) (find collection ref)))
   ([^String collection, ^Map ref, ^List fields]
-     (map (fn [x] (from-db-object x true)) (seq (find collection ref fields))))
-  ([^String collection, ^Map ref, ^List fields, num-to-skip, limit]
-     (map (fn [x] (from-db-object x true)) (seq (find collection ref fields num-to-skip limit))))
-  ([^String collection, ^Map ref, ^List fields, num-to-skip, batch-size, limit]
-     (map (fn [x] (from-db-object x true)) (seq (find collection ref fields num-to-skip batch-size limit)))))
+     (map (fn [x] (from-db-object x true)) (find collection ref fields))))
 
 (defn ^ISeq find-seq
+  "Queries for objects in this collection, returns ISeq of DBObjects."
   ([^String collection]
      (seq (find collection)))
   ([^String collection, ^Map ref]
@@ -93,7 +114,17 @@
 ;;
 
 (defn ^DBObject find-one
-  "Returns a single object from this collection matching the query."
+  "Returns a single DBObject from this collection matching the query.
+
+   EXAMPLES:
+
+      (mgcol/find-one collection { :language \"Clojure\" })
+
+      ;; Return only :language field.
+      ;; Note that _id field is always returned.
+      (mgcol/find-one collection { :language \"Clojure\" } [:language])
+
+  "
   ([^String collection, ^Map ref]
      (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
        (.findOne ^DBCollection coll ^DBObject (to-db-object ref))))
@@ -103,6 +134,7 @@
        (.findOne ^DBCollection coll ^DBObject (to-db-object ref) ^DBObject (to-db-object map-of-fields)))))
 
 (defn ^IPersistentMap find-one-as-map
+  "Returns a single object converted to Map from this collection matching the query."
   ([^String collection, ^Map ref]
      (from-db-object ^DBObject (find-one collection ref) true))
   ([^String collection, ^Map ref, keywordize]
@@ -117,12 +149,23 @@
 ;;
 
 (defn ^DBObject find-by-id
+  "Returns a single object with matching _id field.
+
+   EXAMPLES:
+
+      (mgcol/find-one-by-id collection \"4ef45ab4744e9fd632640e2d\")
+
+      ;; Return only :language field.
+      ;; Note that _id field is always returned.
+      (mgcol/find-one-by-id collection \"4ef45ab4744e9fd632640e2d\" [:language])
+  "
   ([^String collection, id]
      (find-one collection { :_id id }))
   ([^String collection, id, ^List fields]
      (find-one collection { :_id id } fields)))
 
 (defn ^IPersistentMap find-map-by-id
+  "Returns a single object, converted to map with matching _id field."
   ([^String collection, id]
      (from-db-object ^DBObject (find-one-as-map collection { :_id id }) true))
   ([^String collection, id, keywordize]
@@ -158,11 +201,29 @@
            (.count coll (to-db-object conditions)))))
 
 (defn any?
+  "Wether the collection has any items at all, or items matching query.
+
+   EXAMPLES:
+
+    ;; wether the collection has any items
+    (mgcol/any? collection)
+
+    (mgcol/any? collection { :language \"Clojure\" }))
+ "
   ([^String collection]
      (> (count collection) 0))
   ([^String collection, ^Map conditions]
      (> (count collection conditions) 0)))
 
+
+(defn empty?
+  "Wether the collection is empty.
+
+   EXAMPLES:
+      (mgcol/empty? \"things\")
+   "
+  ([^String collection]
+     (= (count collection) 0)))
 
 ;; monger.collection/update
 
@@ -306,11 +367,13 @@
 ;;
 
 (defn drop-index
+  "Drops an index from this collection."
   [^String collection, ^String name]
   (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
     (.dropIndex coll name)))
 
 (defn drop-indexes
+  "Drops an indices from this collection."
   [^String collection]
   (.dropIndexes ^DBCollection (.getCollection monger.core/*mongodb-database* collection)))
 
@@ -331,6 +394,7 @@
   (.collectionExists monger.core/*mongodb-database* collection))
 
 (defn create
+  "Creates a collection with a given name and options."
   [^String collection, ^Map options]
   (.createCollection monger.core/*mongodb-database* collection (to-db-object options)))
 
@@ -364,6 +428,7 @@
 ;;
 
 (defn map-reduce
+  "Performs a map reduce operation"
   ([^String collection, ^String js-mapper, ^String js-reducer, ^String output, ^Map query]
      (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
        (.mapReduce coll js-mapper js-reducer output (to-db-object query))))
@@ -377,6 +442,7 @@
 ;;
 
 (defn distinct
+  "Finds distinct values for a key"
   ([^String collection, ^String key]
      (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
        (.distinct coll ^String (to-db-object key))))

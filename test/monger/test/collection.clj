@@ -114,21 +114,6 @@
     (is (= 1 (mgcol/count collection)))))
 
 
-
-;;
-;; find
-;;
-
-(deftest find-full-document-when-collection-is-empty
-  (let [collection "docs"
-        cursor     (mgcol/find collection)]
-    (is (empty? (iterator-seq cursor)))))
-
-(deftest find-document-seq-when-collection-is-empty
-  (let [collection "docs"]
-    (is (empty? (mgcol/find-seq collection)))))
-
-
 ;;
 ;; find-one
 ;;
@@ -151,7 +136,6 @@
     (is (= (:_id doc) (monger.util/get-id found-one)))
     (is (= (mgcnv/from-db-object found-one true) doc))
     (is (= (mgcnv/to-db-object doc) found-one))))
-
 
 (deftest find-one-full-document-as-map-when-collection-has-matches
   (let [collection "docs"
@@ -252,6 +236,15 @@
 ;; find
 ;;
 
+(deftest find-full-document-when-collection-is-empty
+  (let [collection "docs"
+        cursor     (mgcol/find collection)]
+    (is (empty? (iterator-seq cursor)))))
+
+(deftest find-document-seq-when-collection-is-empty
+  (let [collection "docs"]
+    (is (empty? (mgcol/find-seq collection)))))
+
 (deftest find-multiple-documents-when-collection-is-empty
   (let [collection "libraries"]
     (is (empty? (mgcol/find collection { :language "Scala" })))))
@@ -267,7 +260,6 @@
                                     { :language "JavaScript", :name "sprout-core" }])
     (is (= 2 (monger.core/count (mgcol/find collection { :language #"Java*" }))))))
 
-
 (deftest find-multiple-documents
   (let [collection "libraries"]
     (mgcol/insert-batch collection [{ :language "Clojure", :name "monger" }
@@ -277,6 +269,13 @@
     (is (= 1 (monger.core/count (mgcol/find collection { :language "Scala"   }))))
     (is (= 3 (.count (mgcol/find collection { :language "Clojure" }))))
     (is (empty? (mgcol/find collection      { :language "Java"    })))))
+
+
+(deftest find-document-specify-fields
+  (let [collection "libraries"
+        _          (mgcol/insert collection { :language "Clojure", :name "monger" })
+        result     (mgcol/find collection { :language "Clojure"} [:language])]
+    (is (= (seq [:_id :language]) (keys (mgcnv/from-db-object (.next result) true))))))
 
 (deftest find-and-iterate-over-multiple-documents-the-hard-way
   (let [collection "libraries"]
@@ -523,3 +522,27 @@
     (mgcol/insert-batch collection batch)
     (is (= ["CA" "IL" "NY"] (sort (mgcol/distinct collection :state))))
     (is (= ["CA" "NY"] (sort (mgcol/distinct collection :state { :price { $gt 100.00 } }))))))
+
+
+;;
+;; any?, empty?
+;;
+
+(deftest any-on-empty-collection
+  (let [collection "things"]
+    (is (not (mgcol/any? collection)))))
+
+(deftest any-on-non-empty-collection
+  (let [collection "things"
+        _           (mgcol/insert collection { :language "Clojure", :name "langohr" })]
+    (is (mgcol/any? "things"))
+    (is (mgcol/any? "things" {:language "Clojure"}))))
+
+(deftest empty-on-empty-collection
+  (let [collection "things"]
+    (is (mgcol/empty? collection))))
+
+(deftest empty-on-non-empty-collection
+  (let [collection "things"
+        _           (mgcol/insert collection { :language "Clojure", :name "langohr" })]
+    (is (not (mgcol/empty? "things")))))
