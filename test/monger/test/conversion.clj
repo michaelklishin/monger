@@ -2,7 +2,8 @@
   (:require [monger core collection]
             [monger.conversion :as cnv])
   (:import [com.mongodb DBObject BasicDBObject BasicDBList]
-           [java.util Date Calendar List ArrayList])
+           [java.util Date Calendar List ArrayList]
+           [org.bson.types ObjectId])
   (:use [clojure.test]))
 
 
@@ -131,3 +132,13 @@
     (is (= (-> output (get "nested") (get "list")) ["red" "green" "blue"]))
     (is (= (-> output (get "nested") (get "dblist")) [0 1]))))
 
+
+
+;;
+;; ObjectId coercion
+;;
+
+(deftest test-conversion-to-object-id
+  (let [output (ObjectId. "4efb39370364238a81020502")]
+    (is (= output (cnv/to-object-id "4efb39370364238a81020502")))
+    (is (= output (cnv/to-object-id output)))))

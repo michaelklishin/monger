@@ -22,9 +22,10 @@
 ;; THE SOFTWARE.
 
 (ns monger.conversion
-  (:import (com.mongodb DBObject BasicDBObject BasicDBList DBCursor)
-           (clojure.lang IPersistentMap Keyword)
-           (java.util List Map)))
+  (:import [com.mongodb DBObject BasicDBObject BasicDBList DBCursor]
+           [clojure.lang IPersistentMap Keyword]
+           [java.util List Map Date]
+           [org.bson.types ObjectId]))
 
 (defprotocol ConvertToDBObject
   (to-db-object [input] "Converts given piece of Clojure data to BasicDBObject MongoDB Java driver uses"))
@@ -100,4 +101,23 @@
             (fn [m [^String k v]]
               (assoc m k (from-db-object v false))))
           {} (reverse pairs)))
+
+
+
+(defprotocol ConvertToObjectId
+  (to-object-id [input] "Instantiates ObjectId from input unless the input itself is an ObjectId instance. In that case, returns input as is."))
+
+(extend-protocol ConvertToObjectId
+  String
+  (to-object-id [^String input]
+    (ObjectId. input))
+
+  Date
+  (to-object-id [^Date input]
+    (ObjectId. input))
+
+  ObjectId
+  (to-object-id [^ObjectId input]
+    input))
+
 
