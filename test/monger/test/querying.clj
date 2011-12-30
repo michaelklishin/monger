@@ -106,8 +106,22 @@
                  (find { :inception_year { "$gt"  2002 } })
                  (limit 1)
                  (sort { :inception_year -1 })))
-        (doc1 (with-collection coll
-                (find { :inception_year { "$gte" 2006 } }))))))
+         (doc1 (with-collection coll
+                 (find { :inception_year { "$gte" 2006 } }))))))
+
+
+(deftest query-using-$gt-$lt-$gte-$lte-operators-using-dsl-composition
+  (let [coll "docs"
+        doc1 { :language "Clojure" :_id (ObjectId.) :inception_year 2006 }
+        doc2 { :language "Java"    :_id (ObjectId.) :inception_year 1992 }
+        doc3 { :language "Scala"   :_id (ObjectId.) :inception_year 2003 }
+        srt  (-> {}
+                 (limit 1)
+                 (sort { :inception_year -1 }))
+        _    (mgcol/insert-batch coll [doc1 doc2 doc3])]
+    (is (= [doc1] (with-collection coll
+                    (find { :inception_year { "$gt"  2002 } })
+                    (merge srt))))))
 
 
 ;; $all
