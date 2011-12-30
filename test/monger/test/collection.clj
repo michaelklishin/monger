@@ -130,9 +130,9 @@
 (deftest find-one-full-document-when-collection-has-matches
   (let [collection "docs"
         doc-id     (monger.util/random-uuid)
-        doc        { :data-store "MongoDB", :language "Clojure", :_id doc-id }]
-    (mgcol/insert collection doc)
-    (def ^DBObject found-one (mgcol/find-one collection { :language "Clojure" }))
+        doc        { :data-store "MongoDB", :language "Clojure", :_id doc-id }
+        _          (mgcol/insert collection doc)
+        found-one (mgcol/find-one collection { :language "Clojure" })]
     (is (= (:_id doc) (monger.util/get-id found-one)))
     (is (= (mgcnv/from-db-object found-one true) doc))
     (is (= (mgcnv/to-db-object doc) found-one))))
@@ -150,9 +150,9 @@
   (let [collection "docs"
         doc-id     (monger.util/random-uuid)
         doc        { :data-store "MongoDB", :language "Clojure", :_id doc-id }
-        fields     [:language]]
-    (mgcol/insert collection doc)
-    (def ^DBObject loaded (mgcol/find-one collection { :language "Clojure" } fields))
+        fields     [:language]
+        _          (mgcol/insert collection doc)
+        loaded     (mgcol/find-one collection { :language "Clojure" } fields)]
     (is (nil? (.get ^DBObject loaded "data-store")))
     (is (= doc-id (monger.util/get-id loaded)))
     (is (= "Clojure" (.get ^DBObject loaded "language")))))
