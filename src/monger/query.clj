@@ -2,7 +2,7 @@
   (:refer-clojure :exclude [select find sort])
   (:require [monger.core]
             [monger.internal pagination])
-  (:import [com.mongodb DB DBCollection DBObject DBCursor]
+  (:import [com.mongodb DB DBCollection DBObject DBCursor ReadPreference]
            [java.util List])
   (:use [monger conversion operators]))
 
@@ -52,16 +52,17 @@
   (to-db-object (zipmap fields (repeat 1))))
 
 (defn exec
-  [{ :keys [collection query fields skip limit sort batch-size hint snapshot] :or { limit 0 batch-size 256 skip 0 } }]
+  [{ :keys [collection query fields skip limit sort batch-size hint snapshot read-preference] :or { limit 0 batch-size 256 skip 0 } }]
   (let [cursor (doto ^DBCursor (.find ^DBCollection collection (to-db-object query) (fields-to-db-object fields))
                      (.limit limit)
                      (.skip  skip)
                      (.sort  (to-db-object sort))
                      (.batchSize batch-size)
-                     (.hint ^DBObject (to-db-object hint))
-                     )]
-    (if snapshot
+                     (.hint ^DBObject (to-db-object hint)))]
+    (when snapshot
       (.snapshot cursor))
+    (when read-preference
+      (.setReadPreference cursor read-preference))
     (map (fn [x] (from-db-object x true))
          (seq cursor))))
 
@@ -100,6 +101,10 @@
 (defn snapshot
   [m]
   (merge m { :snapshot true }))
+
+(defn read-preference
+  [m ^ReadPreference rp]
+  (merge m { :read-preference rp }))
 
 (defn paginate
   [m & { :keys [page per-page] :or { page 1 per-page 10 } }]

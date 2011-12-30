@@ -2,7 +2,7 @@
 
 (ns monger.test.querying
   (:refer-clojure :exclude [select find sort])
-  (:import  [com.mongodb WriteResult WriteConcern DBCursor DBObject CommandResult$CommandFailure]
+  (:import  [com.mongodb WriteResult WriteConcern DBCursor DBObject CommandResult$CommandFailure ReadPreference]
             [org.bson.types ObjectId]
             [java.util Date])
   (:require [monger core util]
@@ -189,7 +189,8 @@
         result1 (with-collection coll
                   (find {})
                   (paginate :page 1 :per-page 3)
-                  (sort { :title 1 }))
+                  (sort { :title 1 })
+                  (read-preference ReadPreference/PRIMARY))
         result2 (with-collection coll
                   (find {})
                   (paginate :page 2 :per-page 3)
