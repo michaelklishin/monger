@@ -6,7 +6,8 @@
   (:import [org.joda.time DateTime ReadableInstant]
            [org.joda.time.format ISODateTimeFormat]
            [java.io StringWriter PrintWriter]
-           [org.bson.types ObjectId])
+           [org.bson.types ObjectId]
+           [com.mongodb DBObject])
   (:require [clojure.data.json :as json]
             [clj-time.core     :as t]))
 
