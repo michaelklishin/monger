@@ -8,8 +8,8 @@
   (:require [monger.gridfs :as gridfs]
             [monger.test.helper :as helper]
             [clojure.java.io :as io])
-  (:import [java.io InputStream File]
-           [com.mongodb.gridfs GridFS GridFSInputFile]))
+  (:import [java.io InputStream File FileInputStream]
+           [com.mongodb.gridfs GridFS GridFSInputFile GridFSDBFile]))
 
 
 (defn purge-gridfs
@@ -59,6 +59,17 @@
       (.setContentType "application/octet-stream"))
     (is (= 1 (count (gridfs/all-files))))))
 
+(deftest test-storing-files-to-gridfs-using-input-stream
+  (let [tmp-file (File/createTempFile "monger.test.gridfs" "test-storing-files-to-gridfs-using-input-stream")
+        _        (spit tmp-file "Some other content")]
+    (is (= 0 (count (gridfs/all-files))))
+    (store (make-input-file (FileInputStream. tmp-file))
+      (.setFilename "monger.test.gridfs.file4b")
+      (.setContentType "application/octet-stream"))
+    (is (= 1 (count (gridfs/all-files))))))
+
+
+
 (deftest test-finding-individual-files-on-gridfs
   (let [input   "./test/resources/mongo/js/mapfun1.js"
         ct      "binary/octet-stream"
@@ -78,3 +89,42 @@
          md5 (:_id stored)
          md5 filename
          md5 (to-db-object { :md5 md5 }))))
+
+(deftest test-finding-multiple-files-on-gridfs
+  (let [input   "./test/resources/mongo/js/mapfun1.js"
+        ct      "binary/octet-stream"
+        md5      "14a09deabb50925a3381315149017bbd"
+        stored1  (store (make-input-file input)
+                   (.setFilename "monger.test.gridfs.file6")
+                   (.setContentType ct))
+        stored2  (store (make-input-file input)
+                   (.setFilename "monger.test.gridfs.file7")
+                   (.setContentType ct))
+        list1    (gridfs/find "monger.test.gridfs.file6")
+        list2    (gridfs/find "monger.test.gridfs.file7")
+        list3    (gridfs/find "888000___.monger.test.gridfs.file")
+        list4    (gridfs/find { :md5 md5 })]
+    (is (= 2 (count (gridfs/all-files))))
+    (are [a b] (is (= (map #(.get ^GridFSDBFile % "_id") a)
+                      (map :_id b)))
+         list1 [stored1]
+         list2 [stored2]
+         list3 []
+         list4 [stored1 stored2])))
+
+
+(deftest test-removing-multiple-files-from-gridfs
+  (let [input   "./test/resources/mongo/js/mapfun1.js"
+        ct      "binary/octet-stream"
+        md5      "14a09deabb50925a3381315149017bbd"
+        stored1  (store (make-input-file input)
+                   (.setFilename "monger.test.gridfs.file8")
+                   (.setContentType ct))
+        stored2  (store (make-input-file input)
+                   (.setFilename "monger.test.gridfs.file9")
+                   (.setContentType ct))]
+    (is (= 2 (count (gridfs/all-files))))
+    (gridfs/remove { :filename "monger.test.gridfs.file8" })
+    (is (= 1 (count (gridfs/all-files))))
+    (gridfs/remove { :md5 md5 })
+    (is (= 0 (count (gridfs/all-files))))))

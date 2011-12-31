@@ -1,5 +1,5 @@
 (ns monger.gridfs
-  (:refer-clojure :exclude [remove])
+  (:refer-clojure :exclude [remove find])
   (:require [monger.core]
             [clojure.java.io :as io])
   (:use [monger.conversion])
@@ -60,7 +60,11 @@
 
   File
   (make-input-file [^File input]
-    (.createFile ^GridFS monger.core/*mongodb-gridfs* ^InputStream (io/make-input-stream input { :encoding "UTF-8" }))))
+    (.createFile ^GridFS monger.core/*mongodb-gridfs* ^InputStream (io/make-input-stream input { :encoding "UTF-8" })))
+
+  InputStream
+  (make-input-file [^InputStream input]
+    (.createFile ^GridFS monger.core/*mongodb-gridfs* ^InputStream input)))
 
 
 (defmacro store
@@ -71,10 +75,13 @@
 
 
 (defprotocol Finders
-  (find-one        [input] "Finds one file using given input (an ObjectId, filename or query)"))
+  (find     [input] "Finds multiple files using given input (an ObjectId, filename or query)")
+  (find-one [input] "Finds one file using given input (an ObjectId, filename or query)"))
 
 (extend-protocol Finders
   String
+  (find [^String input]
+    (vec (.find ^GridFS monger.core/*mongodb-gridfs* input)))
   (find-one [^String input]
     (.findOne ^GridFS monger.core/*mongodb-gridfs* input))
 
@@ -84,7 +91,12 @@
 
 
   DBObject
+  (find [^DBObject input]
+    (vec (.find ^GridFS monger.core/*mongodb-gridfs* input)))
   (find-one [^DBObject input]
-    (.findOne ^GridFS monger.core/*mongodb-gridfs* input)))
+    (.findOne ^GridFS monger.core/*mongodb-gridfs* input))
 
+  clojure.lang.PersistentArrayMap
+  (find [^clojure.lang.PersistentArrayMap input]
+    (find (to-db-object input))))
 
