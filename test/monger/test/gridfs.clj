@@ -74,7 +74,7 @@
     (is (= md5 (:md5 stored)))
     (is (= filename (:filename stored)))
     (is (= ct (:contentType stored)))
-    (are [a b] (is (= a (:md5 (gridfs/find-one-as-map b))))
+    (are [a b] (is (= a (:md5 (from-db-object (gridfs/find-one b) true))))
          md5 (:_id stored)
          md5 filename
          md5 (to-db-object { :md5 md5 }))))

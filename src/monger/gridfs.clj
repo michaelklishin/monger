@@ -71,27 +71,20 @@
 
 
 (defprotocol Finders
-  (find-one        [input] "Finds one file using given input (an ObjectId, filename or query)")
-  (find-one-as-map [input] "Finds one file using given input (an ObjectId, filename or query), converting result to Clojure map before returning"))
+  (find-one        [input] "Finds one file using given input (an ObjectId, filename or query)"))
 
 (extend-protocol Finders
   String
   (find-one [^String input]
     (.findOne ^GridFS monger.core/*mongodb-gridfs* input))
-  (find-one-as-map [^String input]
-    (from-db-object (find-one input) true))
 
   org.bson.types.ObjectId
   (find-one [^org.bson.types.ObjectId input]
     (.findOne ^GridFS monger.core/*mongodb-gridfs* input))
-  (find-one-as-map [^org.bson.types.ObjectId input]
-    (from-db-object (find-one input) true))
 
 
   DBObject
   (find-one [^DBObject input]
-    (.findOne ^GridFS monger.core/*mongodb-gridfs* input))
-  (find-one-as-map [^DBObject input]
-    (from-db-object (find-one input) true)))
+    (.findOne ^GridFS monger.core/*mongodb-gridfs* input)))
 
 
