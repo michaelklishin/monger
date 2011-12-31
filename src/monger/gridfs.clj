@@ -17,8 +17,6 @@
     }
   byte-array-type (class (make-array Byte/TYPE 0)))
 
-(def ^:dynamic *chunk-size* (* 2 1024 1024))
-
 ;; ...
 
 
@@ -70,7 +68,7 @@
 (defmacro store
   [^GridFSInputFile input & body]
   `(let [^GridFSInputFile f# (doto ~input ~@body)]
-     (.save f# *chunk-size*)
+     (.save f# GridFS/DEFAULT_CHUNKSIZE)
      (from-db-object f# true)))
 
 
