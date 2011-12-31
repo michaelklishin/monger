@@ -216,3 +216,20 @@
     (is (= [doc1 doc5 doc7] result1))
     (is (= [doc2 doc6 doc4] result2))
     (is (= [doc3] result3))))
+
+
+(deftest combined-querying-dsl-example1
+  (let [coll "docs"
+        ma-doc { :_id (ObjectId.) :name "Massachusetts" :iso "MA" :population 6547629  :joined_in 1788 :capital "Boston" }
+        de-doc { :_id (ObjectId.) :name "Delaware"      :iso "DE" :population 897934   :joined_in 1787 :capital "Dover"  }
+        ny-doc { :_id (ObjectId.) :name "New York"      :iso "NY" :population 19378102 :joined_in 1788 :capital "Albany" }
+        ca-doc { :_id (ObjectId.) :name "California"    :iso "CA" :population 37253956 :joined_in 1850 :capital "Sacramento" }
+        tx-doc { :_id (ObjectId.) :name "Texas"         :iso "TX" :population 25145561 :joined_in 1845 :capital "Austin" }
+        top3               (partial-query (limit 3))
+        by-population-desc (partial-query (sort { :population -1 }))
+        _                  (mgcol/insert-batch coll [ma-doc de-doc ny-doc ca-doc tx-doc])
+        result             (with-collection coll
+                             (find {})
+                             (merge top3)
+                             (merge by-population-desc))]
+    (is (= result [ca-doc tx-doc ny-doc]))))

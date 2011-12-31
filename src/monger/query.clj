@@ -34,18 +34,19 @@
 ;;    deleted during the query, it may or may not be returned, even with snapshot mode). Note that short query responses
 ;;    (less than 1MB) are always effectively snapshotted. Currently, snapshot mode may not be used with sorting or explicit hints.
 (defn empty-query
-  [^DBCollection coll]
-  {
-   :collection      coll
-   :query           {}
-   :sort            {}
-   :fields          []
-   :skip            0
-   :limit           0
-   :batch-size      256
-   :hint            nil
-   :snapshot        false
-   })
+  ([]
+     {
+      :query           {}
+      :sort            {}
+      :fields          []
+      :skip            0
+      :limit           0
+      :batch-size      256
+      :hint            nil
+      :snapshot        false
+      })
+  ([^DBCollection coll]
+     (merge (empty-query) { :collection coll })))
 
 (defn- fields-to-db-object
   [^List fields]
@@ -117,3 +118,7 @@
                                   ~coll)]
      (let [query# (-> (empty-query *query-collection*) ~@body)]
        (exec query#))))
+
+(defmacro partial-query
+  [& body]
+  `(-> {} ~@body))
