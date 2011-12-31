@@ -28,7 +28,7 @@
            [org.bson.types ObjectId]))
 
 (defprotocol ConvertToDBObject
-  (to-db-object [input] "Converts given piece of Clojure data to BasicDBObject MongoDB Java driver uses"))
+  (^DBObject to-db-object [input] "Converts given piece of Clojure data to BasicDBObject MongoDB Java driver uses"))
 
 (extend-protocol ConvertToDBObject
   nil
