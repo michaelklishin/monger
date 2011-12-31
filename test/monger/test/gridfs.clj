@@ -33,10 +33,18 @@
     (is (= 1 (count (gridfs/all-files))))))
 
 
+(deftest test-storing-files-to-gridfs-using-file-instances
+  (let [input (io/as-file "./test/resources/mongo/js/mapfun1.js")]
+    (is (= 0 (count (gridfs/all-files))))
+    (gridfs/store (gridfs/make-input-file input)
+                  (.setFilename "monger.test.gridfs.file2")
+                  (.setContentType "application/octet-stream"))
+    (is (= 1 (count (gridfs/all-files))))))
+
 (deftest test-storing-bytes-to-gridfs
   (let [input (.getBytes "A string")]
     (is (= 0 (count (gridfs/all-files))))
     (store (make-input-file input)
-      (.setFilename "monger.test.gridfs.file2")
+      (.setFilename "monger.test.gridfs.file3")
       (.setContentType "application/octet-stream"))
     (is (= 1 (count (gridfs/all-files))))))

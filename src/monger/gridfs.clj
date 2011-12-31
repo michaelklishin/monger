@@ -5,7 +5,7 @@
   (:use [monger.conversion])
   (:import [com.mongodb DBObject]
            [com.mongodb.gridfs GridFS GridFSInputFile]
-           [java.io InputStream]))
+           [java.io InputStream File]))
 
 ;;
 ;; Implementation
@@ -56,6 +56,10 @@
 (extend-protocol GridFSInputFileFactory
   String
   (make-input-file [^String input]
+    (.createFile ^GridFS monger.core/*mongodb-gridfs* ^InputStream (io/make-input-stream input { :encoding "UTF-8" })))
+
+  File
+  (make-input-file [^File input]
     (.createFile ^GridFS monger.core/*mongodb-gridfs* ^InputStream (io/make-input-stream input { :encoding "UTF-8" }))))
 
 
