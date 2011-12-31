@@ -1,6 +1,7 @@
 # Monger
 
-Monger is an idiomatic Clojure wrapper around MongoDB Java driver.
+Monger is an idiomatic Clojure wrapper around MongoDB Java driver. It offers powerful expressive query DSL, strives to support
+every MongoDB 2.0+ feature and is well maintained.
 
 
 ## Project Goals
@@ -17,11 +18,18 @@ wanted a client that will
  * Learn from other clients like the Java and Ruby ones.
  * Target Clojure 1.3.0 and later from the ground up.
 
+
 ## Usage
 
-We are working on documentation guides & examples site for the 1.0 release. Please refer to the test suite for code examples.
+We are working on documentation guides & examples site for the 1.0 release. In the meantime, please refer to the [test suite](https://github.com/michaelklishin/monger/tree/master/test/monger/test) for code examples.
 
-Here is what monger.query DSL looks like right now:
+
+## Powerful Query DSL
+
+Every application that works with data stores has to query them. As a consequence, having an expressive powerful query DSL is a must
+for client libraries like Monger.
+
+Here is what monger.query DSL feels like:
 
 ``` clojure
 (with-collection "docs"
@@ -34,7 +42,32 @@ Here is what monger.query DSL looks like right now:
   (snapshot))
 ```
 
-More code examples can be found in our test suite.
+It is easy to add new DSL elements, for example, adding pagination took literally less than 10 lines of Clojure code. Here is what
+it looks like:
+
+``` clojure
+(with-collection coll
+                  (find {})
+                  (paginate :page 1 :per-page 3)
+                  (sort { :title 1 })
+                  (read-preference ReadPreference/PRIMARY))
+```
+
+Query DSL supports composition, too:
+
+``` clojure
+(let
+    [top3               (partial-query (limit 3))
+     by-population-desc (partial-query (sort { :population -1 }))
+     result             (with-collection coll
+                          (find {})
+                          (merge top3)
+                          (merge by-population-desc))]
+  ;; ...
+  )
+```
+
+More code examples can be found [in our test suite](https://github.com/michaelklishin/monger/tree/master/test/monger/test).
 
 
 ## This is a Work In Progress
@@ -48,7 +81,7 @@ Snapshot artifacts are [released to Clojars](https://clojars.org/com.novemberain
 
 With Leiningen:
 
-    [com.novemberain/monger "0.11.0-SNAPSHOT"]
+    [com.novemberain/monger "1.0.0-SNAPSHOT"]
 
 
 With Maven:
@@ -56,7 +89,7 @@ With Maven:
     <dependency>
       <groupId>com.novemberain</groupId>
       <artifactId>monger</artifactId>
-      <version>0.11.0-SNAPSHOT</version>
+      <version>1.0.0-SNAPSHOT</version>
     </dependency>
 
 
@@ -65,7 +98,7 @@ With Maven:
 [![Continuous Integration status](https://secure.travis-ci.org/michaelklishin/monger.png)](http://travis-ci.org/michaelklishin/monger)
 
 
-CI is hosted by [travis-ci.org](http://travis-ci.org)
+CI is hosted by [travis-ci.org](http://travis-ci.org).
 
 
 
