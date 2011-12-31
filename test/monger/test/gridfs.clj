@@ -27,18 +27,18 @@
 (deftest test-storing-files-to-gridfs-using-relative-fs-paths
   (let [input "./test/resources/mongo/js/mapfun1.js"]
     (is (= 0 (count (gridfs/all-files))))
-    (gridfs/store (gridfs/make-input-file input)
-                  (.setFilename "monger.test.gridfs.file1")
-                  (.setContentType "application/octet-stream"))
+    (store (make-input-file input)
+      (.setFilename "monger.test.gridfs.file1")
+      (.setContentType "application/octet-stream"))
     (is (= 1 (count (gridfs/all-files))))))
 
 
 (deftest test-storing-files-to-gridfs-using-file-instances
   (let [input (io/as-file "./test/resources/mongo/js/mapfun1.js")]
     (is (= 0 (count (gridfs/all-files))))
-    (gridfs/store (gridfs/make-input-file input)
-                  (.setFilename "monger.test.gridfs.file2")
-                  (.setContentType "application/octet-stream"))
+    (store (make-input-file input)
+      (.setFilename "monger.test.gridfs.file2")
+      (.setContentType "application/octet-stream"))
     (is (= 1 (count (gridfs/all-files))))))
 
 (deftest test-storing-bytes-to-gridfs
