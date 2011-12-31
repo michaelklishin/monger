@@ -4,7 +4,8 @@
             [clojure.java.io :as io])
   (:use [monger.conversion])
   (:import [com.mongodb DBObject]
-           [com.mongodb.gridfs GridFS GridFSInputFile]))
+           [com.mongodb.gridfs GridFS GridFSInputFile]
+           [java.io InputStream]))
 
 ;;
 ;; Implementation
@@ -55,7 +56,7 @@
 (extend-protocol GridFSInputFileFactory
   String
   (make-input-file [^String input]
-    (.createFile ^GridFS monger.core/*mongodb-gridfs* (.getBytes input))))
+    (.createFile ^GridFS monger.core/*mongodb-gridfs* ^InputStream (io/make-input-stream input { :encoding "UTF-8" }))))
 
 
 
