@@ -18,18 +18,6 @@
 
 (def ^:dynamic *chunk-size* (* 2 1024 1024))
 
-(defn filename
-  [m ^String s]
-  (merge m { :filename s }))
-
-(defn content-type
-  [m ^String s]
-  (merge m { :content-type s }))
-
-(defn- exec
-  [{ :keys [input filename content-type] }]
-  )
-
 ;; ...
 
 
