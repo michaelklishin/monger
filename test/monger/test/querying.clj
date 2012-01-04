@@ -11,7 +11,8 @@
             [monger.test.helper :as helper])
   (:use [clojure.test]
         [monger.test.fixtures]
-        [monger conversion query operators]))
+        [monger conversion query operators joda-time]
+        [clj-time.core :only [date-time]]))
 
 (helper/connect!)
 
@@ -77,7 +78,7 @@
 
 ;; < ($lt), <= ($lte), > ($gt), >= ($gte)
 
-(deftest query-using-dsl-and-$lt-operator
+(deftest query-using-dsl-and-$lt-operator-with-integers
   (let [coll "docs"
         doc1 { :language "Clojure" :_id (ObjectId.) :inception_year 2006 }
         doc2 { :language "Java"    :_id (ObjectId.) :inception_year 1992 }
@@ -86,7 +87,21 @@
         lt-result (with-collection "docs"
                     (find { :inception_year { $lt 2000 } })
                     (limit 2))]
-    (is (= [doc2] lt-result))))
+    (is (= [doc2] (vec lt-result)))))
+
+
+(deftest query-using-dsl-and-$lt-operator-with-dates
+  (let [coll "docs"
+        ;; these rely on monger.joda-time being loaded. MK.
+        doc1 { :language "Clojure" :_id (ObjectId.) :inception_year (date-time 2006 1 1) }
+        doc2 { :language "Java"    :_id (ObjectId.) :inception_year (date-time 1992 1 2) }
+        doc3 { :language "Scala"   :_id (ObjectId.) :inception_year (date-time 2003 3 3) }
+        _      (mgcol/insert-batch coll [doc1 doc2])
+        lt-result (with-collection "docs"
+                    (find { :inception_year { $lt (date-time 2000 1 2) } })
+                    (limit 2))]
+    (is (= (map :_id [doc2])
+           (map :_id (vec lt-result))))))
 
 
 
