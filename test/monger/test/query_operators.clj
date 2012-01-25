@@ -1,6 +1,6 @@
 (set! *warn-on-reflection* true)
 
-(ns monger.test.collection
+(ns monger.test.query-operators
   (:import  [com.mongodb WriteResult WriteConcern DBCursor DBObject CommandResult$CommandFailure MapReduceOutput MapReduceCommand MapReduceCommand$OutputType]
             [org.bson.types ObjectId]
             [java.util Date])
@@ -68,7 +68,7 @@
                                                   {:users { $gt 10 } } ]}))))))
 
 ;;
-;; $all, $in
+;; $all, $in, $nin
 ;;
 
 (deftest find-on-embedded-arrays
@@ -78,7 +78,8 @@
                                     { :language "Ruby",    :tags [ "object-oriented" "dynamic" ] }])
 
     (is (= "Scala" (:language (first (mgcol/find-maps collection { :tags { $all [ "functional" "object-oriented" ] } } )))))
-    (is (= 3 (.count (mgcol/find-maps collection { :tags { $in [ "functional" "object-oriented" ] } } ))))))
+    (is (= 3 (.count (mgcol/find-maps collection { :tags { $in [ "functional" "object-oriented" ] } } ))))
+    (is (= 1 (.count (mgcol/find-maps collection { :tags { $nin [ "functional" ] } } ))))))
 
 
 (deftest find-with-conditional-operators-on-embedded-documents

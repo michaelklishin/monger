@@ -37,6 +37,13 @@
 ;;   (mgcol/find-maps "languages" { :tags { $in [ "functional" "object-oriented" ] } } )
 (defoperator $in)
 
+;; The $nin operator is similar to $in, but it selects objects for which the specified field does not
+;; have any value in the specified array.
+;;
+;; EXAMPLES
+;;   (mgcol/find-maps "languages" { :tags { $nin [ "functional" ] } } )
+(defoperator $nin)
+
 ;; $ne is "non-equals" comparator
 ;;
 ;; EXAMPLES:
