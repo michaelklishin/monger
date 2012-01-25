@@ -2,7 +2,7 @@
   (:refer-clojure :exclude [select find sort])
   (:require [monger.core]
             [monger.internal pagination])
-  (:import [com.mongodb DB DBCollection DBObject DBCursor]
+  (:import [com.mongodb DB DBCollection DBObject DBCursor ReadPreference]
            [java.util List])
   (:use [monger conversion operators]))
 
@@ -34,34 +34,36 @@
 ;;    deleted during the query, it may or may not be returned, even with snapshot mode). Note that short query responses
 ;;    (less than 1MB) are always effectively snapshotted. Currently, snapshot mode may not be used with sorting or explicit hints.
 (defn empty-query
-  [^DBCollection coll]
-  {
-   :collection      coll
-   :query           {}
-   :sort            {}
-   :fields          []
-   :skip            0
-   :limit           0
-   :batch-size      256
-   :hint            nil
-   :snapshot        false
-   })
+  ([]
+     {
+      :query           {}
+      :sort            {}
+      :fields          []
+      :skip            0
+      :limit           0
+      :batch-size      256
+      :hint            nil
+      :snapshot        false
+      })
+  ([^DBCollection coll]
+     (merge (empty-query) { :collection coll })))
 
 (defn- fields-to-db-object
   [^List fields]
   (to-db-object (zipmap fields (repeat 1))))
 
 (defn exec
-  [{ :keys [collection query fields skip limit sort batch-size hint snapshot] :or { limit 0 batch-size 256 skip 0 } }]
+  [{ :keys [collection query fields skip limit sort batch-size hint snapshot read-preference] :or { limit 0 batch-size 256 skip 0 } }]
   (let [cursor (doto ^DBCursor (.find ^DBCollection collection (to-db-object query) (fields-to-db-object fields))
                      (.limit limit)
                      (.skip  skip)
                      (.sort  (to-db-object sort))
                      (.batchSize batch-size)
-                     (.hint ^DBObject (to-db-object hint))
-                     )]
-    (if snapshot
+                     (.hint ^DBObject (to-db-object hint)))]
+    (when snapshot
       (.snapshot cursor))
+    (when read-preference
+      (.setReadPreference cursor read-preference))
     (map (fn [x] (from-db-object x true))
          (seq cursor))))
 
@@ -101,6 +103,10 @@
   [m]
   (merge m { :snapshot true }))
 
+(defn read-preference
+  [m ^ReadPreference rp]
+  (merge m { :read-preference rp }))
+
 (defn paginate
   [m & { :keys [page per-page] :or { page 1 per-page 10 } }]
   (merge m { :limit per-page :skip (monger.internal.pagination/offset-for page per-page) }))
@@ -112,3 +118,7 @@
                                   ~coll)]
      (let [query# (-> (empty-query *query-collection*) ~@body)]
        (exec query#))))
+
+(defmacro partial-query
+  [& body]
+  `(-> {} ~@body))

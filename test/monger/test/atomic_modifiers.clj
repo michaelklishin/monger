@@ -3,9 +3,7 @@
 (ns monger.test.atomic-modifiers
   (:import  [com.mongodb WriteResult WriteConcern DBCursor DBObject CommandResult$CommandFailure]
             [org.bson.types ObjectId]
-            [java.util Date]
-
-            )
+            [java.util Date])
   (:require [monger core util]
             [monger.collection :as mgcol]
             [monger.result     :as mgres]

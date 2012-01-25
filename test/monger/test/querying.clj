@@ -2,7 +2,7 @@
 
 (ns monger.test.querying
   (:refer-clojure :exclude [select find sort])
-  (:import  [com.mongodb WriteResult WriteConcern DBCursor DBObject CommandResult$CommandFailure]
+  (:import  [com.mongodb WriteResult WriteConcern DBCursor DBObject CommandResult$CommandFailure ReadPreference]
             [org.bson.types ObjectId]
             [java.util Date])
   (:require [monger core util]
@@ -11,7 +11,8 @@
             [monger.test.helper :as helper])
   (:use [clojure.test]
         [monger.test.fixtures]
-        [monger conversion query operators]))
+        [monger conversion query operators joda-time]
+        [clj-time.core :only [date-time]]))
 
 (helper/connect!)
 
@@ -77,7 +78,7 @@
 
 ;; < ($lt), <= ($lte), > ($gt), >= ($gte)
 
-(deftest query-using-dsl-and-$lt-operator
+(deftest query-using-dsl-and-$lt-operator-with-integers
   (let [coll "docs"
         doc1 { :language "Clojure" :_id (ObjectId.) :inception_year 2006 }
         doc2 { :language "Java"    :_id (ObjectId.) :inception_year 1992 }
@@ -86,7 +87,21 @@
         lt-result (with-collection "docs"
                     (find { :inception_year { $lt 2000 } })
                     (limit 2))]
-    (is (= [doc2] lt-result))))
+    (is (= [doc2] (vec lt-result)))))
+
+
+(deftest query-using-dsl-and-$lt-operator-with-dates
+  (let [coll "docs"
+        ;; these rely on monger.joda-time being loaded. MK.
+        doc1 { :language "Clojure" :_id (ObjectId.) :inception_year (date-time 2006 1 1) }
+        doc2 { :language "Java"    :_id (ObjectId.) :inception_year (date-time 1992 1 2) }
+        doc3 { :language "Scala"   :_id (ObjectId.) :inception_year (date-time 2003 3 3) }
+        _      (mgcol/insert-batch coll [doc1 doc2])
+        lt-result (with-collection "docs"
+                    (find { :inception_year { $lt (date-time 2000 1 2) } })
+                    (limit 2))]
+    (is (= (map :_id [doc2])
+           (map :_id (vec lt-result))))))
 
 
 
@@ -106,8 +121,22 @@
                  (find { :inception_year { "$gt"  2002 } })
                  (limit 1)
                  (sort { :inception_year -1 })))
-        (doc1 (with-collection coll
-                (find { :inception_year { "$gte" 2006 } }))))))
+         (doc1 (with-collection coll
+                 (find { :inception_year { "$gte" 2006 } }))))))
+
+
+(deftest query-using-$gt-$lt-$gte-$lte-operators-using-dsl-composition
+  (let [coll "docs"
+        doc1 { :language "Clojure" :_id (ObjectId.) :inception_year 2006 }
+        doc2 { :language "Java"    :_id (ObjectId.) :inception_year 1992 }
+        doc3 { :language "Scala"   :_id (ObjectId.) :inception_year 2003 }
+        srt  (-> {}
+                 (limit 1)
+                 (sort { :inception_year -1 }))
+        _    (mgcol/insert-batch coll [doc1 doc2 doc3])]
+    (is (= [doc1] (with-collection coll
+                    (find { :inception_year { "$gt"  2002 } })
+                    (merge srt))))))
 
 
 ;; $all
@@ -189,7 +218,8 @@
         result1 (with-collection coll
                   (find {})
                   (paginate :page 1 :per-page 3)
-                  (sort { :title 1 }))
+                  (sort { :title 1 })
+                  (read-preference ReadPreference/PRIMARY))
         result2 (with-collection coll
                   (find {})
                   (paginate :page 2 :per-page 3)
@@ -201,3 +231,20 @@
     (is (= [doc1 doc5 doc7] result1))
     (is (= [doc2 doc6 doc4] result2))
     (is (= [doc3] result3))))
+
+
+(deftest combined-querying-dsl-example1
+  (let [coll "docs"
+        ma-doc { :_id (ObjectId.) :name "Massachusetts" :iso "MA" :population 6547629  :joined_in 1788 :capital "Boston" }
+        de-doc { :_id (ObjectId.) :name "Delaware"      :iso "DE" :population 897934   :joined_in 1787 :capital "Dover"  }
+        ny-doc { :_id (ObjectId.) :name "New York"      :iso "NY" :population 19378102 :joined_in 1788 :capital "Albany" }
+        ca-doc { :_id (ObjectId.) :name "California"    :iso "CA" :population 37253956 :joined_in 1850 :capital "Sacramento" }
+        tx-doc { :_id (ObjectId.) :name "Texas"         :iso "TX" :population 25145561 :joined_in 1845 :capital "Austin" }
+        top3               (partial-query (limit 3))
+        by-population-desc (partial-query (sort { :population -1 }))
+        _                  (mgcol/insert-batch coll [ma-doc de-doc ny-doc ca-doc tx-doc])
+        result             (with-collection coll
+                             (find {})
+                             (merge top3)
+                             (merge by-population-desc))]
+    (is (= result [ca-doc tx-doc ny-doc]))))

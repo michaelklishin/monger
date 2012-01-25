@@ -14,8 +14,9 @@
   monger.core
   (:refer-clojure :exclude [count])
   (:use [monger.conversion])
-  (:import (com.mongodb Mongo DB WriteConcern DBObject DBCursor)
-           (java.util Map)))
+  (:import [com.mongodb Mongo DB WriteConcern DBObject DBCursor CommandResult]
+           [com.mongodb.gridfs GridFS]
+           [java.util Map]))
 
 ;;
 ;; Defaults
@@ -28,6 +29,7 @@
 (declare ^:dynamic ^DB           *mongodb-database*)
 (def     ^:dynamic ^WriteConcern *mongodb-write-concern* WriteConcern/SAFE)
 
+(declare ^:dynamic ^GridFS       *mongodb-gridfs*)
 
 ;;
 ;; API
@@ -75,33 +77,37 @@
   `(binding [*mongodb-database* ~db]
      (do ~@body)))
 
+(defmacro with-gridfs
+  [fs & body]
+  `(binding [*mongodb-gridfs* ~fs]
+     (do ~@body)))
+
 
 (defn connect!
-  "Connect to MongoDB, save connection to *mongodb-connection* dynamic variable"
+  "Connect to MongoDB, store connection in the *mongodb-connection* var"
   ^Mongo [& args]
   (def ^:dynamic *mongodb-connection* (apply connect args)))
 
 
 (defn set-db!
-  "Set dynamic *mongodb-database* variable to given :db"
+  "Sets *mongodb-database* var to given db, updates *mongodb-gridfs* var state. Recommended to be used for
+  applications that only use one database."
   [db]
-  (def ^:dynamic *mongodb-database* db))
+  (def ^:dynamic *mongodb-database* db)
+  (def ^:dynamic *mongodb-gridfs* (GridFS. db)))
 
 
 (defn set-default-write-concern!
   [wc]
-  "Set dynamic *mongodb-write-concert* to :wc
+  "Set *mongodb-write-concert* var to :wc
 
-  We recommend to use WriteConcern/SAFE by default to make sure your data was written."
+  Unlike the official Java driver, Monger uses WriteConcern/SAFE by default. We think defaults should be safe first
+  and WebScale fast second."
   (def ^:dynamic *mongodb-write-concern* wc))
 
-(defn command
-  "Available commands (please check MongoDB documentation for a complete list of commands for particular DB version.
-   Returns CommandResult.
-     Use (.ok result) to get response status.
-     It implements AbstractMap interface, so you can access it's internals:
-
-        (get (monger.core/command { :collstats \"things\") \"ns\")) ;; => monger-test.things
+(defn ^CommandResult command
+  "Runs a database command (please check MongoDB documentation for the complete list of commands). Some common commands
+  are:
 
    { :buildinfo 1 } returns version number and build information about the current MongoDB server, should be executed via admin DB.
 
@@ -162,7 +168,7 @@
 
 (extend-protocol Countable
   DBCursor
-  (count [^com.mongodb.DBCursor this]
+  (count [^DBCursor this]
     (.count this)))
 
 (defn ^DBObject get-last-error
@@ -184,5 +190,3 @@
      (.getLastError ^DB database w wtimeout fsync))
   ([^DB database ^WriteConcern write-concern]
      (.getLastError ^DB database write-concern)))
-
-
