@@ -79,7 +79,9 @@
 
     (is (= "Scala" (:language (first (mgcol/find-maps collection { :tags { $all [ "functional" "object-oriented" ] } } )))))
     (is (= 3 (.count (mgcol/find-maps collection { :tags { $in [ "functional" "object-oriented" ] } } ))))
-    (is (= 1 (.count (mgcol/find-maps collection { :tags { $nin [ "functional" ] } } ))))))
+    (is (= 2 (.count (mgcol/find-maps collection { :language { $in [ "Scala" "Ruby" ] } } ))))
+    (is (= 1 (.count (mgcol/find-maps collection { :tags { $nin [ "dynamic", "object-oriented" ] } } ))))
+    (is (= 3 (.count (mgcol/find-maps collection { :language { $nin [ "C#" ] } } ))))))
 
 
 (deftest find-with-conditional-operators-on-embedded-documents
