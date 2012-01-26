@@ -96,16 +96,28 @@
         doc1 { :language "Clojure" :_id (ObjectId.) :inception_year (date-time 2006 1 1) }
         doc2 { :language "Java"    :_id (ObjectId.) :inception_year (date-time 1992 1 2) }
         doc3 { :language "Scala"   :_id (ObjectId.) :inception_year (date-time 2003 3 3) }
-        _      (mgcol/insert-batch coll [doc1 doc2])
+        _    (mgcol/insert-batch coll [doc1 doc2])
         lt-result (with-collection "docs"
                     (find { :inception_year { $lt (date-time 2000 1 2) } })
                     (limit 2))]
     (is (= (map :_id [doc2])
            (map :_id (vec lt-result))))))
 
+(deftest query-using-both-$lte-and-$gte-operators-with-dates
+  (let [coll "docs"
+        ;; these rely on monger.joda-time being loaded. MK.
+        doc1 { :language "Clojure" :_id (ObjectId.) :inception_year (date-time 2006 1 1) }
+        doc2 { :language "Java"    :_id (ObjectId.) :inception_year (date-time 1992 1 2) }
+        doc3 { :language "Scala"   :_id (ObjectId.) :inception_year (date-time 2003 3 3) }
+        _    (mgcol/insert-batch coll [doc1 doc2 doc3])
+        lt-result (with-collection "docs"
+                    (find { :inception_year { $gt (date-time 2000 1 2) $lte (date-time 2007 2 2) } })
+                    (sort { :inception_year 1 }))]
+    (is (= (map :_id [doc3 doc1])
+           (map :_id (vec lt-result))))))
 
 
-(deftest query-using-$gt-$lt-$gte-$lte-operators
+(deftest query-using-$gt-$lt-$gte-$lte-operators-as-strings
   (let [coll "docs"
         doc1 { :language "Clojure" :_id (ObjectId.) :inception_year 2006 }
         doc2 { :language "Java"    :_id (ObjectId.) :inception_year 1992 }
