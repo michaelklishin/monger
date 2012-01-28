@@ -34,7 +34,7 @@ Here is what monger.query DSL feels like:
 ``` clojure
 (with-collection "docs"
   (find { :inception_year { $lt 2000 $gte 2011 } })
-  (fields { :inception_year 1 :name 1 })
+  (fields [ :inception_year :name ])
   (skip 10)
   (limit 20)
   (batch-size 50)
