@@ -8,4 +8,5 @@
                      [clj-time              "0.3.3" :exclusions [org.clojure/clojure]]
                      [codox                 "0.3.4" :exclusions [org.clojure/clojure]]]
   :dev-resources-path "test/resources"
-  :warn-on-reflection true)
+  :warn-on-reflection true
+  :codox { :exclude [monger.internal.pagination] })
