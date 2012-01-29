@@ -414,8 +414,8 @@
 
 (defn create
   "Creates a collection with a given name and options."
-  [^String collection, ^Map options]
-  (.createCollection monger.core/*mongodb-database* collection (to-db-object options)))
+  ([^String collection ^Map options]
+     (.createCollection monger.core/*mongodb-database* collection (to-db-object options))))
 
 (defn drop
   "Deletes collection from database.
@@ -424,9 +424,12 @@
 
       (monger.collection/drop \"collection-to-drop\")
   "
-  [^String collection]
-  (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
-    (.drop coll)))
+  ([^String collection]
+     (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
+       (.drop coll)))
+  ([^DB db ^String collection]
+     (let [^DBCollection coll (.getCollection db collection)]
+       (.drop coll))))
 
 (defn rename
   "Renames collection.
