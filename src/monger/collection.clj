@@ -86,11 +86,15 @@
   ([^String collection]
      (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
        (.find coll)))
-  ([^String collection, ^Map ref]
+  ([^String collection ^Map ref]
      (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
        (.find ^DBCollection coll ^DBObject (to-db-object ref))))
-  ([^String collection, ^Map ref, ^List fields]
+  ([^String collection ^Map ref ^List fields]
      (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)
+           map-of-fields (fields-to-db-object fields)]
+       (.find ^DBCollection coll ^DBObject (to-db-object ref) ^DBObject (to-db-object map-of-fields))))
+  ([^DB db ^String collection ^Map ref ^List fields]
+     (let [^DBCollection coll (.getCollection db collection)
            map-of-fields (fields-to-db-object fields)]
        (.find ^DBCollection coll ^DBObject (to-db-object ref) ^DBObject (to-db-object map-of-fields)))))
 
@@ -101,19 +105,23 @@
   "
   ([^String collection]
      (map (fn [x] (from-db-object x true)) (find collection)))
-  ([^String collection, ^Map ref]
+  ([^String collection ^Map ref]
      (map (fn [x] (from-db-object x true)) (find collection ref)))
-  ([^String collection, ^Map ref, ^List fields]
-     (map (fn [x] (from-db-object x true)) (find collection ref fields))))
+  ([^String collection ^Map ref ^List fields]
+     (map (fn [x] (from-db-object x true)) (find collection ref fields)))
+  ([^DB db ^String collection ^Map ref ^List fields]
+     (map (fn [x] (from-db-object x true)) (find db collection ref fields))))
 
 (defn ^ISeq find-seq
   "Queries for objects in this collection, returns ISeq of DBObjects."
   ([^String collection]
      (seq (find collection)))
-  ([^String collection, ^Map ref]
+  ([^String collection ^Map ref]
      (seq (find collection ref)))
-  ([^String collection, ^Map ref, ^List fields]
-     (seq (find collection ref fields))))
+  ([^String collection ^Map ref ^List fields]
+     (seq (find collection ref fields)))
+  ([^DB db ^String collection ^Map ref ^List fields]
+     (seq (find db collection ref fields))))
 
 ;;
 ;; monger.collection/find-one
@@ -131,21 +139,25 @@
       (mgcol/find-one collection { :language \"Clojure\" } [:language])
 
   "
-  ([^String collection, ^Map ref]
+  ([^String collection ^Map ref]
      (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
        (.findOne ^DBCollection coll ^DBObject (to-db-object ref))))
-  ([^String collection, ^Map ref, ^List fields]
+  ([^String collection ^Map ref ^List fields]
      (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)
+           map-of-fields (fields-to-db-object fields)]
+       (.findOne ^DBCollection coll ^DBObject (to-db-object ref) ^DBObject (to-db-object map-of-fields))))
+  ([^DB db ^String collection ^Map ref ^List fields]
+     (let [^DBCollection coll (.getCollection db collection)
            map-of-fields (fields-to-db-object fields)]
        (.findOne ^DBCollection coll ^DBObject (to-db-object ref) ^DBObject (to-db-object map-of-fields)))))
 
 (defn ^IPersistentMap find-one-as-map
   "Returns a single object converted to Map from this collection matching the query."
-  ([^String collection, ^Map ref]
+  ([^String collection ^Map ref]
      (from-db-object ^DBObject (find-one collection ref) true))
-  ([^String collection, ^Map ref, keywordize]
+  ([^String collection ^Map ref keywordize]
      (from-db-object ^DBObject (find-one collection ref) keywordize))
-  ([^String collection, ^Map ref, ^List fields, keywordize]
+  ([^String collection ^Map ref ^List fields keywordize]
      (from-db-object ^DBObject (find-one collection ref fields) keywordize)))
 
 
@@ -165,18 +177,20 @@
       ;; Note that _id field is always returned.
       (mgcol/find-one-by-id collection \"4ef45ab4744e9fd632640e2d\" [:language])
   "
-  ([^String collection, id]
+  ([^String collection id]
      (find-one collection { :_id id }))
-  ([^String collection, id, ^List fields]
-     (find-one collection { :_id id } fields)))
+  ([^String collection id ^List fields]
+     (find-one collection { :_id id } fields))
+  ([^DB db ^String collection id ^List fields]
+     (find-one db collection { :_id id } fields)))
 
 (defn ^IPersistentMap find-map-by-id
   "Returns a single object, converted to map with matching _id field."
-  ([^String collection, id]
+  ([^String collection id]
      (from-db-object ^DBObject (find-one-as-map collection { :_id id }) true))
-  ([^String collection, id, keywordize]
+  ([^String collection id keywordize]
      (from-db-object ^DBObject (find-one-as-map collection { :_id id }) keywordize))
-  ([^String collection, id, ^List fields, keywordize]
+  ([^String collection id ^List fields keywordize]
      (from-db-object ^DBObject (find-one-as-map collection { :_id id } fields) keywordize)))
 
 
@@ -202,10 +216,10 @@
   (^long [^String collection]
          (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
            (.count coll)))
-  (^long [^String collection, ^Map conditions]
+  (^long [^String collection ^Map conditions]
          (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
            (.count coll (to-db-object conditions))))
-  (^long [^DB db ^String collection, ^Map conditions]
+  (^long [^DB db ^String collection ^Map conditions]
          (let [^DBCollection coll (.getCollection db collection)]
            (.count coll (to-db-object conditions)))))
 
@@ -221,9 +235,9 @@
  "
   ([^String collection]
      (> (count collection) 0))
-  ([^String collection, ^Map conditions]
+  ([^String collection ^Map conditions]
      (> (count collection conditions) 0))
-  ([^DB db ^String collection, ^Map conditions]
+  ([^DB db ^String collection ^Map conditions]
      (> (count db collection conditions) 0)))
 
 

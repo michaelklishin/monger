@@ -320,7 +320,8 @@
                                     { :language "Scala",   :name "akka" }])
     (is (= 1 (clojure.core/count (mgcol/find-maps collection { :language "Scala" }))))
     (is (= 3 (.count (mgcol/find-maps collection { :language "Clojure" }))))
-    (is (empty? (mgcol/find-maps collection      { :language "Java"    })))))
+    (is (empty? (mgcol/find-maps collection      { :language "Java"    })))
+    (is (empty? (mgcol/find-maps monger.core/*mongodb-database* collection { :language "Java" } [:language :name])))))
 
 
 
