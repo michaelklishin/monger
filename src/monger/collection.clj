@@ -415,7 +415,9 @@
 (defn create
   "Creates a collection with a given name and options."
   ([^String collection ^Map options]
-     (.createCollection monger.core/*mongodb-database* collection (to-db-object options))))
+     (.createCollection monger.core/*mongodb-database* collection (to-db-object options)))
+  ([^DB db ^String collection ^Map options]
+     (.createCollection db collection (to-db-object options))))
 
 (defn drop
   "Deletes collection from database.
