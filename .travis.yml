@@ -1,1 +1,2 @@
 language: clojure
+before_install: rm -f ~/.m2/settings.xml
