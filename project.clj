@@ -5,6 +5,7 @@
                  [org.mongodb/mongo-java-driver "2.7.2"]
                  [com.novemberain/validateur    "1.0.0-SNAPSHOT"]]
   :dev-dependencies [[org.clojure/data.json "0.1.2" :exclusions [org.clojure/clojure]]
-                     [clj-time              "0.3.3" :exclusions [org.clojure/clojure]]]
+                     [clj-time              "0.3.3" :exclusions [org.clojure/clojure]]
+                     [codox                 "0.3.4" :exclusions [org.clojure/clojure]]]
   :dev-resources-path "test/resources"
   :warn-on-reflection true)
