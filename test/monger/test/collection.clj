@@ -488,7 +488,7 @@
                   { :state "IL" :quantity 3 :price 5.50   }]
       expected    [{:_id "CA", :value 204.9} {:_id "IL", :value 39.5} {:_id "NY", :value 697.0}]]
   (deftest basic-inline-map-reduce-example
-    (mgcol/remove collection)
+    (mgcol/remove monger.core/*mongodb-database* collection {})
     (is (mgres/ok? (mgcol/insert-batch collection batch)))
     (let [output  (mgcol/map-reduce collection mapper reducer nil MapReduceCommand$OutputType/INLINE {})
           results (mgcnv/from-db-object ^DBObject (.results ^MapReduceOutput output) true)]
@@ -496,7 +496,7 @@
       (is (= expected results))))
 
   (deftest basic-map-reduce-example-that-replaces-named-collection
-    (mgcol/remove collection)
+    (mgcol/remove monger.core/*mongodb-database* collection {})
     (is (mgres/ok? (mgcol/insert-batch collection batch)))
     (let [output  (mgcol/map-reduce collection mapper reducer "mr_outputs" {})
           results (mgcnv/from-db-object ^DBObject (.results ^MapReduceOutput output) true)]
@@ -509,7 +509,7 @@
       (.drop ^MapReduceOutput output)))
 
   (deftest basic-map-reduce-example-that-merged-results-into-named-collection
-    (mgcol/remove collection)
+    (mgcol/remove monger.core/*mongodb-database* collection {})
     (is (mgres/ok? (mgcol/insert-batch collection batch)))
     (mgcol/map-reduce collection mapper reducer "merged_mr_outputs" MapReduceCommand$OutputType/MERGE {})
     (is (mgres/ok? (mgcol/insert       collection { :state "OR" :price 17.95 :quantity 4 })))
@@ -534,7 +534,7 @@
                     { :state "CA" :quantity 2 :price 2.95   }
                     { :state "IL" :quantity 3 :price 5.50   }]]
     (mgcol/insert-batch collection batch)
-    (is (= ["CA" "IL" "NY"] (sort (mgcol/distinct collection :state))))
+    (is (= ["CA" "IL" "NY"] (sort (mgcol/distinct monger.core/*mongodb-database* collection :state {}))))
     (is (= ["CA" "NY"] (sort (mgcol/distinct collection :state { :price { $gt 100.00 } }))))))
 
 

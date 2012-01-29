@@ -316,8 +316,11 @@
   ([^String collection]
      (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
        (.remove coll (to-db-object {}))))
-  ([^String collection, ^Map conditions]
+  ([^String collection ^Map conditions]
      (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
+       (.remove coll (to-db-object conditions))))
+  ([^DB db ^String collection ^Map conditions]
+     (let [^DBCollection coll (.getCollection db collection)]
        (.remove coll (to-db-object conditions)))))
 
 
@@ -459,11 +462,14 @@
 
 (defn distinct
   "Finds distinct values for a key"
-  ([^String collection, ^String key]
+  ([^String collection ^String key]
      (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
        (.distinct coll ^String (to-db-object key))))
-  ([^String collection, ^String key, ^Map query]
+  ([^String collection ^String key ^Map query]
      (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
+       (.distinct coll ^String (to-db-object key) ^DBObject (to-db-object query))))
+  ([^DB db ^String collection ^String key ^Map query]
+     (let [^DBCollection coll (.getCollection db collection)]
        (.distinct coll ^String (to-db-object key) ^DBObject (to-db-object query)))))
 
 
