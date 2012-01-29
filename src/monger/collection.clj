@@ -387,14 +387,19 @@
 
 (defn drop-index
   "Drops an index from this collection."
-  [^String collection, ^String name]
-  (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
-    (.dropIndex coll name)))
+  ([^String collection ^String name]
+     (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
+       (.dropIndex coll name)))
+  ([^DB db ^String collection ^String name]
+     (let [^DBCollection coll (.getCollection db collection)]
+       (.dropIndex coll name))))
 
 (defn drop-indexes
   "Drops an indices from this collection."
-  [^String collection]
-  (.dropIndexes ^DBCollection (.getCollection monger.core/*mongodb-database* collection)))
+  ([^String collection]
+     (.dropIndexes ^DBCollection (.getCollection monger.core/*mongodb-database* collection)))
+  ([^DB db ^String collection]
+     (.dropIndexes ^DBCollection (.getCollection db collection))))
 
 
 ;;
@@ -409,8 +414,10 @@
 
       (monger.collection/exists? \"coll\")
   "
-  [^String collection]
-  (.collectionExists monger.core/*mongodb-database* collection))
+  ([^String collection]
+     (.collectionExists monger.core/*mongodb-database* collection))
+  ([^DB db ^String collection]
+     (.collectionExists db collection)))
 
 (defn create
   "Creates a collection with a given name and options."
