@@ -273,7 +273,7 @@
     (monger.collection/update \"people\" { :first_name \"Yoko\" } { :first_name \"Yoko\" :last_name \"Ono\" } :upsert true)
 
   By default :upsert and :multi are false."
-  [^String collection, ^Map conditions, ^Map document, & { :keys [upsert multi write-concern] :or { upsert false, multi false, write-concern monger.core/*mongodb-write-concern* } }]
+  [^String collection ^Map conditions ^Map document & { :keys [upsert multi write-concern] :or { upsert false, multi false, write-concern monger.core/*mongodb-write-concern* } }]
   (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
     (.update coll (to-db-object conditions) (to-db-object document) upsert multi write-concern)))
 
