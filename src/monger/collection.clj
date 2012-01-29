@@ -438,8 +438,11 @@
   ([^String from, ^String to]
      (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* from)]
        (.rename coll to)))
-  ([^String from, ^String to, ^Boolean drop-target]
+  ([^String from ^String to ^Boolean drop-target]
      (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* from)]
+       (.rename coll to drop-target)))
+  ([^DB db ^String from ^String to ^Boolean drop-target]
+     (let [^DBCollection coll (.getCollection db from)]
        (.rename coll to drop-target))))
 
 ;;
