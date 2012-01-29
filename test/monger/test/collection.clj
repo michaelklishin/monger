@@ -75,6 +75,13 @@
     (is (monger.result/ok? (mgcol/insert-batch "people" docs WriteConcern/NORMAL)))
     (is (= 2 (mgcol/count collection)))))
 
+(deftest insert-a-batch-of-basic-documents-with-explicit-database-without-ids-and-with-explicit-write-concern
+  (let [collection "people"
+        docs       [{ :name "Joe", :age 30 }, { :name "Paul", :age 27 }]]
+    (dotimes [n 44]
+      (is (monger.result/ok? (mgcol/insert-batch monger.core/*mongodb-database* "people" docs WriteConcern/NORMAL))))
+    (is (= 88 (mgcol/count collection)))))
+
 
 
 
@@ -91,12 +98,12 @@
                                     { :language "Scala",   :name "akka" }] )
     (is (= 4 (mgcol/count collection)))
     (is (mgcol/any? collection))
-    (is (= 3 (mgcol/count collection { :language "Clojure" })))
-    (is (mgcol/any? collection { :language "Clojure" }))
+    (is (= 3 (mgcol/count monger.core/*mongodb-database* collection { :language "Clojure" })))
+    (is (mgcol/any? monger.core/*mongodb-database* collection { :language "Clojure" }))
     (is (= 1 (mgcol/count collection { :language "Scala"   })))
     (is (mgcol/any? collection { :language "Scala" }))
-    (is (= 0 (mgcol/count collection { :language "Python"  })))
-    (is (not (mgcol/any? collection { :language "Python" })))))
+    (is (= 0 (mgcol/count monger.core/*mongodb-database* collection { :language "Python"  })))
+    (is (not (mgcol/any? monger.core/*mongodb-database* collection { :language "Python" })))))
 
 
 (deftest remove-all-documents-from-collection
@@ -543,11 +550,12 @@
   (let [collection "things"
         _           (mgcol/insert collection { :language "Clojure", :name "langohr" })]
     (is (mgcol/any? "things"))
-    (is (mgcol/any? "things" {:language "Clojure"}))))
+    (is (mgcol/any? monger.core/*mongodb-database* "things" {:language "Clojure"}))))
 
 (deftest empty-on-empty-collection
   (let [collection "things"]
-    (is (mgcol/empty? collection))))
+    (is (mgcol/empty? collection))
+    (is (mgcol/empty? monger.core/*mongodb-database* collection))))
 
 (deftest empty-on-non-empty-collection
   (let [collection "things"

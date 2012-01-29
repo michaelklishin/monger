@@ -58,6 +58,9 @@
        (.insert ^DBCollection coll ^List (to-db-object documents) ^WriteConcern monger.core/*mongodb-write-concern*)))
   ([^String collection, ^List documents, ^WriteConcern concern]
      (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
+       (.insert ^DBCollection coll ^List (to-db-object documents) ^WriteConcern concern)))
+  ([^DB db ^String collection, ^List documents, ^WriteConcern concern]
+     (let [^DBCollection coll (.getCollection db collection)]
        (.insert ^DBCollection coll ^List (to-db-object documents) ^WriteConcern concern))))
 
 ;;
@@ -201,6 +204,9 @@
            (.count coll)))
   (^long [^String collection, ^Map conditions]
          (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
+           (.count coll (to-db-object conditions))))
+  (^long [^DB db ^String collection, ^Map conditions]
+         (let [^DBCollection coll (.getCollection db collection)]
            (.count coll (to-db-object conditions)))))
 
 (defn any?
@@ -216,7 +222,9 @@
   ([^String collection]
      (> (count collection) 0))
   ([^String collection, ^Map conditions]
-     (> (count collection conditions) 0)))
+     (> (count collection conditions) 0))
+  ([^DB db ^String collection, ^Map conditions]
+     (> (count db collection conditions) 0)))
 
 
 (defn empty?
@@ -226,7 +234,9 @@
       (mgcol/empty? \"things\")
    "
   ([^String collection]
-     (= (count collection) 0)))
+     (= (count collection) 0))
+  ([^DB db ^String collection]
+     (= (count db collection {}) 0)))
 
 ;; monger.collection/update
 
