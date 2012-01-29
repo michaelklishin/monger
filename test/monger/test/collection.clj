@@ -30,6 +30,13 @@
     (is (monger.result/ok? (mgcol/insert "people" doc)))
     (is (= 1 (mgcol/count collection)))))
 
+(deftest insert-a-basic-document-with-explicitly-passed-database-without-id-and-with-default-write-concern
+  (let [collection "people"
+        doc        { :name "Joe", :age 30 }]
+    (dotimes [n 5]
+      (is (monger.result/ok? (mgcol/insert monger.core/*mongodb-database* "people" doc WriteConcern/SAFE))))
+    (is (= 5 (mgcol/count collection)))))
+
 (deftest insert-a-basic-document-without-id-and-with-explicit-write-concern
   (let [collection "people"
         doc        { :name "Joe", :age 30 }]

@@ -32,11 +32,14 @@
 
        (monger.collection/insert \"people\" { :name \"Joe\", :age 30, WriteConcern/SAFE })
   "
-  ([^String collection, ^DBObject document]
+  ([^String collection ^DBObject document]
      (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
        (.insert ^DBCollection coll ^DBObject (to-db-object document) ^WriteConcern monger.core/*mongodb-write-concern*)))
-  ([^String collection, ^DBObject document, ^WriteConcern concern]
+  ([^String collection ^DBObject document ^WriteConcern concern]
      (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
+       (.insert ^DBCollection coll ^DBObject (to-db-object document) ^WriteConcern concern)))
+  ([^DB db ^String collection ^DBObject document ^WriteConcern concern]
+     (let [^DBCollection coll (.getCollection db collection)]
        (.insert ^DBCollection coll ^DBObject (to-db-object document) ^WriteConcern concern))))
 
 
