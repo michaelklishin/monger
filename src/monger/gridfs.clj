@@ -3,7 +3,7 @@
   (:require [monger.core]
             [clojure.java.io :as io])
   (:use [monger.conversion])
-  (:import [com.mongodb DBObject]
+  (:import [com.mongodb DB DBObject]
            [com.mongodb.gridfs GridFS GridFSInputFile]
            [java.io InputStream File]))
 
@@ -30,17 +30,23 @@
   ([]
      (remove {}))
   ([query]
-     (.remove ^GridFS monger.core/*mongodb-gridfs* ^DBObject (to-db-object query))))
+     (.remove ^GridFS monger.core/*mongodb-gridfs* ^DBObject (to-db-object query)))
+  ([^GridFS fs query]
+     (.remove fs ^DBObject (to-db-object query))))
 
 (defn remove-all
-  []
-  (remove {}))
+  ([]
+     (remove {}))
+  ([^GridFS fs]
+     (remove fs {})))
 
 (defn all-files
   ([]
      (.getFileList ^GridFS monger.core/*mongodb-gridfs*))
   ([query]
-     (.getFileList ^GridFS monger.core/*mongodb-gridfs* query)))
+     (.getFileList ^GridFS monger.core/*mongodb-gridfs* query))
+  ([^GridFS fs query]
+     (.getFileList fs query)))
 
 
 (defprotocol GridFSInputFileFactory

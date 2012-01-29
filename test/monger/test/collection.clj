@@ -30,6 +30,13 @@
     (is (monger.result/ok? (mgcol/insert "people" doc)))
     (is (= 1 (mgcol/count collection)))))
 
+(deftest insert-a-basic-document-with-explicitly-passed-database-without-id-and-with-default-write-concern
+  (let [collection "people"
+        doc        { :name "Joe", :age 30 }]
+    (dotimes [n 5]
+      (is (monger.result/ok? (mgcol/insert monger.core/*mongodb-database* "people" doc WriteConcern/SAFE))))
+    (is (= 5 (mgcol/count collection)))))
+
 (deftest insert-a-basic-document-without-id-and-with-explicit-write-concern
   (let [collection "people"
         doc        { :name "Joe", :age 30 }]
@@ -68,6 +75,13 @@
     (is (monger.result/ok? (mgcol/insert-batch "people" docs WriteConcern/NORMAL)))
     (is (= 2 (mgcol/count collection)))))
 
+(deftest insert-a-batch-of-basic-documents-with-explicit-database-without-ids-and-with-explicit-write-concern
+  (let [collection "people"
+        docs       [{ :name "Joe", :age 30 }, { :name "Paul", :age 27 }]]
+    (dotimes [n 44]
+      (is (monger.result/ok? (mgcol/insert-batch monger.core/*mongodb-database* "people" docs WriteConcern/NORMAL))))
+    (is (= 88 (mgcol/count collection)))))
+
 
 
 
@@ -84,12 +98,12 @@
                                     { :language "Scala",   :name "akka" }] )
     (is (= 4 (mgcol/count collection)))
     (is (mgcol/any? collection))
-    (is (= 3 (mgcol/count collection { :language "Clojure" })))
-    (is (mgcol/any? collection { :language "Clojure" }))
+    (is (= 3 (mgcol/count monger.core/*mongodb-database* collection { :language "Clojure" })))
+    (is (mgcol/any? monger.core/*mongodb-database* collection { :language "Clojure" }))
     (is (= 1 (mgcol/count collection { :language "Scala"   })))
     (is (mgcol/any? collection { :language "Scala" }))
-    (is (= 0 (mgcol/count collection { :language "Python"  })))
-    (is (not (mgcol/any? collection { :language "Python" })))))
+    (is (= 0 (mgcol/count monger.core/*mongodb-database* collection { :language "Python"  })))
+    (is (not (mgcol/any? monger.core/*mongodb-database* collection { :language "Python" })))))
 
 
 (deftest remove-all-documents-from-collection
@@ -306,7 +320,8 @@
                                     { :language "Scala",   :name "akka" }])
     (is (= 1 (clojure.core/count (mgcol/find-maps collection { :language "Scala" }))))
     (is (= 3 (.count (mgcol/find-maps collection { :language "Clojure" }))))
-    (is (empty? (mgcol/find-maps collection      { :language "Java"    })))))
+    (is (empty? (mgcol/find-maps collection      { :language "Java"    })))
+    (is (empty? (mgcol/find-maps monger.core/*mongodb-database* collection { :language "Java" } [:language :name])))))
 
 
 
@@ -367,7 +382,7 @@
   (let [collection "people"
         doc        (mgcnv/to-db-object { :name "Joe", :age 30 })]
     (is (nil? (monger.util/get-id doc)))
-    (mgcol/save "people" doc)
+    (mgcol/save monger.core/*mongodb-database* "people" doc WriteConcern/SAFE)
     (is (not (nil? (monger.util/get-id doc))))))
 
 
@@ -474,7 +489,7 @@
                   { :state "IL" :quantity 3 :price 5.50   }]
       expected    [{:_id "CA", :value 204.9} {:_id "IL", :value 39.5} {:_id "NY", :value 697.0}]]
   (deftest basic-inline-map-reduce-example
-    (mgcol/remove collection)
+    (mgcol/remove monger.core/*mongodb-database* collection {})
     (is (mgres/ok? (mgcol/insert-batch collection batch)))
     (let [output  (mgcol/map-reduce collection mapper reducer nil MapReduceCommand$OutputType/INLINE {})
           results (mgcnv/from-db-object ^DBObject (.results ^MapReduceOutput output) true)]
@@ -482,7 +497,7 @@
       (is (= expected results))))
 
   (deftest basic-map-reduce-example-that-replaces-named-collection
-    (mgcol/remove collection)
+    (mgcol/remove monger.core/*mongodb-database* collection {})
     (is (mgres/ok? (mgcol/insert-batch collection batch)))
     (let [output  (mgcol/map-reduce collection mapper reducer "mr_outputs" {})
           results (mgcnv/from-db-object ^DBObject (.results ^MapReduceOutput output) true)]
@@ -495,7 +510,7 @@
       (.drop ^MapReduceOutput output)))
 
   (deftest basic-map-reduce-example-that-merged-results-into-named-collection
-    (mgcol/remove collection)
+    (mgcol/remove monger.core/*mongodb-database* collection {})
     (is (mgres/ok? (mgcol/insert-batch collection batch)))
     (mgcol/map-reduce collection mapper reducer "merged_mr_outputs" MapReduceCommand$OutputType/MERGE {})
     (is (mgres/ok? (mgcol/insert       collection { :state "OR" :price 17.95 :quantity 4 })))
@@ -520,7 +535,7 @@
                     { :state "CA" :quantity 2 :price 2.95   }
                     { :state "IL" :quantity 3 :price 5.50   }]]
     (mgcol/insert-batch collection batch)
-    (is (= ["CA" "IL" "NY"] (sort (mgcol/distinct collection :state))))
+    (is (= ["CA" "IL" "NY"] (sort (mgcol/distinct monger.core/*mongodb-database* collection :state {}))))
     (is (= ["CA" "NY"] (sort (mgcol/distinct collection :state { :price { $gt 100.00 } }))))))
 
 
@@ -536,11 +551,12 @@
   (let [collection "things"
         _           (mgcol/insert collection { :language "Clojure", :name "langohr" })]
     (is (mgcol/any? "things"))
-    (is (mgcol/any? "things" {:language "Clojure"}))))
+    (is (mgcol/any? monger.core/*mongodb-database* "things" {:language "Clojure"}))))
 
 (deftest empty-on-empty-collection
   (let [collection "things"]
-    (is (mgcol/empty? collection))))
+    (is (mgcol/empty? collection))
+    (is (mgcol/empty? monger.core/*mongodb-database* collection))))
 
 (deftest empty-on-non-empty-collection
   (let [collection "things"
