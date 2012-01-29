@@ -290,11 +290,14 @@
 
        (monger.collection/save \"people\" { :first_name \"Ian\" :last_name \"Gillan\" })
    "
-  ([^String collection, ^Map document]
+  ([^String collection ^Map document]
      (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
        (.save coll (to-db-object document) monger.core/*mongodb-write-concern*)))
-  ([^String collection, ^Map document, ^WriteConcern write-concern]
+  ([^String collection ^Map document ^WriteConcern write-concern]
      (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
+       (.save coll document write-concern)))
+  ([^DB db ^String collection ^Map document ^WriteConcern write-concern]
+     (let [^DBCollection coll (.getCollection db collection)]
        (.save coll document write-concern))))
 
 

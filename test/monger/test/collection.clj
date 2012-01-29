@@ -381,7 +381,7 @@
   (let [collection "people"
         doc        (mgcnv/to-db-object { :name "Joe", :age 30 })]
     (is (nil? (monger.util/get-id doc)))
-    (mgcol/save "people" doc)
+    (mgcol/save monger.core/*mongodb-database* "people" doc WriteConcern/SAFE)
     (is (not (nil? (monger.util/get-id doc))))))
 
 
