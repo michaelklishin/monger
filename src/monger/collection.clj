@@ -338,9 +338,12 @@
       (monger.collection/create-index collection { \"language\" 1 })
 
   "
-  [^String collection, ^Map keys]
-  (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
-    (.createIndex coll (to-db-object keys))))
+  ([^String collection ^Map keys]
+     (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
+       (.createIndex coll (to-db-object keys))))
+  ([^DB db ^String collection ^Map keys]
+     (let [^DBCollection coll (.getCollection db collection)]
+       (.createIndex coll (to-db-object keys)))))
 
 
 ;;
