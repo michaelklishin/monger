@@ -70,6 +70,44 @@ Query DSL supports composition, too:
 More code examples can be found [in our test suite](https://github.com/michaelklishin/monger/tree/master/test/monger/test).
 
 
+## Integration With Popular Libraries
+
+Because Monger was built for Clojure 1.3 and later, it can take advantage of relatively new powerful Clojure features such as protocols.
+
+
+### Integration with clojure.data.json
+
+Monger was created for AMQP and HTTP services that use JSON to serialize message payloads. When serializing documents to JSON, developers
+usually want to represent `com.mongodb.ObjectId` instances as strings in resulting JSON documents. Monger integrates with [clojure.data.json](http://github.com/clojure/clojure.data.json) to
+make that effortless.
+
+Just load `monger.json` namespace and it will extend `clojure.data.json/WriteJSON` protocol to support `com.mongodb.ObjectId` instance. Then
+functions like `clojure.data.json/write-json` will be able to serialize object ids as strings exactly the way you expect it to be.
+
+``` clojure
+(ns my.service.handlers
+  ;; Make clojure.data.json aware of ObjectId instances
+  (:require [monger.json]))
+```
+
+
+### Integration with Joda Time
+
+Monger provides the `monger.joda-time` namespace that extend its own Clojure-to-DBObject conversion protocols as well as
+[clojure.data.json](http://github.com/clojure/clojure.data.json) `WriteJSON` protocol to handle `org.joda.time.DateTime` instances. To use it, make sure that
+you have JodaTime and clojure.data.json on your dependencies list then load `monger.joda-time` like so
+
+``` clojure
+(ns my.service.handlers
+  ;; Make clojure.data.json aware of ObjectId instances
+  (:require [monger.joda-time]))
+```
+
+Now `clojure.data.json/write-json` and related functions will serialize JodaTime date time objects using [ISO8601 date time format](http://joda-time.sourceforge.net/apidocs/org/joda/time/format/ISODateTimeFormat.html). In addition, functions that convert MongoDB documents to
+Clojure maps will instantiate JodaTime date time objects from `java.util.Date` instances MongoDB Java driver uses.
+
+
+
 ## This is a Work In Progress
 
 Core Monger APIs are stabilized but it is still a work in progress. Keep that in mind. 1.0 will be released in early 2012
