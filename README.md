@@ -25,6 +25,10 @@ wanted a client that will
 
 We are working on documentation guides & examples site for the 1.0 release. In the meantime, please refer to the [test suite](https://github.com/michaelklishin/monger/tree/master/test/monger/test) for code examples.
 
+## Mailing List
+
+[Monger has a mailing list](https://groups.google.com/forum/#!forum/clojure-monger). Feel free to join it and ask any questions you may have.
+
 ## Connecting to MongoDB
 
 Monger supports working with multiple connections and/or databases but is optimized for applications that only use one connection
