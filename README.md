@@ -78,7 +78,7 @@ Because Monger was built for Clojure 1.3 and later, it can take advantage of rel
 ### Integration with clojure.data.json
 
 Monger was created for AMQP and HTTP services that use JSON to serialize message payloads. When serializing documents to JSON, developers
-usually want to represent `com.mongodb.ObjectId` instances as strings in resulting JSON documents. Monger integrates with [clojure.data.json](http://github.com/clojure/clojure.data.json) to
+usually want to represent `com.mongodb.ObjectId` instances as strings in resulting JSON documents. Monger integrates with [clojure.data.json](http://github.com/clojure/data.json) to
 make that effortless.
 
 Just load `monger.json` namespace and it will extend `clojure.data.json/WriteJSON` protocol to support `com.mongodb.ObjectId` instance. Then
@@ -94,7 +94,7 @@ functions like `clojure.data.json/write-json` will be able to serialize object i
 ### Integration with Joda Time
 
 Monger provides the `monger.joda-time` namespace that extend its own Clojure-to-DBObject conversion protocols as well as
-[clojure.data.json](http://github.com/clojure/clojure.data.json) `WriteJSON` protocol to handle `org.joda.time.DateTime` instances. To use it, make sure that
+[clojure.data.json](http://github.com/clojure/data.json) `WriteJSON` protocol to handle `org.joda.time.DateTime` instances. To use it, make sure that
 you have JodaTime and clojure.data.json on your dependencies list then load `monger.joda-time` like so
 
 ``` clojure
