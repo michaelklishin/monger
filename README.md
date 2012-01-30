@@ -99,7 +99,7 @@ you have JodaTime and clojure.data.json on your dependencies list then load `mon
 
 ``` clojure
 (ns my.service.handlers
-  ;; Make clojure.data.json aware of ObjectId instances
+  ;; Make Monger conversion protocols and clojure.data.json aware of JodaTime's DateTime instances
   (:require [monger.joda-time]))
 ```
 
