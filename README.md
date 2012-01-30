@@ -3,6 +3,8 @@
 Monger is an idiomatic Clojure wrapper around MongoDB Java driver. It offers powerful expressive query DSL, strives to support
 every MongoDB 2.0+ feature and is well maintained.
 
+[![Continuous Integration status](https://secure.travis-ci.org/michaelklishin/monger.png)](http://travis-ci.org/michaelklishin/monger)
+
 
 ## Project Goals
 
