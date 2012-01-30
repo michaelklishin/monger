@@ -70,7 +70,7 @@ To insert documents, use `monger.collection/insert` and `monger.collection/inser
   (:use [monger.core :only [connect! connect set-db! get-db]]
         [monger.collection :only [insert insert-batch]])
   (:import [org.bson.types ObjectId]
-           [com.mongodb DB WriteResult]))
+           [com.mongodb DB WriteConcern]))
 
 ;; localhost, default port
 (connect!)
