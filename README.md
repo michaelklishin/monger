@@ -117,7 +117,7 @@ With the `SAFE` write concern, it takes roughly 1.7 second to insert 100,000 doc
 `monger.collection` namespace provides several finder functions that try to follow MongoDB query language as closely as possible,
 even when providing shortcuts for common cases.
 
-`` clojure
+``` clojure
 (ns my.service.finders
   (:require [monger.collection :as mc])
   (:use     [monger.operators]))
@@ -152,7 +152,7 @@ even when providing shortcuts for common cases.
 
 ;; with a query that uses operators as strings
 (mc/find "products" { :price_in_subunits { "$gt" 4000 "$lte" 1200 } })
-``
+```
 
 
 ## Powerful Query DSL
