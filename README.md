@@ -19,9 +19,140 @@ wanted a client that will
  * Target Clojure 1.3.0 and later from the ground up.
 
 
-## Usage
+## Documentation & Examples
 
 We are working on documentation guides & examples site for the 1.0 release. In the meantime, please refer to the [test suite](https://github.com/michaelklishin/monger/tree/master/test/monger/test) for code examples.
+
+## Connecting to MongoDB
+
+Monger supports working with multiple connections and/or databases but is optimized for applications that only use one connection
+and one database.
+
+``` clojure
+(ns my.service.server
+  (:require [monger core util]))
+
+;; localhost, default port
+(monger.core/connect!)
+
+;; given host, given port
+(monger.core/connect! { :host "db.megacorp.internal" :port 7878 })
+```
+
+To set default database Monger will use, use `monger.core/get-db` and `monger.core/set-db!` functions in combination:
+
+``` clojure
+(ns my.service.server
+  (:require [monger core]]))
+
+;; localhost, default port
+(monger.core/connect!)
+(monger.core/set-db! (monger.core/get-db "monger-test"))
+```
+
+To set default write concern, use `monger.core/set-default-write-concern!` function:
+
+``` clojure
+(monger.core/set-default-write-concern! WriteConcern/FSYNC_SAFE)
+```
+
+By default Monger will use `WriteConcern/SAFE` as write concern. We believe that MongoDB Java driver (as well as other
+official drivers) are using very unsafe defaults when no exceptions are raised, even for network issues. This does not sound
+like a good default for most applications: many applications use MongoDB because of the flexibility, not extreme write throughput
+requirements.
+
+## Inserting Documents
+
+To insert documents, use `monger.collection/insert` and `monger.collection/insert-batch` functions.
+
+``` clojure
+(ns my.service.server
+  (:use [monger.core :only [connect! connect set-db! get-db]]
+        [monger.collection :only [insert insert-batch]])
+  (:import [org.bson.types ObjectId]
+           [com.mongodb DB WriteResult]))
+
+;; localhost, default port
+(connect!)
+(set-db! (monger.core/get-db "monger-test"))
+
+;; without document id
+(insert "document" { :first_name "John" :last_name "Lennon" })
+
+;; multiple documents at once
+(insert-batch "document" [{ :first_name "John" :last_name "Lennon" }
+                          { :first_name "Paul" :last_name "McCartney" }])
+
+;; with explicit document id
+(insert "documents" { :_id (ObjectId.) :first_name "John" :last_name "Lennon" })
+
+;; with a different write concern
+(insert "documents" { :_id (ObjectId.) :first_name "John" :last_name "Lennon" } WriteConcern/JOURNAL_SAFE)
+
+;; with a different database
+(let [archive-db (get-db "monger-test.archive")]
+  (insert archive-db "documents" { :first_name "John" :last_name "Lennon" } WriteConcern/NORMAL))
+```
+
+### Write Performance
+
+Monger insert operations are efficient and have very little overhead compared to the underlying Java driver. Here
+are some numbers on a MacBook Pro from fall 2010 with Core i7 and an Intel SSD drive:
+
+```
+Testing monger.test.stress
+Inserting  1000  documents...
+"Elapsed time: 38.317 msecs"
+Inserting  10,000  documents...
+"Elapsed time: 263.827 msecs"
+Inserting  100,000  documents...
+"Elapsed time: 1679.828 msecs"
+```
+
+With the `SAFE` write concern, it takes roughly 1.7 second to insert 100,000 documents.
+
+
+## Regular Finders
+
+`monger.collection` namespace provides several finder functions that try to follow MongoDB query language as closely as possible,
+even when providing shortcuts for common cases.
+
+`` clojure
+(ns my.service.finders
+  (:require [monger.collection :as mc])
+  (:use     [monger.operators]))
+
+;; find one document by id, as Clojure map
+(mc/find-map-by-id "documents" (ObjectId. "4ec2d1a6b55634a935ea4ac8"))
+
+;; find one document by id, as `com.mongodb.DBObject` instance
+(mc/find-by-id "documents" (ObjectId. "4ec2d1a6b55634a935ea4ac8"))
+
+;; find one document as Clojure map
+(mc/find-one-as-map "documents" { :_id (ObjectId. "4ec2d1a6b55634a935ea4ac8") })
+
+;; find one document by id, as `com.mongodb.DBObject` instance
+(mc/find-one "documents" { :_id (ObjectId. "4ec2d1a6b55634a935ea4ac8") })
+
+
+;; all documents  as Clojure maps
+(mc/find-maps "documents")
+
+;; all documents  as `com.mongodb.DBObject` instances
+(mc/find "documents")
+
+;; with a query, as Clojure maps
+(mc/find-maps "documents" { :year 1998 })
+
+;; with a query, as `com.mongodb.DBObject` instances
+(mc/find "documents" { :year 1998 })
+
+;; with a query that uses operators
+(mc/find "products" { :price_in_subunits { $gt 4000 $lte 1200 } })
+
+;; with a query that uses operators as strings
+(mc/find "products" { :price_in_subunits { "$gt" 4000 "$lte" 1200 } })
+``
 
 
 ## Powerful Query DSL
@@ -70,6 +201,33 @@ Query DSL supports composition, too:
 More code examples can be found [in our test suite](https://github.com/michaelklishin/monger/tree/master/test/monger/test).
 
 
+## Updating Documents
+
+Use `monger.collection/update` and `monger.collection/save`.
+
+
+## Removing Documents
+
+Use `monger.collection/remove`.
+
+
+## Counting Documents
+
+Use `monger.collection/count`, `monger.collection/empty?` and `monger.collection/any?`.
+
+
+## Determening Whether Operation Succeeded (or Failed)
+
+To be documented.
+
+
+## Validators with Validateur
+
+Monger relies on [Validateur](http://github.com/michaelklishin/validateur) for data validation.
+
+To be documented.
+
+
 ## Integration With Popular Libraries
 
 Because Monger was built for Clojure 1.3 and later, it can take advantage of relatively new powerful Clojure features such as protocols.
@@ -105,6 +263,31 @@ you have JodaTime and clojure.data.json on your dependencies list then load `mon
 
 Now `clojure.data.json/write-json` and related functions will serialize JodaTime date time objects using [ISO8601 date time format](http://joda-time.sourceforge.net/apidocs/org/joda/time/format/ISODateTimeFormat.html). In addition, functions that convert MongoDB documents to
 Clojure maps will instantiate JodaTime date time objects from `java.util.Date` instances MongoDB Java driver uses.
+
+
+## Map/Reduce. Using JavaScript Resources.
+
+To be documented.
+
+
+## Operations On Indexes
+
+To be documented.
+
+
+## Database Commands
+
+To be documented.
+
+
+## GridFS Support
+
+To be documented.
+
+
+## Helper Functions
+
+To be documented.
 
 
 
