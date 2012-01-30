@@ -1,8 +1,13 @@
 (defproject com.novemberain/monger "1.0.0-SNAPSHOT"
   :description "Monger is an experimental idiomatic Clojure wrapper around MongoDB Java driver"
   :license { :name "Eclipse Public License" }
+  :repositories { "sonatype"
+                 {:url "http://oss.sonatype.org/content/repositories/releases"
+                  :snapshots false
+                  :releases {:checksum :fail :update :always}
+                  }}
   :dependencies [[org.clojure/clojure           "1.3.0"]
-                 [org.mongodb/mongo-java-driver "2.7.2"]
+                 [org.mongodb/mongo-java-driver "2.7.3"]
                  [com.novemberain/validateur    "1.0.0-SNAPSHOT"]]
   :dev-dependencies [[org.clojure/data.json "0.1.2" :exclusions [org.clojure/clojure]]
                      [clj-time              "0.3.3" :exclusions [org.clojure/clojure]]
