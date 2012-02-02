@@ -66,6 +66,14 @@
      (.getDB connection name)))
 
 
+(defn authenticate
+  ([^String db ^String username ^chars password]
+     (authenticate *mongodb-connection* db username password))
+  ([^Mongo connection ^String db ^String username ^chars password]
+     (.authenticate (.getDB connection db) username password)))
+
+
+
 (defmacro with-connection
   [conn & body]
   `(binding [*mongodb-connection* ~conn]
