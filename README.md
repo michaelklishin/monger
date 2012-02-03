@@ -327,7 +327,7 @@ To be documented.
 
 ## Development
 
-Install [lein-multi]() with
+Install [lein-multi](https://github.com/maravillas/lein-multi) with
 
     lein plugin install lein-multi 1.1.0
 
