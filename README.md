@@ -29,6 +29,35 @@ We are working on documentation guides & examples site for the 1.0 release. In t
 
 [Monger has a mailing list](https://groups.google.com/forum/#!forum/clojure-monger). Feel free to join it and ask any questions you may have.
 
+## This is a Work In Progress
+
+Core Monger APIs are stabilized but it is still a work in progress. Keep that in mind. 1.0 will be released in early 2012
+together with documentation guides and dedicated website.
+
+
+## Artifacts
+
+Snapshot artifacts are [released to Clojars](https://clojars.org/com.novemberain/monger) every 24 hours.
+
+With Leiningen:
+
+    [com.novemberain/monger "1.0.0-SNAPSHOT"]
+
+
+With Maven:
+
+    <dependency>
+      <groupId>com.novemberain</groupId>
+      <artifactId>monger</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
+    </dependency>
+
+
+## Supported Clojure versions
+
+Monger is built from the ground up for Clojure 1.3 and up.
+
+
 ## Connecting to MongoDB
 
 Monger supports working with multiple connections and/or databases but is optimized for applications that only use one connection
@@ -296,43 +325,19 @@ To be documented.
 To be documented.
 
 
+## Development
 
-## This is a Work In Progress
+Install [lein-multi]() with
 
-Core Monger APIs are stabilized but it is still a work in progress. Keep that in mind. 1.0 will be released in early 2012
-together with documentation guides and dedicated website.
+    lein plugin install lein-multi 1.1.0
 
+then run tests against Clojure 1.3.0 and 1.4.0[-beta1] using
 
-## Artifacts
+    lein multi test
 
-Snapshot artifacts are [released to Clojars](https://clojars.org/com.novemberain/monger) every 24 hours.
+Then create a branch and make your changes on it. Once you are done with your changes and all tests pass, submit a pull request
+on Github.
 
-With Leiningen:
-
-    [com.novemberain/monger "1.0.0-SNAPSHOT"]
-
-
-With Maven:
-
-    <dependency>
-      <groupId>com.novemberain</groupId>
-      <artifactId>monger</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
-    </dependency>
-
-
-## Continuous Integration
-
-[![Continuous Integration status](https://secure.travis-ci.org/michaelklishin/monger.png)](http://travis-ci.org/michaelklishin/monger)
-
-
-CI is hosted by [travis-ci.org](http://travis-ci.org).
-
-
-
-## Supported Clojure versions
-
-Monger is built from the ground up for Clojure 1.3 and up.
 
 
 ## License

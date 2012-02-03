@@ -1,2 +1,4 @@
 language: clojure
+before_install: lein plugin install lein-multi 1.1.0
 before_script: ./bin/ci/before_script.sh
+script: lein multi test
