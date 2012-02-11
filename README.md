@@ -37,7 +37,25 @@ together with documentation guides and dedicated website.
 
 ## Artifacts
 
-Snapshot artifacts are [released to Clojars](https://clojars.org/com.novemberain/monger) every 24 hours.
+### The Most Recent Release
+
+With Leiningen:
+
+    [com.novemberain/monger "1.0.0-beta1"]
+
+
+With Maven:
+
+    <dependency>
+      <groupId>com.novemberain</groupId>
+      <artifactId>monger</artifactId>
+      <version>1.0.0-beta1</version>
+    </dependency>
+
+
+### Snapshots
+
+If you are comfortable with usugin snapshots, snapshot artifacts are [released to Clojars](https://clojars.org/com.novemberain/monger) every 24 hours.
 
 With Leiningen:
 
