@@ -1,4 +1,4 @@
-(defproject com.novemberain/monger "1.0.0-SNAPSHOT"
+(defproject com.novemberain/monger "1.0.0-beta1"
   :description "Monger is an experimental idiomatic Clojure wrapper around MongoDB Java driver"
   :license { :name "Eclipse Public License" }
   :repositories { "sonatype"
