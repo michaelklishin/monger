@@ -8,11 +8,11 @@
                    }}
   :dependencies [[org.clojure/clojure           "1.3.0"]
                  [org.mongodb/mongo-java-driver "2.7.3"]
-                 [com.novemberain/validateur    "1.0.0-SNAPSHOT"]]
+                 [com.novemberain/validateur    "1.0.0"]]
   :multi-deps {
                "1.4" [[org.clojure/clojure "1.4.0-beta1"]]
                :all [[org.mongodb/mongo-java-driver "2.7.3"]
-                     [com.novemberain/validateur    "1.0.0-SNAPSHOT"]]
+                     [com.novemberain/validateur    "1.0.0"]]
                }
   :dev-dependencies [[org.clojure/data.json "0.1.2" :exclusions [org.clojure/clojure]]
                      [clj-time              "0.3.3" :exclusions [org.clojure/clojure]]
