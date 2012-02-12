@@ -21,3 +21,18 @@ If you need to use `keywordize`, use 4-arity:
 ``` clojure
 (monger.collection/find-one-as-map "documents" { :first_name "John" } [:first_name, :last_name, :age] false)
 ```
+
+
+### Query DSL has a way to specify if fields need to be keywordized
+
+It is now possible to opt-out of field keywordization in the query DSL:
+    
+``` clojure
+(with-collection coll
+  (find {})
+  (limit 3)
+  (sort { :population -1 })
+  (keywordize-fields false))
+```
+
+the default value is still true, field names will be converted to keywords.
