@@ -216,13 +216,13 @@ for client libraries like Monger.
 Here is what monger.query DSL feels like:
 
 ``` clojure
-(with-collection "docs"
-  (find { :inception_year { $lt 2000 $gte 2011 } })
-  (fields [ :inception_year :name ])
+(with-collection "movies"
+  (find { :year { $lt 2010 $gte 2000 }, :revenue { $gt 20000000 } })  
+  (fields [ :year :title :producer :cast :budget :revenue ])
+  (sort-by { :revenue -1 })
   (skip 10)
   (limit 20)
-  (batch-size 50)
-  (hint "my-index-name")
+  (hint "year-by-year-revenue-idx")
   (snapshot))
 ```
 
