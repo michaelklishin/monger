@@ -12,12 +12,12 @@ instead of `keywordize` to better fit a more commonly needed case.
 
 ``` clojure
 ;; 3-arity in 1.0.0-beta2
-(monger.collection/find-one-as-map "documents" { :first_name "John" } [:first\_name, :last\_name, :age])
+(monger.collection/find-one-as-map "documents" { :first_name "John" } [:first_name, :last_name, :age])
 ```
 
 
 If you need to use `keywordize`, use 4-arity:
 
 ``` clojure
-(monger.collection/find-one-as-map "documents" { :first_name "John" } [:first\_name, :last\_name, :age] false)
+(monger.collection/find-one-as-map "documents" { :first_name "John" } [:first_name, :last_name, :age] false)
 ```
