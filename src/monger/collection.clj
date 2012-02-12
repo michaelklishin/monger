@@ -155,10 +155,16 @@
   "Returns a single object converted to Map from this collection matching the query."
   ([^String collection ^Map ref]
      (from-db-object ^DBObject (find-one collection ref) true))
-  ([^String collection ^Map ref keywordize]
-     (from-db-object ^DBObject (find-one collection ref) keywordize))
+  ([^String collection ^Map ref fields]
+     (from-db-object ^DBObject (find-one collection ref fields) true))
   ([^String collection ^Map ref ^List fields keywordize]
      (from-db-object ^DBObject (find-one collection ref fields) keywordize)))
+
+
+  ; ([^String collection ^Map ref keywordize]
+  ;    (from-db-object ^DBObject (find-one collection ref fields) keywordize))
+  ; ([^String collection ^Map ref ^List fields keywordize]
+  ;    (from-db-object ^DBObject (find-one collection ref fields) keywordize)))
 
 
 

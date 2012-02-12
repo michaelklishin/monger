@@ -68,9 +68,29 @@
         doc        { :data-store "MongoDB", :language "Clojure", :_id doc-id }
         fields     [:data-store]]
     (mgcol/insert collection doc)
-    (is (= { :data-store "MongoDB", :_id doc-id } (mgcol/find-one-as-map collection { :language "Clojure" } fields true)))))
+    (is (= { :data-store "MongoDB", :_id doc-id } (mgcol/find-one-as-map collection { :language "Clojure" } fields)))))
 
 
+(deftest find-one-partial-document-as-map-when-collection-has-matches-with-keywordize
+  (let [collection "docs"
+        doc-id     (monger.util/random-uuid)
+        doc        { :data-store "MongoDB", :language "Clojure", :_id doc-id }
+        fields     [:data-store]
+        _id        (mgcol/insert collection doc)
+        loaded     (mgcol/find-one-as-map collection { :language "Clojure" } fields true)
+        ]
+    (is (= { :data-store "MongoDB", :_id doc-id } loaded ))))
+
+
+(deftest find-one-partial-document-as-map-when-collection-has-matches-with-keywordize-false
+  (let [collection "docs"
+        doc-id     (monger.util/random-uuid)
+        doc        { :data-store "MongoDB", :language "Clojure", :_id doc-id }
+        fields     [:data-store]
+        _id        (mgcol/insert collection doc)
+        loaded     (mgcol/find-one-as-map collection { :language "Clojure" } fields false)
+        ]
+    (is (= { "_id" doc-id, "data-store" "MongoDB" } loaded ))))
 
 ;;
 ;; find-by-id
