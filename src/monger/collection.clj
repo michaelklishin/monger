@@ -161,12 +161,6 @@
      (from-db-object ^DBObject (find-one collection ref fields) keywordize)))
 
 
-  ; ([^String collection ^Map ref keywordize]
-  ;    (from-db-object ^DBObject (find-one collection ref fields) keywordize))
-  ; ([^String collection ^Map ref ^List fields keywordize]
-  ;    (from-db-object ^DBObject (find-one collection ref fields) keywordize)))
-
-
 
 ;;
 ;; monger.collection/find-by-id
