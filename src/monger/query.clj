@@ -36,14 +36,15 @@
 (defn empty-query
   ([]
      {
-      :query           {}
-      :sort            {}
-      :fields          []
-      :skip            0
-      :limit           0
-      :batch-size      256
-      :hint            nil
-      :snapshot        false
+      :query             {}
+      :sort              {}
+      :fields            []
+      :skip              0
+      :limit             0
+      :batch-size        256
+      :hint              nil
+      :snapshot          false
+      :keywordize-fields true
       })
   ([^DBCollection coll]
      (merge (empty-query) { :collection coll })))
@@ -53,7 +54,7 @@
   (to-db-object (zipmap fields (repeat 1))))
 
 (defn exec
-  [{ :keys [collection query fields skip limit sort batch-size hint snapshot read-preference] :or { limit 0 batch-size 256 skip 0 } }]
+  [{ :keys [collection query fields skip limit sort batch-size hint snapshot read-preference keywordize-fields] :or { limit 0 batch-size 256 skip 0 } }]
   (let [cursor (doto ^DBCursor (.find ^DBCollection collection (to-db-object query) (fields-to-db-object fields))
                      (.limit limit)
                      (.skip  skip)
@@ -64,7 +65,7 @@
       (.snapshot cursor))
     (when read-preference
       (.setReadPreference cursor read-preference))
-    (map (fn [x] (from-db-object x true))
+    (map (fn [x] (from-db-object x keywordize-fields))
          (seq cursor))))
 
 ;;
@@ -106,6 +107,10 @@
 (defn read-preference
   [m ^ReadPreference rp]
   (merge m { :read-preference rp }))
+
+(defn keywordize-fields
+  [m bool]
+  (merge m { :keywordize-fields bool }))
 
 (defn paginate
   [m & { :keys [page per-page] :or { page 1 per-page 10 } }]
