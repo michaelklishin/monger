@@ -171,11 +171,11 @@
 
    EXAMPLES:
 
-      (mgcol/find-one-by-id collection \"4ef45ab4744e9fd632640e2d\")
+      (mgcol/find-one-by-id collection (ObjectId. \"4ef45ab4744e9fd632640e2d\"))
 
       ;; Return only :language field.
       ;; Note that _id field is always returned.
-      (mgcol/find-one-by-id collection \"4ef45ab4744e9fd632640e2d\" [:language])
+      (mgcol/find-one-by-id collection (ObjectId. \"4ef45ab4744e9fd632640e2d\") [:language])
   "
   ([^String collection id]
      (find-one collection { :_id id }))
