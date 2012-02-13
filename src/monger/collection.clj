@@ -16,6 +16,20 @@
   (:use     [monger.conversion]))
 
 ;;
+;; Implementation
+;;
+
+(defn- fields-to-db-object
+  [^List fields]
+  (zipmap fields (repeat 1)))
+
+(definline check-not-nil!
+  [ref message]
+  `(when (nil? ~ref)
+     (throw (IllegalArgumentException. ~message))))
+
+
+;;
 ;; API
 ;;
 
@@ -66,7 +80,6 @@
 ;;
 ;; monger.collection/find
 ;;
-(declare fields-to-db-object)
 
 (defn ^DBCursor find
   "Queries for objects in this collection.
@@ -178,19 +191,25 @@
       (mgcol/find-one-by-id collection (ObjectId. \"4ef45ab4744e9fd632640e2d\") [:language])
   "
   ([^String collection id]
+     (check-not-nil! id "id must not be nil")
      (find-one collection { :_id id }))
   ([^String collection id ^List fields]
+     (check-not-nil! id "id must not be nil")
      (find-one collection { :_id id } fields))
   ([^DB db ^String collection id ^List fields]
+     (check-not-nil! id "id must not be nil")
      (find-one db collection { :_id id } fields)))
 
 (defn ^IPersistentMap find-map-by-id
   "Returns a single object, converted to map with matching _id field."
   ([^String collection id]
+     (check-not-nil! id "id must not be nil")
      (from-db-object ^DBObject (find-one-as-map collection { :_id id }) true))
   ([^String collection id keywordize]
+     (check-not-nil! id "id must not be nil")
      (from-db-object ^DBObject (find-one-as-map collection { :_id id }) keywordize))
   ([^String collection id ^List fields keywordize]
+     (check-not-nil! id "id must not be nil")
      (from-db-object ^DBObject (find-one-as-map collection { :_id id } fields) keywordize)))
 
 
@@ -503,13 +522,3 @@
   ([^DB db ^String collection ^String key ^Map query]
      (let [^DBCollection coll (.getCollection db collection)]
        (.distinct coll ^String (to-db-object key) ^DBObject (to-db-object query)))))
-
-
-
-;;
-;; Implementation
-;;
-
-(defn- fields-to-db-object
-  [^List fields]
-  (zipmap fields (repeat 1)))

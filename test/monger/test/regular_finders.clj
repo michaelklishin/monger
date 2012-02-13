@@ -101,6 +101,11 @@
         doc-id     (monger.util/random-uuid)]
     (is (nil? (mgcol/find-by-id collection doc-id)))))
 
+(deftest find-full-document-by-string-id-when-id-is-nil
+  (let [collection "libraries"
+        doc-id     nil]
+    (is (thrown? IllegalArgumentException (mgcol/find-by-id collection doc-id)))))
+
 (deftest find-full-document-by-object-id-when-that-document-does-not-exist
   (let [collection "libraries"
         doc-id     (ObjectId.)]
@@ -110,6 +115,12 @@
   (let [collection "libraries"
         doc-id     (monger.util/random-uuid)]
     (is (nil? (mgcol/find-map-by-id collection doc-id)))))
+
+(deftest find-full-document-by-id-as-map-when-id-is-nil
+  (let [collection "libraries"
+        doc-id     nil]
+    (is (thrown? IllegalArgumentException
+                 (mgcol/find-map-by-id collection doc-id)))))
 
 
 (deftest find-full-document-by-string-id-when-document-does-exist
