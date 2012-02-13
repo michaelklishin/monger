@@ -36,3 +36,9 @@ It is now possible to opt-out of field keywordization in the query DSL:
 ```
 
 the default value is still true, field names will be converted to keywords.
+
+
+
+### monger.collection/find-by-id and /find-map-by-id fail fast when id is nil
+
+monger.collection/find-by-id and /find-map-by-id now will throw IllegalArgumentException when id is nil
