@@ -170,6 +170,14 @@
   [^Map cmd]
   (.command ^DB *mongodb-database* ^DBObject (to-db-object cmd)))
 
+(defn ^Set get-collection-names
+  "Returns a set containing the names of all collections in this database.."
+  ([] 
+     (.getCollectionNames ^DB *mongodb-database*))
+  ([^DB database]
+     (.getCollectionNames ^DB database))
+)
+
 
 (defprotocol Countable
   (count [this] "Returns size of the object"))

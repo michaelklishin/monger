@@ -1,6 +1,7 @@
 (ns monger.test.core
   (:require [monger core collection util result]
-            [monger.test.helper :as helper])
+            [monger.test.helper :as helper]            
+            [monger.collection :as mgcol])
   (:import (com.mongodb Mongo DB WriteConcern))
   (:use [clojure.test]))
 
@@ -25,6 +26,15 @@
   (let [connection (monger.core/connect)
         db         (monger.core/get-db connection "monger-test")]
     (is (instance? com.mongodb.DB db))))
+
+
+(deftest get-collection-names    
+    (mgcol/insert "test-1" { :name "Clojure" })
+    (mgcol/insert "test-2" { :name "Clojure" })
+  (let [collections (monger.core/get-collection-names)]
+    (is (.contains collections "test-1"))
+    (is (.contains collections "test-2"))
+  ))    
 
 ;; (deftest get-database-with-valid-credentials
 ;;   (let [connection (monger.core/connect)
