@@ -13,14 +13,22 @@
   (:require [monger core]))
 
 
+(defn drop-db
+  "Drops the specified database."
+  ([] 
+     (.dropDatabase ^DB monger.core/*mongodb-database*))
+  ([^DB database]
+     (.dropDatabase ^DB database)))
+
 
 (defn get-collection-names
-  "Returns a set containing the names of all collections in this database.."
+  "Returns a set containing the names of all collections in this database."
   ([] 
      (into #{} (.getCollectionNames ^DB monger.core/*mongodb-database*)))
   ([^DB database]
      (into #{} (.getCollectionNames ^DB database)))
 )
+
 
 
 

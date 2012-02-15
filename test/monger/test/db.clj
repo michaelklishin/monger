@@ -17,3 +17,16 @@
   ))    
 
 
+(deftest drop-database     
+  (let [collection "test"
+        _          (mgcol/insert collection { :name "Clojure" })
+        check      (mgcol/count collection)
+        _          (monger.db/drop-db)
+  ]
+    (is (= 1 check))
+    (is (not (mgcol/exists? collection)))
+    (is (= 0 (mgcol/count collection)))
+  )
+)    
+
+
