@@ -28,14 +28,6 @@
     (is (instance? com.mongodb.DB db))))
 
 
-(deftest get-collection-names    
-    (mgcol/insert "test-1" { :name "Clojure" })
-    (mgcol/insert "test-2" { :name "Clojure" })
-  (let [collections (monger.core/get-collection-names)]
-    (is (.contains collections "test-1"))
-    (is (.contains collections "test-2"))
-  ))    
-
 ;; (deftest get-database-with-valid-credentials
 ;;   (let [connection (monger.core/connect)
 ;;         db         (monger.core/get-db connection "monger-test" "monger" "test_password")]
