@@ -55,7 +55,7 @@ With Maven:
 
 ### Snapshots
 
-If you are comfortable with usugin snapshots, snapshot artifacts are [released to Clojars](https://clojars.org/com.novemberain/monger) every 24 hours.
+If you are comfortable with using snapshots, snapshot artifacts are [released to Clojars](https://clojars.org/com.novemberain/monger) every 24 hours.
 
 With Leiningen:
 
