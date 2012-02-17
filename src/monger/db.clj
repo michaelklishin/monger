@@ -13,6 +13,15 @@
   (:require [monger core]))
 
 
+
+(defn add-user
+  "Adds a new user for this db"
+  ([^String username, ^chars password] 
+     (.addUser ^DB monger.core/*mongodb-database* username password))
+  ([^DB database ^String username, ^chars password]
+     (.addUser ^DB database username password)))
+
+
 (defn drop-db
   "Drops the specified database."
   ([] 

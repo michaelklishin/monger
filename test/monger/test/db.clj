@@ -8,13 +8,12 @@
 (helper/connect!)
 
 
-(deftest get-collection-names    
-    (mgcol/insert "test-1" { :name "Clojure" })
-    (mgcol/insert "test-2" { :name "Clojure" })
-  (let [collections (monger.db/get-collection-names)]
-    (is (.contains collections "test-1"))
-    (is (.contains collections "test-2"))
-  ))    
+
+(deftest add-user  
+  (let [username "clojurewerkz/monger!"
+        pwd      (.toCharArray "monger!")]
+    (monger.db/add-user username pwd)
+    (is (monger.core/authenticate "monger-test" username pwd))))
 
 
 (deftest drop-database     
@@ -28,5 +27,16 @@
     (is (= 0 (mgcol/count collection)))
   )
 )    
+
+
+(deftest get-collection-names    
+    (mgcol/insert "test-1" { :name "Clojure" })
+    (mgcol/insert "test-2" { :name "Clojure" })
+  (let [collections (monger.db/get-collection-names)]
+    (is (.contains collections "test-1"))
+    (is (.contains collections "test-2"))
+  ))    
+
+
 
 
