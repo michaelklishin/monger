@@ -16,7 +16,7 @@
 
 (defn add-user
   "Adds a new user for this db"
-  ([^String username, ^chars password] 
+  ([^String username, ^chars password]
      (.addUser ^DB monger.core/*mongodb-database* username password))
   ([^DB database ^String username, ^chars password]
      (.addUser ^DB database username password)))
@@ -24,7 +24,7 @@
 
 (defn drop-db
   "Drops the currently set database (via core/set-db) or the specified database."
-  ([] 
+  ([]
      (.dropDatabase ^DB monger.core/*mongodb-database*))
   ([^DB database]
      (.dropDatabase ^DB database)))
@@ -32,12 +32,7 @@
 
 (defn get-collection-names
   "Returns a set containing the names of all collections in this database."
-  ([] 
-     (into #{} (.getCollectionNames ^DB monger.core/*mongodb-database*)))
+  ([]
+     (set (.getCollectionNames ^DB monger.core/*mongodb-database*)))
   ([^DB database]
-     (into #{} (.getCollectionNames ^DB database)))
-)
-
-
-
-
+     (set (.getCollectionNames ^DB database))))
