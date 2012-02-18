@@ -1,7 +1,7 @@
 ;; Original author is Andrew Boekhoff
 ;;
 ;; Portions of the code are Copyright (c) 2009 Andrew Boekhoff
-;; Copyright (c) 2011 Michael S. Klishin
+;; Copyright (c) 2011-2012 Michael S. Klishin
 ;;
 ;; Permission is hereby granted, free of charge, to any person obtaining a copy
 ;; of this software and associated documentation files (the "Software"), to deal

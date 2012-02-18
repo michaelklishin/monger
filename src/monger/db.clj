@@ -1,4 +1,5 @@
-;; Copyright (c) 2011 Michael S. Klishin
+;; Copyright (c) 2011-2012 Michael S. Klishin
+;; Copyright (c) 2012 Toby Hede
 ;;
 ;; The use and distribution terms for this software are covered by the
 ;; Eclipse Public License 1.0 (http://opensource.org/licenses/eclipse-1.0.php)
