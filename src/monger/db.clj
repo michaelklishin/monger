@@ -23,7 +23,7 @@
 
 
 (defn drop-db
-  "Drops the specified database."
+  "Drops the currently set database (via core/set-db) or the specified database."
   ([] 
      (.dropDatabase ^DB monger.core/*mongodb-database*))
   ([^DB database]
