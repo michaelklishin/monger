@@ -11,19 +11,24 @@
 
 (deftest test-add-user
   (let [username "clojurewerkz/monger!"
-        pwd      (.toCharArray "monger!")]
-    (monger.db/add-user username pwd)
-    (is (monger.core/authenticate "monger-test" username pwd))))
+        pwd      (.toCharArray "monger!")
+        db-name  "monger-test4"]
+    ;; use a secondary database here. MK.
+    (monger.core/with-db (monger.core/get-db db-name)      
+      (monger.db/add-user username pwd)
+      (is (monger.core/authenticate db-name username pwd)))))
 
 
 (deftest test-drop-database
-  (let [collection "test"
-        _          (mgcol/insert collection { :name "Clojure" })
-        check      (mgcol/count collection)
-        _          (monger.db/drop-db)]
-    (is (= 1 check))
-    (is (not (mgcol/exists? collection)))
-    (is (= 0 (mgcol/count collection)))))
+  ;; drop a secondary database here. MK.
+  (monger.core/with-db (monger.core/get-db "monger-test3")
+    (let [collection "test"
+          _          (mgcol/insert collection { :name "Clojure" })
+          check      (mgcol/count collection)
+          _          (monger.db/drop-db)]
+      (is (= 1 check))
+      (is (not (mgcol/exists? collection)))
+      (is (= 0 (mgcol/count collection))))))
 
 
 (deftest test-get-collection-names
