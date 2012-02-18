@@ -68,7 +68,7 @@
     (mgcol/insert-batch collection [{ :language "Clojure" :name "monger" :_id oid }])
     (mgcol/remove-by-id collection oid)
     (is (= 0 (mgcol/count collection)))
-    (is (nil? (mgcol/find-by-id oid)))))
+    (is (nil? (mgcol/find-by-id collection oid)))))
 
 
 ;;
