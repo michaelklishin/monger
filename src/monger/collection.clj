@@ -168,7 +168,7 @@
   "Returns a single object converted to Map from this collection matching the query."
   ([^String collection ^Map ref]
      (from-db-object ^DBObject (find-one collection ref) true))
-  ([^String collection ^Map ref fields]
+  ([^String collection ^Map ref ^List fields]
      (from-db-object ^DBObject (find-one collection ref fields) true))
   ([^String collection ^Map ref ^List fields keywordize]
      (from-db-object ^DBObject (find-one collection ref fields) keywordize)))
@@ -205,9 +205,9 @@
   ([^String collection id]
      (check-not-nil! id "id must not be nil")
      (from-db-object ^DBObject (find-one-as-map collection { :_id id }) true))
-  ([^String collection id keywordize]
-     (check-not-nil! id "id must not be nil")
-     (from-db-object ^DBObject (find-one-as-map collection { :_id id }) keywordize))
+  ([^String collection id ^List fields]
+     (check-not-nil! id "id must not be nil")  
+     (from-db-object ^DBObject (find-one-as-map collection { :_id id } fields) true))
   ([^String collection id ^List fields keywordize]
      (check-not-nil! id "id must not be nil")
      (from-db-object ^DBObject (find-one-as-map collection { :_id id } fields) keywordize)))
