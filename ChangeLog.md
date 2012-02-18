@@ -47,3 +47,9 @@ monger.collection/find-by-id and /find-map-by-id now will throw IllegalArgumentE
 ### monger.collection/find-map-by-id no longer ignore fields argument
 
 monger.collection/find-map-by-id no longer ignore fields argument. Contributed by Toby Hede.
+
+
+### Meet monger.db
+
+`monger.db` namespace was added to perform operations like adding users or dropping databases. Several functions from
+`monger.core` will eventually be moved there, but not for 1.0. Contributed by Toby Hede.
