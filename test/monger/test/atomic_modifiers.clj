@@ -74,7 +74,7 @@
         oid  (ObjectId.)]
     (mgcol/insert coll { :_id oid :weight 10.0 :height 15.2 })
     (mgcol/update coll { :_id oid } { $set { :weight 20.5 :height 25.6 } })
-    (is (= { :_id oid :weight 20.5 :height 25.6 } (mgcol/find-map-by-id coll oid [:weight])))))
+    (is (= { :_id oid :weight 20.5 :height 25.6 } (mgcol/find-map-by-id coll oid [:weight :height])))))
 
 
 (deftest update-and-set-multiple-fields-using-$set-modifier
@@ -82,7 +82,7 @@
         oid  (ObjectId.)]
     (mgcol/insert coll { :_id oid :weight 10.0 })
     (mgcol/update coll { :_id oid } {$set { :weight 20.5 :height 25.6 } })
-    (is (= { :_id oid :weight 20.5 :height 25.6 } (mgcol/find-map-by-id coll oid [:weight])))))
+    (is (= { :_id oid :weight 20.5 :height 25.6 } (mgcol/find-map-by-id coll oid [:weight :height])))))
 
 
 ;;

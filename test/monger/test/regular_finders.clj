@@ -162,9 +162,13 @@
 (deftest find-partial-document-as-map-by-id-when-document-does-exist
   (let [collection "libraries"
         doc-id     (monger.util/random-uuid)
-        doc        { :data-store "MongoDB", :language "Clojure", :_id doc-id }]
-    (mgcol/insert collection doc)
-    (is (= ({ :language "Clojure" } (mgcol/find-map-by-id collection doc-id [ :language ]))))))
+        fields     [:data-store]                
+        doc        { :data-store "MongoDB", :language "Clojure", :_id doc-id }
+        _          (mgcol/insert collection doc)        
+        loaded     (mgcol/find-map-by-id collection doc-id [ :language ])]      
+    (is (= { :language "Clojure", :_id doc-id } loaded ))
+  )
+)
 
 
 ;;
