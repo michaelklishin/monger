@@ -55,7 +55,7 @@ monger.collection/find-map-by-id no longer ignore fields argument. Contributed b
 `monger.core` will eventually be moved there, but not for 1.0. Contributed by Toby Hede.
 
 
-### monger.collection/update-by-id
+### New convenience functions: monger.collection/update-by-id, /remove-by-id
 
-monger.collection/update-by-id is a new convenience function for updating a single document with
-given ObjectId
+`monger.collection/update-by-id` is a new convenience function for updating a single document with
+given ObjectId. `monger.collection/remove-by-id` is its counterpart for removing documents.

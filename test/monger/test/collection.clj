@@ -62,6 +62,14 @@
     (mgcol/remove collection { :language "Clojure" })
     (is (= 1 (mgcol/count collection)))))
 
+(deftest remove-a-single-document-from-collection
+  (let [collection "libraries"
+        oid        (ObjectId.)]
+    (mgcol/insert-batch collection [{ :language "Clojure" :name "monger" :_id oid }])
+    (mgcol/remove-by-id collection oid)
+    (is (= 0 (mgcol/count collection)))
+    (is (nil? (mgcol/find-by-id oid)))))
+
 
 ;;
 ;; indexes

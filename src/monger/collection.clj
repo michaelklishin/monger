@@ -318,6 +318,7 @@
   "Update a document with given id"
   [^String collection ^ObjectId id ^Map document & { :keys [upsert write-concern] :or { upsert false
                                                                                        write-concern monger.core/*mongodb-write-concern* } }]
+  (check-not-nil! id "id must not be nil")
   (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
     (.update coll (to-db-object { :_id id }) (to-db-object document) upsert false write-concern)))
 
@@ -367,6 +368,15 @@
      (let [^DBCollection coll (.getCollection db collection)]
        (.remove coll (to-db-object conditions)))))
 
+
+(defn ^WriteResult remove-by-id
+  "Removes a single document with given id"
+  ([^String collection ^ObjectId id]
+     (remove-by-id monger.core/*mongodb-database* collection id))
+  ([^DB db ^String collection ^ObjectId id]
+     (check-not-nil! id "id must not be nil")
+     (let [^DBCollection coll (.getCollection db collection)]
+       (.remove coll (to-db-object { :_id id })))))
 
 
 ;;
