@@ -53,3 +53,9 @@ monger.collection/find-map-by-id no longer ignore fields argument. Contributed b
 
 `monger.db` namespace was added to perform operations like adding users or dropping databases. Several functions from
 `monger.core` will eventually be moved there, but not for 1.0. Contributed by Toby Hede.
+
+
+### monger.collection/update-by-id
+
+monger.collection/update-by-id is a new convenience function for updating a single document with
+given ObjectId

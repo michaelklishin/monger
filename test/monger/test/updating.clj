@@ -33,6 +33,17 @@
     (mgcol/update collection { :_id doc-id } { :language "Erlang" })
     (is (= (modified-doc (mgcol/find-by-id collection doc-id))))))
 
+(deftest update-document-by-id-without-upsert-using-update-by-id
+  (let [collection "libraries"
+        doc-id       (monger.util/random-uuid)
+        date         (Date.)
+        doc          { :created-at date, :data-store "MongoDB", :language "Clojure", :_id doc-id }
+        modified-doc { :created-at date, :data-store "MongoDB", :language "Erlang",  :_id doc-id }]
+    (mgcol/insert collection doc)
+    (is (= (doc (mgcol/find-by-id collection doc-id))))
+    (mgcol/update-by-id collection doc-id { :language "Erlang" })
+    (is (= (modified-doc (mgcol/find-by-id collection doc-id))))))
+
 
 (deftest update-multiple-documents
   (let [collection "libraries"]

@@ -12,7 +12,8 @@
   (:refer-clojure :exclude [find remove count drop distinct empty?])
   (:import [com.mongodb Mongo DB DBCollection WriteResult DBObject WriteConcern DBCursor MapReduceCommand MapReduceCommand$OutputType]
            [java.util List Map]
-           [clojure.lang IPersistentMap ISeq])
+           [clojure.lang IPersistentMap ISeq]
+           [org.bson.types ObjectId])
   (:require [monger core result])
   (:use     [monger.conversion]))
 
@@ -307,9 +308,18 @@
     (monger.collection/update \"people\" { :first_name \"Yoko\" } { :first_name \"Yoko\" :last_name \"Ono\" } :upsert true)
 
   By default :upsert and :multi are false."
-  [^String collection ^Map conditions ^Map document & { :keys [upsert multi write-concern] :or { upsert false, multi false, write-concern monger.core/*mongodb-write-concern* } }]
+  ([^String collection ^Map conditions ^Map document & { :keys [upsert multi write-concern] :or { upsert false
+                                                                                                 multi false
+                                                                                                 write-concern monger.core/*mongodb-write-concern* } }]
+     (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
+       (.update coll (to-db-object conditions) (to-db-object document) upsert multi write-concern))))
+
+(defn ^WriteResult update-by-id
+  "Update a document with given id"
+  [^String collection ^ObjectId id ^Map document & { :keys [upsert write-concern] :or { upsert false
+                                                                                       write-concern monger.core/*mongodb-write-concern* } }]
   (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
-    (.update coll (to-db-object conditions) (to-db-object document) upsert multi write-concern)))
+    (.update coll (to-db-object { :_id id }) (to-db-object document) upsert false write-concern)))
 
 
 ;; monger.collection/save
