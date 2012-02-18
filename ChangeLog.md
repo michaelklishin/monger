@@ -42,3 +42,8 @@ the default value is still true, field names will be converted to keywords.
 ### monger.collection/find-by-id and /find-map-by-id fail fast when id is nil
 
 monger.collection/find-by-id and /find-map-by-id now will throw IllegalArgumentException when id is nil
+
+
+### monger.collection/find-map-by-id no longer ignore fields argument
+
+monger.collection/find-map-by-id no longer ignore fields argument. Contributed by Toby Hede.
