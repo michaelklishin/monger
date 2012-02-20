@@ -59,3 +59,8 @@ monger.collection/find-map-by-id no longer ignore fields argument. Contributed b
 
 `monger.collection/update-by-id` is a new convenience function for updating a single document with
 given ObjectId. `monger.collection/remove-by-id` is its counterpart for removing documents.
+
+
+### monger.core/get-db-names
+
+monger.core/get-db-names returns a set of databases. Contributed by Toby Hede.
