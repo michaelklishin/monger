@@ -28,6 +28,13 @@
     (is (instance? com.mongodb.DB db))))
 
 
+(deftest test-get-db-names
+  (let [dbs (monger.core/get-db-names)]  
+    (is (not (empty? dbs)))
+    (is (some #{"monger-test"} dbs))
+  )
+)
+
 ;; (deftest get-database-with-valid-credentials
 ;;   (let [connection (monger.core/connect)
 ;;         db         (monger.core/get-db connection "monger-test" "monger" "test_password")]

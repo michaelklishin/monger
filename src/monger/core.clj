@@ -52,6 +52,15 @@
   ([{ :keys [host port] :or { host *mongodb-host*, port *mongodb-port* }}]
      (Mongo. ^String host ^Long port)))
 
+          
+
+(defn ^DB get-db-names
+  "Gets a list of all database names present on the server"
+  ([]
+     (list (.getDatabaseNames *mongodb-connection*)))
+  ([^Mongo connection]
+     (list (.getDatabaseNames connection))))
+
 
 (defn ^DB get-db
   "Get database reference by name.
