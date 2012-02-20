@@ -31,9 +31,7 @@
 (deftest test-get-db-names
   (let [dbs (monger.core/get-db-names)]  
     (is (not (empty? dbs)))
-    (is (some #{"monger-test"} dbs))
-  )
-)
+    (is (dbs "monger-test"))))
 
 ;; (deftest get-database-with-valid-credentials
 ;;   (let [connection (monger.core/connect)
