@@ -49,10 +49,14 @@ monger.collection/find-by-id and /find-map-by-id now will throw IllegalArgumentE
 monger.collection/find-map-by-id no longer ignore fields argument. Contributed by Toby Hede.
 
 
-### Meet monger.db
+### Meet monger.db and monger.command
 
 `monger.db` namespace was added to perform operations like adding users or dropping databases. Several functions from
-`monger.core` will eventually be moved there, but not for 1.0. Contributed by Toby Hede.
+`monger.core` will eventually be moved there, but not for 1.0. 
+
+`monger.command` namespace includes convenience methods for issuing MongoDB commands.
+
+Both are contributed by Toby Hede.
 
 
 ### New convenience functions: monger.collection/update-by-id, /remove-by-id
@@ -64,3 +68,4 @@ given ObjectId. `monger.collection/remove-by-id` is its counterpart for removing
 ### monger.core/get-db-names
 
 monger.core/get-db-names returns a set of databases. Contributed by Toby Hede.
+
