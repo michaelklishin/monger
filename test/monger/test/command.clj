@@ -23,10 +23,11 @@
     (is (= check (get stats "count")))))
 
 
-; (deftest test-reindex-collection
-;   (let [result (monger.command/reindex-collection "test")]
-;     (is (monger.result/ok? result))
-;     (is (get result "indexes"))))
+(deftest test-reindex-collection
+  (let [_      (mgcol/insert "test" { :name "Clojure" })
+        result (monger.command/reindex-collection "test")]
+    (is (monger.result/ok? result))
+    (is (get result "indexes"))))
 
 
 (deftest test-server-status
