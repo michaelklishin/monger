@@ -167,9 +167,11 @@
 
    For :distinct, :count, :drop, :dropIndexes, :mapReduce we suggest to use monger/collection #distinct, #count,  #drop, #dropIndexes, :mapReduce respectively.
   "
-  [^Map cmd]
-  (.command ^DB *mongodb-database* ^DBObject (to-db-object cmd)))
-
+  ([^Map cmd]
+    (.command ^DB *mongodb-database* ^DBObject (to-db-object cmd)))
+  ([^DB database ^Map cmd]
+    (.command ^DB database ^DBObject (to-db-object cmd)))
+  )
 
 (defprotocol Countable
   (count [this] "Returns size of the object"))
