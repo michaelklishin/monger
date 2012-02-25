@@ -31,7 +31,7 @@ We are working on documentation guides & examples site for the 1.0 release. In t
 
 ## This is a Work In Progress
 
-Core Monger APIs are stabilized but it is still a work in progress. Keep that in mind. 1.0 will be released in early 2012
+Core Monger APIs are stabilized but it is still a work in progress. Keep that in mind. 1.0 will be released in 2012
 together with documentation guides and dedicated website.
 
 
