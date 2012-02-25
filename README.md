@@ -343,6 +343,12 @@ To be documented.
 To be documented.
 
 
+## Monger Is a ClojureWerkz Project
+
+Neocons is part of the group of libraries known as ClojureWerkz, together with
+[Neocons](https://github.com/michaelklishin/neocons), [Langohr](https://github.com/michaelklishin/langohr), [Elastisch](https://github.com/clojurewerkz/elastisch), [Quartzite](https://github.com/michaelklishin/quartzite) and several others.
+
+
 ## Development
 
 Install [lein-multi](https://github.com/maravillas/lein-multi) with
@@ -360,6 +366,6 @@ on Github.
 
 ## License
 
-Copyright (C) 2011 Michael S. Klishin
+Copyright (C) 2011-2012 Michael S. Klishin
 
 Distributed under the [Eclipse Public License](http://www.eclipse.org/legal/epl-v10.html), the same as Clojure.
