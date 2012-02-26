@@ -25,9 +25,12 @@ wanted a client that will
 
 We are working on documentation guides & examples site for the 1.0 release. In the meantime, please refer to the [test suite](https://github.com/michaelklishin/monger/tree/master/test/monger/test) for code examples.
 
-## Mailing List
+## Community
 
 [Monger has a mailing list](https://groups.google.com/forum/#!forum/clojure-monger). Feel free to join it and ask any questions you may have.
+
+To subscribe for announcements of releases, important changes and so on, please follow [@ClojureWerkz](https://twitter.com/#!/clojurewerkz) on Twitter.
+
 
 ## This is a Work In Progress
 
