@@ -19,7 +19,8 @@
                }
   :dev-dependencies [[org.clojure/data.json "0.1.2" :exclusions [org.clojure/clojure]]
                      [clj-time              "0.3.6" :exclusions [org.clojure/clojure]]
-                     [codox                 "0.3.4" :exclusions [org.clojure/clojure]]]
+                     [codox                 "0.3.4" :exclusions [org.clojure/clojure]]
+                     [org.clojure/tools.cli "0.2.1" :exclusions [org.clojure/clojure]]]
   :dev-resources-path "test/resources"
   :warn-on-reflection true
   :codox { :exclude [monger.internal.pagination] })
