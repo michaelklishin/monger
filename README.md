@@ -41,7 +41,7 @@ together with documentation guides and dedicated website.
 
 With Leiningen:
 
-    [com.novemberain/monger "1.0.0-beta1"]
+    [com.novemberain/monger "1.0.0-beta2"]
 
 
 With Maven:
@@ -49,7 +49,7 @@ With Maven:
     <dependency>
       <groupId>com.novemberain</groupId>
       <artifactId>monger</artifactId>
-      <version>1.0.0-beta1</version>
+      <version>1.0.0-beta2</version>
     </dependency>
 
 
