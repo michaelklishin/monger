@@ -142,23 +142,26 @@
       (set! (. mo fsync) fsync))
     mo))
 
-(defn connect!
-  "Connect to MongoDB, store connection in the *mongodb-connection* var"
-  ^Mongo [& args]
-  (def ^:dynamic *mongodb-connection* (apply connect args)))
 
 (defn set-connection!
   "Sets given MongoDB connection as default by altering *mongodb-connection* var"
   ^Mongo [^Mongo conn]
-  (def ^:dynamic *mongodb-connection* conn))
+  (alter-var-root (var *mongodb-connection*) (constantly conn)))
+
+(defn connect!
+  "Connect to MongoDB, store connection in the *mongodb-connection* var"
+  ^Mongo [& args]
+  (let [c (apply connect args)]
+    (set-connection! c)))
+
 
 
 (defn set-db!
   "Sets *mongodb-database* var to given db, updates *mongodb-gridfs* var state. Recommended to be used for
   applications that only use one database."
   [db]
-  (def ^:dynamic *mongodb-database* db)
-  (def ^:dynamic *mongodb-gridfs* (GridFS. db)))
+  (alter-var-root (var *mongodb-database*) (constantly db))
+  (alter-var-root (var *mongodb-gridfs*)   (constantly (GridFS. db))))
 
 
 (defn set-default-write-concern!
@@ -226,8 +229,7 @@
   ([^Map cmd]
      (.command ^DB *mongodb-database* ^DBObject (to-db-object cmd)))
   ([^DB database ^Map cmd]
-     (.command ^DB database ^DBObject (to-db-object cmd)))
-  )
+     (.command ^DB database ^DBObject (to-db-object cmd))))
 
 (defprotocol Countable
   (count [this] "Returns size of the object"))
