@@ -4,10 +4,6 @@
   (:import  (com.mongodb Mongo DB DBObject))
   (:use     [clojure.tools.cli]))
 
-;; Make mongodb-settings accessible from the monger.core namespace
-(monger.util/with-ns 'monger.core
-  (def ^:dynamic *mongodb-settings*))
-
 (defn fix-paul-maccartneys-name
   "Fix Paul McCartney's name"
   []
@@ -20,19 +16,12 @@
   (let [
         args *command-line-args*
         parsed-args (cli args
-                         (optional ["--port" "Mongodb port" :default 27017])
-                         (optional ["--host" "Mongodb host" :default "localhost"])
-                         (optional ["--db-name"             :default "monger-example"])) ]
+                         ["--port" "Mongodb port" :default 27017]
+                         ["--host" "Mongodb host" :default "127.0.0.1"]
+                         ["--db-name"             :default "monger-example"]) ]
 
-    ;; Define Mongodb connection settings
-
-    (def ^:dynamic *mongodb-settings* parsed-args)
-
-    (monger.util/with-ns 'monger.core
-      ;; Establish Mongodb connection
-      (defonce ^:dynamic *mongodb-connection* (monger.core/connect *mongodb-settings*))
-      ;; Connect to the database
-      (defonce ^:dynamic *mongodb-database* (monger.core/get-db "monger-example")))
+    (monger.core/connect! (first parsed-args))
+    (monger.core/set-db! (monger.core/get-db "monger-example"))
 
     (println "Does people connection exist: " (monger.collection/exists? "people"))
 
@@ -52,14 +41,18 @@
     ;; Fix a typo in the inserted record
     (monger.collection/update "people" { :first_name "Raul" } { "$set" { :first_name "Paul" } })
 
-    (println (monger.collection/find-one "people" { :first_name "Paul" }))
+    (println (monger.collection/find-one-as-map "people" { :first_name "Paul" }))
 
     ;; Now, let's add the index to that record
-    (monger.collection/update "people" { :first_name "Paul" } { "$push" { :years_on_stage 1 } })
+    (monger.collection/update "people" { :first_name "Paul" } { "$set" { :years_on_stage 1 } })
+
+    (println (monger.collection/find-one-as-map "people" { :first_name "Paul" }))
 
     ;; Increment record 45 times
     (dotimes [n 45]
-            (monger.collection/update "people" { :first_name "Paul" } { "$inc" { :years_on_stage 1 } }))
+      (monger.collection/update "people" { :first_name "Paul" } { "$inc" { :years_on_stage 1 } })
+      (println (monger.collection/find-one-as-map "people" { :first_name "Paul" }))
+      )
 
     ;; Remove years_on_stage field
     (monger.collection/update "people" { :first_name "Paul" } { "$unset" { :years_on_stage 1} })
@@ -72,7 +65,7 @@
 
     ;; Save can act both like insert and update
     (def ian_gillian
-         (monger.convertion/to-db-object
+         (monger.conversion/to-db-object
           { :first_name "Ian" :last_name "Gillan" }))
 
     ;; Performs insert
