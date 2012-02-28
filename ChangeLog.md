@@ -1,3 +1,22 @@
+## Changes between 1.0.0-beta2 and 1.0.0-beta3
+
+### monger.core/set-connection!
+
+monger.core/set-connection! allows you to instantiate connection object (com.mongodb.Mongo instances) any
+way you like and then use it as default Monger connection. MongoDB Java driver provides many ways to instantiate
+and fine tune connections, this is the easiest way for Monger to support them all.
+
+### 2-arity for monger.core/connect and monger.core/connect!
+
+monger.core/connect now has 2-arity that accepts `com.mongodb.ServerAddresss` and `com.mongodb.MongoOptions`
+instances and allows you fine tune parameters like socket and connection timeouts, default `:w` value, connection threads
+settings and so on.
+
+`monger.core/mongo-options` and `monger.core/server-address` are helper functions that instantiate those classes from
+paramters passed as Clojure maps, for convenience.
+
+
+
 ## Changes between 1.0.0-beta1 and 1.0.0-beta2
 
 ### 3-arity of monger.collection/find-one-as-map now takes a vector of fields
