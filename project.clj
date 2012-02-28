@@ -22,4 +22,5 @@
                      [codox                 "0.3.4" :exclusions [org.clojure/clojure]]]
   :dev-resources-path "test/resources"
   :warn-on-reflection true
-  :codox { :exclude [monger.internal.pagination] })
+  :codox { :exclude [monger.internal.pagination] }
+  :test-selectors   {:focus          (fn [v] (:focus v))})

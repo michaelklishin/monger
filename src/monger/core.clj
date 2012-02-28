@@ -10,11 +10,11 @@
 (ns ^{:author "Michael S. Klishin"
       :doc "Thin idiomatic wrapper around MongoDB Java client. monger.core includes
        fundamental functions that work with connections & databases. Most of functionality
-       is in the monger.collection namespace."}
+       is in other monger.* namespaces, in particular monger.collection."}
   monger.core
   (:refer-clojure :exclude [count])
   (:use [monger.conversion])
-  (:import [com.mongodb Mongo DB WriteConcern DBObject DBCursor CommandResult]
+  (:import [com.mongodb Mongo DB WriteConcern DBObject DBCursor CommandResult Bytes MongoOptions ServerAddress]
            [com.mongodb.gridfs GridFS]
            [java.util Map]))
 
@@ -49,6 +49,8 @@
    "
   ([]
      (Mongo.))
+  ([^ServerAddress server-address ^MongoOptions options]
+     (Mongo. server-address options))
   ([{ :keys [host port] :or { host *mongodb-host*, port *mongodb-port* }}]
      (Mongo. ^String host ^Long port)))
 
@@ -100,10 +102,55 @@
      (do ~@body)))
 
 
+(defn server-address
+  ([^String hostname]
+     (ServerAddress. hostname))
+  ([^String hostname ^long port]
+     (ServerAddress. hostname port)))
+
+
+(defn mongo-options
+  [& { :keys [connections-per-host threads-allowed-to-block-for-connection-multiplier
+              max-wait-time connect-timeout socket-timeout socket-keep-alive auto-connect-retry max-auto-connect-retry-time
+              safe w w-timeout fsync j] }]
+  (let [mo (MongoOptions.)]
+    (when connections-per-host
+      (set! (. mo connectionsPerHost) connections-per-host))
+    (when threads-allowed-to-block-for-connection-multiplier
+      (set! (. mo threadsAllowedToBlockForConnectionMultiplier) threads-allowed-to-block-for-connection-multiplier))
+    (when max-wait-time
+      (set! (. mo maxWaitTime) max-wait-time))
+    (when connect-timeout
+      (set! (. mo connectTimeout) connect-timeout))
+    (when socket-timeout
+      (set! (. mo socketTimeout) socket-timeout))
+    (when socket-keep-alive
+      (set! (. mo socketKeepAlive) socket-keep-alive))
+    (when auto-connect-retry
+      (set! (. mo autoConnectRetry) auto-connect-retry))
+    (when max-auto-connect-retry-time
+      (set! (. mo maxAutoConnectRetryTime) max-auto-connect-retry-time))
+    (when safe
+      (set! (. mo safe) safe))
+    (when w
+      (set! (. mo w) w))
+    (when w-timeout
+      (set! (. mo wtimeout) w-timeout))
+    (when j
+      (set! (. mo j) j))
+    (when fsync
+      (set! (. mo fsync) fsync))
+    mo))
+
 (defn connect!
   "Connect to MongoDB, store connection in the *mongodb-connection* var"
   ^Mongo [& args]
   (def ^:dynamic *mongodb-connection* (apply connect args)))
+
+(defn set-connection!
+  "Sets given MongoDB connection as default by altering *mongodb-connection* var"
+  ^Mongo [^Mongo conn]
+  (def ^:dynamic *mongodb-connection* conn))
 
 
 (defn set-db!
@@ -177,9 +224,9 @@
    For :distinct, :count, :drop, :dropIndexes, :mapReduce we suggest to use monger/collection #distinct, #count,  #drop, #dropIndexes, :mapReduce respectively.
   "
   ([^Map cmd]
-    (.command ^DB *mongodb-database* ^DBObject (to-db-object cmd)))
+     (.command ^DB *mongodb-database* ^DBObject (to-db-object cmd)))
   ([^DB database ^Map cmd]
-    (.command ^DB database ^DBObject (to-db-object cmd)))
+     (.command ^DB database ^DBObject (to-db-object cmd)))
   )
 
 (defprotocol Countable
