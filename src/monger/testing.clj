@@ -41,8 +41,6 @@
 
 (def factories (atom {}))
 (def defaults  (atom {}))
-(def oids      (atom {}))
-
 
 (defn defaults-for
   [f-group & { :as attributes }]
@@ -66,10 +64,4 @@
    (let [doc (apply build f-group f-name (flatten (vec overrides)))
          oid (:_id doc)]
      (assert (mr/ok? (mc/insert f-group doc)))
-     (swap! oids (fn [a]
-                   (assoc-in a [(name f-group) (name f-name)] oid)))
      doc)))
-
-(defn oid-of
-  [f-group f-name]
-  (get-in @oids [(name f-group) (name f-name)]))

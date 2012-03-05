@@ -54,7 +54,6 @@
         doc (seed "domains" "clojure.org" :created-at t)]
     (is (= 1 (mc/count "domains")))
     (is (:_id doc))
-    (is (= (:_id doc) (oid-of "domains" "clojure.org")))
     (is (= t (:created-at doc)))
     (is (= "clojure.org" (:name doc)))
     (is (false? (:ipv6-enabled doc)))))
