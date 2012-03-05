@@ -8,7 +8,8 @@
 ;; You must not remove this notice, or any other, from this software.
 
 (ns monger.testing
-  (:require [monger collection]))
+  (:require [monger collection])
+  (:import [org.bson.types ObjectId]))
 
 
 ;;
@@ -35,3 +36,24 @@
        (monger.collection/remove ~coll-arg)
        (f#)
        (monger.collection/remove ~coll-arg))))
+
+
+(def factories (atom {}))
+(def defaults  (atom {}))
+
+
+(defn defaults-for
+  [f-group & { :as attributes }]
+  (swap! defaults (fn [v]
+                    (assoc v (name f-group) attributes))))
+
+(defn factory
+  [f-group f-name & { :as attributes }]
+  (swap! factories (fn [a]
+                     (assoc-in a [(name f-group) (name f-name)] attributes))))
+
+(defn build
+  [f-group f-name & { :as overrides }]
+  (let [d          (@defaults (name f-group))
+        attributes (get-in @factories [(name f-group) (name f-name)])]
+    (merge { :_id (ObjectId.) } d attributes overrides)))
