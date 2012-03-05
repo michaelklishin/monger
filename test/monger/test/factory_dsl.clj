@@ -1,7 +1,8 @@
 (ns monger.test.factory-dsl
   (:use     [clojure.test]
             [monger.testing]
-            [clj-time.core :only [days ago weeks]]))
+            [clj-time.core :only [days ago weeks]])
+  (:import [org.bson.types ObjectId]))
 
 (defaults-for "domains"
   :ipv6-enabled false)
@@ -15,5 +16,12 @@
         doc (build "domains" "clojure.org" :created-at t)]
     (is (:_id doc))
     (is (= t (:created-at doc)))
+    (is (= "clojure.org" (:name doc)))
+    (is (false? (:ipv6-enabled doc)))))
+
+(deftest test-building-documents-from-a-factory-case-2
+  (let [oid (ObjectId.)
+        doc (build "domains" "clojure.org" :_id oid)]
+    (is (= oid (:_id doc)))
     (is (= "clojure.org" (:name doc)))
     (is (false? (:ipv6-enabled doc)))))
