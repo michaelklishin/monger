@@ -10,7 +10,7 @@
 (ns monger.testing
   (:require [monger.collection :as mc]
             [monger.result     :as mr])
-  (:use     [monger.internal.fn :only (expand-all) :as fntools])
+  (:use     [monger.internal.fn :only (expand-all expand-all-with) :as fntools])
   (:import [org.bson.types ObjectId]))
 
 
@@ -55,12 +55,27 @@
                      (assoc-in a [(name f-group) (name f-name)] attributes))))
 
 
+(declare build seed)
+(defn- expand-associate-for-building
+  [f]
+  (let [mt               (meta f)
+        [f-group f-name] (f)]
+    (:_id (build f-group f-name))))
+
+(defn- expand-for-building
+  [f]
+  (let [mt (meta f)]
+    (if (:associate-gen mt)
+      (expand-associate-for-building f)
+      (f))))
+
 (defn build
   "Generates a new document and returns it"
   [f-group f-name & { :as overrides }]
   (let [d          (@defaults (name f-group))
-        attributes (get-in @factories [(name f-group) (name f-name)])]
-    (expand-all (merge { :_id (ObjectId.) } d attributes overrides))))
+        attributes (get-in @factories [(name f-group) (name f-name)])
+        merged     (merge { :_id (ObjectId.) } d attributes overrides)]
+    (expand-all-with merged expand-for-building)))
 
 (defn seed
   "Generates and inserts a new document, then returns it"
@@ -75,3 +90,9 @@
   [f-group f-name & { :as overrides }]
   (fn []
     (apply build f-group f-name (flatten (vec overrides)))))
+
+(defn parent-id
+  [f-group f-name]
+  (with-meta (fn []
+               [f-group f-name]) { :associate-gen true :parent-gen true }))
+

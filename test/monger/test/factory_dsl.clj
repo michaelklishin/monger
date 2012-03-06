@@ -34,7 +34,8 @@
                       })
 
 (factory "pages" "http://clojure.org/rationale"
-         :name "/rationale")
+         :name "/rationale"
+         :domain-id (parent-id "domains" "clojure"))
 (factory "pages" "http://clojure.org/jvm_hosted"
          :name "/jvm_hosted")
 (factory "pages" "http://clojure.org/runtime_polymorphism"
@@ -77,6 +78,9 @@
     (is (= "elixir-lang.org" (:name doc)))
     (is (not (:ipv6-enabled doc)))))
 
+(deftest test-building-child-documents-with-a-parent-ref-case-1
+  (let [doc (build "pages" "http://clojure.org/rationale")]
+    (is (:domain-id doc))))
 
 
 
