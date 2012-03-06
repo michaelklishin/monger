@@ -14,6 +14,7 @@
         :d (Double/valueOf 11.1)
         :f (Float/valueOf 2.5)
         :v [1 2 3]
+        :dyn-v [(fn [] 10) (fn [] 20) (fn [] 30)]
         :dyn-i (fn [] 1)
         :dyn-s (fn [] "Clojure (expanded)")
         :m { :nested "String" }
@@ -26,6 +27,7 @@
         :d (Double/valueOf 11.1)
         :f (Float/valueOf 2.5)
         :v [1 2 3]
+        :dyn-v [10 20 30]
         :dyn-i 1
         :dyn-s "Clojure (expanded)"
         :m { :nested "String" }

@@ -47,7 +47,7 @@
   (expand-all [m] (apply-to-values m expand-all))
 
   clojure.lang.PersistentVector
-  (expand-all [v] v)
+  (expand-all [v] (map expand-all v))
 
   clojure.lang.APersistentMap
   (expand-all [m] (apply-to-values m expand-all))
