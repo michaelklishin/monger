@@ -3,7 +3,7 @@
         [monger.internal.fn]))
 
 
-(deftest test-recursive-function-values-expansion
+(deftest test-expand-all
   (are [i o] (is (= (expand-all i) o))
        { :int (fn [] 1) :str "Clojure" :float (Float/valueOf 11.0)  } { :int 1 :str "Clojure" :float (Float/valueOf 11.0 )}
        { :long (fn [] (Long/valueOf 11)) } { :long (Long/valueOf 11) }
@@ -36,3 +36,10 @@
                 :nested { :a { :b { :c "d" } } }
                 }
         }))
+
+(deftest test-expand-all-with
+  (let [expander-fn (fn [v]
+                      (* 3 v))]
+  (are [i o] (is (= (expand-all-with i expander-fn) o))
+       { :a 1 :int (fn [] 3) } { :a 1 :int 9 }
+       { :v [(fn [] 1) (fn [] 11)] :m { :inner (fn [] 3) } :s "Clojure" } { :v [3 33] :m { :inner 9 } :s "Clojure" })))
