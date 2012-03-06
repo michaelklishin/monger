@@ -20,7 +20,10 @@
 
 (factory "domains" "clojure"
          :name       "clojure.org"
-         :created-at (-> 2 days ago))
+         :created-at (-> 2 days ago)
+         :embedded   [(embedded-doc "pages" "http://clojure.org/lisp")
+                      (embedded-doc "pages" "http://clojure.org/jvm_hosted")
+                      (embedded-doc "pages" "http://clojure.org/runtime_polymorphism")])
 
 (factory "domains" "elixir"
          :name     "elixir-lang.org"
@@ -31,10 +34,13 @@
                       })
 
 (factory "pages" "http://clojure.org/rationale"
-         :name "/rationale"
-         :created-at (-> 2 days ago)
-         ;; :domain-id  (parent-id "domains" "clojure")
-         )
+         :name "/rationale")
+(factory "pages" "http://clojure.org/jvm_hosted"
+         :name "/jvm_hosted")
+(factory "pages" "http://clojure.org/runtime_polymorphism"
+         :name "/runtime_polymorphism")
+(factory "pages" "http://clojure.org/lisp"
+         :name "/lisp")
 
 (deftest test-building-documents-from-a-factory-case-1
   (let [t   (-> 2 weeks ago)
@@ -58,7 +64,9 @@
     (is (= oid (:_id doc)))
     (is (= t (:created-at doc)))
     (is (= "clojurewerkz.org" (:name doc)))
-    (is (:ipv6-enabled doc))))
+    (is (:ipv6-enabled doc))
+    (is (= ["/lisp" "/jvm_hosted" "/runtime_polymorphism"]
+           (vec (map :name (:embedded doc)))))))
 
 
 (deftest test-building-documents-from-a-factory-case-4

@@ -56,15 +56,22 @@
 
 
 (defn build
+  "Generates a new document and returns it"
   [f-group f-name & { :as overrides }]
   (let [d          (@defaults (name f-group))
         attributes (get-in @factories [(name f-group) (name f-name)])]
     (expand-all (merge { :_id (ObjectId.) } d attributes overrides))))
 
 (defn seed
+  "Generates and inserts a new document, then returns it"
   [f-group f-name & { :as overrides }]
   (io!
-   (let [doc (apply build f-group f-name (flatten (vec overrides)))
-         oid (:_id doc)]
-     (assert (mr/ok? (mc/insert f-group doc)))
-     doc)))
+    (let [doc (apply build f-group f-name (flatten (vec overrides)))
+          oid (:_id doc)]
+      (assert (mr/ok? (mc/insert f-group doc)))
+      doc)))
+
+(defn embedded-doc
+  [f-group f-name & { :as overrides }]
+  (fn []
+    (apply build f-group f-name (flatten (vec overrides)))))
