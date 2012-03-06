@@ -10,6 +10,7 @@
 (ns monger.testing
   (:require [monger.collection :as mc]
             [monger.result     :as mr])
+  (:use     [monger.internal.fn :only (expand-all) :as fntools])
   (:import [org.bson.types ObjectId]))
 
 
@@ -39,6 +40,7 @@
        (mc/remove ~coll-arg))))
 
 
+
 (def factories (atom {}))
 (def defaults  (atom {}))
 
@@ -52,11 +54,12 @@
   (swap! factories (fn [a]
                      (assoc-in a [(name f-group) (name f-name)] attributes))))
 
+
 (defn build
   [f-group f-name & { :as overrides }]
   (let [d          (@defaults (name f-group))
         attributes (get-in @factories [(name f-group) (name f-name)])]
-    (merge { :_id (ObjectId.) } d attributes overrides)))
+    (expand-all (merge { :_id (ObjectId.) } d attributes overrides))))
 
 (defn seed
   [f-group f-name & { :as overrides }]
