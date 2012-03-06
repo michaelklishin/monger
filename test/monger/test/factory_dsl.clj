@@ -72,7 +72,7 @@
 
 
 
-(deftest test-seeding-documents-using-a-factory-case1
+(deftest test-seeding-documents-using-a-factory-case-1
   (is (mc/empty? "domains"))
   (let [t   (-> 2 weeks ago)
         doc (seed "domains" "clojure" :created-at t)]
@@ -81,3 +81,15 @@
     (is (= t (:created-at doc)))
     (is (= "clojure.org" (:name doc)))
     (is (false? (:ipv6-enabled doc)))))
+
+(deftest test-seeding-documents-using-a-factory-case-2
+  (is (mc/empty? "domains"))
+  (let [doc    (seed "domains" "elixir")
+        loaded (first (mc/find-maps "domains"))]
+    (is (= 1 (mc/count "domains")))
+    (is (:_id doc))
+    (is (= (:_id doc) (:_id loaded)))
+    (is (instance? DateTime (:created-at loaded)))
+    (is (= ["erlang" "python" "ruby"] (get-in loaded [:related :terms])))
+    (is (= "elixir-lang.org" (:name loaded)))
+    (is (not (:ipv6-enabled loaded)))))
