@@ -66,7 +66,7 @@
   ;; clojure.lang.AFn subclasses. MK.
   clojure.lang.AFunction
   (expand-all      [f]          (f))
-  (expand-all-with [f expander] (expander (f)))
+  (expand-all-with [f expander] (expander f))
 
   Object
   (expand-all      [x] x)
