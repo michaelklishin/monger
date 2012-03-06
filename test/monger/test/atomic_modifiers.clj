@@ -12,6 +12,8 @@
         [monger.operators]
         [monger.test.fixtures]))
 
+(helper/connect!)
+
 (use-fixtures :each purge-docs purge-things purge-scores)
 
 
