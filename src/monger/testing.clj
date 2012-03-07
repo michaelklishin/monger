@@ -43,6 +43,7 @@
 
 (def factories (atom {}))
 (def defaults  (atom {}))
+(def last-oids (atom {}))
 
 (defn defaults-for
   [f-group & { :as attributes }]
@@ -55,7 +56,7 @@
                      (assoc-in a [(name f-group) (name f-name)] attributes))))
 
 
-(declare build seed)
+(declare build seed remember-oid)
 (defn- expand-associate-for-building
   [f]
   (let [mt               (meta f)
@@ -102,6 +103,7 @@
           merged     (merge { :_id (ObjectId.) } d attributes overrides)
           expanded   (expand-all-with merged expand-for-seeding)]
       (assert (mr/ok? (mc/insert f-group expanded)))
+      (remember-oid f-group f-name (:_id expanded))
       expanded)))
 
 (defn embedded-doc
@@ -114,3 +116,12 @@
   (with-meta (fn []
                [f-group f-name]) { :associate-gen true :parent-gen true }))
 
+(defn- remember-oid
+  [f-group f-name oid]
+  (swap! last-oids (fn [a]
+                     (assoc-in a [(name f-group) (name f-name)] oid))))
+
+(defn last-oid-of
+  "Returns last object id of a document inserted using given factory"
+  [f-group f-name]
+  (get-in @last-oids [(name f-group) (name f-name)]))

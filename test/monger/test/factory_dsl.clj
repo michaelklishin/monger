@@ -90,6 +90,7 @@
         doc (seed "domains" "clojure" :created-at t)]
     (is (= 1 (mc/count "domains")))
     (is (:_id doc))
+    (is (= (:_id doc) (last-oid-of "domains" "clojure")))
     (is (= t (:created-at doc)))
     (is (= "clojure.org" (:name doc)))
     (is (false? (:ipv6-enabled doc)))))
