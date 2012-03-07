@@ -1,5 +1,51 @@
 ## Changes between 1.0.0-beta2 and 1.0.0-beta3
 
+### Factories/fixtures DSL
+
+When working with even moderately complex data sets, fixture data quickly becomes difficult to
+maintain. Monger 1.0.0-beta3 introduce a new factories DSL that is inspired by (but does not try to
+copy) Ruby's Factory Girl and similar libraries.
+
+It includes support dynamically evaluated attributes and support for two most common techniques for
+implementing associations between documents.
+
+Here is what it feels like:
+
+``` clojure
+(defaults-for "domains"
+  :ipv6-enabled false)
+
+(factory "domains" "clojure"
+         :name       "clojure.org"
+         :created-at (-> 2 days ago)
+         :embedded   [(embedded-doc "pages" "http://clojure.org/lisp")
+                      (embedded-doc "pages" "http://clojure.org/jvm_hosted")
+                      (embedded-doc "pages" "http://clojure.org/runtime_polymorphism")])
+
+(factory "domains" "elixir"
+         :name     "elixir-lang.org"
+         :created-at (fn [] (now))
+         :topics     (fn [] ["programming" "erlang" "beam" "ruby"])
+         :related    {
+                      :terms (fn [] ["erlang" "python" "ruby"])
+                      })
+
+(factory "pages" "http://clojure.org/rationale"
+         :name "/rationale"
+         :domain-id (parent-id "domains" "clojure"))
+(factory "pages" "http://clojure.org/jvm_hosted"
+         :name "/jvm_hosted")
+(factory "pages" "http://clojure.org/runtime_polymorphism"
+         :name "/runtime_polymorphism")
+(factory "pages" "http://clojure.org/lisp"
+         :name "/lisp")
+
+
+(build "domains" "clojure" :created-at (-> 2 weeks ago))
+(seed  "pages" "http://clojure.org/rationale")
+```
+
+
 ### monger.core/set-connection!
 
 monger.core/set-connection! allows you to instantiate connection object (com.mongodb.Mongo instances) any
@@ -14,6 +60,7 @@ settings and so on.
 
 `monger.core/mongo-options` and `monger.core/server-address` are helper functions that instantiate those classes from
 paramters passed as Clojure maps, for convenience.
+
 
 
 
