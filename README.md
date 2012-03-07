@@ -16,6 +16,7 @@ wanted a client that will
  * Be well tested.
  * Be maintained, do not carry technical debt from 2009 forever.
  * Integrate with libraries like clojure.data.json and Joda Time.
+ * Provide support for unit testing: factories/fixtures DSL, collection cleaner functions, clojure.test integration and so on.
  * Integrate usage of JavaScript files and ClojureScript (as soon as the compiler gets artifact it is possible to depend on for easy embedding).
  * Learn from other clients like the Java and Ruby ones.
  * Target Clojure 1.3.0 and later from the ground up.
