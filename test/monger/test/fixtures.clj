@@ -12,3 +12,5 @@
 (defcleaner libraries "libraries")
 (defcleaner scores    "scores")
 (defcleaner locations "locations")
+(defcleaner domains   "domains")
+(defcleaner pages     "pages")
