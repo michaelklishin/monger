@@ -63,10 +63,26 @@
     (:_id (build f-group f-name))))
 
 (defn- expand-for-building
+  "Expands functions, treating those with association metadata (see `parent-id` for example) specially"
   [f]
   (let [mt (meta f)]
     (if (:associate-gen mt)
       (expand-associate-for-building f)
+      (f))))
+
+(defn- expand-associate-for-seeding
+  [f]
+  (let [mt               (meta f)
+        [f-group f-name] (f)]
+    (:_id (seed f-group f-name))))
+
+(defn- expand-for-seeding
+  "Expands functions, treating those with association metadata (see `parent-id` for example) specially,
+   making sure parent documents are persisted first"
+  [f]
+  (let [mt (meta f)]
+    (if (:associate-gen mt)
+      (expand-associate-for-seeding f)
       (f))))
 
 (defn build
@@ -81,10 +97,12 @@
   "Generates and inserts a new document, then returns it"
   [f-group f-name & { :as overrides }]
   (io!
-    (let [doc (apply build f-group f-name (flatten (vec overrides)))
-          oid (:_id doc)]
-      (assert (mr/ok? (mc/insert f-group doc)))
-      doc)))
+    (let [d          (@defaults (name f-group))
+          attributes (get-in @factories [(name f-group) (name f-name)])
+          merged     (merge { :_id (ObjectId.) } d attributes overrides)
+          expanded   (expand-all-with merged expand-for-seeding)]
+      (assert (mr/ok? (mc/insert f-group expanded)))
+      expanded)))
 
 (defn embedded-doc
   [f-group f-name & { :as overrides }]

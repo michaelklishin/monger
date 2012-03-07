@@ -105,3 +105,17 @@
     (is (= ["erlang" "python" "ruby"] (get-in loaded [:related :terms])))
     (is (= "elixir-lang.org" (:name loaded)))
     (is (not (:ipv6-enabled loaded)))))
+
+
+
+(deftest test-seeding-child-documents-with-a-parent-ref-case-1
+  (is (mc/empty? "domains"))
+  (is (mc/empty? "pages"))
+  (let [page   (seed "pages" "http://clojure.org/rationale")
+        domain (mc/find-map-by-id "domains" (:domain-id page))]
+    (is (= 1 (mc/count "domains")))
+    (is (= 1 (mc/count "pages")))
+    (is domain)
+    (is (:domain-id page))
+    (is (= "clojure.org" (:name domain)))
+    (is (= "/rationale" (:name page)))))
