@@ -106,6 +106,14 @@
       (remember-oid f-group f-name (:_id expanded))
       expanded)))
 
+(defn seed-all
+  "Seeds all fixtures in the given collection"
+  [f-group]
+  (io!
+    (let [xs (vec (keys (get @factories f-group)))]
+      (doseq [f-name xs]
+        (seed f-group f-name)))))
+
 (defn embedded-doc
   [f-group f-name & { :as overrides }]
   (fn []

@@ -120,3 +120,11 @@
     (is (:domain-id page))
     (is (= "clojure.org" (:name domain)))
     (is (= "/rationale" (:name page)))))
+
+
+(deftest test-seeding-all-factories-in-a-group
+  (is (mc/empty? "domains"))
+  (is (mc/empty? "pages"))
+  (seed-all "pages")
+  (is (>= (mc/count "domains") 1))
+  (is (>= (mc/count "pages") 4)))
