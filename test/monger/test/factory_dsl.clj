@@ -18,30 +18,37 @@
 (defaults-for "domains"
   :ipv6-enabled false)
 
-(factory "domains" "clojure"
-         :name       "clojure.org"
-         :created-at (-> 2 days ago)
-         :embedded   [(embedded-doc "pages" "http://clojure.org/lisp")
-                      (embedded-doc "pages" "http://clojure.org/jvm_hosted")
-                      (embedded-doc "pages" "http://clojure.org/runtime_polymorphism")])
+(let [coll "domains"]
+  (factory coll "clojure"
+           :name       "clojure.org"
+           :created-at (-> 2 days ago)
+           :embedded   [(embedded-doc "pages" "http://clojure.org/lisp")
+                        (embedded-doc "pages" "http://clojure.org/jvm_hosted")
+                        (embedded-doc "pages" "http://clojure.org/runtime_polymorphism")])
 
-(factory "domains" "elixir"
-         :name     "elixir-lang.org"
-         :created-at (fn [] (now))
-         :topics     (fn [] ["programming" "erlang" "beam" "ruby"])
-         :related    {
-                      :terms (fn [] ["erlang" "python" "ruby"])
-                      })
+  (factory coll "elixir"
+           :_id        (memoized-oid coll "elixir")
+           :name       "elixir-lang.org"
+           :created-at (fn [] (now))
+           :topics     (fn [] ["programming" "erlang" "beam" "ruby"])
+           :related    {
+                        :terms (fn [] ["erlang" "python" "ruby"])
+                        }))
 
-(factory "pages" "http://clojure.org/rationale"
-         :name "/rationale"
-         :domain-id (parent-id "domains" "clojure"))
-(factory "pages" "http://clojure.org/jvm_hosted"
-         :name "/jvm_hosted")
-(factory "pages" "http://clojure.org/runtime_polymorphism"
-         :name "/runtime_polymorphism")
-(factory "pages" "http://clojure.org/lisp"
-         :name "/lisp")
+(let [coll "pages"]
+  (factory coll "http://clojure.org/rationale"
+           :name "/rationale"
+           :domain-id (parent-id "domains" "clojure"))
+  (factory coll "http://clojure.org/jvm_hosted"
+           :name "/jvm_hosted")
+  (factory coll "http://clojure.org/runtime_polymorphism"
+           :name "/runtime_polymorphism")
+  (factory coll "http://clojure.org/lisp"
+           :name "/lisp")
+  (factory coll "http://elixir-lang.org/getting_started"
+           :name "/getting_started/1.html"
+           :domain-id (memoized-oid "domains" "elixir")))
+
 
 (deftest test-building-documents-from-a-factory-case-1
   (let [t   (-> 2 weeks ago)
@@ -73,6 +80,7 @@
 (deftest test-building-documents-from-a-factory-case-4
   (let [doc (build "domains" "elixir")]
     (is (:_id doc))
+    (is (= (:_id doc) (memoized-oid "domains" "elixir")))
     (is (instance? DateTime (:created-at doc)))
     (is (= ["erlang" "python" "ruby"] (get-in doc [:related :terms])))
     (is (= "elixir-lang.org" (:name doc)))
@@ -82,6 +90,9 @@
   (let [doc (build "pages" "http://clojure.org/rationale")]
     (is (:domain-id doc))))
 
+(deftest test-building-child-documents-that-use-memoized-oids-for-parents
+  (let [doc (build "pages" "http://elixir-lang.org/getting_started")]
+    (is (= (:domain-id doc) (memoized-oid "domains" "elixir")))))
 
 
 (deftest test-seeding-documents-using-a-factory-case-1
@@ -128,3 +139,17 @@
   (seed-all "pages")
   (is (>= (mc/count "domains") 1))
   (is (>= (mc/count "pages") 4)))
+
+
+
+(deftest test-named-memoized-object-ids
+  (let [oid1 (memoized-oid "domains" "clojure.org")
+        oid2 (memoized-oid "domains" "python.org")]
+    (is (= oid1 (memoized-oid "domains" "clojure.org")))
+    (is (= oid1 (memoized-oid "domains" "clojure.org")))
+    (is (= oid1 (memoized-oid "domains" "clojure.org")))
+    (is (= oid1 (memoized-oid "domains" "clojure.org")))
+    (is (not (= oid1 oid2)))
+    (is (= oid2 (memoized-oid "domains" "python.org")))
+    (is (= oid2 (memoized-oid "domains" "python.org")))
+    (is (= oid2 (memoized-oid "domains" "python.org")))))

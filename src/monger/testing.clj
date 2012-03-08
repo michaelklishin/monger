@@ -87,7 +87,8 @@
       (f))))
 
 (defn build
-  "Generates a new document and returns it"
+  "Generates a new document and returns it.
+   Unless _id field is defined by the factory, it is generated."
   [f-group f-name & { :as overrides }]
   (let [d          (@defaults (name f-group))
         attributes (get-in @factories [(name f-group) (name f-name)])
@@ -95,7 +96,8 @@
     (expand-all-with merged expand-for-building)))
 
 (defn seed
-  "Generates and inserts a new document, then returns it"
+  "Generates and inserts a new document, then returns it.
+   Unless _id field is defined by the factory, it is generated."
   [f-group f-name & { :as overrides }]
   (io!
     (let [d          (@defaults (name f-group))
@@ -133,3 +135,9 @@
   "Returns last object id of a document inserted using given factory"
   [f-group f-name]
   (get-in @last-oids [(name f-group) (name f-name)]))
+
+
+(def ^{ :doc "Returns a new object id. Generates it if needed, otherwise returns a cached version.
+  Useful for defining referenced associations between fixture documents." }
+  memoized-oid (memoize (fn [f-group f-name]
+                          (ObjectId.))))
