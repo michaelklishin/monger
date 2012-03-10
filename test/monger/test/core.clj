@@ -6,6 +6,7 @@
   (:use [clojure.test]
         [monger.core :only [server-address mongo-options]]))
 
+(println (str "Using Clojure version " *clojure-version*))
 (helper/connect!)
 
 (deftest connect-to-mongo-with-default-host-and-port

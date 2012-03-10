@@ -45,6 +45,10 @@ Here is what it feels like:
 (seed  "pages" "http://clojure.org/rationale")
 ```
 
+### Leiningen 2
+
+Monger now uses [Leiningen 2](https://github.com/technomancy/leiningen/wiki/Upgrading).
+
 
 ### monger.core/set-connection!
 
