@@ -10,19 +10,19 @@
   :mailing-list {:name "clojure-monger",
                  :archive "https://groups.google.com/group/clojure-monger",
                  :post "clojure-monger@googlegroups.com"}
-  :profiles {:all {:dependencies [[org.mongodb/mongo-java-driver "2.7.3"]
-                                  [com.novemberain/validateur "1.0.0"]]},
-             :1.4 {:resource-paths ["test/resources"],
-                   :dependencies [[org.clojure/clojure "1.4.0-beta4"]
-                                  [org.clojure/data.json "0.1.2" :exclusions [org.clojure/clojure]]
-                                  [clj-time "0.3.6"              :exclusions [org.clojure/clojure]]
-                                  [codox "0.3.4"                 :exclusions [org.clojure/clojure]]
-                                  [org.clojure/tools.cli "0.2.1" :exclusions [org.clojure/clojure]]]},
+  :profiles {:1.4 {:resource-paths ["test/resources"],
+                   :dependencies [[org.clojure/clojure "1.4.0-beta4"]]},
              :dev {:resource-paths ["test/resources"],
-                   :dependencies  [[org.clojure/data.json "0.1.2" :exclusions [org.clojure/clojure]]
+                   :dependencies  [[org.mongodb/mongo-java-driver "2.7.3"]
+                                   [com.novemberain/validateur "1.0.0"]
+                                   [clj-time "0.3.6"              :exclusions [org.clojure/clojure]]
+                                   [codox "0.3.4"                 :exclusions [org.clojure/clojure]]
+                                   [org.clojure/tools.cli "0.2.1" :exclusions [org.clojure/clojure]]
+                                   [org.clojure/data.json "0.1.2" :exclusions [org.clojure/clojure]]
                                    [clj-time "0.3.6"              :exclusions [org.clojure/clojure]]
                                    [codox "0.3.4"                 :exclusions [org.clojure/clojure]]
                                    [org.clojure/tools.cli "0.2.1" :exclusions [org.clojure/clojure]]]}}
+  :aliases { "all" ["with-profile" "dev:dev,1.4"] }
   :repositories {"sonatype" {:url "http://oss.sonatype.org/content/repositories/releases",
                              :snapshots false,
                              :releases {:checksum :fail, :update :always}}}
