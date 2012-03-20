@@ -11,7 +11,7 @@
                  :archive "https://groups.google.com/group/clojure-monger",
                  :post "clojure-monger@googlegroups.com"}
   :profiles {:1.4 {:resource-paths ["test/resources"],
-                   :dependencies [[org.clojure/clojure "1.4.0-beta4"]]},
+                   :dependencies [[org.clojure/clojure "1.4.0-beta5"]]},
              :dev {:resource-paths ["test/resources"],
                    :dependencies  [[org.mongodb/mongo-java-driver "2.7.3"]
                                    [com.novemberain/validateur "1.0.0"]
