@@ -15,13 +15,14 @@
              :dev {:resource-paths ["test/resources"],
                    :dependencies  [[org.mongodb/mongo-java-driver "2.7.3"]
                                    [com.novemberain/validateur "1.0.0"]
-                                   [clj-time "0.3.6"              :exclusions [org.clojure/clojure]]
-                                   [codox "0.3.4"                 :exclusions [org.clojure/clojure]]
-                                   [org.clojure/tools.cli "0.2.1" :exclusions [org.clojure/clojure]]
-                                   [org.clojure/data.json "0.1.2" :exclusions [org.clojure/clojure]]
-                                   [clj-time "0.3.6"              :exclusions [org.clojure/clojure]]
-                                   [codox "0.3.4"                 :exclusions [org.clojure/clojure]]
-                                   [org.clojure/tools.cli "0.2.1" :exclusions [org.clojure/clojure]]]}}
+                                   [clj-time "0.3.6"               :exclusions [org.clojure/clojure]]
+                                   [codox "0.3.4"                  :exclusions [org.clojure/clojure]]
+                                   [org.clojure/tools.cli "0.2.1"  :exclusions [org.clojure/clojure]]
+                                   [org.clojure/data.json "0.1.2"  :exclusions [org.clojure/clojure]]
+                                   [clj-time "0.3.6"               :exclusions [org.clojure/clojure]]
+                                   [org.clojure/core.cache "0.5.0" :exclusions [org.clojure/clojure]]
+                                   [codox "0.3.4"                  :exclusions [org.clojure/clojure]]
+                                   [org.clojure/tools.cli "0.2.1"  :exclusions [org.clojure/clojure]]]}}
   :aliases { "all" ["with-profile" "dev:dev,1.4"] }
   :repositories {"sonatype" {:url "http://oss.sonatype.org/content/repositories/releases",
                              :snapshots false,
