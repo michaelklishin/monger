@@ -44,6 +44,17 @@
     (mgcol/update-by-id collection doc-id { :language "Erlang" })
     (is (= (modified-doc (mgcol/find-by-id collection doc-id))))))
 
+(deftest update-nested-document-fields-without-upsert-using-update-by-id
+  (let [collection "libraries"
+        doc-id       (ObjectId.)
+        date         (Date.)
+        doc          { :created-at date :data-store "MongoDB" :language { :primary "Clojure" } :_id doc-id }
+        modified-doc { :created-at date :data-store "MongoDB" :language { :primary "Erlang"  } :_id doc-id }]
+    (mgcol/insert collection doc)
+    (is (= (doc (mgcol/find-by-id collection doc-id))))
+    (mgcol/update-by-id collection doc-id { $set { "language.primary" "Erlang" }})
+    (is (= (modified-doc (mgcol/find-by-id collection doc-id))))))
+
 
 (deftest update-multiple-documents
   (let [collection "libraries"]
