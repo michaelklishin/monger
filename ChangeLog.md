@@ -1,5 +1,12 @@
 ## Changes between 1.0.0-beta2 and 1.0.0-beta3
 
+### Support serialization of Clojure ratios
+
+Documents that contain Clojure ratios (for example, `26/5`) now can be converted to DBObject instances
+and thus stored. On load, ratios will be presented as doubles: this way we ensure interoperability with
+other languages and clients.
+
+
 ### Factories/fixtures DSL
 
 When working with even moderately complex data sets, fixture data quickly becomes difficult to
