@@ -55,6 +55,13 @@
         result     (mgcol/insert "people" doc)]
     (is (= id (monger.util/get-id doc)))))
 
+(deftest insert-a-document-with-clojure-ratio-in-it
+  (let [collection "widgets"
+        id         (ObjectId.)
+        doc        { :ratio 11/2 "_id" id }
+        result     (mgcol/insert "widgets" doc)]
+    (is (= 5.5 (:ratio (mgcol/find-map-by-id collection id))))))
+
 
 
 ;;

@@ -26,6 +26,11 @@
         output (cnv/to-db-object input)]
     (is (= input output))))
 
+(deftest convert-rationale-to-dbobject
+  (let [input  11/2
+        output (cnv/to-db-object input)]
+    (is (= 5.5 output))))
+
 (deftest convert-string-to-dbobject
   (let [input  "MongoDB"
         output (cnv/to-db-object input)]
