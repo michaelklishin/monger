@@ -1,5 +1,11 @@
 ## Changes between 1.0.0-beta2 and 1.0.0-beta3
 
+### Index Options support for monger.collection/ensure-index and /create-index
+
+`monger.collection/ensure-index` and `/create-index` now accept index options as additional argument.
+**Breaking change**: 3-arity versions of those functions now become 4-arity versions.
+
+
 ### Support serialization of Clojure ratios
 
 Documents that contain Clojure ratios (for example, `26/5`) now can be converted to DBObject instances

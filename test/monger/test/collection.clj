@@ -75,7 +75,7 @@
 ;; indexes
 ;;
 
-(deftest index-operations
+(deftest ^{:indexing true} index-operations
   (let [collection "libraries"]
     (mgcol/drop-indexes collection)
     (is (= "_id_"
@@ -86,10 +86,11 @@
            (:name (second (mgcol/indexes-on collection)))))
     (mgcol/drop-index collection "language_1")
     (is (nil? (second (mgcol/indexes-on collection))))
-    (mgcol/ensure-index collection { "language" 1 })
+    (mgcol/ensure-index collection { "language" 1 } {:unique true})
     (is (= "language_1"
            (:name (second (mgcol/indexes-on collection)))))
-    (mgcol/ensure-index collection { "language" 1 })))
+    (mgcol/ensure-index collection { "language" 1 })
+    (mgcol/ensure-index collection { "language" 1 } { :unique true })))
 
 
 ;;

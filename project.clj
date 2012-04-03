@@ -5,7 +5,11 @@
   :dependencies [[org.clojure/clojure "1.3.0"]
                  [org.mongodb/mongo-java-driver "2.7.3"]
                  [com.novemberain/validateur "1.0.0"]]
-  :test-selectors {:focus (fn [v] (:focus v))}
+  :test-selectors {:default (complement :performance)
+                   :focus :focus
+                   :indexing :indexing
+                   :performance :performance
+                   :all (constantly true)}
   :codox {:exclude [monger.internal.pagination]}
   :mailing-list {:name "clojure-monger",
                  :archive "https://groups.google.com/group/clojure-monger",

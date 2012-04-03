@@ -388,16 +388,20 @@
 
   EXAMPLES
 
-      ;; Will create an index on \"language\" field
+      ;; Will create an index on the \"language\" field
       (monger.collection/create-index collection { \"language\" 1 })
+      (monger.collection/create-index collection { \"language\" 1 } { :unique true :name \"unique_language\" })
 
   "
   ([^String collection ^Map keys]
      (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
        (.createIndex coll (to-db-object keys))))
-  ([^DB db ^String collection ^Map keys]
+  ([^String collection ^Map keys options]
+     (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
+       (.createIndex coll (to-db-object keys) (to-db-object options))))
+  ([^DB db ^String collection ^Map keys ^Map options]
      (let [^DBCollection coll (.getCollection db collection)]
-       (.createIndex coll (to-db-object keys)))))
+       (.createIndex coll (to-db-object keys) (to-db-object options)))))
 
 
 ;;
@@ -416,9 +420,12 @@
   ([^String collection, ^Map keys]
      (let [coll ^DBCollection (.getCollection monger.core/*mongodb-database* collection)]
        (.ensureIndex ^DBCollection coll ^DBObject (to-db-object keys))))
-  ([^String collection, ^Map keys, ^String name]
+  ([^String collection, ^Map keys ^Map options]
      (let [coll ^DBCollection (.getCollection monger.core/*mongodb-database* collection)]
-       (.ensureIndex coll ^DBObject (to-db-object keys) ^String name))))
+       (.ensureIndex ^DBCollection coll ^DBObject (to-db-object keys) (to-db-object options))))
+  ([^String collection ^Map keys ^String name ^Boolean unique?]
+     (let [coll ^DBCollection (.getCollection monger.core/*mongodb-database* collection)]
+       (.ensureIndex coll ^DBObject (to-db-object keys) ^String name unique?))))
 
 
 ;;
