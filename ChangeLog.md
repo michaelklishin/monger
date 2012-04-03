@@ -1,5 +1,10 @@
 ## Changes between 1.0.0-beta2 and 1.0.0-beta3
 
+### Validateur 1.1.0-beta1
+
+[Validateur](https://github.com/michaelklishin/validateur) dependency has been upgraded to 1.1.0-beta1.
+
+
 ### Index Options support for monger.collection/ensure-index and /create-index
 
 `monger.collection/ensure-index` and `/create-index` now accept index options as additional argument.
