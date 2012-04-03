@@ -90,7 +90,8 @@
     (is (= "language_1"
            (:name (second (mgcol/indexes-on collection)))))
     (mgcol/ensure-index collection { "language" 1 })
-    (mgcol/ensure-index collection { "language" 1 } { :unique true })))
+    (mgcol/ensure-index collection { "language" 1 } { :unique true })
+    (mgcol/drop-indexes collection)))
 
 
 ;;
