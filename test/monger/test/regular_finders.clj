@@ -54,21 +54,31 @@
   (let [collection "docs"
         doc-id     (monger.util/random-uuid)
         doc        { :data-store "MongoDB", :language "Clojure", :_id doc-id }
-        fields     [:language]
         _          (mgcol/insert collection doc)
-        loaded     (mgcol/find-one collection { :language "Clojure" } fields)]
+        loaded     (mgcol/find-one collection { :language "Clojure" } [:language])]
     (is (nil? (.get ^DBObject loaded "data-store")))
     (is (= doc-id (monger.util/get-id loaded)))
     (is (= "Clojure" (.get ^DBObject loaded "language")))))
 
 
+(deftest find-one-partial-document-using-field-negation-when-collection-has-matches
+  (let [collection       "docs"
+        doc-id           (monger.util/random-uuid)
+        doc              { :data-store "MongoDB", :language "Clojure", :_id doc-id }
+        _                (mgcol/insert collection doc)
+        ^DBObject loaded (mgcol/find-one collection { :language "Clojure" } {:data-store 0 :_id 0})]
+    (is (nil? (.get loaded "data-store")))
+    (is (nil? (.get loaded "_id")))
+    (is (nil? (monger.util/get-id loaded)))
+    (is (= "Clojure" (.get loaded "language")))))
+
+
 (deftest find-one-partial-document-as-map-when-collection-has-matches
   (let [collection "docs"
         doc-id     (monger.util/random-uuid)
-        doc        { :data-store "MongoDB", :language "Clojure", :_id doc-id }
-        fields     [:data-store]]
+        doc        { :data-store "MongoDB", :language "Clojure", :_id doc-id }]
     (mgcol/insert collection doc)
-    (is (= { :data-store "MongoDB", :_id doc-id } (mgcol/find-one-as-map collection { :language "Clojure" } fields)))))
+    (is (= { :data-store "MongoDB", :_id doc-id } (mgcol/find-one-as-map collection { :language "Clojure" } [:data-store])))))
 
 
 (deftest find-one-partial-document-as-map-when-collection-has-matches-with-keywordize

@@ -1,5 +1,19 @@
 ## Changes between 1.0.0-beta2 and 1.0.0-beta3
 
+### Support for field negation in queries
+
+Previously to load only a subset of document fields with Monger, one had to specify them all. Starting
+with 1.0.0-beta3, Monger supports [field negation](http://www.mongodb.org/display/DOCS/Retrieving+a+Subset+of+Fields#RetrievingaSubsetofFields-FieldNegation) feature of MongoDB: it is possible to exclude
+certain fields instead.
+
+To do so, pass a map as field selector, with fields that should be omitted set to 0:
+
+``` clojure
+;; will retrieve all fields except body
+(monger.collection/find-one-map "documents" {:author "John"} {:body 0})
+```
+
+
 ### Validateur 1.1.0-beta1
 
 [Validateur](https://github.com/michaelklishin/validateur) dependency has been upgraded to 1.1.0-beta1.
