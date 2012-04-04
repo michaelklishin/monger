@@ -31,7 +31,7 @@
 ;;
 ;; Existing query fields:
 ;;
-;; :fields - selects which fields are returned. The default is all fields. _id is always returned.
+;; :fields - selects which fields are returned. The default is all fields. _id is included by default.
 ;; :sort - adds a sort to the query.
 ;; :fields - set of fields to retrieve during query execution
 ;; :skip - Skips the first N results.
