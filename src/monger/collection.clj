@@ -21,10 +21,6 @@
 ;; Implementation
 ;;
 
-(defn- fields-to-db-object
-  [^List fields]
-  (zipmap fields (repeat 1)))
-
 (definline check-not-nil!
   [ref ^String message]
   `(when (nil? ~ref)
@@ -104,13 +100,13 @@
   ([^String collection ^Map ref]
      (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
        (.find ^DBCollection coll ^DBObject (to-db-object ref))))
-  ([^String collection ^Map ref ^List fields]
+  ([^String collection ^Map ref fields]
      (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)
-           map-of-fields (fields-to-db-object fields)]
+           map-of-fields (as-field-selector fields)]
        (.find ^DBCollection coll ^DBObject (to-db-object ref) ^DBObject (to-db-object map-of-fields))))
-  ([^DB db ^String collection ^Map ref ^List fields]
+  ([^DB db ^String collection ^Map ref fields]
      (let [^DBCollection coll (.getCollection db collection)
-           map-of-fields (fields-to-db-object fields)]
+           map-of-fields (as-field-selector fields)]
        (.find ^DBCollection coll ^DBObject (to-db-object ref) ^DBObject (to-db-object map-of-fields)))))
 
 (defn ^ISeq find-maps
@@ -122,9 +118,9 @@
      (map (fn [x] (from-db-object x true)) (find collection)))
   ([^String collection ^Map ref]
      (map (fn [x] (from-db-object x true)) (find collection ref)))
-  ([^String collection ^Map ref ^List fields]
+  ([^String collection ^Map ref fields]
      (map (fn [x] (from-db-object x true)) (find collection ref fields)))
-  ([^DB db ^String collection ^Map ref ^List fields]
+  ([^DB db ^String collection ^Map ref fields]
      (map (fn [x] (from-db-object x true)) (find db collection ref fields))))
 
 (defn ^ISeq find-seq
@@ -133,9 +129,9 @@
      (seq (find collection)))
   ([^String collection ^Map ref]
      (seq (find collection ref)))
-  ([^String collection ^Map ref ^List fields]
+  ([^String collection ^Map ref fields]
      (seq (find collection ref fields)))
-  ([^DB db ^String collection ^Map ref ^List fields]
+  ([^DB db ^String collection ^Map ref fields]
      (seq (find db collection ref fields))))
 
 ;;
@@ -157,22 +153,22 @@
   ([^String collection ^Map ref]
      (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
        (.findOne ^DBCollection coll ^DBObject (to-db-object ref))))
-  ([^String collection ^Map ref ^List fields]
+  ([^String collection ^Map ref fields]
      (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)
-           map-of-fields (fields-to-db-object fields)]
+           map-of-fields (as-field-selector fields)]
        (.findOne ^DBCollection coll ^DBObject (to-db-object ref) ^DBObject (to-db-object map-of-fields))))
-  ([^DB db ^String collection ^Map ref ^List fields]
+  ([^DB db ^String collection ^Map ref fields]
      (let [^DBCollection coll (.getCollection db collection)
-           map-of-fields (fields-to-db-object fields)]
+           map-of-fields (as-field-selector fields)]
        (.findOne ^DBCollection coll ^DBObject (to-db-object ref) ^DBObject (to-db-object map-of-fields)))))
 
 (defn ^IPersistentMap find-one-as-map
   "Returns a single object converted to Map from this collection matching the query."
   ([^String collection ^Map ref]
      (from-db-object ^DBObject (find-one collection ref) true))
-  ([^String collection ^Map ref ^List fields]
+  ([^String collection ^Map ref fields]
      (from-db-object ^DBObject (find-one collection ref fields) true))
-  ([^String collection ^Map ref ^List fields keywordize]
+  ([^String collection ^Map ref fields keywordize]
      (from-db-object ^DBObject (find-one collection ref fields) keywordize)))
 
 
@@ -195,10 +191,10 @@
   ([^String collection id]
      (check-not-nil! id "id must not be nil")
      (find-one collection { :_id id }))
-  ([^String collection id ^List fields]
+  ([^String collection id fields]
      (check-not-nil! id "id must not be nil")
      (find-one collection { :_id id } fields))
-  ([^DB db ^String collection id ^List fields]
+  ([^DB db ^String collection id fields]
      (check-not-nil! id "id must not be nil")
      (find-one db collection { :_id id } fields)))
 
@@ -207,10 +203,10 @@
   ([^String collection id]
      (check-not-nil! id "id must not be nil")
      (from-db-object ^DBObject (find-one-as-map collection { :_id id }) true))
-  ([^String collection id ^List fields]
+  ([^String collection id fields]
      (check-not-nil! id "id must not be nil")  
      (from-db-object ^DBObject (find-one-as-map collection { :_id id } fields) true))
-  ([^String collection id ^List fields keywordize]
+  ([^String collection id fields keywordize]
      (check-not-nil! id "id must not be nil")
      (from-db-object ^DBObject (find-one-as-map collection { :_id id } fields) keywordize)))
 
