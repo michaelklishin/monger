@@ -22,7 +22,7 @@
 ;; Defaults
 ;;
 
-(def ^:dynamic ^String *mongodb-host* "localhost")
+(def ^:dynamic ^String *mongodb-host* "127.0.0.1")
 (def ^:dynamic ^long   *mongodb-port* 27017)
 
 (declare ^:dynamic ^Mongo        *mongodb-connection*)
