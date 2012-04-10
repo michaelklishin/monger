@@ -189,11 +189,12 @@
     ;;
     ;; First we set connection, then DB, then authentcate
     (set-connection! conn)
-    (when db
-      (set-db! db))
     (when (and user pwd)
       (when-not (authenticate (.getName db) user pwd)
         (throw (IllegalArgumentException. "Could not authenticate. Either database name or credentials are invalid."))))
+    ;; only do this *after* we authenticated because set-db! will try to set up a default GridFS instance. MK.
+    (when db
+      (set-db! db))
     conn))
 
 

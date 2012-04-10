@@ -8,6 +8,7 @@
   :test-selectors {:default (complement :performance)
                    :focus :focus
                    :indexing :indexing
+                   :external :external
                    :performance :performance
                    :all (constantly true)}
   :codox {:exclude [monger.internal.pagination]}

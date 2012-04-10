@@ -35,6 +35,14 @@
   ;; reconnect using regular host
   (helper/connect!))
 
+(if-let [uri (System/getenv "MONGOHQ_URL")]
+  (deftest ^{:external true} connect-to-mongo-via-uri-with-valid-credentials
+    (let [connection (monger.core/connect-via-uri! uri)]
+      (is (= (-> connection .getAddress (.sameHost "127.0.0.1")))))
+    ;; reconnect using regular host
+    (helper/connect!)))
+
+
 (deftest connect-to-mongo-via-uri-with-invalid-credentials
   (is (thrown? IllegalArgumentException
                (monger.core/connect-via-uri! "mongodb://clojurewerkz/monger!:ahsidaysd78jahsdi8@127.0.0.1/monger-test4"))))
