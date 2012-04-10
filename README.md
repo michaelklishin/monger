@@ -15,11 +15,12 @@ wanted a client that will
  * Be well documented.
  * Be well tested.
  * Be maintained, do not carry technical debt from 2009 forever.
+ * Target Clojure 1.3.0 and later from the ground up.
  * Integrate with libraries like clojure.data.json and Joda Time.
  * Provide support for unit testing: factories/fixtures DSL, collection cleaner functions, clojure.test integration and so on.
- * Integrate usage of JavaScript files and ClojureScript (as soon as the compiler gets artifact it is possible to depend on for easy embedding).
+ * Support URI connections to be friendly to Heroku and other PaaS providers.
  * Learn from other clients like the Java and Ruby ones.
- * Target Clojure 1.3.0 and later from the ground up.
+ * Integrate usage of JavaScript files and ClojureScript (as soon as the compiler gets artifact it is possible to depend on for easy embedding).
 
 
 ## Documentation & Examples
@@ -45,7 +46,7 @@ together with documentation guides and dedicated website.
 
 With Leiningen:
 
-    [com.novemberain/monger "1.0.0-beta3"]
+    [com.novemberain/monger "1.0.0-beta4"]
 
 
 With Maven:
@@ -53,7 +54,7 @@ With Maven:
     <dependency>
       <groupId>com.novemberain</groupId>
       <artifactId>monger</artifactId>
-      <version>1.0.0-beta3</version>
+      <version>1.0.0-beta4</version>
     </dependency>
 
 

@@ -1,3 +1,9 @@
+## Changes between 1.0.0-beta4 and 1.0.0-beta5
+
+No changes yet.
+
+
+
 ## Changes between 1.0.0-beta3 and 1.0.0-beta4
 
 ### Support for URI connections (and thus PaaS provides like Heroku)
