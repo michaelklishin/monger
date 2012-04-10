@@ -14,7 +14,7 @@
   monger.core
   (:refer-clojure :exclude [count])
   (:use [monger.conversion])
-  (:import [com.mongodb Mongo DB WriteConcern DBObject DBCursor CommandResult Bytes MongoOptions ServerAddress MapReduceOutput]
+  (:import [com.mongodb Mongo MongoURI DB WriteConcern DBObject DBCursor CommandResult Bytes MongoOptions ServerAddress MapReduceOutput]
            [com.mongodb.gridfs GridFS]
            [java.util Map]))
 
@@ -30,6 +30,7 @@
 (def     ^:dynamic ^WriteConcern *mongodb-write-concern* WriteConcern/SAFE)
 
 (declare ^:dynamic ^GridFS       *mongodb-gridfs*)
+
 
 ;;
 ;; API
@@ -51,9 +52,8 @@
      (Mongo.))
   ([^ServerAddress server-address ^MongoOptions options]
      (Mongo. server-address options))
-  ([{ :keys [host port] :or { host *mongodb-host*, port *mongodb-port* }}]
+  ([{ :keys [host port uri] :or { host *mongodb-host* port *mongodb-port* }}]
      (Mongo. ^String host ^Long port)))
-
 
 
 (defn ^DB get-db-names
@@ -105,7 +105,7 @@
 (defn server-address
   ([^String hostname]
      (ServerAddress. hostname))
-  ([^String hostname ^long port]
+  ([^String hostname ^Long port]
      (ServerAddress. hostname port)))
 
 
@@ -171,6 +171,30 @@
   Unlike the official Java driver, Monger uses WriteConcern/SAFE by default. We think defaults should be safe first
   and WebScale fast second."
   (def ^:dynamic *mongodb-write-concern* wc))
+
+
+(defn connect-via-uri!
+  "Connects to MongoDB using a URI, sets up default connection and database. Commonly used for PaaS-based applications,
+   for example, running on Heroku. If username and password are provided, performs authentication."
+  [{ :keys [uri] }]
+  (let [uri  (MongoURI. uri)
+        ;; yes, you are not hallucinating. A class named MongoURI has a method called connectDB.
+        ;; I call it "college OOP". Or maybe "don't give a shit" OOP.
+        db   (.connectDB uri)
+        conn (.getMongo db)
+        user (.getUsername uri)
+        pwd  (.getPassword uri)]
+    ;; I hope that whoever wrote the MongoDB Java driver connection/authentication parts
+    ;; wasn't sober while at it. MK.
+    ;;
+    ;; First we set connection, then DB, then authentcate
+    (set-connection! conn)
+    (when db
+      (set-db! db))
+    (when (and user pwd)
+      (authenticate db user pwd))
+    conn))
+
 
 (defn ^CommandResult command
   "Runs a database command (please check MongoDB documentation for the complete list of commands). Some common commands
