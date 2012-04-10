@@ -63,6 +63,17 @@
     (is (= 5.5 (:ratio (mgcol/find-map-by-id collection id))))))
 
 
+(defrecord Metrics
+    [rps eps])
+
+(deftest ^:focus insert-a-document-with-clojure-record-in-it
+  (let [collection "widgets"
+        id         (ObjectId.)
+        doc        { :record (Metrics. 10 20) "_id" id }
+        result     (mgcol/insert "widgets" doc)]
+    (is (= {:rps 10 :eps 20} (:record (mgcol/find-map-by-id collection id))))))
+
+
 
 ;;
 ;; insert-batch
