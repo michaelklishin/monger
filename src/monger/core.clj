@@ -176,7 +176,7 @@
 (defn connect-via-uri!
   "Connects to MongoDB using a URI, sets up default connection and database. Commonly used for PaaS-based applications,
    for example, running on Heroku. If username and password are provided, performs authentication."
-  [{ :keys [uri] }]
+  [uri]
   (let [uri  (MongoURI. uri)
         ;; yes, you are not hallucinating. A class named MongoURI has a method called connectDB.
         ;; I call it "college OOP". Or maybe "don't give a shit" OOP.
@@ -192,7 +192,8 @@
     (when db
       (set-db! db))
     (when (and user pwd)
-      (authenticate db user pwd))
+      (when-not (authenticate (.getName db) user pwd)
+        (throw (IllegalArgumentException. "Could not authenticate. Either database name or credentials are invalid."))))
     conn))
 
 
