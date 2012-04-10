@@ -60,10 +60,10 @@
     (mgcol/remove monger.core/*mongodb-database* collection {})
     (is (mgres/ok? (mgcol/insert-batch collection batch)))
     (mgcol/map-reduce collection mapper reducer "merged_mr_outputs" MapReduceCommand$OutputType/MERGE {})
-    (is (mgres/ok? (mgcol/insert       collection { :state "OR" :price 17.95 :quantity 4 })))
-    (let [output  (mgcol/map-reduce collection mapper reducer "merged_mr_outputs" MapReduceCommand$OutputType/MERGE {})]
+    (is (mgres/ok? (mgcol/insert collection { :state "OR" :price 17.95 :quantity 4 })))
+    (let [^MapReduceOutput output (mgcol/map-reduce collection mapper reducer "merged_mr_outputs" MapReduceCommand$OutputType/MERGE {})]
       (mgres/ok? output)
-      (is (= 4 (monger.core/count (.results ^MapReduceOutput output))))
+      (is (= 4 (monger.core/count output)))
       (is (= ["CA" "IL" "NY" "OR"]
              (map :_id (mgcol/find-maps "merged_mr_outputs"))))
       (.drop ^MapReduceOutput output))))

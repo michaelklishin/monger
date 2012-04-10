@@ -14,7 +14,7 @@
   monger.core
   (:refer-clojure :exclude [count])
   (:use [monger.conversion])
-  (:import [com.mongodb Mongo DB WriteConcern DBObject DBCursor CommandResult Bytes MongoOptions ServerAddress]
+  (:import [com.mongodb Mongo DB WriteConcern DBObject DBCursor CommandResult Bytes MongoOptions ServerAddress MapReduceOutput]
            [com.mongodb.gridfs GridFS]
            [java.util Map]))
 
@@ -237,7 +237,11 @@
 (extend-protocol Countable
   DBCursor
   (count [^DBCursor this]
-    (.count this)))
+    (.count this))
+
+  MapReduceOutput
+  (count [^MapReduceOutput this]
+    (.count (.results this))))
 
 (defn ^DBObject get-last-error
   "Returns the the error (if there is one) from the previous operation on this connection.
