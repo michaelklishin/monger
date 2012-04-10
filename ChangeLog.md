@@ -1,6 +1,28 @@
 ## Changes between 1.0.0-beta3 and 1.0.0-beta4
 
-No changes yet.
+### Support for URI connections (and thus PaaS provides like Heroku)
+
+`monger.core/connect-via-uri!` is a new function that combines `monger.core/connect!`, `monger.core/set-db!` and `monger.core/authenticate`
+and works with string URIs like `mongodb://userb71148a:0da0a696f23a4ce1ecf6d11382633eb2049d728e@cluster1.mongohost.com:27034/app81766662`.
+
+It can be used to connect with or without authentication, for example:
+
+``` clojure
+;; connect without authentication
+(monger.core/connect-via-uri! "mongodb://127.0.0.1/monger-test4")
+
+;; connect with authentication
+(monger.core/connect-via-uri! "mongodb://clojurewerkz/monger!:monger!@127.0.0.1/monger-test4")
+
+;; connect using connection URI stored in an env variable, in this case, MONGOHQ_URL
+(monger.core/connect-via-uri! (System/genenv "MONGOHQ_URL"))
+```
+
+It is also possible to pass connection options and query parameters:
+
+``` clojure
+(monger.core/connect-via-uri! "mongodb://localhost/test?maxPoolSize=128&waitQueueMultiple=5;waitQueueTimeoutMS=150;socketTimeoutMS=5500&autoConnectRetry=true;safe=false&w=1;wtimeout=2500;fsync=true")
+```
 
 
 ## Changes between 1.0.0-beta2 and 1.0.0-beta3
