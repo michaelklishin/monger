@@ -1,9 +1,9 @@
-(ns monger.test.core
+(ns monger.test.core-test
   (:require [monger core collection util result]
             [monger.test.helper :as helper]            
             [monger.collection :as mgcol])
   (:import [com.mongodb Mongo DB WriteConcern MongoOptions ServerAddress])
-  (:use [clojure.test]
+  (:use clojure.test
         [monger.core :only [server-address mongo-options]]))
 
 (println (str "Using Clojure version " *clojure-version*))

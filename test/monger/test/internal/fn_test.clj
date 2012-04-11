@@ -1,6 +1,6 @@
-(ns monger.test.internal.fn
-  (:use [clojure.test]
-        [monger.internal.fn]))
+(ns monger.test.internal.fn-test
+  (:use clojure.test
+        monger.internal.fn))
 
 
 (deftest test-expand-all

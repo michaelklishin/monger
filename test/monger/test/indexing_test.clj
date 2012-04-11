@@ -1,4 +1,4 @@
-(ns monger.test.map-reduce
+(ns monger.test.indexing-test
   (:import  org.bson.types.ObjectId
             java.util.Date)
   (:require [monger core util]

@@ -1,9 +1,9 @@
-(ns monger.test.stress
+(ns monger.test.stress-test
   (:import [com.mongodb Mongo DB DBCollection WriteResult DBObject WriteConcern DBCursor]
-           [java.util Date])
-  (:require [monger core]
+           java.util.Date)
+  (:require monger.core
             [monger.test.helper :as helper])
-  (:use     [clojure.test]))
+  (:use     clojure.test))
 
 
 ;;

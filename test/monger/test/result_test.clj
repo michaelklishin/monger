@@ -1,8 +1,8 @@
-(ns monger.test.result
-  (:import (com.mongodb BasicDBObject WriteResult WriteConcern) (java.util Date))
+(ns monger.test.result-test
+  (:import [com.mongodb BasicDBObject WriteResult WriteConcern] java.util.Date)
   (:require [monger core collection conversion]
             [monger.test.helper :as helper])
-  (:use [clojure.test]))
+  (:use clojure.test))
 
 (helper/connect!)
 

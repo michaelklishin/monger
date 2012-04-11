@@ -1,7 +1,7 @@
-(ns monger.test.util
-  (:import (com.mongodb DBObject))
+(ns monger.test.util-test
+  (:import com.mongodb.DBObject)
   (:require [monger util conversion])
-  (:use [clojure.test]))
+  (:use clojure.test))
 
 
 (deftest get-object-id

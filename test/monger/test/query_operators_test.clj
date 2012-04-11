@@ -1,9 +1,9 @@
 (set! *warn-on-reflection* true)
 
-(ns monger.test.query-operators
+(ns monger.test.query-operators-test
   (:import  [com.mongodb WriteResult WriteConcern DBCursor DBObject CommandResult$CommandFailure MapReduceOutput MapReduceCommand MapReduceCommand$OutputType]
-            [org.bson.types ObjectId]
-            [java.util Date])
+            org.bson.types.ObjectId
+            java.util.Date)
   (:require [monger core util]
             [clojure stacktrace]
             [monger.collection :as mgcol]

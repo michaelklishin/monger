@@ -1,17 +1,17 @@
 (set! *warn-on-reflection* true)
 
-(ns monger.test.inserting
+(ns monger.test.inserting-test
   (:import  [com.mongodb WriteResult WriteConcern DBCursor DBObject]
-            [org.bson.types ObjectId]
-            [java.util Date])
+            org.bson.types.ObjectId
+            java.util.Date)
   (:require [monger core util]
             [monger.collection :as mgcol]
             [monger.result     :as mgres]
             [monger.conversion :as mgcnv]
             [monger.test.helper :as helper])
-  (:use [clojure.test]
-        [monger.operators]
-        [monger.test.fixtures]))
+  (:use clojure.test
+        monger.operators
+        monger.test.fixtures))
 
 (helper/connect!)
 

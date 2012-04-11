@@ -1,8 +1,8 @@
-(ns monger.test.gridfs
+(ns monger.test.gridfs-test
   (:refer-clojure :exclude [count remove find])
-  (:use [clojure.test]
+  (:use clojure.test
         [monger.core :only [count]]
-        [monger.test.fixtures]
+        monger.test.fixtures
         [monger operators conversion]
         [monger.gridfs :only (store make-input-file)])
   (:require [monger.gridfs :as gridfs]

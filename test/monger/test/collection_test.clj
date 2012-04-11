@@ -1,6 +1,6 @@
 (set! *warn-on-reflection* true)
 
-(ns monger.test.collection
+(ns monger.test.collection-test
   (:import  [com.mongodb WriteResult WriteConcern DBCursor DBObject CommandResult$CommandFailure MapReduceOutput MapReduceCommand MapReduceCommand$OutputType]
             org.bson.types.ObjectId
             java.util.Date)

@@ -1,16 +1,16 @@
 (set! *warn-on-reflection* true)
 
-(ns monger.test.querying
+(ns monger.test.querying-test
   (:refer-clojure :exclude [select find sort])
   (:import  [com.mongodb WriteResult WriteConcern DBCursor DBObject CommandResult$CommandFailure ReadPreference]
-            [org.bson.types ObjectId]
-            [java.util Date])
+            org.bson.types.ObjectId
+            java.util.Date)
   (:require [monger core util]
-            [monger.collection :as mgcol]
-            [monger.result     :as mgres]
+            [monger.collection  :as mgcol]
+            [monger.result      :as mgres]
             [monger.test.helper :as helper])
-  (:use [clojure.test]
-        [monger.test.fixtures]
+  (:use clojure.test
+        monger.test.fixtures
         [monger conversion query operators joda-time]
         [clj-time.core :only [date-time]]))
 

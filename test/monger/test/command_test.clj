@@ -1,9 +1,9 @@
-(ns monger.test.command
+(ns monger.test.command-test
   (:require [monger core command]
             [monger.test.helper :as helper]
             [monger.collection :as mgcol])
   (:import (com.mongodb Mongo DB CommandResult))
-  (:use [clojure.test]))
+  (:use clojure.test))
 
 (helper/connect!)
 

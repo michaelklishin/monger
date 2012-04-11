@@ -1,10 +1,10 @@
-(ns monger.test.db
+(ns monger.test.db-test
   (:require [monger core db]
             [monger.test.helper :as helper]
             [monger.collection :as mgcol])
   (:import [com.mongodb Mongo DB]
-           [java.util Set])
-  (:use [clojure.test]))
+           java.util.Set)
+  (:use clojure.test))
 
 (helper/connect!)
 

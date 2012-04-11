@@ -1,4 +1,4 @@
-(ns monger.test.authentication
+(ns monger.test.authentication-test
   (:require [monger core util db]
             [monger.test.helper :as helper])
   (:use [clojure.test]))

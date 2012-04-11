@@ -1,4 +1,4 @@
-(ns monger.test.cache
+(ns monger.test.cache-test
   (:require [monger.test.helper :as helper]
             [monger.collection  :as mc])
   (:use clojure.core.cache clojure.test monger.cache)
