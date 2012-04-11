@@ -160,14 +160,14 @@ are some numbers on a MacBook Pro from fall 2010 with Core i7 and an Intel SSD d
 ```
 Testing monger.test.stress
 Inserting  1000  documents...
-"Elapsed time: 38.317 msecs"
-Inserting  10,000  documents...
-"Elapsed time: 263.827 msecs"
-Inserting  100,000  documents...
-"Elapsed time: 1679.828 msecs"
+"Elapsed time: 25.699 msecs"
+Inserting  10000  documents...
+"Elapsed time: 135.069 msecs"
+Inserting  100000  documents...
+"Elapsed time: 515.969 msecs"
 ```
 
-With the `SAFE` write concern, it takes roughly 1.7 second to insert 100,000 documents.
+With the `SAFE` write concern, it takes roughly 0.5 second to insert 100,000 documents with Clojure 1.3.0.
 
 
 ## Regular Finders
