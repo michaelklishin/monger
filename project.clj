@@ -6,9 +6,10 @@
                  [org.mongodb/mongo-java-driver "2.7.3"]
                  [com.novemberain/validateur "1.1.0-beta1"]]
   :test-selectors {:default (complement :performance)
-                   :focus :focus
-                   :indexing :indexing
-                   :external :external
+                   :focus       :focus
+                   :indexing    :indexing
+                   :external    :external
+                   :cache       :cache
                    :performance :performance
                    :all (constantly true)}
   :codox {:exclude [monger.internal.pagination]}
@@ -21,7 +22,8 @@
                    :dependencies  [[clj-time "0.3.6"              :exclusions [org.clojure/clojure]]
                                    [codox "0.3.4"                 :exclusions [org.clojure/clojure]]
                                    [org.clojure/data.json "0.1.2" :exclusions [org.clojure/clojure]]
-                                   [org.clojure/tools.cli "0.2.1" :exclusions [org.clojure/clojure]]]}}
+                                   [org.clojure/tools.cli "0.2.1" :exclusions [org.clojure/clojure]]
+                                   [org.clojure/core.cache "0.5.0" :exclusions [org.clojure/clojure]]]}}
   :aliases { "all" ["with-profile" "dev:dev,1.4"] }
   :repositories {"sonatype" {:url "http://oss.sonatype.org/content/repositories/releases"
                              :snapshots false

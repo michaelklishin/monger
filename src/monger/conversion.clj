@@ -23,7 +23,7 @@
 
 (ns monger.conversion
   (:import [com.mongodb DBObject BasicDBObject BasicDBList DBCursor]
-           [clojure.lang IPersistentMap Keyword Ratio]
+           [clojure.lang IPersistentMap Named Ratio]
            [java.util List Map Date]
            org.bson.types.ObjectId))
 
@@ -39,12 +39,20 @@
   (to-db-object [input]
     input)
 
+  String
+  (to-db-object [^String input]
+    input)
+
+  java.util.Date
+  (to-db-object [^java.util.Date input]
+    input)
+
   Ratio
   (to-db-object [^Ratio input]
     (double input))
 
-  Keyword
-  (to-db-object [^Keyword input] (.getName input))
+  Named
+  (to-db-object [^Named input] (.getName input))
 
   IPersistentMap
   (to-db-object [^IPersistentMap input]
