@@ -39,6 +39,14 @@
   (to-db-object [input]
     input)
 
+  String
+  (to-db-object [^String input]
+    input)
+
+  java.util.Date
+  (to-db-object [^java.util.Date input]
+    input)
+
   Ratio
   (to-db-object [^Ratio input]
     (double input))
