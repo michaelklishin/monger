@@ -267,7 +267,7 @@
 
   MapReduceOutput
   (count [^MapReduceOutput this]
-    (.count (.results this))))
+    (.count ^Iterable (.results this))))
 
 (defn ^DBObject get-last-error
   "Returns the the error (if there is one) from the previous operation on this connection.
