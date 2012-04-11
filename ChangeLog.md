@@ -1,6 +1,20 @@
 ## Changes between 1.0.0-beta4 and 1.0.0-beta5
 
-No changes yet.
+### clojure.core.cache integration
+
+`monger.cache` is a new namespace for various cache implementations that adhere to the [clojure.core.cache](github.com/clojure/core.cache) `CacheProtocol` protocol
+and sit on top of MongoDB
+
+
+### Clojure symbols now can be serialized
+
+Monger now supports serialization for all classes that implement `clojure.lang.Named`, not just keywords.
+
+
+### Improved serialization performance
+
+Thanks to faster paths for serialization of strings and dates (java.util.Date), mean time to insert 100,000 documents went down from
+about 1.7 seconds to about 0.5 seconds.
 
 
 
