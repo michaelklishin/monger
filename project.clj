@@ -6,9 +6,10 @@
                  [org.mongodb/mongo-java-driver "2.7.3"]
                  [com.novemberain/validateur "1.1.0-beta1"]]
   :test-selectors {:default (complement :performance)
-                   :focus :focus
-                   :indexing :indexing
-                   :external :external
+                   :focus       :focus
+                   :indexing    :indexing
+                   :external    :external
+                   :cache       :cache
                    :performance :performance
                    :all (constantly true)}
   :codox {:exclude [monger.internal.pagination]}
