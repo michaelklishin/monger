@@ -1,6 +1,6 @@
 (ns monger.test.factory-dsl
   (:use     [clojure.test]
-            [monger testing joda-time]
+            [monger testkit joda-time]
             [monger.test.fixtures]
             [clj-time.core :only [days ago weeks now]])
   (:require [monger.collection  :as mc]

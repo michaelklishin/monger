@@ -31,7 +31,7 @@
 ;;
 ;; Existing query fields:
 ;;
-;; :fields - selects which fields are returned. The default is all fields. _id is always returned.
+;; :fields - selects which fields are returned. The default is all fields. _id is included by default.
 ;; :sort - adds a sort to the query.
 ;; :fields - set of fields to retrieve during query execution
 ;; :skip - Skips the first N results.
@@ -58,13 +58,9 @@
   ([^DBCollection coll]
      (merge (empty-query) { :collection coll })))
 
-(defn- fields-to-db-object
-  [^List fields]
-  (to-db-object (zipmap fields (repeat 1))))
-
 (defn exec
   [{ :keys [collection query fields skip limit sort batch-size hint snapshot read-preference keywordize-fields] :or { limit 0 batch-size 256 skip 0 } }]
-  (let [cursor (doto ^DBCursor (.find ^DBCollection collection (to-db-object query) (fields-to-db-object fields))
+  (let [cursor (doto ^DBCursor (.find ^DBCollection collection (to-db-object query) (as-field-selector fields))
                      (.limit limit)
                      (.skip  skip)
                      (.sort  (to-db-object sort))

@@ -1,6 +1,6 @@
 (ns monger.test.fixtures
   (:require [monger.collection :as mgcol])
-  (:use     [monger.testing]))
+  (:use     monger.testkit))
 
 ;;
 ;; fixture functions

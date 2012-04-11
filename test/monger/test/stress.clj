@@ -30,7 +30,7 @@
 
 (monger.core/set-default-write-concern! WriteConcern/NORMAL)
 
-(deftest insert-large-batches-of-documents-without-object-ids
+(deftest ^{:performance true} insert-large-batches-of-documents-without-object-ids
   (doseq [n [1000 10000 100000]]
     (let [collection "things"
           docs       (map (fn [i]

@@ -15,11 +15,12 @@ wanted a client that will
  * Be well documented.
  * Be well tested.
  * Be maintained, do not carry technical debt from 2009 forever.
+ * Target Clojure 1.3.0 and later from the ground up.
  * Integrate with libraries like clojure.data.json and Joda Time.
  * Provide support for unit testing: factories/fixtures DSL, collection cleaner functions, clojure.test integration and so on.
- * Integrate usage of JavaScript files and ClojureScript (as soon as the compiler gets artifact it is possible to depend on for easy embedding).
+ * Support URI connections to be friendly to Heroku and other PaaS providers.
  * Learn from other clients like the Java and Ruby ones.
- * Target Clojure 1.3.0 and later from the ground up.
+ * Integrate usage of JavaScript files and ClojureScript (as soon as the compiler gets artifact it is possible to depend on for easy embedding).
 
 
 ## Documentation & Examples
@@ -45,7 +46,7 @@ together with documentation guides and dedicated website.
 
 With Leiningen:
 
-    [com.novemberain/monger "1.0.0-beta2"]
+    [com.novemberain/monger "1.0.0-beta4"]
 
 
 With Maven:
@@ -53,7 +54,7 @@ With Maven:
     <dependency>
       <groupId>com.novemberain</groupId>
       <artifactId>monger</artifactId>
-      <version>1.0.0-beta2</version>
+      <version>1.0.0-beta4</version>
     </dependency>
 
 
@@ -223,7 +224,7 @@ Here is what monger.query DSL feels like:
 (with-collection "movies"
   (find { :year { $lt 2010 $gte 2000 }, :revenue { $gt 20000000 } })  
   (fields [ :year :title :producer :cast :budget :revenue ])
-  (sort-by { :revenue -1 })
+  (sort { :revenue -1 })
   (skip 10)
   (limit 20)
   (hint "year-by-year-revenue-idx")
@@ -362,7 +363,7 @@ Neocons is part of the group of libraries known as ClojureWerkz, together with
 ## Development
 
 Monger uses [Leiningen 2](https://github.com/technomancy/leiningen/blob/master/doc/TUTORIAL.md). Make sure you have it installed and then run tests against
-Clojure 1.3.0 and 1.4.0[-beta4] using
+supported Clojure versions using
 
     lein2 all test
 

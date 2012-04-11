@@ -1,4 +1,69 @@
+## Changes between 1.0.0-beta4 and 1.0.0-beta5
+
+No changes yet.
+
+
+
+## Changes between 1.0.0-beta3 and 1.0.0-beta4
+
+### Support for URI connections (and thus PaaS provides like Heroku)
+
+`monger.core/connect-via-uri!` is a new function that combines `monger.core/connect!`, `monger.core/set-db!` and `monger.core/authenticate`
+and works with string URIs like `mongodb://userb71148a:0da0a696f23a4ce1ecf6d11382633eb2049d728e@cluster1.mongohost.com:27034/app81766662`.
+
+It can be used to connect with or without authentication, for example:
+
+``` clojure
+;; connect without authentication
+(monger.core/connect-via-uri! "mongodb://127.0.0.1/monger-test4")
+
+;; connect with authentication
+(monger.core/connect-via-uri! "mongodb://clojurewerkz/monger!:monger!@127.0.0.1/monger-test4")
+
+;; connect using connection URI stored in an env variable, in this case, MONGOHQ_URL
+(monger.core/connect-via-uri! (System/genenv "MONGOHQ_URL"))
+```
+
+It is also possible to pass connection options and query parameters:
+
+``` clojure
+(monger.core/connect-via-uri! "mongodb://localhost/test?maxPoolSize=128&waitQueueMultiple=5;waitQueueTimeoutMS=150;socketTimeoutMS=5500&autoConnectRetry=true;safe=false&w=1;wtimeout=2500;fsync=true")
+```
+
+
 ## Changes between 1.0.0-beta2 and 1.0.0-beta3
+
+### Support for field negation in queries
+
+Previously to load only a subset of document fields with Monger, one had to specify them all. Starting
+with 1.0.0-beta3, Monger supports [field negation](http://www.mongodb.org/display/DOCS/Retrieving+a+Subset+of+Fields#RetrievingaSubsetofFields-FieldNegation) feature of MongoDB: it is possible to exclude
+certain fields instead.
+
+To do so, pass a map as field selector, with fields that should be omitted set to 0:
+
+``` clojure
+;; will retrieve all fields except body
+(monger.collection/find-one-map "documents" {:author "John"} {:body 0})
+```
+
+
+### Validateur 1.1.0-beta1
+
+[Validateur](https://github.com/michaelklishin/validateur) dependency has been upgraded to 1.1.0-beta1.
+
+
+### Index Options support for monger.collection/ensure-index and /create-index
+
+`monger.collection/ensure-index` and `/create-index` now accept index options as additional argument.
+**Breaking change**: 3-arity versions of those functions now become 4-arity versions.
+
+
+### Support serialization of Clojure ratios
+
+Documents that contain Clojure ratios (for example, `26/5`) now can be converted to DBObject instances
+and thus stored. On load, ratios will be presented as doubles: this way we ensure interoperability with
+other languages and clients.
+
 
 ### Factories/fixtures DSL
 

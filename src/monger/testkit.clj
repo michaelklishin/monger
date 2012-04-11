@@ -7,7 +7,7 @@
 ;; the terms of this license.
 ;; You must not remove this notice, or any other, from this software.
 
-(ns monger.testing
+(ns monger.testkit
   (:require [monger.collection :as mc]
             [monger.result     :as mr])
   (:use     [monger.internal.fn :only (expand-all expand-all-with) :as fntools])

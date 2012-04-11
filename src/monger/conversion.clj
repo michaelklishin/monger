@@ -23,12 +23,12 @@
 
 (ns monger.conversion
   (:import [com.mongodb DBObject BasicDBObject BasicDBList DBCursor]
-           [clojure.lang IPersistentMap Keyword]
+           [clojure.lang IPersistentMap Keyword Ratio]
            [java.util List Map Date]
-           [org.bson.types ObjectId]))
+           org.bson.types.ObjectId))
 
 (defprotocol ConvertToDBObject
-  (to-db-object [input] "Converts given piece of Clojure data to BasicDBObject MongoDB Java driver uses"))
+  (^com.mongodb.DBObject to-db-object [input] "Converts given piece of Clojure data to BasicDBObject MongoDB Java driver uses"))
 
 (extend-protocol ConvertToDBObject
   nil
@@ -38,6 +38,10 @@
   Object
   (to-db-object [input]
     input)
+
+  Ratio
+  (to-db-object [^Ratio input]
+    (double input))
 
   Keyword
   (to-db-object [^Keyword input] (.getName input))
@@ -105,7 +109,7 @@
 
 
 (defprotocol ConvertToObjectId
-  (to-object-id [input] "Instantiates ObjectId from input unless the input itself is an ObjectId instance. In that case, returns input as is."))
+  (^org.bson.types.ObjectId to-object-id [input] "Instantiates ObjectId from input unless the input itself is an ObjectId instance. In that case, returns input as is."))
 
 (extend-protocol ConvertToObjectId
   String
@@ -121,3 +125,19 @@
     input))
 
 
+
+(defprotocol FieldSelector
+  (^com.mongodb.DBObject as-field-selector [input] "Converts values to DBObject that can be used to specify a list of document fields (including negation support)"))
+
+(extend-protocol FieldSelector
+  DBObject
+  (as-field-selector [^DBObject input]
+    input)
+
+  List
+  (as-field-selector [^List input]
+    (to-db-object (zipmap input (repeat 1))))
+
+  Object
+  (as-field-selector [input]
+    (to-db-object input)))
