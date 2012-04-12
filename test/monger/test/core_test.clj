@@ -98,16 +98,6 @@
     (is (not (empty? dbs)))
     (is (dbs "monger-test"))))
 
-(deftest issuing-a-command
-  "Some commands require administrative priviledges or complex data / checks or heavily depend on DB version. They will be ommited here."
-  (let [collection "things"]
-    (doseq [c [{ :profile 1 }
-               { :listCommands 1 }
-               { :dbStats 1 }
-               { :collstats "things" :scale (* 1024 1024) }
-               { :getLastError 1 }]]
-      (is (monger.result/ok? (monger.core/command c))))))
-
 (deftest get-last-error
   (let [connection (monger.core/connect)
         db         (monger.core/get-db connection "monger-test")]
