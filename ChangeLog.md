@@ -1,5 +1,11 @@
 ## Changes between 1.0.0-beta4 and 1.0.0-beta5
 
+### Capped collection support
+
+`monger.collection/create` provides a way to create collections with fine-tuned attributes (for example, capped collections)
+without having to use Java driver API.
+
+
 ### clojure.core.cache integration
 
 `monger.cache` is a new namespace for various cache implementations that adhere to the [clojure.core.cache](github.com/clojure/core.cache) `CacheProtocol` protocol
