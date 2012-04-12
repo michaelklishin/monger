@@ -8,9 +8,8 @@
 ;; You must not remove this notice, or any other, from this software.
 
 (ns monger.result
-  (:import [com.mongodb DBObject WriteResult MapReduceOutput]
-           [clojure.lang IPersistentMap])
-  (:require [monger conversion]))
+  (:import [com.mongodb DBObject WriteResult MapReduceOutput])
+  (:require monger.conversion))
 
 
 ;;

@@ -11,7 +11,8 @@
 (ns monger.db
   (:refer-clojure :exclude [find remove count drop distinct empty?])
   (:import [com.mongodb Mongo DB DBCollection])
-  (:require [monger core]))
+  (:require monger.core)
+  (:use monger.conversion))
 
 
 
@@ -19,7 +20,7 @@
   "Adds a new user for this db"
   ([^String username, ^chars password]
      (.addUser ^DB monger.core/*mongodb-database* username password))
-  ([^DB database ^String username, ^chars password]
+  ([^DB database ^String username ^chars password]
      (.addUser ^DB database username password)))
 
 
@@ -29,7 +30,6 @@
      (.dropDatabase ^DB monger.core/*mongodb-database*))
   ([^DB database]
      (.dropDatabase ^DB database)))
-
 
 (defn get-collection-names
   "Returns a set containing the names of all collections in this database."
