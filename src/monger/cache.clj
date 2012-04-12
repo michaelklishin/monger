@@ -28,7 +28,7 @@
       (:value doc)
       not-found))
   (has? [c k]
-    (mc/any? (get c :collection) {:_id k}))
+    (not (nil? (mc/find-by-id (get c :collection) k))))
   (hit [this k]
     this)
   (miss [c k v]
