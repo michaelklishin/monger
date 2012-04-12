@@ -204,7 +204,7 @@
      (check-not-nil! id "id must not be nil")
      (from-db-object ^DBObject (find-one-as-map collection { :_id id }) true))
   ([^String collection id fields]
-     (check-not-nil! id "id must not be nil")  
+     (check-not-nil! id "id must not be nil")
      (from-db-object ^DBObject (find-one-as-map collection { :_id id } fields) true))
   ([^String collection id fields keywordize]
      (check-not-nil! id "id must not be nil")
@@ -546,3 +546,14 @@
   ([^DB db ^String collection ^String key ^Map query]
      (let [^DBCollection coll (.getCollection db collection)]
        (.distinct coll ^String (to-db-object key) ^DBObject (to-db-object query)))))
+
+
+;;
+;; create/capped collections
+;;
+
+(defn create
+  "Creates a collection. Options are: :capped (pass true to create a capped collection), :max (number of documents)
+   and :size (max allowed size of the collection, in bytes)."
+  [^String name options]
+  (.createCollection ^DB monger.core/*mongodb-database* name (to-db-object options)))

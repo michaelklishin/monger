@@ -15,3 +15,5 @@
 (defcleaner domains   "domains")
 (defcleaner pages     "pages")
 
+(defcleaner cached    "cached")
+
