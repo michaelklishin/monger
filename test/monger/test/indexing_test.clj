@@ -19,9 +19,6 @@
 (deftest ^{:indexing true} test-creating-and-dropping-indexes
   (let [collection "libraries"]
     (mgcol/drop-indexes collection)
-    (is (= "_id_"
-           (:name (first (mgcol/indexes-on collection)))))
-    (is (nil? (second (mgcol/indexes-on collection))))
     (mgcol/create-index collection { "language" 1 })
     (is (= "language_1"
            (:name (second (mgcol/indexes-on collection)))))
