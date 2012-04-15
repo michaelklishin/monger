@@ -20,16 +20,19 @@
       (is (monger.core/authenticate db-name username pwd)))))
 
 
-(deftest test-drop-database
-  ;; drop a secondary database here. MK.
-  (monger.core/with-db (monger.core/get-db "monger-test3")
-    (let [collection "test"
-          _          (mgcol/insert collection { :name "Clojure" })
-          check      (mgcol/count collection)
-          _          (monger.db/drop-db)]
-      (is (= 1 check))
-      (is (not (mgcol/exists? collection)))
-      (is (= 0 (mgcol/count collection))))))
+;; do not run this test for CI, it complicates matters by messing up
+;; authentication for some other tests :( MK.
+(when-not (System/getenv "CI")
+  (deftest test-drop-database
+    ;; drop a secondary database here. MK.
+    (monger.core/with-db (monger.core/get-db "monger-test3")
+      (let [collection "test"
+            _          (mgcol/insert collection { :name "Clojure" })
+            check      (mgcol/count collection)
+            _          (monger.db/drop-db)]
+        (is (= 1 check))
+        (is (not (mgcol/exists? collection)))
+        (is (= 0 (mgcol/count collection)))))))
 
 
 (deftest test-get-collection-names
