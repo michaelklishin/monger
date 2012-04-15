@@ -25,7 +25,8 @@
                                    [org.clojure/tools.cli "0.2.1" :exclusions [org.clojure/clojure]]
                                    [org.clojure/core.cache "0.5.0" :exclusions [org.clojure/clojure]]]}}
   :aliases { "all" ["with-profile" "dev:dev,1.4"] }
-  :repositories {"sonatype" {:url "http://oss.sonatype.org/content/repositories/releases"
-                             :snapshots false
+  :repositories {"clojure-releases" "http://build.clojure.org/releases"
+                 "sonatype" {:url "http://oss.sonatype.org/content/repositories/releases"
+                             :snapshots false,
                              :releases {:checksum :fail :update :always}}}
   :warn-on-reflection true)
