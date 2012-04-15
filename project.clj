@@ -17,7 +17,7 @@
                  :archive "https://groups.google.com/group/clojure-monger"
                  :post "clojure-monger@googlegroups.com"}
   :profiles {:1.4 {:resource-paths ["test/resources"]
-                   :dependencies [[org.clojure/clojure "1.4.0-beta7"]]}
+                   :dependencies [[org.clojure/clojure "1.4.0"]]}
              :dev {:resource-paths ["test/resources"]
                    :dependencies  [[clj-time "0.3.6"              :exclusions [org.clojure/clojure]]
                                    [codox "0.3.4"                 :exclusions [org.clojure/clojure]]
