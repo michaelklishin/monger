@@ -2,4 +2,4 @@ language: clojure
 lein: lein2
 before_script:
   - ./bin/ci/before_script.sh
-script: lein2 all test
+script: lein2 test
