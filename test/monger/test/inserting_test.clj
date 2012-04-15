@@ -62,6 +62,13 @@
         result     (mgcol/insert "widgets" doc)]
     (is (= 5.5 (:ratio (mgcol/find-map-by-id collection id))))))
 
+(deftest insert-a-document-with-clojure-keyword-in-it
+  (let [collection "widgets"
+        id         (ObjectId.)
+        doc        { :keyword :kwd "_id" id }
+        result     (mgcol/insert "widgets" doc)]
+    (is (= (name :kwd) (:keyword (mgcol/find-map-by-id collection id)))))) ;
+
 
 (defrecord Metrics
     [rps eps])
