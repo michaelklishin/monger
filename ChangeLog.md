@@ -1,5 +1,10 @@
 ## Changes between 1.0.0-beta4 and 1.0.0-beta5
 
+### Clojure sets now can be serialized
+
+Monger now supports serialization for all classes that implement `java.util.Set`, including Clojure sets.
+
+
 ### Capped collection support
 
 `monger.collection/create` provides a way to create collections with fine-tuned attributes (for example, capped collections)

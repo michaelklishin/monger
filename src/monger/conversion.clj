@@ -23,8 +23,8 @@
 
 (ns monger.conversion
   (:import [com.mongodb DBObject BasicDBObject BasicDBList DBCursor]
-           [clojure.lang IPersistentMap Named Ratio]
-           [java.util List Map Date]
+           [clojure.lang IPersistentMap Named Keyword Ratio]
+           [java.util List Map Date Set]
            org.bson.types.ObjectId))
 
 (defprotocol ConvertToDBObject
@@ -32,10 +32,6 @@
 
 (extend-protocol ConvertToDBObject
   nil
-  (to-db-object [input]
-    input)
-
-  Object
   (to-db-object [input]
     input)
 
@@ -51,6 +47,9 @@
   (to-db-object [^Ratio input]
     (double input))
 
+  Keyword
+  (to-db-object [^Keyword input] (.getName input))
+
   Named
   (to-db-object [^Named input] (.getName input))
 
@@ -64,8 +63,15 @@
   List
   (to-db-object [^List input] (map to-db-object input))
 
+  Set
+  (to-db-object [^Set input] (map to-db-object input))
+
   DBObject
-  (to-db-object [^DBObject input] input))
+  (to-db-object [^DBObject input] input)
+
+  Object
+  (to-db-object [input]
+    input))
 
 
 

@@ -67,7 +67,15 @@
         id         (ObjectId.)
         doc        { :keyword :kwd "_id" id }
         result     (mgcol/insert "widgets" doc)]
-    (is (= (name :kwd) (:keyword (mgcol/find-map-by-id collection id)))))) ;
+    (is (= (name :kwd) (:keyword (mgcol/find-map-by-id collection id))))))
+
+(deftest insert-a-document-with-clojure-keyword-in-a-set-in-it
+  (let [collection "widgets"
+        id         (ObjectId.)
+        doc        { :keyword1 {:keyword2 #{:kw1 :kw2}} "_id" id }
+        result     (mgcol/insert "widgets" doc)]
+    (is (= (sort ["kw1" "kw2"])
+           (sort (get-in (mgcol/find-map-by-id collection id) [:keyword1 :keyword2]))))))
 
 
 (defrecord Metrics
