@@ -171,3 +171,9 @@
 (defoperator $pullAll)
 
 (defoperator $bit)
+
+(defoperator $exists)
+(defoperator $mod)
+(defoperator $size)
+(defoperator $type)
+(defoperator $not)
