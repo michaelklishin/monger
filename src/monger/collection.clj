@@ -44,13 +44,13 @@
 
        (monger.collection/insert \"people\" { :name \"Joe\", :age 30, WriteConcern/SAFE })
   "
-  ([^String collection ^DBObject document]
+  ([^String collection document]
      (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
        (.insert ^DBCollection coll ^DBObject (to-db-object document) ^WriteConcern monger.core/*mongodb-write-concern*)))
-  ([^String collection ^DBObject document ^WriteConcern concern]
+  ([^String collection document ^WriteConcern concern]
      (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
        (.insert ^DBCollection coll ^DBObject (to-db-object document) ^WriteConcern concern)))
-  ([^DB db ^String collection ^DBObject document ^WriteConcern concern]
+  ([^DB db ^String collection document ^WriteConcern concern]
      (let [^DBCollection coll (.getCollection db collection)]
        (.insert ^DBCollection coll ^DBObject (to-db-object document) ^WriteConcern concern))))
 
@@ -65,13 +65,13 @@
       (monger.collection/insert-batch \"people\" [{ :name \"Joe\", :age 30 }, { :name \"Paul\", :age 27 }] WriteConcern/NORMAL)
 
   "
-  ([^String collection, ^List documents]
+  ([^String collection ^List documents]
      (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
        (.insert ^DBCollection coll ^List (to-db-object documents) ^WriteConcern monger.core/*mongodb-write-concern*)))
-  ([^String collection, ^List documents, ^WriteConcern concern]
+  ([^String collection ^List documents ^WriteConcern concern]
      (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
        (.insert ^DBCollection coll ^List (to-db-object documents) ^WriteConcern concern)))
-  ([^DB db ^String collection, ^List documents, ^WriteConcern concern]
+  ([^DB db ^String collection ^List documents ^WriteConcern concern]
      (let [^DBCollection coll (.getCollection db collection)]
        (.insert ^DBCollection coll ^List (to-db-object documents) ^WriteConcern concern))))
 
