@@ -3,9 +3,7 @@
         monger.json
         monger.joda-time
         monger.conversion)
-  (:import [org.joda.time DateTime ReadableInstant]
-           [org.joda.time.format ISODateTimeFormat]
-           [java.io StringWriter PrintWriter]
+  (:import org.joda.time.DateTime
            org.bson.types.ObjectId
            com.mongodb.DBObject)
   (:require [clojure.data.json :as json]
