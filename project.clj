@@ -20,7 +20,7 @@
   :profiles {:1.4 {:dependencies [[org.clojure/clojure "1.4.0"]]}
              :1.5 {:dependencies [[org.clojure/clojure "1.5.0-master-SNAPSHOT"]]}
              :dev {:resource-paths ["test/resources"]
-                   :dependencies  [[clj-time "0.3.6"              :exclusions [org.clojure/clojure]]
+                   :dependencies  [[clj-time "0.4.2"              :exclusions [org.clojure/clojure]]
                                    [codox "0.3.4"                 :exclusions [org.clojure/clojure]]
                                    [org.clojure/data.json "0.1.2" :exclusions [org.clojure/clojure]]
                                    [org.clojure/tools.cli "0.2.1" :exclusions [org.clojure/clojure]]
