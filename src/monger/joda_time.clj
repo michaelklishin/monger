@@ -11,7 +11,8 @@
   (:import [org.joda.time DateTime DateTimeZone ReadableInstant]
            [org.joda.time.format ISODateTimeFormat])
   (:use [monger.conversion])
-  (:require [clojure.data.json :as json]))
+  (:require [clojure.data.json :as json]
+            clojurewerkz.support.json))
 
 ;;
 ;; API
@@ -26,9 +27,3 @@
   java.util.Date
   (from-db-object [^java.util.Date input keywordize]
     (org.joda.time.DateTime. input)))
-
-
-(extend-protocol json/Write-JSON
-  org.joda.time.DateTime
-  (write-json [^DateTime object out escape-unicode?]
-    (json/write-json (.print (ISODateTimeFormat/dateTime) ^ReadableInstant object) out escape-unicode?)))

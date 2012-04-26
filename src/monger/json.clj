@@ -9,7 +9,8 @@
 
 (ns monger.json
   (:import (org.bson.types ObjectId))
-  (:require [clojure.data.json :as json]))
+  (:require [clojure.data.json :as json]
+            clojurewerkz.support.json))
 
 ;;
 ;; API
