@@ -54,7 +54,7 @@ It can be used to connect with or without authentication, for example:
 (monger.core/connect-via-uri! (System/genenv "MONGOHQ_URL"))
 ```
 
-It is also possible to pass connection options and query parameters:
+It is also possible to pass connection options as query parameters:
 
 ``` clojure
 (monger.core/connect-via-uri! "mongodb://localhost/test?maxPoolSize=128&waitQueueMultiple=5;waitQueueTimeoutMS=150;socketTimeoutMS=5500&autoConnectRetry=true;safe=false&w=1;wtimeout=2500;fsync=true")
