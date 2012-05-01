@@ -113,7 +113,7 @@ With the `SAFE` write concern, it takes roughly 0.5 second to insert 100,000 doc
 
 ## Monger Is a ClojureWerkz Project
 
-Neocons is part of the group of libraries known as ClojureWerkz, together with
+Monger is part of the [group of Clojure libraries known as ClojureWerkz](http://clojurewerkz.org), together with
 [Neocons](https://github.com/michaelklishin/neocons), [Langohr](https://github.com/michaelklishin/langohr), [Elastisch](https://github.com/clojurewerkz/elastisch), [Welle](https://github.com/michaelklishin/welle), [Quartzite](https://github.com/michaelklishin/quartzite) and several others.
 
 
