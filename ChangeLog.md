@@ -1,6 +1,8 @@
 ## Changes between 1.0.0-beta5 and 1.0.0-beta6
 
-No changes yet.
+### Validateur 1.1.0
+
+[Validateur](https://github.com/michaelklishin/validateur) dependency has been upgraded to 1.1.0.
 
 
 
