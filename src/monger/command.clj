@@ -9,39 +9,38 @@
 ;; You must not remove this notice, or any other, from this software.
 
 (ns monger.command
-  (:use [monger.conversion])
-  (:refer-clojure :exclude [find remove count drop distinct empty?])
-  (:import [com.mongodb Mongo DB DBObject CommandResult] 
-           [java.util Map])
-  (:require [monger core]))
-    
+  (:require monger.core)
+  (:use monger.conversion)
+  (:import com.mongodb.DB))
+
 
 (defn collection-stats
   ([collection]
-    (collection-stats monger.core/*mongodb-database* collection))
+     (collection-stats monger.core/*mongodb-database* collection))
   ([^DB database collection]
-   (monger.core/command database { :collstats collection })))
+     (monger.core/command database { :collstats collection })))
 
 (defn db-stats
   ([]
-    (db-stats monger.core/*mongodb-database*))
+     (db-stats monger.core/*mongodb-database*))
   ([^DB database]
-   (monger.core/command database {:dbStats 1 })))
+     (monger.core/command database {:dbStats 1 })))
 
 
 (defn reindex-collection
   ([collection]
-    (reindex-collection monger.core/*mongodb-database* collection))
+     (reindex-collection monger.core/*mongodb-database* collection))
   ([^DB database collection]
-   (monger.core/command database { :reIndex collection })))
+     (monger.core/command database { :reIndex collection })))
 
 
 (defn server-status
   ([]
-    (server-status monger.core/*mongodb-database*))
+     (server-status monger.core/*mongodb-database*))
   ([^DB database]
-   (monger.core/command database {:serverStatus 1 })))
+     (monger.core/command database {:serverStatus 1 })))
 
 
-(defn top []
-  (monger.core/command (monger.core/get-db "admin") {:top 1 }))
+(defn top
+  []
+  (monger.core/command (monger.core/get-db "admin") {:top 1}))
