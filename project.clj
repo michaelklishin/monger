@@ -4,7 +4,7 @@
   :license {:name "Eclipse Public License"}
   :dependencies [[org.clojure/clojure           "1.3.0"]
                  [org.mongodb/mongo-java-driver "2.7.3"]
-                 [com.novemberain/validateur    "1.1.0-beta1"]
+                 [com.novemberain/validateur    "1.1.0"]
                  [clojurewerkz/support          "0.2.0"]]
   :test-selectors {:default (complement :performance)
                    :focus       :focus
