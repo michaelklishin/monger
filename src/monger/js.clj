@@ -7,18 +7,8 @@
 ;; the terms of this license.
 ;; You must not remove this notice, or any other, from this software.
 
-(ns monger.js
-  (:require [clojure.java.io :as io]))
-
-;;
-;; Implementation
-;;
-
-(defn- normalize-resource
-  [^String path]
-  (if (.endsWith path ".js")
-    path
-    (str path ".js")))
+(ns ^{:doc "Kept for backwards compatibility. Please use clojurewerkz.support.js from now on."} monger.js
+  (:require [clojurewerkz.support.js :as js]))
 
 
 
@@ -28,4 +18,4 @@
 
 (defn load-resource
   (^String [^String path]
-           (slurp (io/resource (normalize-resource path)))))
+           (js/load-resource path)))

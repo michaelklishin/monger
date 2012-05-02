@@ -1,5 +1,15 @@
 ## Changes between 1.0.0-beta5 and 1.0.0-beta6
 
+### monger.js is deprecated
+
+`monger.js` namespace is kept for backwards compatibility but is deprecated in favor of [ClojureWerkz Support](http://github.com/clojurewerkz/support)
+that now has exactly the same function in `clojurewerkz.support.js`. To add Support to your project with Leiningen, use
+
+``` clojure
+[clojurewerkz/support "0.3.0"]
+```
+
+
 ### Validateur 1.1.0
 
 [Validateur](https://github.com/michaelklishin/validateur) dependency has been upgraded to 1.1.0.
