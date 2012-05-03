@@ -2,7 +2,8 @@
   (:require [monger.test.helper :as helper]
             [monger.collection  :as mc])
   (:use clojure.core.cache clojure.test monger.cache)
-  (:import [clojure.core.cache BasicCache FIFOCache LRUCache TTLCache]))
+  (:import [clojure.core.cache BasicCache FIFOCache LRUCache TTLCache]
+           java.util.UUID))
 
 ;;
 ;; Playground/Tests. These were necessary because clojure.core.cache has
@@ -92,7 +93,8 @@
   (testing "that has? returns false for misses"
     (let [coll "basic_monger_cache_entries"
           c    (basic-monger-cache-factory coll)]
-      ))
+      (is (not (has? c (str (UUID/randomUUID)))))
+      (is (not (has? c (str (UUID/randomUUID)))))))
   (testing "that has? returns true for hits"
     (let [coll "basic_monger_cache_entries"
           c    (basic-monger-cache-factory coll {"a" 1 "b" "cache" "c" 3/4})]
