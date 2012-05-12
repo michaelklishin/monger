@@ -172,6 +172,42 @@
      (from-db-object ^DBObject (find-one collection ref fields) keywordize)))
 
 
+;;
+;; monger.collection/find-and-modify
+;;
+
+(defn ^DBObject find-and-modify
+  "Atomically modify a document (at most one) and return it.
+
+   EXAMPLES:
+      
+      ;; Find and modify a document
+      (mgcol/find-and-modify collection { :language \"Python\" } { :language \"Clojure\" })
+
+      ;; If multiple documents match, choose the first one in the specified order
+      (mgcol/find-and-modify collection { :language \"Python\" } { :language \"Clojure\" } :sort { :language -1 })
+
+      ;; Remove the object before returning
+      (mgcol/find-and-modify collection { :language \"Python\" } {} :remove true)
+
+      ;; Return the modified object instead of the old one
+      (mgcol/find-and-modify collection { :language \"Python\" } { :language \"Clojure\" } :return-new true)
+
+      ;; Retrieve a subset of fields
+      (mgcol/find-and-modify collection { :language \"Python\" } { :language \"Clojure\" } :fields [ :language ])
+
+      ;; Create the object if it doesn't exist
+      (mgcol/find-and-modify collection { :language \"Factor\" } { :language \"Clojure\" } :upsert true)
+
+  "
+  ([^String collection ^Map conditions ^Map document & { :keys [fields sort remove return-new upsert keywordize] :or
+                                                       { fields nil sort nil remove false return-new false upsert false keywordize true }}]
+     (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)
+           maybe-fields (when fields (to-db-object (as-field-selector fields)))
+           maybe-sort (when sort (to-db-object sort))]
+       (from-db-object
+        ^DBObject (.findAndModify ^DBCollection coll ^DBObject (to-db-object conditions) maybe-fields maybe-sort remove
+                                  ^DBObject (to-db-object document) return-new upsert) keywordize))))
 
 ;;
 ;; monger.collection/find-by-id
