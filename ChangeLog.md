@@ -1,5 +1,19 @@
 ## Changes between 1.0.0-beta5 and 1.0.0-beta6
 
+### find-and-modify support
+
+`monger.collection/find-and-modify` function implements [atomic Find and Modify](http://www.mongodb.org/display/DOCS/findAndModify+Command) command.
+It is similar to the "regular" update operations but atomically modifies a document (at most one) and returns it.
+
+An example:
+
+``` clojure
+(mgcol/find-and-modify "scoreboard" {:name "Sophie Bangs"} {$inc {:level 1}} :return-new true)
+```
+
+Contributed by [Baishampayan Ghose](https://github.com/ghoseb).
+
+
 ### monger.js is deprecated
 
 `monger.js` namespace is kept for backwards compatibility but is deprecated in favor of [ClojureWerkz Support](http://github.com/clojurewerkz/support)
