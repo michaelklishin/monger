@@ -291,3 +291,50 @@
     (mgcol/insert coll { :_id oid :title title :measurements v })
     (mgcol/update coll { :_id oid } { $rename { :measurements "results" } })
     (is (= { :_id oid :title title :results v } (mgcol/find-map-by-id coll oid)))))
+
+
+;;
+;; find-and-modify
+;;
+
+(deftest find-and-modify-a-single-document
+  (let [coll "docs"
+        oid (ObjectId.)
+        doc {:_id oid :name "Sophie Bangs" :level 42}
+        conditions {:name "Sophie Bangs"}
+        update {$inc {:level 1}}]
+    (mgcol/insert coll doc)
+    (let [res (mgcol/find-and-modify coll conditions update :return-new true)]
+      (is (= (select-keys res [:name :level]) {:name "Sophie Bangs" :level 43})))))
+
+
+(deftest find-and-modify-remove-a-document
+  (let [coll "docs"
+        oid (ObjectId.)
+        doc {:_id oid :name "Sophie Bangs" :level 42}
+        conditions {:name "Sophie Bangs"}]
+    (mgcol/insert coll doc)
+    (let [res (mgcol/find-and-modify coll conditions {} :remove true)]
+      (is (= (select-keys res [:name :level]) {:name "Sophie Bangs" :level 42}))
+      (is (empty? (mgcol/find-maps coll conditions))))))
+
+
+(deftest find-and-modify-upsert-a-document
+  (let [coll "docs"
+        oid (ObjectId.)
+        doc {:_id oid :name "Sophie Bangs" :level 42}]
+    (let [res (mgcol/find-and-modify coll doc doc :upsert true)]
+      (is (empty? res))
+      (is (select-keys (mgcol/find-map-by-id coll oid) [:name :level]) (dissoc doc :_id)))))
+
+
+(deftest find-and-modify-after-sort
+  (let [coll "docs"
+        oid (ObjectId.)
+        oid2 (ObjectId.)
+        doc {:name "Sophie Bangs"}
+        doc1 (assoc doc :_id oid :level 42)
+        doc2 (assoc doc :_id oid2 :level 0)]
+    (mgcol/insert-batch coll [doc1 doc2])
+    (let [res (mgcol/find-and-modify coll doc {$inc {:level 1}} :sort {:level -1})]
+      (is (= (select-keys res [:name :level]) {:name "Sophie Bangs" :level 42})))))
