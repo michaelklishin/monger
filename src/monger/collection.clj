@@ -103,12 +103,12 @@
        (.find ^DBCollection coll ^DBObject (to-db-object ref))))
   ([^String collection ^Map ref fields]
      (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)
-           map-of-fields (as-field-selector fields)]
-       (.find ^DBCollection coll ^DBObject (to-db-object ref) ^DBObject (to-db-object map-of-fields))))
+           ^DBObject fields-obj (as-field-selector fields)]
+       (.find ^DBCollection coll ^DBObject (to-db-object ref) fields-obj)))
   ([^DB db ^String collection ^Map ref fields]
      (let [^DBCollection coll (.getCollection db collection)
-           map-of-fields (as-field-selector fields)]
-       (.find ^DBCollection coll ^DBObject (to-db-object ref) ^DBObject (to-db-object map-of-fields)))))
+           ^DBObject fields-obj (as-field-selector fields)]
+       (.find ^DBCollection coll ^DBObject (to-db-object ref) fields-obj))))
 
 (defn ^ISeq find-maps
   "Queries for objects in this collection.
@@ -156,12 +156,12 @@
        (.findOne ^DBCollection coll ^DBObject (to-db-object ref))))
   ([^String collection ^Map ref fields]
      (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)
-           map-of-fields (as-field-selector fields)]
-       (.findOne ^DBCollection coll ^DBObject (to-db-object ref) ^DBObject (to-db-object map-of-fields))))
+           ^DBObject fields-obj (as-field-selector fields)]
+       (.findOne ^DBCollection coll ^DBObject (to-db-object ref) fields-obj)))
   ([^DB db ^String collection ^Map ref fields]
      (let [^DBCollection coll (.getCollection db collection)
-           map-of-fields (as-field-selector fields)]
-       (.findOne ^DBCollection coll ^DBObject (to-db-object ref) ^DBObject (to-db-object map-of-fields)))))
+           ^DBObject fields-obj (as-field-selector fields)]
+       (.findOne ^DBCollection coll ^DBObject (to-db-object ref) fields-obj))))
 
 (defn ^IPersistentMap find-one-as-map
   "Returns a single object converted to Map from this collection matching the query."
@@ -204,7 +204,7 @@
   ([^String collection ^Map conditions ^Map document & { :keys [fields sort remove return-new upsert keywordize] :or
                                                        { fields nil sort nil remove false return-new false upsert false keywordize true }}]
      (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)
-           maybe-fields (when fields (to-db-object (as-field-selector fields)))
+           maybe-fields (when fields (as-field-selector fields))
            maybe-sort (when sort (to-db-object sort))]
        (from-db-object
         ^DBObject (.findAndModify ^DBCollection coll ^DBObject (to-db-object conditions) maybe-fields maybe-sort remove
