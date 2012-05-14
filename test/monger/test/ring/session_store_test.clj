@@ -36,7 +36,7 @@
 
 
 (deftest test-updating-a-session
-  (let [store (monger-store)
+  (let [store (monger-store "sessions")
         sk1   (write-session store nil {:library "Monger"})
         sk2   (write-session store sk1 {:library "Ring"})
         m     (read-session store sk2)]
@@ -48,7 +48,7 @@
 
 
 (deftest test-deleting-a-session
-  (let [store (monger-store)
+  (let [store (monger-store "sessions")
         sk    (write-session store nil {:library "Monger"})]
     (is (nil? (delete-session store sk)))
     (is (= {} (read-session store sk)))))
