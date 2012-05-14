@@ -1,3 +1,9 @@
+## Changes between 1.0.0-beta6 and 1.0.0-beta7
+
+No changes yet.
+
+
+
 ## Changes between 1.0.0-beta5 and 1.0.0-beta6
 
 ### find-and-modify support

@@ -12,7 +12,7 @@ There is one MongoDB client for Clojure that has been around since 2009. So, why
 wanted a client that will
 
  * Support most of MongoDB 2.0+ features but only those that really matter. Grouping the way it is done today, for example, does not (it is easier to just use Map/Reduce directly).
- * Be well documented.
+ * Be [well documented](http://clojuremongodb.info).
  * Be well tested.
  * Be maintained, do not carry technical debt from 2009 forever.
  * Target Clojure 1.3.0 and later from the ground up.
@@ -38,7 +38,7 @@ To subscribe for announcements of releases, important changes and so on, please 
 
 With Leiningen:
 
-    [com.novemberain/monger "1.0.0-beta5"]
+    [com.novemberain/monger "1.0.0-beta6"]
 
 
 With Maven:
@@ -46,7 +46,7 @@ With Maven:
     <dependency>
       <groupId>com.novemberain</groupId>
       <artifactId>monger</artifactId>
-      <version>1.0.0-beta5</version>
+      <version>1.0.0-beta6</version>
     </dependency>
 
 
