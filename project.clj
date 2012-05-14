@@ -5,7 +5,7 @@
   :dependencies [[org.clojure/clojure           "1.3.0"]
                  [org.mongodb/mongo-java-driver "2.7.3"]
                  [com.novemberain/validateur    "1.1.0"]
-                 [clojurewerkz/support          "0.3.0"]]
+                 [clojurewerkz/support          "0.3.1"]]
   :test-selectors {:default (complement :performance)
                    :focus       :focus
                    :indexing    :indexing
