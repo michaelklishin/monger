@@ -1,6 +1,17 @@
 ## Changes between 1.0.0-beta6 and 1.0.0-beta7
 
-No changes yet.
+### ring.session.store implementation
+
+Monger now features a [Ring session store](https://github.com/mmcgrana/ring/blob/master/ring-core/src/ring/middleware/session/store.clj) implementation. To use it, require `monger.ring.session-store` and use
+`monger.ring.session-store/monger-store` function like so:
+
+``` clojure
+(ns my.service
+  (:use monger.ring.session-store))
+
+(let [store (monger-store "web_sessions")]
+  ...)
+```
 
 
 

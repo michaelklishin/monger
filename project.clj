@@ -21,12 +21,13 @@
              :1.5 {:dependencies [[org.clojure/clojure "1.5.0-master-SNAPSHOT"]]}
              :dev {:resource-paths ["test/resources"]
                    :dependencies  [[clj-time "0.4.2"              :exclusions [org.clojure/clojure]]
-                                   [org.clojure/data.json "0.1.2" :exclusions [org.clojure/clojure]]
-                                   [org.clojure/tools.cli "0.2.1" :exclusions [org.clojure/clojure]]
-                                   [org.clojure/core.cache "0.5.0" :exclusions [org.clojure/clojure]]]}}
+                                   [org.clojure/data.json  "0.1.2" :exclusions [org.clojure/clojure]]
+                                   [org.clojure/tools.cli  "0.2.1" :exclusions [org.clojure/clojure]]
+                                   [org.clojure/core.cache "0.5.0" :exclusions [org.clojure/clojure]]
+                                   [ring/ring-core         "1.1.0"]]}}
   :aliases {"all" ["with-profile" "dev:dev,1.4:dev,1.5"]}
   :repositories {"sonatype" {:url "http://oss.sonatype.org/content/repositories/releases"
-                             :snapshots false,
+                             :snapshots false
                              :releases {:checksum :fail :update :always}}
                  "sonatype-snapshots" {:url "http://oss.sonatype.org/content/repositories/snapshots"
                                        :snapshots true
