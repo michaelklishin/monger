@@ -1,5 +1,28 @@
 ## Changes between 1.0.0-beta6 and 1.0.0-beta7
 
+### Replica sets support
+
+Monger can now connect to replica sets using one or more seeds when
+calling `monger.core/connect` with a collection of server addresses
+instead of just a single one:
+
+``` clojure
+(ns my.service
+  (:use monger.core))
+
+;; Connect to a single MongoDB instance
+(connect (server-address "127.0.0.1" 27017) (mongo-options))
+
+;; Connect to a replica set
+(connect [(server-address "127.0.0.1" 27017) (server-address "127.0.0.1" 27018)]
+         (mongo-options))
+```
+
+`monger.core/connect!` works exactly the same way.
+
+Contributed by [Baishampayan Ghose](https://github.com/ghoseb).
+
+
 ### ring.session.store implementation
 
 Monger now features a [Ring session store](https://github.com/mmcgrana/ring/blob/master/ring-core/src/ring/middleware/session/store.clj) implementation. To use it, require `monger.ring.session-store` and use
