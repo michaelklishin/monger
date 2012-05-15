@@ -185,7 +185,7 @@
 
   Unlike the official Java driver, Monger uses WriteConcern/SAFE by default. We think defaults should be safe first
   and WebScale fast second."
-  (def ^:dynamic *mongodb-write-concern* wc))
+  (alter-var-root #'*mongodb-write-concern* (constantly wc)))
 
 
 (defn connect-via-uri!
