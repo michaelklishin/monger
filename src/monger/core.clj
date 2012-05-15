@@ -16,7 +16,7 @@
   (:use [monger.conversion])
   (:import [com.mongodb Mongo MongoURI DB WriteConcern DBObject DBCursor CommandResult Bytes MongoOptions ServerAddress MapReduceOutput]
            [com.mongodb.gridfs GridFS]
-           [java.util Map]))
+           [java.util Map ArrayList]))
 
 ;;
 ;; Defaults
@@ -47,11 +47,26 @@
 
        (monger.core/connect)
        (monger.core/connect { :host \"db3.intranet.local\", :port 27787 })
+
+       ;; Connecting to a replica set with a couple of seeds
+       (let [^MongoOptions opts (mg/mongo-options :threads-allowed-to-block-for-connection-multiplier 300)
+                           seeds [[\"192.168.1.1\" 27017] [\"192.168.1.2\" 27017] [\"192.168.1.1\" 27018]]
+                           sas (map #(apply mg/server-address %) seeds)]
+         (mg/connect! sas opts))
    "
+  {:arglists '([]
+               [server-address options]
+               [[server-address & more] options]
+               [{ :keys [host port uri] :or { host *mongodb-host* port *mongodb-port* }}])}
   ([]
      (Mongo.))
-  ([^ServerAddress server-address ^MongoOptions options]
-     (Mongo. server-address options))
+  ([server-address+ ^MongoOptions options]
+     (if (coll? server-address+)
+       ;; connect to a replica set
+       (let [server-list ^ArrayList (ArrayList. ^java.util.Collection server-address+)]
+         (Mongo. server-list options))
+       ;; connect to a single instance
+       (Mongo. ^ServerAddress server-address options)))
   ([{ :keys [host port uri] :or { host *mongodb-host* port *mongodb-port* }}]
      (Mongo. ^String host ^Long port)))
 
