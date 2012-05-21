@@ -31,6 +31,14 @@ wanted a client that will
 To subscribe for announcements of releases, important changes and so on, please follow [@ClojureWerkz](https://twitter.com/#!/clojurewerkz) on Twitter.
 
 
+## Project Maturity
+
+Monger is no longer a really young project: it will be 1 year old in a few months, with active production use from week 1. It is now rapidly approaching
+the RC1 milestone and almost all API parts are set in stone for the 1.0 release. That said, the team takes a pretty conservative stance on
+versioning and there will be as many beta releases as necessary to get things right.
+
+RC1 is something we believe is worth labelling 1.0 when most of documentation guides are ready.
+
 
 ## Artifacts
 
@@ -38,7 +46,7 @@ To subscribe for announcements of releases, important changes and so on, please 
 
 With Leiningen:
 
-    [com.novemberain/monger "1.0.0-beta6"]
+    [com.novemberain/monger "1.0.0-beta7"]
 
 
 With Maven:
@@ -46,7 +54,7 @@ With Maven:
     <dependency>
       <groupId>com.novemberain</groupId>
       <artifactId>monger</artifactId>
-      <version>1.0.0-beta6</version>
+      <version>1.0.0-beta7</version>
     </dependency>
 
 
