@@ -443,12 +443,14 @@
 
 (defn ensure-index
   "Creates an index on a set of fields, if one does not already exist.
-   ensureIndex in Java driver is optimized and is inexpensive if the index already exists.
+   This operation is optimized in the Java driver and is inexpensive in the case when an index already exists.
 
    EXAMPLES
 
-     (monger.collection/ensure-index collection { \"language\" 1 })
-
+     ;; create a regular index
+     (monger.collection/ensure-index \"documents\" { \"language\" 1 })
+     ;; create a unique index
+     (monger.collection/ensure-index \"pages\"     { :url 1 } {:unique true})
   "
   ([^String collection, ^Map keys]
      (let [coll ^DBCollection (.getCollection monger.core/*mongodb-database* collection)]
