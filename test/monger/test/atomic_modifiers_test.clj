@@ -320,12 +320,20 @@
 
 
 (deftest find-and-modify-upsert-a-document
-  (let [coll "docs"
+  (testing "case 1"
+    (let [coll "docs"
         oid (ObjectId.)
         doc {:_id oid :name "Sophie Bangs" :level 42}]
     (let [res (mgcol/find-and-modify coll doc doc :upsert true)]
       (is (empty? res))
       (is (select-keys (mgcol/find-map-by-id coll oid) [:name :level]) (dissoc doc :_id)))))
+  (testing "case 2"
+    (let [coll  "docs"
+          query {:name "Sophie Bangs"}
+          doc   (merge query {:level 42})]
+    (let [res (mgcol/find-and-modify coll query doc :upsert true :return-new true)]
+      (is (:_id res))
+      (is (select-keys (mgcol/find-map-by-id coll (:_id res)) [:name :level]) doc)))))
 
 
 (deftest find-and-modify-after-sort
