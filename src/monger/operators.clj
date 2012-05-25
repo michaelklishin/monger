@@ -192,3 +192,36 @@
 (defoperator $skip)
 (defoperator $unwind)
 (defoperator $group)
+(defoperator $sort)
+
+(defoperator $cmp)
+
+(defoperator $min)
+(defoperator $max)
+(defoperator $avg)
+(defoperator $sum)
+
+(defoperator $add)
+(defoperator $divide)
+(defoperator $multiply)
+(defoperator $substract)
+
+(defoperator $strcasecmp)
+(defoperator $substr)
+(defoperator $toLower)
+(defoperator $toUpper)
+
+(defoperator $dayOfMonth)
+(defoperator $dayOfWeek)
+(defoperator $dayOfYear)
+(defoperator $hour)
+(defoperator $minute)
+(defoperator $month)
+(defoperator $second)
+(defoperator $week)
+(defoperator $year)
+(defoperator $isoDate)
+
+
+(defoperator $ifNull)
+(defoperator $cond)
