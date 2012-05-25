@@ -1,6 +1,8 @@
 ## Changes between 1.0.0-beta7 and 1.0.0-beta8
 
-No changes yet.
+### More Operators
+
+Two new operator macros: `$regex`, `$options`.
 
 
 

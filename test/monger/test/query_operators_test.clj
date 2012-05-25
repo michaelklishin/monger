@@ -97,3 +97,16 @@
          1 { :comments { $elemMatch { :text "Nice!" :rating { $gte 1 } } } }
          2 { "comments.rating" 1 }
          1 { "comments.rating" { $gt 3 } })))
+
+(deftest ^{:focus true} find-with-regex-operator
+  (let [collection "libraries"]
+    (mgcol/insert-batch collection [{ :language "Ruby",    :name "Mongoid"  :users 1}
+                                    { :language "Clojure", :name "Langohr"  :users 5 }
+                                    { :language "Clojure", :name "Incanter" :users 15 }
+                                    { :language "Scala",   :name "Akka"     :users 150}])
+    (are [query results] (is (= results (.count (mgcol/find collection query))))
+      {:language {$regex "Clo.*" }} 2
+      {:language {$regex "clo.*" $options "i"}} 2
+      {:name     {$regex "aK.*" $options "i"}} 1
+      {:language {$regex ".*by" }} 1
+      {:language {$regex ".*ala.*" }} 1)))

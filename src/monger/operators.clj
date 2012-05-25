@@ -12,8 +12,9 @@
 (defmacro ^{:private true} defoperator
   [operator]
   (let [op#     (str operator)
-        op-sym# (symbol op#)]
-    `(def ~op-sym# ~op#)))
+        op-sym# (symbol op#)
+        meta    {:const true}]
+    `(def ^{:const true} ~op-sym# ~op#)))
 
 ;;
 ;; QUERY OPERATORS
@@ -66,6 +67,8 @@
 ;;   (monger.collection/find "comments" { $elemMatch { :text "Nice!" :rating { $gte 1 } } })
 (defoperator $elemMatch)
 
+(defoperator $regex)
+(defoperator $options)
 
 ;;
 ;; LOGIC OPERATORS
