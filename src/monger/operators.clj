@@ -189,3 +189,4 @@
 (defoperator $match)
 (defoperator $project)
 (defoperator $unwind)
+(defoperator $group)
