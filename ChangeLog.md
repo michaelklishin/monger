@@ -2,7 +2,8 @@
 
 ### More Operators
 
-Two new operator macros: `$regex`, `$options`.
+Two new operator macros: `$regex`, `$options` and those used by the upcoming
+[MongoDB 2.2 Aggregation framework](http://docs.mongodb.org/manual/applications/aggregation/).
 
 
 
