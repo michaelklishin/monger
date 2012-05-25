@@ -188,5 +188,7 @@
 
 (defoperator $match)
 (defoperator $project)
+(defoperator $limit)
+(defoperator $skip)
 (defoperator $unwind)
 (defoperator $group)
