@@ -180,3 +180,12 @@
 (defoperator $size)
 (defoperator $type)
 (defoperator $not)
+
+
+;;
+;; Aggregation in 2.2
+;;
+
+(defoperator $match)
+(defoperator $project)
+(defoperator $unwind)
