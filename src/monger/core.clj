@@ -127,7 +127,7 @@
 (defn mongo-options
   [& { :keys [connections-per-host threads-allowed-to-block-for-connection-multiplier
               max-wait-time connect-timeout socket-timeout socket-keep-alive auto-connect-retry max-auto-connect-retry-time
-              safe w w-timeout fsync j] }]
+              safe w w-timeout fsync j] :or [auto-connect-retry true] }]
   (let [mo (MongoOptions.)]
     (when connections-per-host
       (set! (. mo connectionsPerHost) connections-per-host))
