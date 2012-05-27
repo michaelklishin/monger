@@ -5,6 +5,10 @@
 `monger.collection/aggregate` provides a convenient way to run [aggregation queries](http://docs.mongodb.org/manual/reference/aggregation/).
 
 ``` clojure
+(ns my.service
+  (:require [monger.collection :as mc])
+  (:use monger.operators))
+
 ;; single stage pipeline
 (mc/aggregate "docs" [{$project {:subtotal {$multiply ["$quantity", "$price"]}
                                                        :_id     "$state"}}])
