@@ -78,7 +78,7 @@ With Maven:
 
 ## Getting Started
 
-Please refer to our [Getting Started guide](http://clojuremongodb.info/articles/getting_started.html). Don't hesitate to join our [mailing list](https://groups.google.com/forum/#!forum/clojure-monger) and ask questions, too!
+Please refer to our [Getting Started guide](http://clojuremongodb.info/articles/getting_started.html). Don't hesitate to join our [mailing list](https://groups.google.com/forum/#!forum/clojure-mongodb) and ask questions, too!
 
 
 
