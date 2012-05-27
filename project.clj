@@ -6,13 +6,17 @@
                  [org.mongodb/mongo-java-driver "2.7.3"]
                  [com.novemberain/validateur    "1.1.0"]
                  [clojurewerkz/support          "0.4.0"]]
-  :test-selectors {:default (complement :performance)
-                   :focus       :focus
-                   :indexing    :indexing
-                   :external    :external
-                   :cache       :cache
-                   :performance :performance
-                   :all (constantly true)}
+  :test-selectors {:default     (fn [m]
+                                  (and (not (:performance m))
+                                       (not (:edge-features m))))
+                   :focus         :focus
+                   :indexing      :indexing
+                   :external      :external
+                   :cache         :cache
+                   :performance   :performance
+                   ;; as in, edge mongodb server
+                   :edge-features :edge-features
+                   :all           (constantly true)}
   :codox {:exclude [monger.internal.pagination]}
   :mailing-list {:name "clojure-monger"
                  :archive "https://groups.google.com/group/clojure-monger"

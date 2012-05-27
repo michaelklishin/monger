@@ -596,3 +596,17 @@
    and :size (max allowed size of the collection, in bytes)."
   [^String name options]
   (.createCollection ^DB monger.core/*mongodb-database* name (to-db-object options)))
+
+;;
+;; Aggregation
+;;
+
+(defn aggregate
+  "Performs aggregation query. MongoDB 2.1/2.2+ only.
+
+  See http://docs.mongodb.org/manual/applications/aggregation/ to learn more."
+  [^String coll stages]
+  (let [res (monger.core/command {:aggregate coll :pipeline stages})]
+    ;; this is what DBCollection#distinct does. Turning a blind eye!
+    (.throwOnError res)
+    (map #(from-db-object % true) (.get res "result"))))
