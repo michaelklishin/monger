@@ -26,7 +26,7 @@ wanted a client that will
 
 ## Community
 
-[Monger has a mailing list](https://groups.google.com/forum/#!forum/clojure-monger). Feel free to join it and ask any questions you may have.
+[Monger has a mailing list](https://groups.google.com/forum/#!forum/clojure-mongodb). Feel free to join it and ask any questions you may have.
 
 To subscribe for announcements of releases, important changes and so on, please follow [@ClojureWerkz](https://twitter.com/#!/clojurewerkz) on Twitter.
 
