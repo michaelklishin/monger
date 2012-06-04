@@ -1,5 +1,11 @@
 ## Changes between 1.0.0-beta7 and 1.0.0-beta8
 
+### monger.gridfs/files-as-maps
+
+`monger.gridfs/files-as-maps` works the same way as `monger.gridfs/all-files` but returns results as Clojure maps. It is to
+`monger.gridfs/all-files` what `monger.collection/find-maps` is to `monger.collection/find`.
+
+
 ### MongoDB 2.1/2.2 Aggregation Framework support
 
 `monger.collection/aggregate` provides a convenient way to run [aggregation queries](http://docs.mongodb.org/manual/reference/aggregation/).
