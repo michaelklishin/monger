@@ -65,12 +65,12 @@
   ([]
      (map converter (all-files)))
   ([query]
-     (map converter (all-files query)))
+     (map converter (all-files (to-db-object query))))
   ([^GridFS fs query]
-     (map converter (all-files fs query))))
+     (map converter (all-files fs (to-db-object query)))))
 
 (defprotocol GridFSInputFileFactory
-  (^GridFSInputFile make-input-file [input] "Makes GridFSInputFile out of the given input"))
+  (^com.mongodb.gridfs.GridFSInputFile make-input-file [input] "Makes GridFSInputFile out of the given input"))
 
 (extend byte-array-type
   GridFSInputFileFactory
