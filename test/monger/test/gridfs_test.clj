@@ -24,7 +24,7 @@
 
 
 
-(deftest test-storing-files-to-gridfs-using-relative-fs-paths
+(deftest ^{:gridfs true} test-storing-files-to-gridfs-using-relative-fs-paths
   (let [input "./test/resources/mongo/js/mapfun1.js"]
     (is (= 0 (count (gridfs/all-files))))
     (store (make-input-file input)
@@ -33,7 +33,7 @@
     (is (= 1 (count (gridfs/all-files))))))
 
 
-(deftest test-storing-files-to-gridfs-using-file-instances
+(deftest ^{:gridfs true} test-storing-files-to-gridfs-using-file-instances
   (let [input (io/as-file "./test/resources/mongo/js/mapfun1.js")]
     (is (= 0 (count (gridfs/all-files))))
     (store (make-input-file input)
@@ -41,15 +41,23 @@
       (.setContentType "application/octet-stream"))
     (is (= 1 (count (gridfs/all-files))))))
 
-(deftest test-storing-bytes-to-gridfs
-  (let [input (.getBytes "A string")]
+(deftest ^{:gridfs true} test-storing-bytes-to-gridfs
+  (let [input (.getBytes "A string")
+        md    {:format "raw" :source "AwesomeCamera D95"}
+        filename "monger.test.gridfs.file3"
+        ct       "application/octet-stream"]
     (is (= 0 (count (gridfs/all-files))))
     (store (make-input-file input)
-      (.setFilename "monger.test.gridfs.file3")
+      (.setFilename filename)
+      (.setMetaData (to-db-object md))
       (.setContentType "application/octet-stream"))
+    (let [f (first (gridfs/files-as-maps))]
+      (is (= ct (:contentType f)))
+      (is (= filename (:filename f)))
+      (is (= md (:metadata f))))
     (is (= 1 (count (gridfs/all-files))))))
 
-(deftest test-storing-files-to-gridfs-using-absolute-fs-paths
+(deftest ^{:gridfs true} test-storing-files-to-gridfs-using-absolute-fs-paths
   (let [tmp-file (File/createTempFile "monger.test.gridfs" "test-storing-files-to-gridfs-using-absolute-fs-paths")
         _        (spit tmp-file "Some content")
         input    (.getAbsolutePath tmp-file)]
@@ -59,7 +67,7 @@
       (.setContentType "application/octet-stream"))
     (is (= 1 (count (gridfs/all-files))))))
 
-(deftest test-storing-files-to-gridfs-using-input-stream
+(deftest ^{:gridfs true} test-storing-files-to-gridfs-using-input-stream
   (let [tmp-file (File/createTempFile "monger.test.gridfs" "test-storing-files-to-gridfs-using-input-stream")
         _        (spit tmp-file "Some other content")]
     (is (= 0 (count (gridfs/all-files))))
@@ -70,7 +78,7 @@
 
 
 
-(deftest test-finding-individual-files-on-gridfs
+(deftest ^{:gridfs true} test-finding-individual-files-on-gridfs
   (let [input   "./test/resources/mongo/js/mapfun1.js"
         ct      "binary/octet-stream"
         filename "monger.test.gridfs.file5"
@@ -90,7 +98,7 @@
          md5 filename
          md5 (to-db-object { :md5 md5 }))))
 
-(deftest test-finding-multiple-files-on-gridfs
+(deftest ^{:gridfs true} test-finding-multiple-files-on-gridfs
   (let [input   "./test/resources/mongo/js/mapfun1.js"
         ct      "binary/octet-stream"
         md5      "14a09deabb50925a3381315149017bbd"
@@ -113,7 +121,7 @@
          list4 [stored1 stored2])))
 
 
-(deftest test-removing-multiple-files-from-gridfs
+(deftest ^{:gridfs true} test-removing-multiple-files-from-gridfs
   (let [input   "./test/resources/mongo/js/mapfun1.js"
         ct      "binary/octet-stream"
         md5      "14a09deabb50925a3381315149017bbd"

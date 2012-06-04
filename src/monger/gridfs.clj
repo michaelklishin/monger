@@ -9,9 +9,10 @@
 
 (ns monger.gridfs
   (:refer-clojure :exclude [remove find])
-  (:require [monger.core]
+  (:require monger.core
             [clojure.java.io :as io])
-  (:use [monger.conversion])
+  (:use monger.conversion
+        [clojurewerkz.support.fn :only [fpartial]])
   (:import [com.mongodb DB DBObject]
            [com.mongodb.gridfs GridFS GridFSInputFile]
            [java.io InputStream File]))
@@ -57,23 +58,33 @@
   ([^GridFS fs query]
      (.getFileList fs query)))
 
+(def ^{:private true} converter
+  (fpartial from-db-object true))
+
+(defn files-as-maps
+  ([]
+     (map converter (all-files)))
+  ([query]
+     (map converter (all-files query)))
+  ([^GridFS fs query]
+     (map converter (all-files fs query))))
 
 (defprotocol GridFSInputFileFactory
-  (^GridFSInputFile make-input-file [input] "Makes GridFSInputFile out of given input"))
+  (^GridFSInputFile make-input-file [input] "Makes GridFSInputFile out of the given input"))
 
 (extend byte-array-type
   GridFSInputFileFactory
-  { :make-input-file (fn [^bytes input]
-                       (.createFile ^GridFS monger.core/*mongodb-gridfs* input)) })
+  {:make-input-file (fn [^bytes input]
+                      (.createFile ^GridFS monger.core/*mongodb-gridfs* input))})
 
 (extend-protocol GridFSInputFileFactory
   String
   (make-input-file [^String input]
-    (.createFile ^GridFS monger.core/*mongodb-gridfs* ^InputStream (io/make-input-stream input { :encoding "UTF-8" })))
+    (.createFile ^GridFS monger.core/*mongodb-gridfs* ^InputStream (io/make-input-stream input {:encoding "UTF-8"})))
 
   File
   (make-input-file [^File input]
-    (.createFile ^GridFS monger.core/*mongodb-gridfs* ^InputStream (io/make-input-stream input { :encoding "UTF-8" })))
+    (.createFile ^GridFS monger.core/*mongodb-gridfs* ^InputStream (io/make-input-stream input {:encoding "UTF-8"})))
 
   InputStream
   (make-input-file [^InputStream input]
