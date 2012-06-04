@@ -1,6 +1,9 @@
 ## Changes between 1.0.0-beta7 and 1.0.0-beta8
 
-### monger.gridfs/files-as-maps
+### GridFS support improvements
+
+`monger.gridfs/find-maps` and `monger.gridfs/find-one-as-map` were added. They serve the same purposes as `monger.collection/find-maps` and
+`monger.collection/find-one-as-map`, making it easy to work with Clojure data structures all the time.
 
 `monger.gridfs/files-as-maps` works the same way as `monger.gridfs/all-files` but returns results as Clojure maps. It is to
 `monger.gridfs/all-files` what `monger.collection/find-maps` is to `monger.collection/find`.

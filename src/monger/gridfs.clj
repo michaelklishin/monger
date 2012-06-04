@@ -100,27 +100,45 @@
 
 (defprotocol Finders
   (find     [input] "Finds multiple files using given input (an ObjectId, filename or query)")
-  (find-one [input] "Finds one file using given input (an ObjectId, filename or query)"))
+  (find-one [input] "Finds one file using given input (an ObjectId, filename or query)")
+  (find-maps       [input] "Finds multiple files using given input (an ObjectId, filename or query), returning a Clojure map")
+  (find-one-as-map [input] "Finds one file using given input (an ObjectId, filename or query), returning a Clojure map"))
 
 (extend-protocol Finders
   String
   (find [^String input]
-    (vec (.find ^GridFS monger.core/*mongodb-gridfs* input)))
+    (.find ^GridFS monger.core/*mongodb-gridfs* input))
   (find-one [^String input]
     (.findOne ^GridFS monger.core/*mongodb-gridfs* input))
+  (find-maps [^String input]
+    (map converter (find input)))
+  (find-one-as-map [^String input]
+    (converter (find-one input)))
 
   org.bson.types.ObjectId
   (find-one [^org.bson.types.ObjectId input]
     (.findOne ^GridFS monger.core/*mongodb-gridfs* input))
+  (find-one-as-map [^org.bson.types.ObjectId input]
+    (converter (find-one input)))
 
 
   DBObject
   (find [^DBObject input]
-    (vec (.find ^GridFS monger.core/*mongodb-gridfs* input)))
+    (.find ^GridFS monger.core/*mongodb-gridfs* input))
   (find-one [^DBObject input]
     (.findOne ^GridFS monger.core/*mongodb-gridfs* input))
+  (find-maps [^DBObject input]
+    (map converter (find input)))
+  (find-one-as-map [^DBObject input]
+    (converter (find-one input)))
 
-  clojure.lang.PersistentArrayMap
-  (find [^clojure.lang.PersistentArrayMap input]
-    (find (to-db-object input))))
+  java.util.Map
+  (find [^java.util.Map input]
+    (find (to-db-object input)))
+  (find-one [^java.util.Map input]
+    (find-one (to-db-object input)))
+  (find-maps [^java.util.Map input]
+    (find-maps (to-db-object input)))
+  (find-one-as-map [^java.util.Map input]
+    (find-one-as-map (to-db-object input))))
 

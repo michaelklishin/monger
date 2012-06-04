@@ -11,6 +11,9 @@
   (:import [java.io InputStream File FileInputStream]
            [com.mongodb.gridfs GridFS GridFSInputFile GridFSDBFile]))
 
+(defn purge-gridfs*
+  []
+  (gridfs/remove-all))
 
 (defn purge-gridfs
   [f]
@@ -79,7 +82,9 @@
 
 
 (deftest ^{:gridfs true} test-finding-individual-files-on-gridfs
-  (let [input   "./test/resources/mongo/js/mapfun1.js"
+  (testing "gridfs/find-one"
+    (purge-gridfs*)    
+    (let [input   "./test/resources/mongo/js/mapfun1.js"
         ct      "binary/octet-stream"
         filename "monger.test.gridfs.file5"
         md5      "14a09deabb50925a3381315149017bbd"
@@ -96,7 +101,30 @@
     (are [a b] (is (= a (:md5 (from-db-object (gridfs/find-one b) true))))
          md5 (:_id stored)
          md5 filename
-         md5 (to-db-object { :md5 md5 }))))
+         md5 (to-db-object {:md5 md5}))))
+  (testing "gridfs/find-one-as-map"
+    (purge-gridfs*)
+    (let [input   "./test/resources/mongo/js/mapfun1.js"
+        ct      "binary/octet-stream"
+        filename "monger.test.gridfs.file6"
+        md5      "14a09deabb50925a3381315149017bbd"
+        stored  (store (make-input-file input)
+                  (.setFilename filename)
+                  (.setMetaData (to-db-object {:meta "data"}))
+                  (.setContentType ct))]
+    (is (= 1 (count (gridfs/all-files))))
+    (is (:_id stored))
+    (is (:uploadDate stored))
+    (is (= 62 (:length stored)))
+    (is (= md5 (:md5 stored)))
+    (is (= filename (:filename stored)))
+    (is (= ct (:contentType stored)))
+    (let [m (gridfs/find-one-as-map {:filename filename})]
+      (is (= {:meta "data"} (:metadata m))))
+    (are [a query] (is (= a (:md5 (gridfs/find-one-as-map query))))
+         md5 (:_id stored)
+         md5 filename
+         md5 {:md5 md5}))))
 
 (deftest ^{:gridfs true} test-finding-multiple-files-on-gridfs
   (let [input   "./test/resources/mongo/js/mapfun1.js"
