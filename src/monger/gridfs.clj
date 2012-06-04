@@ -69,6 +69,11 @@
   ([^GridFS fs query]
      (map converter (all-files fs (to-db-object query)))))
 
+
+;;
+;; Plumbing (low-level API)
+;;
+
 (defprotocol GridFSInputFileFactory
   (^com.mongodb.gridfs.GridFSInputFile make-input-file [input] "Makes GridFSInputFile out of the given input"))
 
@@ -97,6 +102,40 @@
      (.save f# GridFS/DEFAULT_CHUNKSIZE)
      (from-db-object f# true)))
 
+
+;;
+;; "New" DSL, a higher-level API
+;;
+
+(defn save
+  [^GridFSInputFile input]
+  (.save input GridFS/DEFAULT_CHUNKSIZE)
+  (from-db-object input true))
+
+(defn filename
+  [^GridFSInputFile input ^String s]
+  (.setFilename input s)
+  input)
+
+(defn content-type
+  [^GridFSInputFile input ^String s]
+  (.setContentType input s)
+  input)
+
+(defn metadata
+  [^GridFSInputFile input md]
+  (.setMetaData input (to-db-object md))
+  input)
+
+(defmacro store-file
+  [^GridFSInputFile input & body]
+  `(let [f# (-> ~input ~@body)]
+     (save f#)))
+
+
+;;
+;; Finders
+;;
 
 (defprotocol Finders
   (find     [input] "Finds multiple files using given input (an ObjectId, filename or query)")

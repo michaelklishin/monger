@@ -4,7 +4,7 @@
         [monger.core :only [count]]
         monger.test.fixtures
         [monger operators conversion]
-        [monger.gridfs :only (store make-input-file)])
+        [monger.gridfs :only (store make-input-file store-file filename content-type metadata)])
   (:require [monger.gridfs :as gridfs]
             [monger.test.helper :as helper]
             [clojure.java.io :as io])
@@ -31,32 +31,32 @@
   (let [input "./test/resources/mongo/js/mapfun1.js"]
     (is (= 0 (count (gridfs/all-files))))
     (store (make-input-file input)
-      (.setFilename "monger.test.gridfs.file1")
-      (.setContentType "application/octet-stream"))
+           (.setFilename "monger.test.gridfs.file1")
+           (.setContentType "application/octet-stream"))
     (is (= 1 (count (gridfs/all-files))))))
 
 
 (deftest ^{:gridfs true} test-storing-files-to-gridfs-using-file-instances
   (let [input (io/as-file "./test/resources/mongo/js/mapfun1.js")]
     (is (= 0 (count (gridfs/all-files))))
-    (store (make-input-file input)
-      (.setFilename "monger.test.gridfs.file2")
-      (.setContentType "application/octet-stream"))
+    (store-file (make-input-file input)
+                (filename "monger.test.gridfs.file2")
+                (content-type "application/octet-stream"))
     (is (= 1 (count (gridfs/all-files))))))
 
 (deftest ^{:gridfs true} test-storing-bytes-to-gridfs
   (let [input (.getBytes "A string")
         md    {:format "raw" :source "AwesomeCamera D95"}
-        filename "monger.test.gridfs.file3"
-        ct       "application/octet-stream"]
+        fname  "monger.test.gridfs.file3"
+        ct     "application/octet-stream"]
     (is (= 0 (count (gridfs/all-files))))
-    (store (make-input-file input)
-      (.setFilename filename)
-      (.setMetaData (to-db-object md))
-      (.setContentType "application/octet-stream"))
+    (store-file (make-input-file input)
+                (filename fname)
+                (metadata md)
+                (content-type "application/octet-stream"))
     (let [f (first (gridfs/files-as-maps))]
       (is (= ct (:contentType f)))
-      (is (= filename (:filename f)))
+      (is (= fname (:filename f)))
       (is (= md (:metadata f))))
     (is (= 1 (count (gridfs/all-files))))))
 
@@ -65,18 +65,18 @@
         _        (spit tmp-file "Some content")
         input    (.getAbsolutePath tmp-file)]
     (is (= 0 (count (gridfs/all-files))))
-    (store (make-input-file input)
-      (.setFilename "monger.test.gridfs.file4")
-      (.setContentType "application/octet-stream"))
+    (store-file (make-input-file input)
+                (filename "monger.test.gridfs.file4")
+                (content-type "application/octet-stream"))
     (is (= 1 (count (gridfs/all-files))))))
 
 (deftest ^{:gridfs true} test-storing-files-to-gridfs-using-input-stream
   (let [tmp-file (File/createTempFile "monger.test.gridfs" "test-storing-files-to-gridfs-using-input-stream")
         _        (spit tmp-file "Some other content")]
     (is (= 0 (count (gridfs/all-files))))
-    (store (make-input-file (FileInputStream. tmp-file))
-      (.setFilename "monger.test.gridfs.file4b")
-      (.setContentType "application/octet-stream"))
+    (store-file (make-input-file (FileInputStream. tmp-file))
+                (filename "monger.test.gridfs.file4b")
+                (content-type "application/octet-stream"))
     (is (= 1 (count (gridfs/all-files))))))
 
 
@@ -85,57 +85,57 @@
   (testing "gridfs/find-one"
     (purge-gridfs*)    
     (let [input   "./test/resources/mongo/js/mapfun1.js"
-        ct      "binary/octet-stream"
-        filename "monger.test.gridfs.file5"
-        md5      "14a09deabb50925a3381315149017bbd"
-        stored  (store (make-input-file input)
-                  (.setFilename filename)
-                  (.setContentType ct))]
-    (is (= 1 (count (gridfs/all-files))))
-    (is (:_id stored))
-    (is (:uploadDate stored))
-    (is (= 62 (:length stored)))
-    (is (= md5 (:md5 stored)))
-    (is (= filename (:filename stored)))
-    (is (= ct (:contentType stored)))
-    (are [a b] (is (= a (:md5 (from-db-object (gridfs/find-one b) true))))
-         md5 (:_id stored)
-         md5 filename
-         md5 (to-db-object {:md5 md5}))))
+          ct     "binary/octet-stream"
+          fname  "monger.test.gridfs.file5"
+          md5    "14a09deabb50925a3381315149017bbd"
+          stored (store-file (make-input-file input)
+                             (filename fname)
+                             (content-type ct))]
+      (is (= 1 (count (gridfs/all-files))))
+      (is (:_id stored))
+      (is (:uploadDate stored))
+      (is (= 62 (:length stored)))
+      (is (= md5 (:md5 stored)))
+      (is (= fname (:filename stored)))
+      (is (= ct (:contentType stored)))
+      (are [a b] (is (= a (:md5 (from-db-object (gridfs/find-one b) true))))
+           md5 (:_id stored)
+           md5 fname
+           md5 (to-db-object {:md5 md5}))))
   (testing "gridfs/find-one-as-map"
     (purge-gridfs*)
     (let [input   "./test/resources/mongo/js/mapfun1.js"
-        ct      "binary/octet-stream"
-        filename "monger.test.gridfs.file6"
-        md5      "14a09deabb50925a3381315149017bbd"
-        stored  (store (make-input-file input)
-                  (.setFilename filename)
-                  (.setMetaData (to-db-object {:meta "data"}))
-                  (.setContentType ct))]
-    (is (= 1 (count (gridfs/all-files))))
-    (is (:_id stored))
-    (is (:uploadDate stored))
-    (is (= 62 (:length stored)))
-    (is (= md5 (:md5 stored)))
-    (is (= filename (:filename stored)))
-    (is (= ct (:contentType stored)))
-    (let [m (gridfs/find-one-as-map {:filename filename})]
-      (is (= {:meta "data"} (:metadata m))))
-    (are [a query] (is (= a (:md5 (gridfs/find-one-as-map query))))
-         md5 (:_id stored)
-         md5 filename
-         md5 {:md5 md5}))))
+          ct      "binary/octet-stream"
+          fname "monger.test.gridfs.file6"
+          md5      "14a09deabb50925a3381315149017bbd"
+          stored  (store-file (make-input-file input)
+                              (filename fname)
+                              (metadata (to-db-object {:meta "data"}))
+                              (content-type ct))]
+      (is (= 1 (count (gridfs/all-files))))
+      (is (:_id stored))
+      (is (:uploadDate stored))
+      (is (= 62 (:length stored)))
+      (is (= md5 (:md5 stored)))
+      (is (= fname (:filename stored)))
+      (is (= ct (:contentType stored)))
+      (let [m (gridfs/find-one-as-map {:filename fname})]
+        (is (= {:meta "data"} (:metadata m))))
+      (are [a query] (is (= a (:md5 (gridfs/find-one-as-map query))))
+           md5 (:_id stored)
+           md5 fname
+           md5 {:md5 md5}))))
 
 (deftest ^{:gridfs true} test-finding-multiple-files-on-gridfs
   (let [input   "./test/resources/mongo/js/mapfun1.js"
         ct      "binary/octet-stream"
         md5      "14a09deabb50925a3381315149017bbd"
-        stored1  (store (make-input-file input)
-                   (.setFilename "monger.test.gridfs.file6")
-                   (.setContentType ct))
-        stored2  (store (make-input-file input)
-                   (.setFilename "monger.test.gridfs.file7")
-                   (.setContentType ct))
+        stored1  (store-file (make-input-file input)
+                             (filename "monger.test.gridfs.file6")
+                             (content-type ct))
+        stored2  (store-file (make-input-file input)
+                             (filename "monger.test.gridfs.file7")
+                             (content-type ct))
         list1    (gridfs/find "monger.test.gridfs.file6")
         list2    (gridfs/find "monger.test.gridfs.file7")
         list3    (gridfs/find "888000___.monger.test.gridfs.file")
@@ -153,12 +153,12 @@
   (let [input   "./test/resources/mongo/js/mapfun1.js"
         ct      "binary/octet-stream"
         md5      "14a09deabb50925a3381315149017bbd"
-        stored1  (store (make-input-file input)
-                   (.setFilename "monger.test.gridfs.file8")
-                   (.setContentType ct))
-        stored2  (store (make-input-file input)
-                   (.setFilename "monger.test.gridfs.file9")
-                   (.setContentType ct))]
+        stored1  (store-file (make-input-file input)
+                             (filename "monger.test.gridfs.file8")
+                             (content-type ct))
+        stored2  (store-file (make-input-file input)
+                             (filename "monger.test.gridfs.file9")
+                             (content-type ct))]
     (is (= 2 (count (gridfs/all-files))))
     (gridfs/remove { :filename "monger.test.gridfs.file8" })
     (is (= 1 (count (gridfs/all-files))))

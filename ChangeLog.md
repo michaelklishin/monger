@@ -2,7 +2,21 @@
 
 ### GridFS support improvements
 
-`monger.gridfs/find-maps` and `monger.gridfs/find-one-as-map` were added. They serve the same purposes as `monger.collection/find-maps` and
+Monger finally has a higher-level DSL for storing files on GridFS
+
+``` clojure
+(ns my.service
+  (:use [monger.gridfs :only [store-file make-input-file filename content-type metadata]]))
+
+;; store a file from a local FS path with the given filename, content type and metadata
+(store-file (make-input-file "/path/to/a/local/file.png")
+  (filename "image.png")
+  (metadata {:format "png"})
+  (content-type "image/png"))
+```
+
+There are also querying improvements: `monger.gridfs/find-maps` and `monger.gridfs/find-one-as-map` are new functions that were added.
+They serve the same purposes as `monger.collection/find-maps` and
 `monger.collection/find-one-as-map`, making it easy to work with Clojure data structures all the time.
 
 `monger.gridfs/files-as-maps` works the same way as `monger.gridfs/all-files` but returns results as Clojure maps. It is to
