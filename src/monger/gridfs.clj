@@ -132,7 +132,8 @@
   (find-one-as-map [^DBObject input]
     (converter (find-one input)))
 
-  java.util.Map
+  ;; using java.util.Map here results in (occasional) recursion
+  clojure.lang.IPersistentMap
   (find [^java.util.Map input]
     (find (to-db-object input)))
   (find-one [^java.util.Map input]
