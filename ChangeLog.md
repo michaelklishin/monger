@@ -1,3 +1,9 @@
+## Changes between 1.0.0-beta8 and 1.0.0-rc1
+
+No changes yet.
+
+
+
 ## Changes between 1.0.0-beta7 and 1.0.0-beta8
 
 ### GridFS support improvements

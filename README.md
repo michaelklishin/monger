@@ -46,7 +46,7 @@ RC1 is something we believe is worth labelling 1.0 when most of documentation gu
 
 With Leiningen:
 
-    [com.novemberain/monger "1.0.0-beta7"]
+    [com.novemberain/monger "1.0.0-beta8"]
 
 
 With Maven:
@@ -54,7 +54,7 @@ With Maven:
     <dependency>
       <groupId>com.novemberain</groupId>
       <artifactId>monger</artifactId>
-      <version>1.0.0-beta7</version>
+      <version>1.0.0-beta8</version>
     </dependency>
 
 
