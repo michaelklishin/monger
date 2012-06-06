@@ -20,8 +20,8 @@
                    :all           (constantly true)}
   :codox {:exclude [monger.internal.pagination]}
   :mailing-list {:name "clojure-monger"
-                 :archive "https://groups.google.com/group/clojure-monger"
-                 :post "clojure-monger@googlegroups.com"}
+                 :archive "https://groups.google.com/group/clojure-mongodb"
+                 :post "clojure-mongodb@googlegroups.com"}
   :profiles {:1.4 {:dependencies [[org.clojure/clojure "1.4.0"]]}
              :1.5 {:dependencies [[org.clojure/clojure "1.5.0-master-SNAPSHOT"]]}
              :dev {:resource-paths ["test/resources"]
