@@ -11,10 +11,7 @@
 
 (defmacro ^{:private true} defoperator
   [operator]
-  (let [op#     (str operator)
-        op-sym# (symbol op#)
-        meta    {:const true}]
-    `(def ^{:const true} ~op-sym# ~op#)))
+  `(def ^{:const true} ~(symbol (str operator)) ~(str operator)))
 
 ;;
 ;; QUERY OPERATORS
