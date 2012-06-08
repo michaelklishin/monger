@@ -8,8 +8,18 @@
 ;; You must not remove this notice, or any other, from this software.
 
 (ns monger.result
-  (:import [com.mongodb DBObject WriteResult MapReduceOutput])
+  (:import [com.mongodb DBObject WriteResult MapReduceOutput]
+           clojure.lang.IPersistentMap)
   (:require monger.conversion))
+
+
+;;
+;; Implementation
+;;
+
+(defn- okayish?
+  [value]
+  (contains? #{true "true" 1 1.0} value))
 
 
 ;;
@@ -25,7 +35,7 @@
   DBObject
   (ok?
     [^DBObject result]
-    (.contains [true "true" 1 1.0] (.get result "ok")))
+    (okayish? (.get result "ok")))
   (has-error?
     [^DBObject result]
     ;; yes, this is exactly the logic MongoDB Java driver uses.
@@ -50,4 +60,10 @@
   MapReduceOutput
   (ok?
     [^MapReduceOutput result]
-    (ok? ^DBObject (.getRaw result))))
+    (ok? ^DBObject (.getRaw result)))
+
+  IPersistentMap
+  (ok?
+    [^IPersistentMap m]
+    (okayish? (or (get m :ok)
+                  (get m "ok")))))

@@ -13,7 +13,8 @@
                    :indexing      :indexing
                    :external      :external
                    :cache         :cache
-                   :gridfs        :gridfs                   
+                   :gridfs        :gridfs
+                   :command       :command
                    :performance   :performance
                    ;; as in, edge mongodb server
                    :edge-features :edge-features

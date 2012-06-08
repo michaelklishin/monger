@@ -1,6 +1,8 @@
 ## Changes between 1.0.0-beta8 and 1.0.0-rc1
 
-No changes yet.
+### monger.result/ok? now works on Clojure maps
+
+`monger.result/ok?` has been implemented for Clojure maps.
 
 
 
