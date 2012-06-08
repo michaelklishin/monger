@@ -46,14 +46,17 @@
        (monger.collection/insert \"people\" { :name \"Joe\", :age 30, WriteConcern/SAFE })
   "
   ([^String collection document]
-     (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
-       (.insert ^DBCollection coll ^DBObject (to-db-object document) ^WriteConcern monger.core/*mongodb-write-concern*)))
+     (.insert ^DBCollection (.getCollection monger.core/*mongodb-database* collection)
+                ^DBObject (to-db-object document)
+                ^WriteConcern monger.core/*mongodb-write-concern*))
   ([^String collection document ^WriteConcern concern]
-     (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
-       (.insert ^DBCollection coll ^DBObject (to-db-object document) ^WriteConcern concern)))
+     (.insert ^DBCollection (.getCollection monger.core/*mongodb-database* collection)
+                ^DBObject (to-db-object document)
+                concern))
   ([^DB db ^String collection document ^WriteConcern concern]
-     (let [^DBCollection coll (.getCollection db collection)]
-       (.insert ^DBCollection coll ^DBObject (to-db-object document) ^WriteConcern concern))))
+     (.insert ^DBCollection (.getCollection db collection)
+                ^DBObject (to-db-object document)
+                concern)))
 
 
 (defn ^WriteResult insert-batch
@@ -67,14 +70,17 @@
 
   "
   ([^String collection ^List documents]
-     (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
-       (.insert ^DBCollection coll ^List (to-db-object documents) ^WriteConcern monger.core/*mongodb-write-concern*)))
+     (.insert ^DBCollection (.getCollection monger.core/*mongodb-database* collection)
+              ^List (to-db-object documents)
+              ^WriteConcern monger.core/*mongodb-write-concern*))
   ([^String collection ^List documents ^WriteConcern concern]
-     (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
-       (.insert ^DBCollection coll ^List (to-db-object documents) ^WriteConcern concern)))
+     (.insert ^DBCollection (.getCollection monger.core/*mongodb-database* collection)
+              ^List (to-db-object documents)
+              concern))
   ([^DB db ^String collection ^List documents ^WriteConcern concern]
-     (let [^DBCollection coll (.getCollection db collection)]
-       (.insert ^DBCollection coll ^List (to-db-object documents) ^WriteConcern concern))))
+     (.insert ^DBCollection (.getCollection db collection)
+                ^List (to-db-object documents)
+                concern)))
 
 ;;
 ;; monger.collection/find
@@ -96,21 +102,20 @@
       (mgcol/find \"people\" { :company \"Comp Corp\"} [:first_name :last_name])
   "
   ([^String collection]
-     (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
-       (.find coll)))
+     (.find ^DBCollection (.getCollection monger.core/*mongodb-database* collection)))
   ([^String collection ^Map ref]
-     (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
-       (.find ^DBCollection coll ^DBObject (to-db-object ref))))
+     (.find ^DBCollection (.getCollection monger.core/*mongodb-database* collection)
+            ^DBObject (to-db-object ref)))
   ([^String collection ^Map ref fields]
-     (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)
-           ^DBObject fields-obj (as-field-selector fields)]
-       (.find ^DBCollection coll ^DBObject (to-db-object ref) fields-obj)))
+     (.find ^DBCollection (.getCollection monger.core/*mongodb-database* collection)
+            ^DBObject (to-db-object ref)
+            ^DBObject (as-field-selector fields)))
   ([^DB db ^String collection ^Map ref fields]
-     (let [^DBCollection coll (.getCollection db collection)
-           ^DBObject fields-obj (as-field-selector fields)]
-       (.find ^DBCollection coll ^DBObject (to-db-object ref) fields-obj))))
+     (.find ^DBCollection (.getCollection db collection)
+            ^DBObject (to-db-object ref)
+            ^DBObject (as-field-selector fields))))
 
-(defn ^ISeq find-maps
+(defn find-maps
   "Queries for objects in this collection.
    This function returns clojure Seq of Maps.
    If you want to work directly with DBObject, use find.
@@ -124,7 +129,7 @@
   ([^DB db ^String collection ^Map ref fields]
      (map (fn [x] (from-db-object x true)) (find db collection ref fields))))
 
-(defn ^ISeq find-seq
+(defn find-seq
   "Queries for objects in this collection, returns ISeq of DBObjects."
   ([^String collection]
      (seq (find collection)))
@@ -152,16 +157,16 @@
 
   "
   ([^String collection ^Map ref]
-     (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
-       (.findOne ^DBCollection coll ^DBObject (to-db-object ref))))
+     (.findOne ^DBCollection (.getCollection monger.core/*mongodb-database* collection)
+               ^DBObject (to-db-object ref)))
   ([^String collection ^Map ref fields]
-     (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)
-           ^DBObject fields-obj (as-field-selector fields)]
-       (.findOne ^DBCollection coll ^DBObject (to-db-object ref) fields-obj)))
+     (.findOne ^DBCollection (.getCollection monger.core/*mongodb-database* collection)
+               ^DBObject (to-db-object ref)
+               ^DBObject (as-field-selector fields)))
   ([^DB db ^String collection ^Map ref fields]
-     (let [^DBCollection coll (.getCollection db collection)
-           ^DBObject fields-obj (as-field-selector fields)]
-       (.findOne ^DBCollection coll ^DBObject (to-db-object ref) fields-obj))))
+     (.findOne ^DBCollection (.getCollection db collection)
+               ^DBObject (to-db-object ref)
+               ^DBObject (as-field-selector fields))))
 
 (defn ^IPersistentMap find-one-as-map
   "Returns a single object converted to Map from this collection matching the query."
@@ -268,14 +273,11 @@
 
       (monger.collection/count collection { :first_name \"Paul\" })"
   (^long [^String collection]
-         (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
-           (.count coll)))
+         (.count ^DBCollection (.getCollection monger.core/*mongodb-database* collection)))
   (^long [^String collection ^Map conditions]
-         (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
-           (.count coll (to-db-object conditions))))
+         (.count ^DBCollection (.getCollection monger.core/*mongodb-database* collection) (to-db-object conditions)))
   (^long [^DB db ^String collection ^Map conditions]
-         (let [^DBCollection coll (.getCollection db collection)]
-           (.count coll (to-db-object conditions)))))
+         (.count ^DBCollection (.getCollection db collection) (to-db-object conditions))))
 
 (defn any?
   "Wether the collection has any items at all, or items matching query.
@@ -344,16 +346,24 @@
   ([^String collection ^Map conditions ^Map document & { :keys [upsert multi write-concern] :or { upsert false
                                                                                                  multi false
                                                                                                  write-concern monger.core/*mongodb-write-concern* } }]
-     (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
-       (.update coll (to-db-object conditions) (to-db-object document) upsert multi write-concern))))
+     (.update ^DBCollection (.getCollection monger.core/*mongodb-database* collection)
+              (to-db-object conditions)
+              (to-db-object document)
+              upsert
+              multi
+              write-concern)))
 
 (defn ^WriteResult update-by-id
   "Update a document with given id"
   [^String collection id ^Map document & { :keys [upsert write-concern] :or { upsert false
                                                                                        write-concern monger.core/*mongodb-write-concern* } }]
   (check-not-nil! id "id must not be nil")
-  (let [^DBCollection coll (.getCollection monger.core/*mongodb-database* collection)]
-    (.update coll (to-db-object { :_id id }) (to-db-object document) upsert false write-concern)))
+  (.update ^DBCollection (.getCollection monger.core/*mongodb-database* collection)
+           (to-db-object { :_id id })
+           (to-db-object document)
+           upsert
+           false
+           write-concern))
 
 
 ;; monger.collection/save
