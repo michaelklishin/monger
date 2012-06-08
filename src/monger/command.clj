@@ -45,14 +45,14 @@
   "Converts an existing, non-capped collection to a capped collection using the convertToCapped command"
   ([^String collection ^long size]
      (convert-to-capped monger.core/*mongodb-database* collection size))
-  ([^Db database ^String collection ^long size]
+  ([^DB database ^String collection ^long size]
      (monger.core/command database {:convertToCapped collection :size size})))
 
 (defn empty-capped
   "Removes all documents from a capped collection using the emptycapped command"
   ([^String collection]
      (empty-capped monger.core/*mongodb-database* collection))
-  ([^Db database ^String collection]
+  ([^DB database ^String collection]
      (monger.core/command database {:emptycapped collection})))
 
 
@@ -60,7 +60,7 @@
   "Rewrites and defragments a single collection using the compact command. This also forces all indexes on the collection to be rebuilt"
   ([^String collection]
      (compact monger.core/*mongodb-database* collection))
-  ([^Db database ^String collection]
+  ([^DB database ^String collection]
      (monger.core/command database {:compact collection})))
 
 
