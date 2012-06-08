@@ -282,7 +282,9 @@
 
   MapReduceOutput
   (count [^MapReduceOutput this]
-    (.count ^Iterable (.results this))))
+    ;; MongoDB Java driver could use a lot more specific type than Iterable but
+    ;; it always uses DBCollection#find to popular result set. MK.
+    (.count ^DBCursor (.results this))))
 
 (defn ^DBObject get-last-error
   "Returns the the error (if there is one) from the previous operation on this connection.
