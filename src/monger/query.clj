@@ -20,7 +20,7 @@
 ;; Implementation
 ;;
 
-(def ^{ :dynamic true } *query-collection*)
+(def ^{:dynamic true} *query-collection*)
 
 ;;
 ;; Cursor/chain methods
@@ -59,13 +59,13 @@
      (merge (empty-query) { :collection coll })))
 
 (defn exec
-  [{ :keys [collection query fields skip limit sort batch-size hint snapshot read-preference keywordize-fields] :or { limit 0 batch-size 256 skip 0 } }]
-  (let [cursor (doto ^DBCursor (.find ^DBCollection collection (to-db-object query) (as-field-selector fields))
+  [{ :keys [^DBCollection collection query fields skip limit sort batch-size hint snapshot read-preference keywordize-fields] :or { limit 0 batch-size 256 skip 0 } }]
+  (let [cursor (doto (.find collection (to-db-object query) (as-field-selector fields))
                      (.limit limit)
                      (.skip  skip)
                      (.sort  (to-db-object sort))
                      (.batchSize batch-size)
-                     (.hint ^DBObject (to-db-object hint)))]
+                     (.hint (to-db-object hint)))]
     (when snapshot
       (.snapshot cursor))
     (when read-preference
