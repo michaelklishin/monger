@@ -46,17 +46,17 @@
        (monger.collection/insert \"people\" { :name \"Joe\", :age 30, WriteConcern/SAFE })
   "
   ([^String collection document]
-     (.insert ^DBCollection (.getCollection monger.core/*mongodb-database* collection)
-                ^DBObject (to-db-object document)
-                ^WriteConcern monger.core/*mongodb-write-concern*))
+     (.insert (.getCollection monger.core/*mongodb-database* collection)
+              (to-db-object document)
+              ^WriteConcern monger.core/*mongodb-write-concern*))
   ([^String collection document ^WriteConcern concern]
-     (.insert ^DBCollection (.getCollection monger.core/*mongodb-database* collection)
-                ^DBObject (to-db-object document)
-                concern))
+     (.insert (.getCollection monger.core/*mongodb-database* collection)
+               (to-db-object document)
+               concern))
   ([^DB db ^String collection document ^WriteConcern concern]
-     (.insert ^DBCollection (.getCollection db collection)
-                ^DBObject (to-db-object document)
-                concern)))
+     (.insert (.getCollection db collection)
+              (to-db-object document)
+              concern)))
 
 
 (defn ^WriteResult insert-batch
@@ -70,15 +70,15 @@
 
   "
   ([^String collection ^List documents]
-     (.insert ^DBCollection (.getCollection monger.core/*mongodb-database* collection)
+     (.insert (.getCollection monger.core/*mongodb-database* collection)
               ^List (to-db-object documents)
               ^WriteConcern monger.core/*mongodb-write-concern*))
   ([^String collection ^List documents ^WriteConcern concern]
-     (.insert ^DBCollection (.getCollection monger.core/*mongodb-database* collection)
+     (.insert (.getCollection monger.core/*mongodb-database* collection)
               ^List (to-db-object documents)
               concern))
   ([^DB db ^String collection ^List documents ^WriteConcern concern]
-     (.insert ^DBCollection (.getCollection db collection)
+     (.insert (.getCollection db collection)
                 ^List (to-db-object documents)
                 concern)))
 
@@ -102,18 +102,18 @@
       (mgcol/find \"people\" { :company \"Comp Corp\"} [:first_name :last_name])
   "
   ([^String collection]
-     (.find ^DBCollection (.getCollection monger.core/*mongodb-database* collection)))
+     (.find (.getCollection monger.core/*mongodb-database* collection)))
   ([^String collection ^Map ref]
-     (.find ^DBCollection (.getCollection monger.core/*mongodb-database* collection)
-            ^DBObject (to-db-object ref)))
+     (.find (.getCollection monger.core/*mongodb-database* collection)
+            (to-db-object ref)))
   ([^String collection ^Map ref fields]
-     (.find ^DBCollection (.getCollection monger.core/*mongodb-database* collection)
-            ^DBObject (to-db-object ref)
-            ^DBObject (as-field-selector fields)))
+     (.find (.getCollection monger.core/*mongodb-database* collection)
+            (to-db-object ref)
+            (as-field-selector fields)))
   ([^DB db ^String collection ^Map ref fields]
-     (.find ^DBCollection (.getCollection db collection)
-            ^DBObject (to-db-object ref)
-            ^DBObject (as-field-selector fields))))
+     (.find (.getCollection db collection)
+            (to-db-object ref)
+            (as-field-selector fields))))
 
 (defn find-maps
   "Queries for objects in this collection.
@@ -489,7 +489,7 @@
 
   "
   [^String collection]
-  (from-db-object (.getIndexInfo ^DBCollection (.getCollection monger.core/*mongodb-database* collection)) true))
+  (from-db-object (.getIndexInfo (.getCollection monger.core/*mongodb-database* collection)) true))
 
 
 ;;
