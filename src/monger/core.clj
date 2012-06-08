@@ -296,7 +296,7 @@
    Important note: when calling this method directly, it is undefined which connection \"getLastError\" is called on.
    You may need to explicitly use a \"consistent Request\", see requestStart() For most purposes it is better not to call this method directly but instead use WriteConcern."
   ([]
-     (.getLastError ^DB *mongodb-database*))
+     (get-last-error *mongodb-database*))
   ([^DB database]
      (.getLastError ^DB database))
   ([^DB database ^Integer w ^Integer wtimeout ^Boolean fsync]
