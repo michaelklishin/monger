@@ -28,10 +28,40 @@
 
 
 (defn reindex-collection
-  ([collection]
+  "Forces an existing collection to be reindexed using the reindexCollection command"
+  ([^String collection]
      (reindex-collection monger.core/*mongodb-database* collection))
-  ([^DB database collection]
+  ([^DB database ^String collection]
      (monger.core/command database { :reIndex collection })))
+
+(defn rename-collection
+  "Changes the name of an existing collection using the renameCollection command"
+  ([^String from ^String to]
+     (reindex-collection monger.core/*mongodb-database* from to))
+  ([^DB database ^String from ^String to]
+     (monger.core/command database { :renameCollection from :to to })))
+
+(defn convert-to-capped
+  "Converts an existing, non-capped collection to a capped collection using the convertToCapped command"
+  ([^String collection ^long size]
+     (convert-to-capped monger.core/*mongodb-database* collection size))
+  ([^Db database ^String collection ^long size]
+     (monger.core/command database {:convertToCapped collection :size size})))
+
+(defn empty-capped
+  "Removes all documents from a capped collection using the emptycapped command"
+  ([^String collection]
+     (empty-capped monger.core/*mongodb-database* collection))
+  ([^Db database ^String collection]
+     (monger.core/command database {:emptycapped collection})))
+
+
+(defn compact
+  "Rewrites and defragments a single collection using the compact command. This also forces all indexes on the collection to be rebuilt"
+  ([^String collection]
+     (compact monger.core/*mongodb-database* collection))
+  ([^Db database ^String collection]
+     (monger.core/command database {:compact collection})))
 
 
 (defn server-status
