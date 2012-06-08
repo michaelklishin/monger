@@ -88,7 +88,7 @@
        (monger.core/get-db connection \"myapp_production\")"
   ([^String name]
      (.getDB *mongodb-connection* name))
-  ([^Mongo connection, ^String name]
+  ([^Mongo connection ^String name]
      (.getDB connection name)))
 
 
@@ -206,7 +206,7 @@
     (set-connection! conn)
     (when (and user pwd)
       (when-not (authenticate (.getName db) user pwd)
-        (throw (IllegalArgumentException. "Could not authenticate. Either database name or credentials are invalid."))))
+        (throw (IllegalArgumentException. (format "Could not authenticate. Either database name or credentials are invalid. Database name: %s, username: %s" (.getName db) user)))))
     ;; only do this *after* we authenticated because set-db! will try to set up a default GridFS instance. MK.
     (when db
       (set-db! db))
