@@ -1,8 +1,38 @@
 ## Changes between 1.0.0-beta8 and 1.0.0-rc1
 
+### Documentation improvements
+
+[Documentation guides](http://clojuremongodb.info) have been greatly improved and now include
+several new guides:
+
+ * [Storing files on GridFS with Clojure](http://clojuremongodb.info/articles/gridfs.html)
+ * [Using Map/Reduce](http://clojuremongodb.info/articles/mapreduce.html)
+ * [Using MongoDB Commands](http://clojuremongodb.info/articles/commands.html)
+ * [Using MongoDB 2.2 Aggregation Framework with Clojure](http://clojuremongodb.info/articles/aggregation.html)
+
+
+### monger.core/current-db
+
+`monger.core/current-db` returns the currently used database.
+
+
+### monger.core/use-db!
+
+`monger.core/use-db!` composes `monger.core/set-db!` and `monger.core/get-db`:
+
+``` clojure
+(ns my.service
+  (:use [monger.core :only [set-db! use-db! get-db]]))
+
+;; equivalent
+(use-db! "my_product")
+(set-db! (get-db "my_product"))
+```
+
 ### monger.result/ok? now works on Clojure maps
 
 `monger.result/ok?` has been implemented for Clojure maps.
+
 
 
 
