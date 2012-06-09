@@ -14,7 +14,7 @@
   monger.core
   (:refer-clojure :exclude [count])
   (:use [monger.conversion])
-  (:import [com.mongodb Mongo MongoURI DB WriteConcern DBObject DBCursor CommandResult Bytes MongoOptions ServerAddress MapReduceOutput]
+  (:import [com.mongodb Mongo MongoURI DB WriteConcern DBObject DBCursor Bytes MongoOptions ServerAddress MapReduceOutput]
            [com.mongodb.gridfs GridFS]
            [java.util Map ArrayList]))
 
@@ -36,7 +36,7 @@
 ;; API
 ;;
 
-(defn ^Mongo connect
+(defn ^com.mongodb.Mongo connect
   "Connects to MongoDB. When used without arguments, connects to
 
    Arguments:
@@ -71,7 +71,7 @@
      (Mongo. ^String host ^Long port)))
 
 
-(defn ^DB get-db-names
+(defn get-db-names
   "Gets a list of all database names present on the server"
   ([]
      (get-db-names *mongodb-connection*))
@@ -79,18 +79,24 @@
      (set (.getDatabaseNames connection))))
 
 
-(defn ^DB get-db
+(defn ^com.mongodb.DB get-db
   "Get database reference by name.
 
    EXAMPLES
 
        (monger.core/get-db \"myapp_production\")
        (monger.core/get-db connection \"myapp_production\")"
+  ([]
+     *mongodb-database*)
   ([^String name]
      (.getDB *mongodb-connection* name))
   ([^Mongo connection ^String name]
      (.getDB connection name)))
 
+(defn ^com.mongodb.DB current-db
+  "Returns currently used database"
+  []
+  *mongodb-database*)
 
 (defn authenticate
   ([^String db ^String username ^chars password]
@@ -179,6 +185,10 @@
   (alter-var-root (var *mongodb-gridfs*)   (constantly (GridFS. db))))
 
 
+(def ^{:doc "Combines set-db! and get-db, so (use-db \"mydb\") is the same as (set-db! (get-db \"mydb\"))"}
+  use-db! (comp set-db! get-db))
+
+
 (defn set-default-write-concern!
   [wc]
   "Set *mongodb-write-concert* var to :wc
@@ -213,7 +223,7 @@
     conn))
 
 
-(defn ^CommandResult command
+(defn ^com.mongodb.CommandResult command
   "Runs a database command (please check MongoDB documentation for the complete list of commands). Some common commands
   are:
 
