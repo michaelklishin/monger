@@ -42,11 +42,21 @@ RC1 is something we believe is worth labelling 1.0 when most of documentation gu
 
 ## Artifacts
 
+Monger artifacts are [released to Clojars](https://clojars.org/com.novemberain/monger). If you are using Maven, add the following repository
+definition to your `pom.xml`:
+
+``` xml
+<repository>
+  <id>clojars.org</id>
+  <url>http://clojars.org/repo</url>
+</repository>
+```
+
 ### The Most Recent Release
 
 With Leiningen:
 
-    [com.novemberain/monger "1.0.0-beta8"]
+    [com.novemberain/monger "1.0.0-rc1"]
 
 
 With Maven:
@@ -54,26 +64,9 @@ With Maven:
     <dependency>
       <groupId>com.novemberain</groupId>
       <artifactId>monger</artifactId>
-      <version>1.0.0-beta8</version>
+      <version>1.0.0-rc1</version>
     </dependency>
 
-
-### Snapshots
-
-If you are comfortable with using snapshots, snapshot artifacts are [released to Clojars](https://clojars.org/com.novemberain/monger) every 24 hours.
-
-With Leiningen:
-
-    [com.novemberain/monger "1.0.0-SNAPSHOT"]
-
-
-With Maven:
-
-    <dependency>
-      <groupId>com.novemberain</groupId>
-      <artifactId>monger</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
-    </dependency>
 
 
 ## Getting Started
