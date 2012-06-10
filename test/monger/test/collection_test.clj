@@ -132,3 +132,22 @@
     (mc/insert-batch collection batch)
     (is (= ["CA" "IL" "NY"] (sort (mc/distinct mg/*mongodb-database* collection :state {}))))
     (is (= ["CA" "NY"] (sort (mc/distinct collection :state {:price {$gt 100.00}}))))))
+
+
+;;
+;; miscellenous
+;;
+
+(deftest test-system-collection-predicate
+  (are [name] (is (mc/system-collection? name))
+    "system.indexes"
+    "system"
+    ;; we treat default GridFS collections as system ones,
+    ;; possibly this is a bad idea, time will tell. MK.
+    "fs.chunks"
+    "fs.files")
+  (are [name] (is (not (mc/system-collection? name)))
+    "events"
+    "accounts"
+    "megacorp_account"
+    "myapp_development"))

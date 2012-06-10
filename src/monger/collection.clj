@@ -612,3 +612,17 @@
     ;; this is what DBCollection#distinct does. Turning a blind eye!
     (.throwOnError res)
     (map #(from-db-object % true) (.get res "result"))))
+
+
+;;
+;; Misc
+;;
+
+(def ^{:const true}
+  system-collection-pattern #"^(system|fs)")
+
+(defn- system-collection?
+  "Evaluates to true if the given collection name refers to a system collection. System collections
+   are prefixed with system. or fs. (default GridFS collection prefix)"
+  [^String coll-name]
+  (re-find system-collection-pattern coll-name))
