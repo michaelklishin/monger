@@ -41,9 +41,9 @@
 
    EXAMPLES:
 
-       (monger.collection/insert \"people\" { :name \"Joe\", :age 30 })
+       (monger.collection/insert \"people\" {:name \"Joe\", :age 30})
 
-       (monger.collection/insert \"people\" { :name \"Joe\", :age 30, WriteConcern/SAFE })
+       (monger.collection/insert \"people\" {:name \"Joe\", :age 30, WriteConcern/SAFE})
   "
   ([^String collection document]
      (.insert (.getCollection monger.core/*mongodb-database* collection)
@@ -64,9 +64,9 @@
 
   EXAMPLES:
 
-      (monger.collection/insert-batch \"people\" [{ :name \"Joe\", :age 30 }, { :name \"Paul\", :age 27 }])
+      (monger.collection/insert-batch \"people\" [{:name \"Joe\", :age 30}, {:name \"Paul\", :age 27}])
 
-      (monger.collection/insert-batch \"people\" [{ :name \"Joe\", :age 30 }, { :name \"Paul\", :age 27 }] WriteConcern/NORMAL)
+      (monger.collection/insert-batch \"people\" [{:name \"Joe\", :age 30}, {:name \"Paul\", :age 27}] WriteConcern/NORMAL)
 
   "
   ([^String collection ^List documents]
@@ -96,10 +96,10 @@
       (mgcol/find \"people\")
 
       ;; return all objects matching query
-      (mgcol/find \"people\" { :company \"Comp Corp\"})
+      (mgcol/find \"people\" {:company \"Comp Corp\"})
 
       ;; return all objects matching query, taking only specified fields
-      (mgcol/find \"people\" { :company \"Comp Corp\"} [:first_name :last_name])
+      (mgcol/find \"people\" {:company \"Comp Corp\"} [:first_name :last_name])
   "
   ([^String collection]
      (.find (.getCollection monger.core/*mongodb-database* collection)))
@@ -149,11 +149,11 @@
 
    EXAMPLES:
 
-      (mgcol/find-one collection { :language \"Clojure\" })
+      (mgcol/find-one collection {:language \"Clojure\"})
 
       ;; Return only :language field.
       ;; Note that _id field is always returned.
-      (mgcol/find-one collection { :language \"Clojure\" } [:language])
+      (mgcol/find-one collection {:language \"Clojure\"} [:language])
 
   "
   ([^String collection ^Map ref]
@@ -186,28 +186,28 @@
   "Atomically modify a document (at most one) and return it.
 
    EXAMPLES:
-      
+
       ;; Find and modify a document
-      (mgcol/find-and-modify collection { :language \"Python\" } { :language \"Clojure\" })
+      (mgcol/find-and-modify collection {:language \"Python\"} {:language \"Clojure\"})
 
       ;; If multiple documents match, choose the first one in the specified order
-      (mgcol/find-and-modify collection { :language \"Python\" } { :language \"Clojure\" } :sort { :language -1 })
+      (mgcol/find-and-modify collection {:language \"Python\"} {:language \"Clojure\"} :sort {:language -1})
 
       ;; Remove the object before returning
-      (mgcol/find-and-modify collection { :language \"Python\" } {} :remove true)
+      (mgcol/find-and-modify collection {:language \"Python\"} {} :remove true)
 
       ;; Return the modified object instead of the old one
-      (mgcol/find-and-modify collection { :language \"Python\" } { :language \"Clojure\" } :return-new true)
+      (mgcol/find-and-modify collection {:language \"Python\"} {:language \"Clojure\"} :return-new true)
 
       ;; Retrieve a subset of fields
-      (mgcol/find-and-modify collection { :language \"Python\" } { :language \"Clojure\" } :fields [ :language ])
+      (mgcol/find-and-modify collection {:language \"Python\"} {:language \"Clojure\"} :fields [ :language ])
 
       ;; Create the object if it doesn't exist
-      (mgcol/find-and-modify collection { :language \"Factor\" } { :language \"Clojure\" } :upsert true)
+      (mgcol/find-and-modify collection {:language \"Factor\"} {:language \"Clojure\"} :upsert true)
 
   "
-  ([^String collection ^Map conditions ^Map document & { :keys [fields sort remove return-new upsert keywordize] :or
-                                                       { fields nil sort nil remove false return-new false upsert false keywordize true }}]
+  ([^String collection ^Map conditions ^Map document & {:keys [fields sort remove return-new upsert keywordize] :or
+                                                       {fields nil sort nil remove false return-new false upsert false keywordize true}}]
      (let [coll (.getCollection monger.core/*mongodb-database* collection)
            maybe-fields (when fields (as-field-selector fields))
            maybe-sort (when sort (to-db-object sort))]
@@ -232,25 +232,25 @@
   "
   ([^String collection id]
      (check-not-nil! id "id must not be nil")
-     (find-one collection { :_id id }))
+     (find-one collection {:_id id}))
   ([^String collection id fields]
      (check-not-nil! id "id must not be nil")
-     (find-one collection { :_id id } fields))
+     (find-one collection {:_id id} fields))
   ([^DB db ^String collection id fields]
      (check-not-nil! id "id must not be nil")
-     (find-one db collection { :_id id } fields)))
+     (find-one db collection {:_id id} fields)))
 
 (defn ^IPersistentMap find-map-by-id
   "Returns a single object, converted to map with matching _id field."
   ([^String collection id]
      (check-not-nil! id "id must not be nil")
-     (from-db-object ^DBObject (find-one-as-map collection { :_id id }) true))
+     (from-db-object ^DBObject (find-one-as-map collection {:_id id}) true))
   ([^String collection id fields]
      (check-not-nil! id "id must not be nil")
-     (from-db-object ^DBObject (find-one-as-map collection { :_id id } fields) true))
+     (from-db-object ^DBObject (find-one-as-map collection {:_id id} fields) true))
   ([^String collection id fields keywordize]
      (check-not-nil! id "id must not be nil")
-     (from-db-object ^DBObject (find-one-as-map collection { :_id id } fields) keywordize)))
+     (from-db-object ^DBObject (find-one-as-map collection {:_id id} fields) keywordize)))
 
 
 ;;
@@ -271,7 +271,7 @@
 
       (monger.collection/count collection)
 
-      (monger.collection/count collection { :first_name \"Paul\" })"
+      (monger.collection/count collection {:first_name \"Paul\"})"
   (^long [^String collection]
          (.count (.getCollection monger.core/*mongodb-database* collection)))
   (^long [^String collection ^Map conditions]
@@ -287,7 +287,7 @@
     ;; wether the collection has any items
     (mgcol/any? collection)
 
-    (mgcol/any? collection { :language \"Clojure\" }))
+    (mgcol/any? collection {:language \"Clojure\"}))
  "
   ([^String collection]
      (> (count collection) 0))
@@ -319,17 +319,17 @@
 
   EXAMPLES
 
-      (monger.collection/update \"people\" { :first_name \"Raul\" } { \"$set\" { :first_name \"Paul\" } })
+      (monger.collection/update \"people\" {:first_name \"Raul\"} {\"$set\" {:first_name \"Paul\"}})
 
   You can use all the Mongodb Modifier Operations ($inc, $set, $unset, $push, $pushAll, $addToSet, $pop, $pull
   $pullAll, $rename, $bit) here, as well
 
   EXAMPLES
 
-    (monger.collection/update \"people\" { :first_name \"Paul\" } { \"$set\" { :index 1 } })
-    (monger.collection/update \"people\" { :first_name \"Paul\" } { \"$inc\" { :index 5 } })
+    (monger.collection/update \"people\" {:first_name \"Paul\"} {\"$set\" {:index 1}})
+    (monger.collection/update \"people\" {:first_name \"Paul\"} {\"$inc\" {:index 5}})
 
-    (monger.collection/update \"people\" { :first_name \"Paul\" } { \"$unset\" { :years_on_stage 1} })
+    (monger.collection/update \"people\" {:first_name \"Paul\"} {\"$unset\" {:years_on_stage 1}})
 
   It also takes modifiers, such as :upsert and :multi.
 
@@ -337,15 +337,15 @@
 
     ;; add :band field to all the records found in \"people\" collection, otherwise only the first matched record
     ;; will be updated
-    (monger.collection/update \"people\" { } { \"$set\" { :band \"The Beatles\" }} :multi true)
+    (monger.collection/update \"people\" {} {\"$set\" {:band \"The Beatles\"}} :multi true)
 
     ;; inserts the record if it did not exist in the collection
-    (monger.collection/update \"people\" { :first_name \"Yoko\" } { :first_name \"Yoko\" :last_name \"Ono\" } :upsert true)
+    (monger.collection/update \"people\" {:first_name \"Yoko\"} {:first_name \"Yoko\" :last_name \"Ono\"} :upsert true)
 
   By default :upsert and :multi are false."
-  ([^String collection ^Map conditions ^Map document & { :keys [upsert multi write-concern] :or { upsert false
-                                                                                                 multi false
-                                                                                                 write-concern monger.core/*mongodb-write-concern* } }]
+  ([^String collection ^Map conditions ^Map document & {:keys [upsert multi write-concern] :or {upsert false
+                                                                                                multi false
+                                                                                                write-concern monger.core/*mongodb-write-concern*}}]
      (.update (.getCollection monger.core/*mongodb-database* collection)
               (to-db-object conditions)
               (to-db-object document)
@@ -355,11 +355,11 @@
 
 (defn ^WriteResult update-by-id
   "Update a document with given id"
-  [^String collection id ^Map document & { :keys [upsert write-concern] :or { upsert false
-                                                                                       write-concern monger.core/*mongodb-write-concern* } }]
+  [^String collection id ^Map document & {:keys [upsert write-concern] :or {upsert false
+                                                                            write-concern monger.core/*mongodb-write-concern*}}]
   (check-not-nil! id "id must not be nil")
   (.update (.getCollection monger.core/*mongodb-database* collection)
-           (to-db-object { :_id id })
+           (to-db-object {:_id id})
            (to-db-object document)
            upsert
            false
@@ -376,7 +376,7 @@
 
    EXAMPLES
 
-       (monger.collection/save \"people\" { :first_name \"Ian\" :last_name \"Gillan\" })
+       (monger.collection/save \"people\" {:first_name \"Ian\" :last_name \"Gillan\"})
    "
   ([^String collection ^Map document]
      (.save (.getCollection monger.core/*mongodb-database* collection)
@@ -401,7 +401,7 @@
 
       (monger.collection/remove collection) ;; Removes all documents from DB
 
-      (monger.collection/remove collection { :language \"Clojure\" }) ;; Removes documents based on given query
+      (monger.collection/remove collection {:language \"Clojure\"}) ;; Removes documents based on given query
 
   "
   ([^String collection]
@@ -419,7 +419,7 @@
   ([^DB db ^String collection id]
      (check-not-nil! id "id must not be nil")
      (let [coll (.getCollection db collection)]
-       (.remove coll (to-db-object { :_id id })))))
+       (.remove coll (to-db-object {:_id id})))))
 
 
 ;;
@@ -432,8 +432,8 @@
   EXAMPLES
 
       ;; Will create an index on the \"language\" field
-      (monger.collection/create-index collection { \"language\" 1 })
-      (monger.collection/create-index collection { \"language\" 1 } { :unique true :name \"unique_language\" })
+      (monger.collection/create-index collection {\"language\" 1})
+      (monger.collection/create-index collection {\"language\" 1} {:unique true :name \"unique_language\"})
 
   "
   ([^String collection ^Map keys]
@@ -459,13 +459,13 @@
    EXAMPLES
 
      ;; create a regular index
-     (monger.collection/ensure-index \"documents\" { \"language\" 1 })
+     (monger.collection/ensure-index \"documents\" {\"language\" 1})
      ;; create a unique index
-     (monger.collection/ensure-index \"pages\"     { :url 1 } {:unique true})
+     (monger.collection/ensure-index \"pages\"     {:url 1} {:unique true})
   "
-  ([^String collection, ^Map keys]
+  ([^String collection ^Map keys]
      (.ensureIndex (.getCollection monger.core/*mongodb-database* collection) (to-db-object keys)))
-  ([^String collection, ^Map keys ^Map options]
+  ([^String collection ^Map keys ^Map options]
      (.ensureIndex (.getCollection monger.core/*mongodb-database* collection)
                    (to-db-object keys)
                    (to-db-object options)))
@@ -567,10 +567,10 @@
 
 (defn map-reduce
   "Performs a map reduce operation"
-  ([^String collection, ^String js-mapper, ^String js-reducer, ^String output, ^Map query]
+  ([^String collection ^String js-mapper ^String js-reducer ^String output ^Map query]
      (let [coll (.getCollection monger.core/*mongodb-database* collection)]
        (.mapReduce coll js-mapper js-reducer output (to-db-object query))))
-  ([^String collection, ^String js-mapper, ^String js-reducer, ^String output, ^MapReduceCommand$OutputType output-type, ^Map query]
+  ([^String collection ^String js-mapper ^String js-reducer ^String output ^MapReduceCommand$OutputType output-type ^Map query]
      (let [coll (.getCollection monger.core/*mongodb-database* collection)]
        (.mapReduce coll js-mapper js-reducer output output-type (to-db-object query)))))
 
@@ -596,8 +596,8 @@
 (defn create
   "Creates a collection. Options are: :capped (pass true to create a capped collection), :max (number of documents)
    and :size (max allowed size of the collection, in bytes)."
-  [^String name options]
-  (.createCollection ^DB monger.core/*mongodb-database* name (to-db-object options)))
+  [^String collection options]
+  (.createCollection ^DB monger.core/*mongodb-database* collection (to-db-object options)))
 
 ;;
 ;; Aggregation
@@ -607,8 +607,8 @@
   "Performs aggregation query. MongoDB 2.1/2.2+ only.
 
   See http://docs.mongodb.org/manual/applications/aggregation/ to learn more."
-  [^String coll stages]
-  (let [res (monger.core/command {:aggregate coll :pipeline stages})]
+  [^String collection stages]
+  (let [res (monger.core/command {:aggregate collection :pipeline stages})]
     ;; this is what DBCollection#distinct does. Turning a blind eye!
     (.throwOnError res)
     (map #(from-db-object % true) (.get res "result"))))
@@ -624,5 +624,5 @@
 (defn system-collection?
   "Evaluates to true if the given collection name refers to a system collection. System collections
    are prefixed with system. or fs. (default GridFS collection prefix)"
-  [^String coll-name]
-  (re-find system-collection-pattern coll-name))
+  [^String collection]
+  (re-find system-collection-pattern collection))
