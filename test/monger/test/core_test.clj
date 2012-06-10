@@ -1,7 +1,7 @@
 (ns monger.test.core-test
   (:require [monger core collection util result]
             [monger.test.helper :as helper]            
-            [monger.collection :as mgcol])
+            [monger.collection :as mc])
   (:import [com.mongodb Mongo DB WriteConcern MongoOptions ServerAddress])
   (:use clojure.test
         [monger.core :only [server-address mongo-options]]))
@@ -32,7 +32,13 @@
 
   (deftest connect-to-mongo-via-uri-with-valid-credentials
     (let [connection (monger.core/connect-via-uri! "mongodb://clojurewerkz/monger!:monger!@127.0.0.1/monger-test4")]
-      (is (= (-> connection .getAddress ^InetAddress (.sameHost "127.0.0.1")))))
+      (is (= "monger-test4" (.getName (monger.core/current-db))))
+      (is (= (-> connection .getAddress ^InetAddress (.sameHost "127.0.0.1"))))
+      (mc/remove "documents")
+      ;; make sure that the database is selected
+      ;; and operations get through.
+      (mc/insert "documents" {:field "value"})
+      (is (= 1 (mc/count "documents" {}))))
     ;; reconnect using regular host
     (helper/connect!)))
 
