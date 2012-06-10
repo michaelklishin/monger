@@ -437,14 +437,14 @@
 
   "
   ([^String collection ^Map keys]
-     (.createIndex (.getCollection monger.core/*mongodb-database* collection) (to-db-object keys)))
+     (.createIndex (.getCollection monger.core/*mongodb-database* collection) (as-field-selector keys)))
   ([^String collection ^Map keys options]
      (.createIndex (.getCollection monger.core/*mongodb-database* collection)
-                   (to-db-object keys)
+                   (as-field-selector keys)
                    (to-db-object options)))
   ([^DB db ^String collection ^Map keys ^Map options]
      (.createIndex (.getCollection db collection)
-                   (to-db-object keys)
+                   (as-field-selector keys)
                    (to-db-object options))))
 
 
@@ -464,14 +464,14 @@
      (monger.collection/ensure-index \"pages\"     {:url 1} {:unique true})
   "
   ([^String collection ^Map keys]
-     (.ensureIndex (.getCollection monger.core/*mongodb-database* collection) (to-db-object keys)))
+     (.ensureIndex (.getCollection monger.core/*mongodb-database* collection) (as-field-selector keys)))
   ([^String collection ^Map keys ^Map options]
      (.ensureIndex (.getCollection monger.core/*mongodb-database* collection)
-                   (to-db-object keys)
+                   (as-field-selector keys)
                    (to-db-object options)))
   ([^String collection ^Map keys ^String name ^Boolean unique?]
      (.ensureIndex (.getCollection monger.core/*mongodb-database* collection)
-                   (to-db-object keys)
+                   (as-field-selector keys)
                    name
                    unique?)))
 

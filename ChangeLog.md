@@ -1,6 +1,9 @@
 ## Changes between 1.0.0-rc1 and 1.0.0-rc2
 
-No changes yet.
+### More flexible monger.collection/ensure-index and monger.collection/create-index
+
+`monger.collection/ensure-index` and `monger.collection/ensure-index` now accept fields to index as a collection
+(e.g. a vector) as well as a map. It is convenient when creating multiple single-field indexes at once.
 
 
 
