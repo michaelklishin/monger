@@ -621,7 +621,7 @@
 (def ^{:const true}
   system-collection-pattern #"^(system|fs)")
 
-(defn- system-collection?
+(defn system-collection?
   "Evaluates to true if the given collection name refers to a system collection. System collections
    are prefixed with system. or fs. (default GridFS collection prefix)"
   [^String coll-name]
