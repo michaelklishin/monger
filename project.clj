@@ -5,7 +5,7 @@
   :dependencies [[org.clojure/clojure           "1.3.0"]
                  [org.mongodb/mongo-java-driver "2.7.3"]
                  [com.novemberain/validateur    "1.1.0"]
-                 [clojurewerkz/support          "0.4.0"]]
+                 [clojurewerkz/support          "0.5.0"]]
   :test-selectors {:default     (fn [m]
                                   (and (not (:performance m))
                                        (not (:edge-features m))))
