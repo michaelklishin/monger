@@ -33,11 +33,9 @@ To subscribe for announcements of releases, important changes and so on, please 
 
 ## Project Maturity
 
-Monger is no longer a really young project: it will be 1 year old in a few months, with active production use from week 1. It is now rapidly approaching
-the RC1 milestone and almost all API parts are set in stone for the 1.0 release. That said, the team takes a pretty conservative stance on
-versioning and there will be as many beta releases as necessary to get things right.
+Monger is not a young project: it will be 1 year old in a few months, with active production use from week 1. It is now at 1.0.0-rc1,
+all API parts are set in stone and 1.0 will be released after a few weeks of "soaking".
 
-RC1 is something we believe is worth labelling 1.0 when most of documentation guides are ready.
 
 
 ## Artifacts
