@@ -1,7 +1,7 @@
 (set! *warn-on-reflection* true)
 
 (ns monger.test.inserting-test
-  (:import  [com.mongodb WriteResult WriteConcern DBCursor DBObject]
+  (:import  [com.mongodb WriteResult WriteConcern DBCursor DBObject DBRef]
             org.bson.types.ObjectId
             java.util.Date)
   (:require [monger.core        :as mg]
@@ -81,13 +81,22 @@
 (defrecord Metrics
     [rps eps])
 
-(deftest ^:focus insert-a-document-with-clojure-record-in-it
-         (let [collection "widgets"
-               id         (ObjectId.)
-               doc        {:record (Metrics. 10 20) "_id" id}
-               result     (mc/insert "widgets" doc)]
-           (is (= {:rps 10 :eps 20} (:record (mc/find-map-by-id collection id))))))
+(deftest insert-a-document-with-clojure-record-in-it
+  (let [collection "widgets"
+        id         (ObjectId.)
+        doc        {:record (Metrics. 10 20) "_id" id}
+        result     (mc/insert "widgets" doc)]
+    (is (= {:rps 10 :eps 20} (:record (mc/find-map-by-id collection id))))))
 
+(deftest test-insert-a-document-with-dbref
+  (let [coll1 "widgets"
+        coll2 "owners"
+        oid   (ObjectId.)
+        joe   (mc/insert "owners" {:name "Joe" :_id oid})
+        dbref (DBRef. (mg/current-db) coll2 oid)]
+    (mc/insert coll1 {:type "pentagon" :owner dbref})
+    (let [fetched (mc/find-one-as-map coll1 {:type "pentagon"})]
+      (is (= dbref (:owner fetched))))))
 
 
 ;;
