@@ -7,11 +7,15 @@
 ;; the terms of this license.
 ;; You must not remove this notice, or any other, from this software.
 
-(ns monger.testkit
+(ns ^{:doc "Monger TestKit is an experiment that turned out to be partially successful but partially need to be
+            rethough, redesigned, integrated with MongoDB DB references and simply reimplemented from the ground up
+            one more time. For this exact reason, there is no documentation guide on it.
+            Please keep this in mind if you are considering using it."}
+  monger.testkit
   (:require [monger.collection :as mc]
             [monger.result     :as mr])
   (:use     [monger.internal.fn :only (expand-all expand-all-with) :as fntools])
-  (:import [org.bson.types ObjectId]))
+  (:import org.bson.types.ObjectId))
 
 
 ;;
