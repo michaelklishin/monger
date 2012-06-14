@@ -104,7 +104,7 @@
     (vec (map #(from-db-object % keywordize) input)))
 
   com.mongodb.DBRef
-  (from-db-object [^com.novemberain.monger.DBRef input keywordize]
+  (from-db-object [^com.mongodb.DBRef input keywordize]
     (com.novemberain.monger.DBRef. input))
 
   DBObject
