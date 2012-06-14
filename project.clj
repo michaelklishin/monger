@@ -19,6 +19,8 @@
                    ;; as in, edge mongodb server
                    :edge-features :edge-features
                    :all           (constantly true)}
+  :source-paths      ["src/clojure"]
+  :java-source-paths ["src/java"]
   :codox {:exclude [monger.internal.pagination]}
   :mailing-list {:name "clojure-monger"
                  :archive "https://groups.google.com/group/clojure-mongodb"
