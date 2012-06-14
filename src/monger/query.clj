@@ -71,7 +71,7 @@
     (when read-preference
       (.setReadPreference cursor read-preference))
     (map (fn [x] (from-db-object x keywordize-fields))
-         (seq cursor))))
+         cursor)))
 
 ;;
 ;; API

@@ -1,5 +1,14 @@
 ## Changes between 1.0.0-rc1 and 1.0.0-rc2
 
+### Query DSL no longer seq()s the cursor
+
+Query DSL will no longer apply `clojure.core/seq` to the underlying cursor, thus guaranteeing to return an empty
+sequence when there are no results. This gives developers better control over what do they want to get back:
+an empty sequence or nil. In the latter case, they will just manually apply `clojure.core/seq` to the
+result.
+
+
+
 ### More flexible monger.collection/ensure-index and monger.collection/create-index
 
 `monger.collection/ensure-index` and `monger.collection/ensure-index` now accept fields to index as a collection

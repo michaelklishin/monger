@@ -239,10 +239,15 @@
         result3 (with-collection coll
                   (find {})
                   (paginate :page 3 :per-page 3)
+                  (sort { :title 1 }))
+        result4 (with-collection coll
+                  (find {})
+                  (paginate :page 10 :per-page 3)
                   (sort { :title 1 }))]
     (is (= [doc1 doc5 doc7] result1))
     (is (= [doc2 doc6 doc4] result2))
-    (is (= [doc3] result3))))
+    (is (= [doc3] result3))
+    (is (empty? result4))))
 
 
 (deftest combined-querying-dsl-example1
