@@ -6,7 +6,7 @@ import com.mongodb.DBObject;
 import org.bson.BSONObject;
 
 /**
- * Exactly as com.mongodb.DBRef but also implements Clojure IDefer for @dereferencing
+ * Exactly as com.mongodb.DBRef but also implements Clojure IDeref for @dereferencing
  */
 public class DBRef extends com.mongodb.DBRef implements IDeref {
 
