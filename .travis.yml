@@ -2,7 +2,7 @@ language: clojure
 lein: lein2
 before_script:
   - ./bin/ci/before_script.sh
-script: lein2 ci test
+script: lein2 javac && lein2 all test
 jdk:
   - openjdk6
   - openjdk7

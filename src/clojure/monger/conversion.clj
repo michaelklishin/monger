@@ -69,6 +69,10 @@
   DBObject
   (to-db-object [^DBObject input] input)
 
+  com.novemberain.monger.DBRef
+  (to-db-object [^com.novemberain.monger.DBRef dbref]
+    dbref)
+
   Object
   (to-db-object [input]
     input))
@@ -98,6 +102,10 @@
   BasicDBList
   (from-db-object [^BasicDBList input keywordize]
     (vec (map #(from-db-object % keywordize) input)))
+
+  com.mongodb.DBRef
+  (from-db-object [^com.novemberain.monger.DBRef input keywordize]
+    (com.novemberain.monger.DBRef. input))
 
   DBObject
   (from-db-object [^DBObject input keywordize]

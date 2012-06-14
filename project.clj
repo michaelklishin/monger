@@ -21,6 +21,7 @@
                    :all           (constantly true)}
   :source-paths      ["src/clojure"]
   :java-source-paths ["src/java"]
+  :javac-options     ["-target" "1.6" "-source" "1.6"]  
   :codox {:exclude [monger.internal.pagination]}
   :mailing-list {:name "clojure-monger"
                  :archive "https://groups.google.com/group/clojure-mongodb"
