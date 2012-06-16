@@ -34,7 +34,8 @@
                                    [org.clojure/tools.cli  "0.2.1" :exclusions [org.clojure/clojure]]
                                    [org.clojure/core.cache "0.5.0" :exclusions [org.clojure/clojure]]
                                    [ring/ring-core         "1.1.0"]]}}
-  :aliases {"all" ["with-profile" "dev:dev,1.4:dev,1.5"]}
+  :aliases {"all" ["with-profile" "dev:dev,1.4:dev,1.5"]
+            "ci"  ["with-profile" "dev:dev,1.4"]}
   :repositories {"sonatype" {:url "http://oss.sonatype.org/content/repositories/releases"
                              :snapshots false
                              :releases {:checksum :fail :update :always}}
