@@ -23,7 +23,7 @@
   :java-source-paths ["src/java"]
   :javac-options     ["-target" "1.6" "-source" "1.6"]  
   :codox {:exclude [monger.internal.pagination]}
-  :mailing-list {:name "clojure-monger"
+  :mailing-list {:name "clojure-mongodb"
                  :archive "https://groups.google.com/group/clojure-mongodb"
                  :post "clojure-mongodb@googlegroups.com"}
   :profiles {:1.4 {:dependencies [[org.clojure/clojure "1.4.0"]]}
