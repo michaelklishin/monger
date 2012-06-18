@@ -216,7 +216,7 @@
     (set-connection! conn)
     (when (and user pwd)
       (when-not (authenticate (.getName db) user pwd)
-        (throw (IllegalArgumentException. (format "Could not authenticate. Either database name or credentials are invalid. Database name: %s, username: %s" (.getName db) user)))))
+        (throw (IllegalArgumentException. (format "Could not authenticate with MongoDB. Either database name or credentials are invalid. Database name: %s, username: %s" (.getName db) user)))))
     ;; only do this *after* we authenticated because set-db! will try to set up a default GridFS instance. MK.
     (when db
       (set-db! db))
