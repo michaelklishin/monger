@@ -1,3 +1,8 @@
+## Changes between 1.0.0-rc1 and 1.0.0
+
+No changes yet.
+
+
 ## Changes between 1.0.0-rc1 and 1.0.0-rc2
 
 ### Ragtime integration
