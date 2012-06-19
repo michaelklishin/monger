@@ -16,7 +16,7 @@ wanted a client that will
  * Be well tested.
  * Be maintained, do not carry technical debt from 2009 forever.
  * Target Clojure 1.3.0 and later from the ground up.
- * Integrate with libraries like clojure.data.json and Joda Time.
+ * Integrate with libraries like clojure.data.json, Joda Time, [Ragtime](https://github.com/weavejester/ragtime).
  * Provide support for unit testing: factories/fixtures DSL, collection cleaner functions, clojure.test integration and so on.
  * Support URI connections to be friendly to Heroku and other PaaS providers.
  * Learn from other clients like the Java and Ruby ones.
