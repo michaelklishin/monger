@@ -1,5 +1,24 @@
 ## Changes between 1.0.0-rc1 and 1.0.0-rc2
 
+### Ragtime integration
+
+Monger now provides an adapter for [Ragtime, a generic Clojure library for data migrations](https://github.com/weavejester/ragtime) (evolutions).
+
+It is in the `monger.ragtime` namespace. To use Ragtime with Monger, you need to add dependencies
+on both Ragtime core and Monger to your project. An example with Leiningen:
+
+``` clojure
+:dependencies [[org.clojure/clojure       "1.4.0"]
+               [com.novemberain/monger    "1.0.0-rc2"]
+               [ragtime/ragtime.core      "0.2.0"]]
+```
+
+Then require `monger.ragtime` and use Ragtime as usual, passing it a database instance
+you get via `monger.core/get-db`.
+
+Monger will persist information about migrations using the `FSYNC_SAFE` write concern.
+
+
 ### Query DSL no longer seq()s the cursor
 
 Query DSL will no longer apply `clojure.core/seq` to the underlying cursor, thus guaranteeing to return an empty

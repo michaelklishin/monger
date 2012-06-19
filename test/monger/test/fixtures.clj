@@ -17,3 +17,4 @@
 
 (defcleaner cached    "cached")
 
+(defcleaner migrations "meta.migrations")
