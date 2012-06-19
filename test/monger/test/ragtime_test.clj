@@ -19,6 +19,7 @@
   (let [db   (mg/get-db "monger-test")
         coll "meta.migrations"
         key  "1"]
+    (mc/remove db coll {})
     (is (not (mc/any? db coll {:_id key})))
     (is (not (contains? (applied-migration-ids db) key)))
     (add-migration-id db key)
@@ -30,6 +31,7 @@
   (let [db   (mg/get-db "monger-test")
         coll "meta.migrations"
         key  "1"]
+    (mc/remove db coll {})
     (add-migration-id db key)
     (is (mc/any? db coll {:_id key}))
     (is (contains? (applied-migration-ids db) key))
