@@ -3,10 +3,10 @@
   :min-lein-version "2.0.0"
   :license {:name "Eclipse Public License"}
   :dependencies [[org.clojure/clojure           "1.3.0"]
-                 [org.mongodb/mongo-java-driver "2.7.3"]
+                 [org.mongodb/mongo-java-driver "2.8.0"]
                  [com.novemberain/validateur    "1.1.0"]
                  [clojurewerkz/support          "0.5.0"]
-                 [ragtime/ragtime.core          "0.2.0" :exclusions [org.clojure/clojure]]]
+                 [ragtime/ragtime.core          "0.2.0"]]
   :test-selectors {:default     (fn [m]
                                   (and (not (:performance m))
                                        (not (:edge-features m))))
