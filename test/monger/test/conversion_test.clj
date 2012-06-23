@@ -35,6 +35,16 @@
         output (to-db-object input)]
     (is (= input output))))
 
+(deftest convert-boolean-true-to-dbobject
+  (let [input  true
+        output (to-db-object input)]
+    (is (= input output))))
+
+(deftest convert-boolean-false-to-dbobject
+  (let [input  false
+        output (to-db-object input)]
+    (is (= input output))))
+
 
 (deftest convert-map-to-dbobject
   (let [input  { :int 1, :string "Mongo", :float 22.23 }

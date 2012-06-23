@@ -43,4 +43,4 @@
                  "sonatype-snapshots" {:url "http://oss.sonatype.org/content/repositories/snapshots"
                                        :snapshots true
                                        :releases {:checksum :fail :update :always}}}
-  :warn-on-reflection true)
+  :aot [monger.conversion])
