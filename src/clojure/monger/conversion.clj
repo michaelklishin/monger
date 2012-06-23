@@ -39,6 +39,10 @@
   (to-db-object [^String input]
     input)
 
+  Boolean
+  (to-db-object [^Boolean input]
+    input)
+
   java.util.Date
   (to-db-object [^java.util.Date input]
     input)
