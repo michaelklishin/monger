@@ -47,11 +47,13 @@
 
 
 (deftest convert-map-to-dbobject
-  (let [input  { :int 1, :string "Mongo", :float 22.23 }
+  (let [input  { :int 1 :string "Mongo" :float 22.23 :true true :false false }
         output ^DBObject (to-db-object input)]
     (is (= 1 (.get output "int")))
     (is (= "Mongo" (.get output "string")))
-    (is (= 22.23 (.get output "float")))))
+    (is (= 22.23 (.get output "float")))
+    (is (true? (.get output "true")))
+    (is (false? (.get output "false")))))
 
 
 (deftest convert-nested-map-to-dbobject
