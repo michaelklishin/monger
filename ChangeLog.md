@@ -1,6 +1,12 @@
 ## Changes between 1.0.0-rc2 and 1.0.0
 
-No changes yet.
+### Extended support for BSON serialization for Joda Time types
+
+`monger.joda-time` previously only extended BSON (DBObjects) conversion protocol for `org.joda.time.DateTime`. While `DateTime` is the most
+commonly used type in JodaTime, plenty of other types are also used and may need to be stored in MongoDB documents.
+
+Now Monger handles serialization for all JodaTime types that inherit from `org.joda.time.base.AbstractInstant`, for example, `org.joda.time.DateTime`
+and `org.joda.time.DateMidnight`.
 
 
 ## Changes between 1.0.0-rc1 and 1.0.0-rc2

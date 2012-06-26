@@ -19,8 +19,8 @@
 ;;
 
 (extend-protocol ConvertToDBObject
-  org.joda.time.DateTime
-  (to-db-object [^DateTime input]
+  org.joda.time.base.AbstractInstant
+  (to-db-object [^AbstractInstant input]
     (to-db-object (.toDate input))))
 
 (extend-protocol ConvertFromDBObject
