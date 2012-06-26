@@ -33,8 +33,7 @@ To subscribe for announcements of releases, important changes and so on, please 
 
 ## Project Maturity
 
-Monger is not a young project: it will be 1 year old in a few months, with active production use from week 1. It is now at 1.0.0 RCs,
-all API parts are set in stone and 1.0 will be released after a few weeks of "soaking".
+Monger is not a young project: it will be 1 year old around July 2012, with active production use from week 1.
 
 
 
@@ -54,7 +53,7 @@ definition to your `pom.xml`:
 
 With Leiningen:
 
-    [com.novemberain/monger "1.0.0-rc2"]
+    [com.novemberain/monger "1.0.0"]
 
 
 With Maven:
@@ -62,7 +61,7 @@ With Maven:
     <dependency>
       <groupId>com.novemberain</groupId>
       <artifactId>monger</artifactId>
-      <version>1.0.0-rc2</version>
+      <version>1.0.0</version>
     </dependency>
 
 
