@@ -1,3 +1,8 @@
+## Changes between 1.0.0 and 1.0.1
+
+No changes yet.
+
+
 ## Changes between 1.0.0-rc2 and 1.0.0
 
 ### Extended support for BSON serialization for Joda Time types
