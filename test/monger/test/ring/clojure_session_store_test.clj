@@ -30,8 +30,8 @@
         sk    (write-session store nil {:library "Monger"})
         m     (read-session store sk)]
     (is sk)
-    (is (and (:_id m) (:date m)))
-    (is (= (dissoc m :_id :date)
+    (is (and (:_id m)))
+    (is (= (dissoc m :_id)
            {:library "Monger"}))))
 
 
@@ -41,9 +41,9 @@
         sk2   (write-session store sk1 {:library "Ring"})
         m     (read-session store sk2)]
     (is (and sk1 sk2))
-    (is (and (:_id m) (:date m)))
+    (is (and (:_id m)))
     (is (= sk1 sk2))
-    (is (= (dissoc m :_id :date)
+    (is (= (dissoc m :_id)
            {:library "Ring"}))))
 
 
