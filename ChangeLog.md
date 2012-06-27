@@ -1,6 +1,21 @@
 ## Changes between 1.0.0 and 1.1.0-alpha1
 
-No changes yet.
+### Alternative, Clojure reader-based Ring session store implementation
+
+Monger 1.1 will have an alternative Ring session store uses Clojure reader serialization
+
+This way libraries like Friend, that use namespaced keywords (like `::identity`) and other
+Clojure-specific data structures will work well with Monger.
+
+Current store will strip off namespace information from namespaced keywords
+because clojure.core/name work that way. For example:
+
+
+``` clojure
+(name ::identity)
+```
+
+Reported by Julio Barros.
 
 
 
