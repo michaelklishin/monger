@@ -43,7 +43,7 @@
           key   (or key (str (UUID/randomUUID)))
           value (binding [*print-dup* true]
                   (pr-str (assoc data :date date :_id key)))]
-      (mc/save (.collection-name store) {:_id key :date date :value value})
+      (mc/save (.collection-name store) {:_id key :value value})
       key))
 
   (delete-session [store key]
