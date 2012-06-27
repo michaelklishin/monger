@@ -1,4 +1,9 @@
-## Changes between 1.0.0 and 1.1.0-alpha1
+## Changes between 1.0.0-alpha2 and 1.1.0-alpha3
+
+No changes yet.
+
+
+## Changes between 1.0.0 and 1.1.0-alpha2
 
 ### Alternative, Clojure reader-based Ring session store implementation
 
