@@ -24,6 +24,24 @@
 
 (defrecord ClojureReaderBasedMongoDBSessionStore [^String collection-name])
 
+(defmethod print-dup java.util.Date
+  [d out]
+  (.write out
+          (str "#="
+               `(java.util.Date. ~(.getYear d)
+                                 ~(.getMonth d)
+                                 ~(.getDate d)
+                                 ~(.getHours d)
+                                 ~(.getMinutes d)
+                                 ~(.getSeconds d)))))
+
+(defmethod print-dup org.bson.types.ObjectId
+  [oid out]
+  (.write out
+          (str "#="
+               `(org.bson.types.ObjectId. ~(str oid)))))
+
+
 (extend-protocol ringstore/SessionStore
   ClojureReaderBasedMongoDBSessionStore
 

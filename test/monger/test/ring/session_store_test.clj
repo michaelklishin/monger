@@ -52,3 +52,11 @@
         sk    (write-session store nil {:library "Monger"})]
     (is (nil? (delete-session store sk)))
     (is (= {} (read-session store sk)))))
+
+
+(deftest test-reader-extensions
+  (let [d   (java.util.Date.)
+        oid (org.bson.types.ObjectId.)]
+    (binding [*print-dup* true]
+      (pr-str d)
+      (pr-str oid))))
