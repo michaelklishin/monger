@@ -1,6 +1,14 @@
-## Changes between 1.0.0-alpha2 and 1.1.0-alpha3
+## Changes between 1.0.0-alpha3 and 1.1.0-alpha4
 
 No changes yet.
+
+
+## Changes between 1.0.0-alpha2 and 1.1.0-alpha3
+
+### Clojure reader extensions
+
+`monger.joda-time` now extends Clojure reader for Joda Time types so the new Clojure reader-based
+Ring session store can store Joda dates/time values.
 
 
 ## Changes between 1.0.0 and 1.1.0-alpha2
