@@ -34,3 +34,9 @@
         output (from-db-object input false)]
     (is (instance? org.joda.time.DateTime output))
     (is (= input (.toDate ^DateTime output)))))
+
+
+(deftest test-reader-extensions
+  (let [^DateTime d (t/date-time 2011 10 13 23 55 0)]
+    (binding [*print-dup* true]
+      (pr-str d))))

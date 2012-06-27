@@ -27,3 +27,25 @@
   java.util.Date
   (from-db-object [^java.util.Date input keywordize]
     (org.joda.time.DateTime. input)))
+
+
+
+;;
+;; Reader extensions
+;;
+
+(defmethod print-dup java.util.Date
+  [d out]
+  (.write out
+          (str "#="
+               `(java.util.Date. ~(.getYear d)
+                                 ~(.getMonth d)
+                                 ~(.getDate d)
+                                 ~(.getHours d)
+                                 ~(.getMinutes d)
+                                 ~(.getSeconds d)))))
+
+
+(defmethod print-dup org.joda.time.base.AbstractInstant
+  [d out]
+  (print-dup (.toDate d) out))
