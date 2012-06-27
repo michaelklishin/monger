@@ -28,10 +28,6 @@
   ClojureReaderBasedMongoDBSessionStore
 
   (read-session [store key]
-    #_ (if-let [m (and key
-                       (mc/find-one-as-map (.collection-name store) {:_id key}))]
-         m
-         {})
     (if key
       (if-let [m (mc/find-one-as-map (.collection-name store) {:_id key})]
         (read-string (:value m))
@@ -42,8 +38,8 @@
     (let [date  (Date.)
           key   (or key (str (UUID/randomUUID)))
           value (binding [*print-dup* true]
-                  (pr-str (assoc data :date date :_id key)))]
-      (mc/save (.collection-name store) {:_id key :value value})
+                  (pr-str (assoc data :_id key)))]
+      (mc/save (.collection-name store) {:_id key :value value :date date})
       key))
 
   (delete-session [store key]
