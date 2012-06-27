@@ -1,4 +1,4 @@
-(ns monger.test.ring.session-store-test
+(ns monger.test.ring.clojure-session-store-test
   (:require [monger core util]
             [monger.collection  :as mc]
             [monger.test.helper :as helper])  
