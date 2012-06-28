@@ -504,7 +504,7 @@
      (.dropIndex (.getCollection db collection) name)))
 
 (defn drop-indexes
-  "Drops an indices from this collection."
+  "Drops all indixes from this collection."
   ([^String collection]
      (.dropIndexes (.getCollection monger.core/*mongodb-database* collection)))
   ([^DB db ^String collection]
