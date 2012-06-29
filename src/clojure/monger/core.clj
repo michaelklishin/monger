@@ -9,8 +9,14 @@
 
 (ns ^{:author "Michael S. Klishin"
       :doc "Thin idiomatic wrapper around MongoDB Java client. monger.core includes
-       fundamental functions that work with connections & databases. Most of functionality
-       is in other monger.* namespaces, in particular monger.collection."}
+       fundamental functions that perform database/replica set connection, set default write concern, default database, performing commands
+       and so on. Most of the functionality is in other monger.* namespaces, in particular monger.collection, monger.query and monger.gridfs
+
+       Related documentation guides:
+
+       * http://clojuremongodb.info/articles/connecting.html
+       * http://clojuremongodb.info/articles/commands.html
+       * http://clojuremongodb.info/articles/gridfs.html"}
   monger.core
   (:refer-clojure :exclude [count])
   (:use [monger.conversion])

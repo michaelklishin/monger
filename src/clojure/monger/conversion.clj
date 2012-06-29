@@ -21,7 +21,16 @@
 ;; OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 ;; THE SOFTWARE.
 
-(ns monger.conversion
+(ns ^{:doc "Provides functions that convert between MongoDB Java driver classes (DBObject, DBList) and Clojure
+            data structures (maps, collections). Most of the time, application developers won't need to use these
+            functions directly because Monger Query DSL and many other functions convert documents to Clojure sequences and
+            maps automatically. However, this namespace is part of the public API and guaranteed to be stable between minor releases.
+
+            Related documentation guides:
+
+            * http://clojuremongodb.info/articles/inserting.html
+            * http://clojuremongodb.info/articles/querying.html"}
+  monger.conversion
   (:import [com.mongodb DBObject BasicDBObject BasicDBList DBCursor]
            [clojure.lang IPersistentMap Named Keyword Ratio]
            [java.util List Map Date Set]

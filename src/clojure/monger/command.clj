@@ -8,7 +8,16 @@
 ;; the terms of this license.
 ;; You must not remove this notice, or any other, from this software.
 
-(ns monger.command
+(ns ^{:doc "Provides convenience functions for performing most commonly used MongoDB commands.
+            For a lower-level API that gives maximum flexibility, see `monger.core/command`. To use
+            MongoDB 2.2 Aggregation Framework, see `monger.collection/aggregate`.
+
+            Related documentation guides:
+
+            * http://clojuremongodb.info/articles/commands.html
+            * http://clojuremongodb.info/articles/aggregation.html
+            * http://clojuremongodb.info/articles/mapreduce.html"}
+  monger.command
   (:require monger.core)
   (:use monger.conversion)
   (:import com.mongodb.DB))

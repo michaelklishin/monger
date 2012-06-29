@@ -9,12 +9,25 @@
 ;; the terms of this license.
 ;; You must not remove this notice, or any other, from this software.
 
-(ns monger.collection
+(ns ^{:doc "Provides key functionality for interaction with MongoDB: inserting, querying, updating and deleting documents, performing Aggregation Framework
+            queries, creating and dropping indexes, creating collections and more.
+
+            For more advanced read queries, see monger.query.
+
+            Related documentation guides:
+
+            * http://clojuremongodb.info/articles/getting_started.html
+            * http://clojuremongodb.info/articles/inserting.html
+            * http://clojuremongodb.info/articles/querying.html
+            * http://clojuremongodb.info/articles/updating.html
+            * http://clojuremongodb.info/articles/deleting.html
+            * http://clojuremongodb.info/articles/aggregation.html"}
+  monger.collection
   (:refer-clojure :exclude [find remove count drop distinct empty?])
   (:import [com.mongodb Mongo DB DBCollection WriteResult DBObject WriteConcern DBCursor MapReduceCommand MapReduceCommand$OutputType]
            [java.util List Map]
            [clojure.lang IPersistentMap ISeq]
-           [org.bson.types ObjectId])
+           org.bson.types.ObjectId)
   (:require [monger core result])
   (:use     [monger.conversion]))
 
