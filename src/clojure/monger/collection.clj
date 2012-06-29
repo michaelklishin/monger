@@ -454,7 +454,12 @@
 
 (defn ensure-index
   "Creates an index on a set of fields, if one does not already exist.
-   This operation is optimized in the Java driver and is inexpensive in the case when an index already exists.
+   This operation is inexpensive in the case when an index already exists.
+
+   Options are:
+
+   :unique (boolean) to create a unique index
+   :name (string) to specify a custom index name and not rely on the generated one
 
    EXAMPLES
 
