@@ -24,7 +24,11 @@
   :source-paths      ["src/clojure"]
   :java-source-paths ["src/java"]
   :javac-options     ["-target" "1.6" "-source" "1.6"]  
-  :codox {:exclude [monger.internal.pagination]}
+  :codox {:exclude [monger.internal.pagination
+                    ;; these are not fully baked yet or have changes
+                    ;; that are not entirely backwards compatible with 1.0. MK.
+                    monger.testkit
+                    monger.ring.session-store]}
   :mailing-list {:name "clojure-mongodb"
                  :archive "https://groups.google.com/group/clojure-mongodb"
                  :post "clojure-mongodb@googlegroups.com"}
@@ -35,7 +39,10 @@
                                    [org.clojure/data.json  "0.1.2" :exclusions [org.clojure/clojure]]
                                    [org.clojure/tools.cli  "0.2.1" :exclusions [org.clojure/clojure]]
                                    [org.clojure/core.cache "0.6.0" :exclusions [org.clojure/clojure]]
-                                   [ring/ring-core         "1.1.0"]]}}
+                                   [ring/ring-core         "1.1.0"]]
+                   :plugins [[codox "0.6.1"]]
+                   :codox {:sources ["src/clojure"]
+                           :output-dir "doc/api"}}}
   :aliases {"all" ["with-profile" "dev:dev,1.4:dev,1.5"]
             "ci"  ["with-profile" "dev:dev,1.4"]}
   :repositories {"sonatype" {:url "http://oss.sonatype.org/content/repositories/releases"
