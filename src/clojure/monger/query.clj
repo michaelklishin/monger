@@ -7,7 +7,11 @@
 ;; the terms of this license.
 ;; You must not remove this notice, or any other, from this software.
 
-(ns monger.query
+(ns ^{:doc "Provides an expressive Query DSL that is very close to that in the Mongo shell (within reason).
+            This is the most flexible and recommended way to query with Monger. Queries can be composed, like in Korma.
+
+            Related documentation guide: http://clojuremongodb.info/articles/querying.html"}
+  monger.query
   (:refer-clojure :exclude [select find sort])
   (:require [monger.core]
             [monger.internal pagination])

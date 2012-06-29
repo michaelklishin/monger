@@ -24,6 +24,7 @@
   :java-source-paths ["src/java"]
   :javac-options     ["-target" "1.6" "-source" "1.6"]  
   :codox {:exclude [monger.internal.pagination
+                    monger.internal.fn
                     ;; these are not fully baked yet or have changes
                     ;; that are not entirely backwards compatible with 1.0. MK.
                     monger.testkit
@@ -34,7 +35,7 @@
   :profiles {:1.4 {:dependencies [[org.clojure/clojure "1.4.0"]]}
              :1.5 {:dependencies [[org.clojure/clojure "1.5.0-master-SNAPSHOT"]]}
              :dev {:resource-paths ["test/resources"]
-                   :dependencies  [[clj-time "0.4.2"              :exclusions [org.clojure/clojure]]
+                   :dependencies  [[clj-time "0.4.2"               :exclusions [org.clojure/clojure]]
                                    [org.clojure/data.json  "0.1.2" :exclusions [org.clojure/clojure]]
                                    [org.clojure/tools.cli  "0.2.1" :exclusions [org.clojure/clojure]]
                                    [org.clojure/core.cache "0.6.0" :exclusions [org.clojure/clojure]]

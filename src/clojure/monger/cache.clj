@@ -1,4 +1,6 @@
-(ns ^{:doc "clojure.core.cache implementation(s) on top of MongoDB."
+(ns ^{:doc "clojure.core.cache implementation(s) on top of MongoDB.
+      
+            Related documentation guide: http://clojuremongodb.info/articles/integration.html"
       :author "Michael S. Klishin"}
   monger.cache
   (:require [monger.collection  :as mc]

@@ -7,8 +7,13 @@
 ;; the terms of this license.
 ;; You must not remove this notice, or any other, from this software.
 
-(ns monger.util
-  (:import (java.security SecureRandom) (java.math BigInteger) (org.bson.types ObjectId) (com.mongodb DBObject) (clojure.lang IPersistentMap) (java.util Map)))
+(ns ^{:doc "Provides various utility functions, primarily for working with document ids."} monger.util
+  (:import java.security.SecureRandom
+           java.math.BigInteger
+           org.bson.types.ObjectId
+           com.mongodb.DBObject
+           clojure.lang.IPersistentMap
+           java.util.Map))
 
 ;;
 ;; API

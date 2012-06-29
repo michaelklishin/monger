@@ -17,5 +17,9 @@
 ;;
 
 (defn load-resource
+  "Loads a JavaScript resource (file from the classpath) and returns its content as a string.
+   The .js suffix at the end may be omitted.
+
+   Used primarily for map/reduce queries."
   (^String [^String path]
            (js/load-resource path)))
