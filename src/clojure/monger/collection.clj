@@ -50,10 +50,14 @@
 ;;
 
 (defn ^WriteResult insert
-  "Saves @document@ to @collection@. You can optionally specify WriteConcern.
+  "Saves @document@ to @collection@ and returns write result monger.result/ok? and similar functions operate on. You can optionally specify WriteConcern.
+
+   In case you need the exact inserted document returned, with the :_id key generated, use monger.collection/insert-and-return
+   instead.
 
    EXAMPLES:
 
+       ;; returns write result
        (monger.collection/insert \"people\" {:name \"Joe\", :age 30})
 
        (monger.collection/insert \"people\" {:name \"Joe\", :age 30, WriteConcern/SAFE})
@@ -64,12 +68,38 @@
               ^WriteConcern monger.core/*mongodb-write-concern*))
   ([^String collection document ^WriteConcern concern]
      (.insert (.getCollection monger.core/*mongodb-database* collection)
-               (to-db-object document)
-               concern))
+              (to-db-object document)
+              concern))
   ([^DB db ^String collection document ^WriteConcern concern]
      (.insert (.getCollection db collection)
               (to-db-object document)
               concern)))
+
+
+(defn ^clojure.lang.IPersistentMap insert-and-return
+  "Like monger.collection/insert but returns the inserted document as a persistent Clojure map.
+
+  If the :_id key wasn't set on the document, it will be generated and merged into the returned map.
+
+   EXAMPLES:
+
+       ;; returns the entire document with :_id generated
+       (monger.collection/insert-and-return \"people\" {:name \"Joe\", :age 30})
+
+       (monger.collection/insert-and-return \"people\" {:name \"Joe\", :age 30, WriteConcern/SAFE})
+  "
+  ([^String collection document]
+     (insert-and-return ^DB monger.core/*mongodb-database* collection document ^WriteConcern monger.core/*mongodb-write-concern*))
+  ([^String collection document ^WriteConcern concern]
+     (insert-and-return ^DB monger.core/*mongodb-database* collection document concern))
+  ([^DB db ^String collection document ^WriteConcern concern]
+     ;; MongoDB Java driver will generate the _id and set it but it tries to mutate the inserted DBObject
+     ;; and it does not work very well in our case, because that DBObject is short lived and produced
+     ;; from the Clojure map we are passing in. Plus, this approach is very awkward with immutable data
+     ;; structures being the default. MK.
+     (let [doc (merge document {:_id (ObjectId.)})]
+       (insert db collection doc concern)
+       doc)))
 
 
 (defn ^WriteResult insert-batch
@@ -92,8 +122,8 @@
               concern))
   ([^DB db ^String collection ^List documents ^WriteConcern concern]
      (.insert (.getCollection db collection)
-                ^List (to-db-object documents)
-                concern)))
+              ^List (to-db-object documents)
+              concern)))
 
 ;;
 ;; monger.collection/find
@@ -220,7 +250,7 @@
 
   "
   ([^String collection ^Map conditions ^Map document & {:keys [fields sort remove return-new upsert keywordize] :or
-                                                       {fields nil sort nil remove false return-new false upsert false keywordize true}}]
+                                                        {fields nil sort nil remove false return-new false upsert false keywordize true}}]
      (let [coll (.getCollection monger.core/*mongodb-database* collection)
            maybe-fields (when fields (as-field-selector fields))
            maybe-sort (when sort (to-db-object sort))]

@@ -102,6 +102,36 @@
 
 
 ;;
+;; insert-and-return
+;;
+
+(deftest  insert-and-return-a-basic-document-without-id-and-with-default-write-concern
+  (let [collection "people"
+        doc        {:name "Joe" :age 30}
+        result     (mc/insert-and-return "people" doc)]
+    (is (= (:name doc)
+           (:name result)))
+    (is (= (:age doc)
+           (:age result)))
+    (is (:_id result))
+    (is (= 1 (mc/count collection)))))
+
+(deftest  insert-and-return-a-basic-document-without-id-but-with-a-write-concern
+  (let [collection "people"
+        doc        {:name "Joe" :age 30 :ratio 3/4}
+        result     (mc/insert-and-return "people" doc WriteConcern/FSYNC_SAFE)]
+    (is (= (:name doc)
+           (:name result)))
+    (is (= (:age doc)
+           (:age result)))
+    (is (= (:ratio doc)
+           (:ratio result)))    
+    (is (:_id result))
+    (is (= 1 (mc/count collection)))))
+
+
+
+;;
 ;; insert-batch
 ;;
 

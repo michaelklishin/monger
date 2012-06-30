@@ -1,6 +1,26 @@
 ## Changes between 1.0.0-alpha3 and 1.1.0-alpha4
 
-No changes yet.
+### monger.collection/insert-and-return
+
+`monger.collection/insert-and-return` is a new function that solves the biggest complain about Monger's `monger.collection/insert` behavior
+from Monger 1.0 users. Because `monger.collection/insert` returns a write result and is supposed to be used with Validateur and
+`monger.result/ok?` and similar functions, it is hard to retrieve object id in case it wasn't explicitly passed in.
+
+This resulted in code that looks more or less like this:
+
+``` clojure
+(let [oid    (ObjectId.)
+      result (merge doc {:_id oid)]
+  (monger.collection/insert "documents" result)
+  result)
+```
+
+To solve this problem, we introduce a new function, `monger.collection/insert-and-return`, that returns the exact inserted document
+as an immutable Clojure map. The `:_id` key will be available on the returned map, even if wasn't present and had to be generated.
+
+`monger.collection/insert` behavior stays the same both because of backwards compatibility concerns and because there are valid cases
+when a user may want to have the write result returned.
+
 
 
 ## Changes between 1.0.0-alpha2 and 1.1.0-alpha3
