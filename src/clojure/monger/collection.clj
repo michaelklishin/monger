@@ -546,10 +546,10 @@
 
 (defn drop-index
   "Drops an index from this collection."
-  ([^String collection ^String name]
-     (.dropIndex (.getCollection monger.core/*mongodb-database* (name collection)) name))
-  ([^DB db ^String collection ^String name]
-     (.dropIndex (.getCollection db (name collection)) name)))
+  ([^String collection ^String idx-name]
+     (.dropIndex (.getCollection monger.core/*mongodb-database* (name collection)) idx-name))
+  ([^DB db ^String collection ^String idx-name]
+     (.dropIndex (.getCollection db (name collection)) idx-name)))
 
 (defn drop-indexes
   "Drops all indixes from this collection."
