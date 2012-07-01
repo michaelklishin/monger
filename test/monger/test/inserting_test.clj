@@ -108,7 +108,7 @@
 (deftest  insert-and-return-a-basic-document-without-id-and-with-default-write-concern
   (let [collection "people"
         doc        {:name "Joe" :age 30}
-        result     (mc/insert-and-return "people" doc)]
+        result     (mc/insert-and-return :people doc)]
     (is (= (:name doc)
            (:name result)))
     (is (= (:age doc)

@@ -1,6 +1,10 @@
 ## Changes between 1.0.0-beta1 and 1.1.0-beta2
 
-No changes yet.
+### Support for passing keywords as collection names
+
+It is now possible to use Clojure keywords as collection names with `monger.collection` functions.
+For example, `monger.collection/insert-and-return` that's given collection name as `:people` will store
+treat it as `people` (by applying [clojure.core/name](http://clojuredocs.org/clojure_core/clojure.core/name) to the argument).
 
 
 ## Changes between 1.0.0-alpha3 and 1.1.0-beta1

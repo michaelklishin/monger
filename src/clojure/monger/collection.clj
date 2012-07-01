@@ -63,15 +63,15 @@
        (monger.collection/insert \"people\" {:name \"Joe\", :age 30, WriteConcern/SAFE})
   "
   ([^String collection document]
-     (.insert (.getCollection monger.core/*mongodb-database* collection)
+     (.insert (.getCollection monger.core/*mongodb-database* (name collection))
               (to-db-object document)
               ^WriteConcern monger.core/*mongodb-write-concern*))
   ([^String collection document ^WriteConcern concern]
-     (.insert (.getCollection monger.core/*mongodb-database* collection)
+     (.insert (.getCollection monger.core/*mongodb-database* (name collection))
               (to-db-object document)
               concern))
   ([^DB db ^String collection document ^WriteConcern concern]
-     (.insert (.getCollection db collection)
+     (.insert (.getCollection db (name collection))
               (to-db-object document)
               concern)))
 
@@ -113,15 +113,15 @@
 
   "
   ([^String collection ^List documents]
-     (.insert (.getCollection monger.core/*mongodb-database* collection)
+     (.insert (.getCollection monger.core/*mongodb-database* (name collection))
               ^List (to-db-object documents)
               ^WriteConcern monger.core/*mongodb-write-concern*))
   ([^String collection ^List documents ^WriteConcern concern]
-     (.insert (.getCollection monger.core/*mongodb-database* collection)
+     (.insert (.getCollection monger.core/*mongodb-database* (name collection))
               ^List (to-db-object documents)
               concern))
   ([^DB db ^String collection ^List documents ^WriteConcern concern]
-     (.insert (.getCollection db collection)
+     (.insert (.getCollection db (name collection))
               ^List (to-db-object documents)
               concern)))
 
@@ -145,16 +145,16 @@
       (mgcol/find \"people\" {:company \"Comp Corp\"} [:first_name :last_name])
   "
   ([^String collection]
-     (.find (.getCollection monger.core/*mongodb-database* collection)))
+     (.find (.getCollection monger.core/*mongodb-database* (name collection))))
   ([^String collection ^Map ref]
-     (.find (.getCollection monger.core/*mongodb-database* collection)
+     (.find (.getCollection monger.core/*mongodb-database* (name collection))
             (to-db-object ref)))
   ([^String collection ^Map ref fields]
-     (.find (.getCollection monger.core/*mongodb-database* collection)
+     (.find (.getCollection monger.core/*mongodb-database* (name collection))
             (to-db-object ref)
             (as-field-selector fields)))
   ([^DB db ^String collection ^Map ref fields]
-     (.find (.getCollection db collection)
+     (.find (.getCollection db (name collection))
             (to-db-object ref)
             (as-field-selector fields))))
 
@@ -200,14 +200,14 @@
 
   "
   ([^String collection ^Map ref]
-     (.findOne (.getCollection monger.core/*mongodb-database* collection)
+     (.findOne (.getCollection monger.core/*mongodb-database* (name collection))
                (to-db-object ref)))
   ([^String collection ^Map ref fields]
-     (.findOne (.getCollection monger.core/*mongodb-database* collection)
+     (.findOne (.getCollection monger.core/*mongodb-database* (name collection))
                (to-db-object ref)
                ^DBObject (as-field-selector fields)))
   ([^DB db ^String collection ^Map ref fields]
-     (.findOne (.getCollection db collection)
+     (.findOne (.getCollection db (name collection))
                (to-db-object ref)
                ^DBObject (as-field-selector fields))))
 
@@ -251,7 +251,7 @@
   "
   ([^String collection ^Map conditions ^Map document & {:keys [fields sort remove return-new upsert keywordize] :or
                                                         {fields nil sort nil remove false return-new false upsert false keywordize true}}]
-     (let [coll (.getCollection monger.core/*mongodb-database* collection)
+     (let [coll (.getCollection monger.core/*mongodb-database* (name collection))
            maybe-fields (when fields (as-field-selector fields))
            maybe-sort (when sort (to-db-object sort))]
        (from-db-object
@@ -316,11 +316,11 @@
 
       (monger.collection/count collection {:first_name \"Paul\"})"
   (^long [^String collection]
-         (.count (.getCollection monger.core/*mongodb-database* collection)))
+         (.count (.getCollection monger.core/*mongodb-database* (name collection))))
   (^long [^String collection ^Map conditions]
-         (.count (.getCollection monger.core/*mongodb-database* collection) (to-db-object conditions)))
+         (.count (.getCollection monger.core/*mongodb-database* (name collection)) (to-db-object conditions)))
   (^long [^DB db ^String collection ^Map conditions]
-         (.count (.getCollection db collection) (to-db-object conditions))))
+         (.count (.getCollection db (name collection)) (to-db-object conditions))))
 
 (defn any?
   "Wether the collection has any items at all, or items matching query.
@@ -389,7 +389,7 @@
   ([^String collection ^Map conditions ^Map document & {:keys [upsert multi write-concern] :or {upsert false
                                                                                                 multi false
                                                                                                 write-concern monger.core/*mongodb-write-concern*}}]
-     (.update (.getCollection monger.core/*mongodb-database* collection)
+     (.update (.getCollection monger.core/*mongodb-database* (name collection))
               (to-db-object conditions)
               (to-db-object document)
               upsert
@@ -401,7 +401,7 @@
   [^String collection id ^Map document & {:keys [upsert write-concern] :or {upsert false
                                                                             write-concern monger.core/*mongodb-write-concern*}}]
   (check-not-nil! id "id must not be nil")
-  (.update (.getCollection monger.core/*mongodb-database* collection)
+  (.update (.getCollection monger.core/*mongodb-database* (name collection))
            (to-db-object {:_id id})
            (to-db-object document)
            upsert
@@ -422,15 +422,15 @@
        (monger.collection/save \"people\" {:first_name \"Ian\" :last_name \"Gillan\"})
    "
   ([^String collection ^Map document]
-     (.save (.getCollection monger.core/*mongodb-database* collection)
+     (.save (.getCollection monger.core/*mongodb-database* (name collection))
             (to-db-object document)
             monger.core/*mongodb-write-concern*))
   ([^String collection ^Map document ^WriteConcern write-concern]
-     (.save (.getCollection monger.core/*mongodb-database* collection)
+     (.save (.getCollection monger.core/*mongodb-database* (name collection))
             document
             write-concern))
   ([^DB db ^String collection ^Map document ^WriteConcern write-concern]
-     (.save (.getCollection db collection)
+     (.save (.getCollection db (name collection))
             document
             write-concern)))
 
@@ -448,11 +448,11 @@
 
   "
   ([^String collection]
-     (.remove (.getCollection monger.core/*mongodb-database* collection) (to-db-object {})))
+     (.remove (.getCollection monger.core/*mongodb-database* (name collection)) (to-db-object {})))
   ([^String collection ^Map conditions]
-     (.remove (.getCollection monger.core/*mongodb-database* collection) (to-db-object conditions)))
+     (.remove (.getCollection monger.core/*mongodb-database* (name collection)) (to-db-object conditions)))
   ([^DB db ^String collection ^Map conditions]
-     (.remove (.getCollection db collection) (to-db-object conditions))))
+     (.remove (.getCollection db (name collection)) (to-db-object conditions))))
 
 
 (defn ^WriteResult remove-by-id
@@ -461,7 +461,7 @@
      (remove-by-id monger.core/*mongodb-database* collection id))
   ([^DB db ^String collection id]
      (check-not-nil! id "id must not be nil")
-     (let [coll (.getCollection db collection)]
+     (let [coll (.getCollection db (name collection))]
        (.remove coll (to-db-object {:_id id})))))
 
 
@@ -480,13 +480,13 @@
 
   "
   ([^String collection ^Map keys]
-     (.createIndex (.getCollection monger.core/*mongodb-database* collection) (as-field-selector keys)))
+     (.createIndex (.getCollection monger.core/*mongodb-database* (name collection)) (as-field-selector keys)))
   ([^String collection ^Map keys options]
-     (.createIndex (.getCollection monger.core/*mongodb-database* collection)
+     (.createIndex (.getCollection monger.core/*mongodb-database* (name collection))
                    (as-field-selector keys)
                    (to-db-object options)))
   ([^DB db ^String collection ^Map keys ^Map options]
-     (.createIndex (.getCollection db collection)
+     (.createIndex (.getCollection db (name collection))
                    (as-field-selector keys)
                    (to-db-object options))))
 
@@ -512,13 +512,13 @@
      (monger.collection/ensure-index \"pages\"     {:url 1} {:unique true})
   "
   ([^String collection ^Map keys]
-     (.ensureIndex (.getCollection monger.core/*mongodb-database* collection) (as-field-selector keys)))
+     (.ensureIndex (.getCollection monger.core/*mongodb-database* (name collection)) (as-field-selector keys)))
   ([^String collection ^Map keys ^Map options]
-     (.ensureIndex (.getCollection monger.core/*mongodb-database* collection)
+     (.ensureIndex (.getCollection monger.core/*mongodb-database* (name collection))
                    (as-field-selector keys)
                    (to-db-object options)))
   ([^String collection ^Map keys ^String name ^Boolean unique?]
-     (.ensureIndex (.getCollection monger.core/*mongodb-database* collection)
+     (.ensureIndex (.getCollection monger.core/*mongodb-database* (name collection))
                    (as-field-selector keys)
                    name
                    unique?)))
@@ -537,7 +537,7 @@
 
   "
   [^String collection]
-  (from-db-object (.getIndexInfo (.getCollection monger.core/*mongodb-database* collection)) true))
+  (from-db-object (.getIndexInfo (.getCollection monger.core/*mongodb-database* (name collection))) true))
 
 
 ;;
@@ -547,16 +547,16 @@
 (defn drop-index
   "Drops an index from this collection."
   ([^String collection ^String name]
-     (.dropIndex (.getCollection monger.core/*mongodb-database* collection) name))
+     (.dropIndex (.getCollection monger.core/*mongodb-database* (name collection)) name))
   ([^DB db ^String collection ^String name]
-     (.dropIndex (.getCollection db collection) name)))
+     (.dropIndex (.getCollection db (name collection)) name)))
 
 (defn drop-indexes
   "Drops all indixes from this collection."
   ([^String collection]
-     (.dropIndexes (.getCollection monger.core/*mongodb-database* collection)))
+     (.dropIndexes (.getCollection monger.core/*mongodb-database* (name collection))))
   ([^DB db ^String collection]
-     (.dropIndexes (.getCollection db collection))))
+     (.dropIndexes (.getCollection db (name collection)))))
 
 
 ;;
@@ -591,9 +591,9 @@
       (monger.collection/drop \"collection-to-drop\")
   "
   ([^String collection]
-     (.drop (.getCollection monger.core/*mongodb-database* collection)))
+     (.drop (.getCollection monger.core/*mongodb-database* (name collection))))
   ([^DB db ^String collection]
-     (.drop (.getCollection db collection))))
+     (.drop (.getCollection db (name collection)))))
 
 (defn rename
   "Renames collection.
@@ -616,10 +616,10 @@
 (defn map-reduce
   "Performs a map reduce operation"
   ([^String collection ^String js-mapper ^String js-reducer ^String output ^Map query]
-     (let [coll (.getCollection monger.core/*mongodb-database* collection)]
+     (let [coll (.getCollection monger.core/*mongodb-database* (name collection))]
        (.mapReduce coll js-mapper js-reducer output (to-db-object query))))
   ([^String collection ^String js-mapper ^String js-reducer ^String output ^MapReduceCommand$OutputType output-type ^Map query]
-     (let [coll (.getCollection monger.core/*mongodb-database* collection)]
+     (let [coll (.getCollection monger.core/*mongodb-database* (name collection))]
        (.mapReduce coll js-mapper js-reducer output output-type (to-db-object query)))))
 
 
@@ -630,11 +630,11 @@
 (defn distinct
   "Finds distinct values for a key"
   ([^String collection ^String key]
-     (.distinct (.getCollection monger.core/*mongodb-database* collection) ^String (to-db-object key)))
+     (.distinct (.getCollection monger.core/*mongodb-database* (name collection)) ^String (to-db-object key)))
   ([^String collection ^String key ^Map query]
-     (.distinct (.getCollection monger.core/*mongodb-database* collection) ^String (to-db-object key) (to-db-object query)))
+     (.distinct (.getCollection monger.core/*mongodb-database* (name collection)) ^String (to-db-object key) (to-db-object query)))
   ([^DB db ^String collection ^String key ^Map query]
-     (.distinct (.getCollection db collection) ^String (to-db-object key) (to-db-object query))))
+     (.distinct (.getCollection db (name collection)) ^String (to-db-object key) (to-db-object query))))
 
 
 ;;
