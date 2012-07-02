@@ -1,6 +1,13 @@
-## Changes between 1.0.0 and 1.0.1
+## Changes between 1.0.1 and 1.0.2
 
 No changes yet.
+
+
+## Changes between 1.0.0 and 1.0.1
+
+In the Monger 1.0.0 release jar, development dependencies were erroneously included in the jar. This affected
+projects using, for example, a different version of `clojure.core.cache`. This wasn't intentional and `1.0.1` is released
+to address the problem.
 
 
 ## Changes between 1.0.0-rc2 and 1.0.0
