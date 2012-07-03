@@ -1,4 +1,4 @@
-(defproject com.novemberain/monger "1.1.0-SNAPSHOT"
+(defproject com.novemberain/monger "1.1.0-rc1"
   :description "Monger is a Clojure MongoDB client for a more civilized age: friendly, flexible and with batteries included"
   :url "http://clojuremongodb.info"
   :min-lein-version "2.0.0"
@@ -12,6 +12,7 @@
                                   (and (not (:performance m))
                                        (not (:edge-features m))))
                    :focus         :focus
+                   :updating      :updating
                    :indexing      :indexing
                    :external      :external
                    :cache         :cache
@@ -23,7 +24,7 @@
                    :all           (constantly true)}
   :source-paths      ["src/clojure"]
   :java-source-paths ["src/java"]
-  :javac-options     ["-target" "1.6" "-source" "1.6"]  
+  :javac-options     ["-target" "1.6" "-source" "1.6"]
   :codox {:exclude [monger.internal.pagination
                     monger.internal.fn
                     ;; these are not fully baked yet or have changes
