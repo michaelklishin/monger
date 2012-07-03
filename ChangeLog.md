@@ -1,3 +1,13 @@
+## Changes between 1.0.0-beta2 and 1.1.0-rc1
+
+### monger.collection/save-and-return
+
+`monger.collection/save-and-return` is a new function that to `monger.collection/save` is what `monger.collection/insert-and-return`
+is to `monger.collection/insert`. See Monger 1.1.0-beta1 changes or function documentation strings for more information.
+
+
+
+
 ## Changes between 1.0.0-beta1 and 1.1.0-beta2
 
 ### Support for passing keywords as collection names

@@ -417,6 +417,9 @@
    If the object is not present in the database, insert operation will be performed.
    If the object is already in the database, it will be updated.
 
+   This function returns write result. If you want to get the exact persisted document back,
+   use `save-and-return`.
+
    EXAMPLES
 
        (monger.collection/save \"people\" {:first_name \"Ian\" :last_name \"Gillan\"})
@@ -427,12 +430,38 @@
             monger.core/*mongodb-write-concern*))
   ([^String collection ^Map document ^WriteConcern write-concern]
      (.save (.getCollection monger.core/*mongodb-database* (name collection))
-            document
+            (to-db-object document)
             write-concern))
   ([^DB db ^String collection ^Map document ^WriteConcern write-concern]
      (.save (.getCollection db (name collection))
-            document
+            (to-db-object document)
             write-concern)))
+
+(defn ^clojure.lang.IPersistentMap save-and-return
+  "Saves an object to the given collection (does insert or update based on the object _id).
+
+   If the object is not present in the database, insert operation will be performed.
+   If the object is already in the database, it will be updated.
+
+   This function returns the exact persisted document back, including the `:_id` key in
+   case of an insert.
+
+   If you want to get write result back, use `save`.
+
+   EXAMPLES
+
+       (monger.collection/save-and-return \"people\" {:first_name \"Ian\" :last_name \"Gillan\"})
+   "
+  ([^String collection ^Map document]
+     (save-and-return ^DB monger.core/*mongodb-database* collection document ^WriteConcern monger.core/*mongodb-write-concern*))
+  ([^String collection ^Map document ^WriteConcern write-concern]
+     (save-and-return ^DB monger.core/*mongodb-database* collection document write-concern))
+  ([^DB db ^String collection ^Map document ^WriteConcern write-concern]
+     ;; see the comment in insert-and-return. Here we additionally need to make sure to not scrap the :_id key if
+     ;; it is already present. MK.
+     (let [doc (merge {:_id (ObjectId.)} document)]
+       (save db collection doc write-concern)
+       doc)))
 
 
 ;; monger.collection/remove

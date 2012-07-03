@@ -22,7 +22,7 @@
 ;; update, save
 ;;
 
-(deftest update-document-by-id-without-upsert
+(deftest ^{:updating true} update-document-by-id-without-upsert
   (let [collection "libraries"
         doc-id       (monger.util/random-uuid)
         date         (Date.)
@@ -33,7 +33,7 @@
     (mc/update collection { :_id doc-id } { :language "Erlang" })
     (is (= (modified-doc (mc/find-by-id collection doc-id))))))
 
-(deftest update-document-by-id-without-upsert-using-update-by-id
+(deftest ^{:updating true} update-document-by-id-without-upsert-using-update-by-id
   (let [collection "libraries"
         doc-id       (monger.util/random-uuid)
         date         (Date.)
@@ -44,7 +44,7 @@
     (mc/update-by-id collection doc-id { :language "Erlang" })
     (is (= (modified-doc (mc/find-by-id collection doc-id))))))
 
-(deftest update-nested-document-fields-without-upsert-using-update-by-id
+(deftest ^{:updating true} update-nested-document-fields-without-upsert-using-update-by-id
   (let [collection "libraries"
         doc-id       (ObjectId.)
         date         (Date.)
@@ -56,7 +56,7 @@
     (is (= (modified-doc (mc/find-by-id collection doc-id))))))
 
 
-(deftest update-multiple-documents
+(deftest ^{:updating true} update-multiple-documents
   (let [collection "libraries"]
     (mc/insert collection { :language "Clojure", :name "monger" })
     (mc/insert collection { :language "Clojure", :name "langohr" })
@@ -71,23 +71,31 @@
     (is (= 3 (mc/count collection { :language "Python"  })))))
 
 
-(deftest save-a-new-document
+(deftest ^{:updating true} save-a-new-document
   (let [collection "people"
-        document       { :name "Joe", :age 30 }]
+        document       {:name "Joe" :age 30}]
     (is (monger.result/ok? (mc/save "people" document)))
     (is (= 1 (mc/count collection)))))
 
-
-(deftest save-a-new-basic-db-object
+(deftest ^{:updating true} save-and-return-a-new-document
   (let [collection "people"
-        doc        (to-db-object { :name "Joe", :age 30 })]
+        document       {:name "Joe" :age 30}
+        returned   (mc/save-and-return "people" document)]
+    (is (:_id returned))
+    (is (= document (dissoc returned :_id)))
+    (is (= 1 (mc/count collection)))))
+
+
+(deftest ^{:updating true} save-a-new-basic-db-object
+  (let [collection "people"
+        doc        (to-db-object {:name "Joe" :age 30})]
     (is (nil? (monger.util/get-id doc)))
     (mc/save monger.core/*mongodb-database* "people" doc WriteConcern/SAFE)
     (is (not (nil? (monger.util/get-id doc))))))
 
 
 
-(deftest update-an-existing-document-using-save
+(deftest ^{:updating true} update-an-existing-document-using-save
   (let [collection "people"
         doc-id            "people-1"
         document          { :_id doc-id, :name "Joe",   :age 30 }]
@@ -96,8 +104,17 @@
     (mc/save collection { :_id doc-id, :name "Alan", :age 40 })
     (is (= 1 (mc/count collection { :name "Alan", :age 40 })))))
 
+(deftest ^{:updating true} update-an-existing-document-using-save-and-return
+  (let [collection "people"
+        document   (mc/insert-and-return "people" {:name "Joe" :age 30})
+        doc-id     (:_id document)
+        updated    (mc/save-and-return collection {:_id doc-id :name "Alan" :age 40})]
+    (is (= {:_id doc-id :name "Alan" :age 40} updated))
+    (is (= 1 (mc/count collection)))
+    (is (= 1 (mc/count collection {:name "Alan" :age 40})))))
 
-(deftest set-an-attribute-on-existing-document-using-update
+
+(deftest ^{:updating true} set-an-attribute-on-existing-document-using-update
   (let [collection "people"
         doc-id            (monger.util/object-id)
         document          { :_id doc-id, :name "Joe",   :age 30 }]
@@ -108,7 +125,7 @@
     (is (= 1 (mc/count collection { :has_kids true })))))
 
 
-(deftest  increment-multiple-fields-using-exists-operator-and-update
+(deftest ^{:updating true}  increment-multiple-fields-using-exists-operator-and-update
   (let [collection "matches"
         doc-id     (monger.util/object-id)
         document   { :_id doc-id :abc 0 :def 10 }]
@@ -120,7 +137,7 @@
 
 
 
-(deftest upsert-a-document
+(deftest ^{:updating true} upsert-a-document
   (let [collection "libraries"
         doc-id       (monger.util/random-uuid)
         date         (Date.)
