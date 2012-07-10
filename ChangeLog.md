@@ -1,10 +1,16 @@
-## Changes between 1.0.0-rc1 and 1.1.0
+## Changes between 1.1.0 and 1.1.1
+
+No changes yet.
+
+
+
+## Changes between 1.1.0-rc1 and 1.1.0
 
 No changes.
 
 
 
-## Changes between 1.0.0-beta2 and 1.1.0-rc1
+## Changes between 1.1.0-beta2 and 1.1.0-rc1
 
 ### monger.collection/save-and-return
 
@@ -14,7 +20,7 @@ is to `monger.collection/insert`. See Monger 1.1.0-beta1 changes or function doc
 
 
 
-## Changes between 1.0.0-beta1 and 1.1.0-beta2
+## Changes between 1.1.0-beta1 and 1.1.0-beta2
 
 ### Support for passing keywords as collection names
 
@@ -23,7 +29,7 @@ For example, `monger.collection/insert-and-return` that's given collection name 
 treat it as `people` (by applying [clojure.core/name](http://clojuredocs.org/clojure_core/clojure.core/name) to the argument).
 
 
-## Changes between 1.0.0-alpha3 and 1.1.0-beta1
+## Changes between 1.1.0-alpha3 and 1.1.0-beta1
 
 ### monger.collection/insert-and-return
 
@@ -48,7 +54,7 @@ when a user may want to have the write result returned.
 
 
 
-## Changes between 1.0.0-alpha2 and 1.1.0-alpha3
+## Changes between 1.1.0-alpha2 and 1.1.0-alpha3
 
 ### Clojure reader extensions
 
