@@ -1,6 +1,8 @@
 ## Changes between 1.1.0 and 1.2.0-alpha1
 
-No changes yet
+### monger.collection/insert-and-return no longer forcefully replaces existing document id
+
+`monger.collection/insert-and-return` now preserves existing document ids, just like `monger.collection/save-and-return` does.
 
 
 ## Changes between 1.1.0-rc1 and 1.1.0
