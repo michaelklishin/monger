@@ -97,7 +97,7 @@
      ;; and it does not work very well in our case, because that DBObject is short lived and produced
      ;; from the Clojure map we are passing in. Plus, this approach is very awkward with immutable data
      ;; structures being the default. MK.
-     (let [doc (merge document {:_id (ObjectId.)})]
+     (let [doc (merge {:_id (ObjectId.)} document)]
        (insert db collection doc concern)
        doc)))
 
