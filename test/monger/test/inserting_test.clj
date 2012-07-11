@@ -129,6 +129,13 @@
     (is (:_id result))
     (is (= 1 (mc/count collection)))))
 
+(deftest  insert-and-return-with-a-provided-id
+  (let [collection "people"
+        oid        (ObjectId.)
+        doc        {:name "Joe" :age 30 :_id oid}
+        result     (mc/insert-and-return :people doc)]
+    (is (= (:_id result) (:_id doc) oid))
+    (is (= 1 (mc/count collection)))))
 
 
 ;;
