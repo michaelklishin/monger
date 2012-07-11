@@ -1,5 +1,18 @@
 ## Changes between 1.1.0 and 1.2.0-alpha1
 
+### Monger Query DSL now supports low level options on cursors
+
+For example:
+
+``` clojure
+(with-collection coll
+                  (find {})
+                  (paginate :page 1 :per-page 3)
+                  (sort { :title 1 })
+                  (read-preference ReadPreference/PRIMARY)
+                  (options com.mongodb.Bytes/QUERYOPTION_NOTIMEOUT))
+```
+
 ### monger.collection/insert-and-return no longer forcefully replaces existing document id
 
 `monger.collection/insert-and-return` now preserves existing document ids, just like `monger.collection/save-and-return` does.

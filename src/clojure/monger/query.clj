@@ -63,7 +63,7 @@
      (merge (empty-query) { :collection coll })))
 
 (defn exec
-  [{ :keys [^DBCollection collection query fields skip limit sort batch-size hint snapshot read-preference keywordize-fields] :or { limit 0 batch-size 256 skip 0 } }]
+  [{ :keys [^DBCollection collection query fields skip limit sort batch-size hint snapshot read-preference keywordize-fields options] :or { limit 0 batch-size 256 skip 0 } }]
   (let [cursor (doto (.find collection (to-db-object query) (as-field-selector fields))
                      (.limit limit)
                      (.skip  skip)
@@ -74,6 +74,8 @@
       (.snapshot cursor))
     (when read-preference
       (.setReadPreference cursor read-preference))
+    (when options
+      (.setOptions cursor options))
     (map (fn [x] (from-db-object x keywordize-fields))
          cursor)))
 
@@ -116,6 +118,10 @@
 (defn read-preference
   [m ^ReadPreference rp]
   (merge m { :read-preference rp }))
+
+(defn options
+  [m opts]
+  (merge m { :options opts }))
 
 (defn keywordize-fields
   [m bool]
