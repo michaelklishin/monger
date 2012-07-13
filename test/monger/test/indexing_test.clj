@@ -3,10 +3,11 @@
             java.util.Date)
   (:require [monger core util]
             [monger.collection :as mc]
-            [monger.test.helper :as helper])
+            [monger.test.helper :as helper]
+            monger.joda-time)
   (:use clojure.test
-        [monger operators conversion]
-        monger.test.fixtures))
+        monger.test.fixtures
+        [clj-time.core :only [now secs ago from-now]]))
 
 (helper/connect!)
 
@@ -31,3 +32,22 @@
     (mc/ensure-index collection { "language" 1 })
     (mc/ensure-index collection { "language" 1 } { :unique true })
     (mc/drop-indexes collection)))
+
+(deftest ^{:indexing true :edge-features true :time-consuming true} test-ttl-collections
+  (let [coll  "recent_events"
+        ttl   30
+        sleep 120]
+    (mc/remove coll)
+    (mc/ensure-index coll {:created-at 1} {:expireAfterSeconds ttl})
+    (dotimes [i 100]
+      (mc/insert coll {:type "signup" :created-at (-> i secs ago) :i i}))
+    (dotimes [i 100]
+      (mc/insert coll {:type "signup" :created-at (-> i secs from-now) :i i}))
+    (is (= 200 (mc/count coll {:type "signup"})))
+    ;; sleep for 65 seconds. MongoDB 2.1.2 seems to run TTLMonitor once per minute, according to
+    ;; the log. MK.
+    (println (format "Now sleeping for %d seconds to test TTL collections!" sleep))
+    (Thread/sleep (* sleep 1000))
+    (println (format "Documents in the TTL collection: %d" (mc/count coll {:type "signup"})))
+    (is (< (mc/count coll {:type "signup"}) 100))
+    (mc/remove coll)))

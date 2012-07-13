@@ -10,7 +10,8 @@
                  [ragtime/ragtime.core          "0.2.0"]]
   :test-selectors {:default     (fn [m]
                                   (and (not (:performance m))
-                                       (not (:edge-features m))))
+                                       (not (:edge-features m))
+                                       (not (:time-consuming m))))
                    :focus         :focus
                    :updating      :updating
                    :indexing      :indexing
@@ -20,7 +21,8 @@
                    :command       :command
                    :performance   :performance
                    ;; as in, edge mongodb server
-                   :edge-features :edge-features
+                   :edge-features  :edge-features
+                   :time-consuming :time-consuming
                    :all           (constantly true)}
   :source-paths      ["src/clojure"]
   :java-source-paths ["src/java"]
