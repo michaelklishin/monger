@@ -1,5 +1,10 @@
 ## Changes between 1.1.0 and 1.2.0-alpha1
 
+### ClojureWerkz Support 0.6.0
+
+ClojureWerkz Support dependency has been updated to version `0.6.0`.
+
+
 ### Monger Query DSL now supports low level options on cursors
 
 For example:
