@@ -59,7 +59,7 @@
                     { :state "IL" :quantity 2 :price 11.50  }
                     { :state "CA" :quantity 2 :price 2.95   }
                     { :state "IL" :quantity 3 :price 5.50   }]
-        expected    #{{:_id "CA", :total 204.9} {:_id "IL", :total 39.5} {:_id "NY", :total 697.0}}]
+        expected    #{{:_id "CA" :total 204.9} {:_id "IL" :total 39.5} {:_id "NY" :total 697.0}}]
     (mc/insert-batch collection batch)
     (let [result (set (mc/aggregate "docs" [{$project {:subtotal {$multiply ["$quantity", "$price"]}
                                                        :_id      1
