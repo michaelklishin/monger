@@ -38,6 +38,7 @@
                  :post "clojure-mongodb@googlegroups.com"}
   :profiles {:1.4 {:dependencies [[org.clojure/clojure "1.4.0"]]}
              :1.5 {:dependencies [[org.clojure/clojure "1.5.0-master-SNAPSHOT"]]}
+             :mjd29 {:dependencies [[org.mongodb/mongo-java-driver "2.9.0-SNAPSHOT"]]}
              :dev {:resource-paths ["test/resources"]
                    :dependencies  [[clj-time "0.4.2"               :exclusions [org.clojure/clojure]]
                                    [org.clojure/data.json  "0.1.2" :exclusions [org.clojure/clojure]]
@@ -47,8 +48,8 @@
                    :plugins [[codox "0.6.1"]]
                    :codox {:sources ["src/clojure"]
                            :output-dir "doc/api"}}}
-  :aliases {"all" ["with-profile" "dev:dev,1.4:dev,1.5"]
-            "ci"  ["with-profile" "dev:dev,1.4"]}
+  :aliases {"all" ["with-profile" "dev:dev,1.4:dev,1.5:dev,mjd29:dev,1.4,mjd29:dev,1.5,mjd29"]
+            "ci"  ["with-profile" "dev:dev,1.4:dev,1.5:dev,mjd29:dev,1.4,mjd29"]}
   :repositories {"sonatype" {:url "http://oss.sonatype.org/content/repositories/releases"
                              :snapshots false
                              :releases {:checksum :fail :update :always}}
