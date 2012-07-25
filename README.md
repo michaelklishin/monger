@@ -33,7 +33,7 @@ To subscribe for announcements of releases, important changes and so on, please 
 
 ## Project Maturity
 
-Monger is not a young project: it will be 1 year old around July 2012, with active production use from week 1.
+Monger is not a young project: started in July 2011, it is over 1 year old with active production use from week 1.
 
 
 
@@ -53,7 +53,7 @@ definition to your `pom.xml`:
 
 With Leiningen:
 
-    [com.novemberain/monger "1.1.1"]
+    [com.novemberain/monger "1.1.2"]
 
 
 With Maven:
@@ -61,7 +61,7 @@ With Maven:
     <dependency>
       <groupId>com.novemberain</groupId>
       <artifactId>monger</artifactId>
-      <version>1.1.1</version>
+      <version>1.1.2</version>
     </dependency>
 
 
