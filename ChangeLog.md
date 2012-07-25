@@ -1,5 +1,12 @@
 ## Changes between 1.1.0 and 1.2.0-alpha1
 
+### Eliminated Reflection Warnings in monger.joda-time
+
+`monger.joda-time` functions no longer result in reflective method calls.
+
+Contributed by [Baishampayan Ghose](https://github.com/ghoseb).
+
+
 ### ClojureWerkz Support 0.6.0
 
 ClojureWerkz Support dependency has been updated to version `0.6.0`.
