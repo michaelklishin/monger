@@ -1,6 +1,10 @@
 ## Changes between 1.1.1 and 1.1.2
 
-No changes yet.
+### Eliminated Reflection Warnings in monger.joda-time
+
+`monger.joda-time` functions no longer result in reflective method calls.
+
+Contributed by [Baishampayan Ghose](https://github.com/ghoseb).
 
 
 ## Changes between 1.1.0 and 1.1.1
