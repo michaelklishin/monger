@@ -1,3 +1,8 @@
+## Changes between 1.2.0-alpha1 and 1.2.0-alpha2
+
+No changes yet.
+
+
 ## Changes between 1.1.0 and 1.2.0-alpha1
 
 ### Eliminated Reflection Warnings in monger.joda-time
