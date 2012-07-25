@@ -1,6 +1,6 @@
 # Monger, a modern Clojure MongoDB Driver
 
-Monger is an idiomatic Clojure MongoDB driver for a more civilized age.
+Monger is an idiomatic [Clojure MongoDB driver](http://clojuremongodb.info) for a more civilized age.
 
 It has batteries included, offers powerful expressive query DSL, strives to support every MongoDB 2.0+ feature and has sane defaults. Monger is built from the
 ground up for Clojure 1.3+ and sits on top of the official MongoDB Java driver.
