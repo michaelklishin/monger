@@ -35,7 +35,7 @@
 ;;
 
 (defmethod print-dup java.util.Date
-  [d out]
+  [^java.util.Date d ^java.io.Writer out]
   (.write out
           (str "#="
                `(java.util.Date. ~(.getYear d)
@@ -47,5 +47,5 @@
 
 
 (defmethod print-dup org.joda.time.base.AbstractInstant
-  [d out]
+  [^org.joda.time.base.AbstractInstant d out]
   (print-dup (.toDate d) out))
