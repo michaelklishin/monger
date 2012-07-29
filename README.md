@@ -13,13 +13,12 @@ wanted a client that will
 
  * Support most of MongoDB 2.0+ features but only those that really matter. Grouping the way it is done today, for example, does not (it is easier to just use Map/Reduce directly).
  * Be [well documented](http://clojuremongodb.info).
- * Be well tested.
- * Be maintained, do not carry technical debt from 2009 forever.
+ * Be [well tested](https://github.com/michaelklishin/monger/tree/master/test/monger/test).
+ * Not carry technical debt from 2009 forever.
  * Target Clojure 1.3.0 and later from the ground up.
+ * Be as close to the Mongo shell query language as practical
  * Integrate with libraries like clojure.data.json, Joda Time, [Ragtime](https://github.com/weavejester/ragtime).
- * Provide support for unit testing: factories/fixtures DSL, collection cleaner functions, clojure.test integration and so on.
  * Support URI connections to be friendly to Heroku and other PaaS providers.
- * Learn from other clients like the Java and Ruby ones.
  * Integrate usage of JavaScript files and ClojureScript (as soon as the compiler gets artifact it is possible to depend on for easy embedding).
 
 
@@ -75,7 +74,9 @@ Please refer to our [Getting Started guide](http://clojuremongodb.info/articles/
 
 ## Documentation & Examples
 
-Please visit our [documentation site](http://clojuremongodb.info/). Our [test suite](https://github.com/michaelklishin/monger/tree/master/test/monger/test) also has many code examples.
+Please see our [documentation guides site](http://clojuremongodb.info/) and [API reference](http://reference.clojuremongodb.info).
+
+Our [test suite](https://github.com/michaelklishin/monger/tree/master/test/monger/test) also has many code examples.
 
 
 
@@ -90,7 +91,14 @@ Monger is built from the ground up for Clojure 1.3 and up.
 
 
 
-### Write Performance
+
+## Monger Is a ClojureWerkz Project
+
+Monger is part of the [group of Clojure libraries known as ClojureWerkz](http://clojurewerkz.org), together with
+[Neocons](https://github.com/michaelklishin/neocons), [Langohr](https://github.com/michaelklishin/langohr), [Elastisch](https://github.com/clojurewerkz/elastisch), [Welle](https://github.com/michaelklishin/welle), [Quartzite](https://github.com/michaelklishin/quartzite) and several others.
+
+
+## Write Performance
 
 Monger insert operations are efficient and have very little overhead compared to the underlying Java driver. Here
 are some numbers on a MacBook Pro from fall 2010 with Core i7 and an Intel SSD drive:
@@ -107,12 +115,6 @@ Inserting  100000  documents...
 
 With the `SAFE` write concern, it takes roughly 0.5 second to insert 100,000 documents with Clojure 1.3.0.
 
-
-
-## Monger Is a ClojureWerkz Project
-
-Monger is part of the [group of Clojure libraries known as ClojureWerkz](http://clojurewerkz.org), together with
-[Neocons](https://github.com/michaelklishin/neocons), [Langohr](https://github.com/michaelklishin/langohr), [Elastisch](https://github.com/clojurewerkz/elastisch), [Welle](https://github.com/michaelklishin/welle), [Quartzite](https://github.com/michaelklishin/quartzite) and several others.
 
 
 ## Development
