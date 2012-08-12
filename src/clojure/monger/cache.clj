@@ -6,7 +6,7 @@
   (:require [monger.collection  :as mc]
             [clojure.core.cache :as cache])
   (:use monger.conversion)
-  (:import [clojure.core.cache CacheProtocol]))
+  (:import clojure.core.cache.CacheProtocol))
 
 ;;
 ;; Implementation

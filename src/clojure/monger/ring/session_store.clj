@@ -2,7 +2,8 @@
   (:require [ring.middleware.session.store :as ringstore]
             [monger.collection             :as mc])
   (:use monger.conversion)
-  (:import [java.util UUID Date]))
+  (:import [java.util UUID Date]
+           ring.middleware.session.store.SessionStore))
 
 ;;
 ;; Implementation
