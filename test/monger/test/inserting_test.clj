@@ -97,8 +97,7 @@
     (mc/insert coll1 {:type "pentagon" :owner dbref})
     (let [fetched (mc/find-one-as-map coll1 {:type "pentagon"})
           fo      (:owner fetched)]
-      (is (= {:_id oid :name "Joe"} (from-db-object @fo true)))
-      (is (= dbref fo)))))
+      (is (= {:_id oid :name "Joe"} (from-db-object @fo true))))))
 
 
 ;;

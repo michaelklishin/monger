@@ -1,6 +1,8 @@
-## Changes between 1.2.0-alpha1 and 1.2.0-alpha2
+## Changes between 1.2.0-alpha1 and 1.2.0-beta1
 
-No changes yet.
+### MongoDB Java driver 2.9.0
+
+MongoDB Java driver dependency has been updated to 2.9.0[-RC1].
 
 
 ## Changes between 1.1.0 and 1.2.0-alpha1
