@@ -8,7 +8,7 @@
 ;; You must not remove this notice, or any other, from this software.
 
 (ns ^{:doc "An optional convenience namespaces for applications that heavily use dates and would prefer use JodaTime types
-            transparently when storing and loading them from MongoDB and serializing to JSON.
+            transparently when storing and loading them from MongoDB and serializing to JSON and/or with Clojure reader.
 
             Enables automatic conversion of JodaTime date/time/instant instances to JDK dates (java.util.Date) when documents
             are serialized and the other way around when documents are loaded. Extends clojure.data.json/Write-JSON protocol for
