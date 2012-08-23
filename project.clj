@@ -46,7 +46,10 @@
                                    [ring/ring-core         "1.1.0"]]
                    :plugins [[codox "0.6.1"]]
                    :codox {:sources ["src/clojure"]
-                           :output-dir "doc/api"}}}
+                           :output-dir "doc/api"}}
+             ;; only clj-time/JodaTime available, used to test monger.joda-time w/o clojure.data.json
+             :dev2 {:resource-paths ["test/resources"]
+                    :dependencies  [[clj-time "0.4.2"               :exclusions [org.clojure/clojure]]]}}
   :aliases {"all" ["with-profile" "dev:dev,1.4:dev,1.5"]
             "ci"  ["with-profile" "dev:dev,1.4:dev,1.5"]}
   :repositories {"sonatype" {:url "http://oss.sonatype.org/content/repositories/releases"

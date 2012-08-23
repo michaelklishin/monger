@@ -1,5 +1,12 @@
 ## Changes between 1.2.0-alpha1 and 1.2.0-beta1
 
+### monger.joda-time no longer requires clojure.data.json
+
+`monger.joda-time` no longer requires `clojure.data.json`. If `clojure.data.json` is available, it will be loaded
+and extended. If not, `monger.joda-time` will only extend Clojure reader and BSON dates serialization/deserialization.
+
+
+
 ### MongoDB Java driver 2.9.0
 
 MongoDB Java driver dependency has been updated to 2.9.0[-RC1].

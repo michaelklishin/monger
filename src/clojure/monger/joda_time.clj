@@ -17,9 +17,7 @@
             To use it, make sure you add dependencies on clj-time (or JodaTime) and clojure.data.json."} monger.joda-time
   (:import [org.joda.time DateTime DateTimeZone ReadableInstant]
            [org.joda.time.format ISODateTimeFormat])
-  (:use [monger.conversion])
-  (:require [clojure.data.json :as json]
-            clojurewerkz.support.json))
+  (:use [monger.conversion]))
 
 ;;
 ;; API
@@ -56,3 +54,16 @@
 (defmethod print-dup org.joda.time.base.AbstractInstant
   [^org.joda.time.base.AbstractInstant d out]
   (print-dup (.toDate d) out))
+
+
+;;
+;; JSON serialization
+;;
+
+(try
+  ;; try to load clojure.data.json. If available, load CLJW Support
+  ;; extensions.
+  (require 'clojure.data.json)
+  (require 'clojurewerkz.support.json)
+  (catch Throwable _
+    false))
