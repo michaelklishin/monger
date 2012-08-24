@@ -4,7 +4,7 @@
   :min-lein-version "2.0.0"
   :license {:name "Eclipse Public License"}
   :dependencies [[org.clojure/clojure           "1.4.0"]
-                 [org.mongodb/mongo-java-driver "2.9.0-RC1"]
+                 [org.mongodb/mongo-java-driver "2.9.0-RC2"]
                  [com.novemberain/validateur    "1.2.0"]
                  [clojurewerkz/support          "0.6.0"]
                  [ragtime/ragtime.core          "0.2.0"]]
