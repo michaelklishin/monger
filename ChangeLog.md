@@ -1,10 +1,4 @@
-## Changes between 1.2.0-rc1 and 1.2.0
-
-No changes yet.
-
-
-
-## Changes between 1.2.0-alpha1 and 1.2.0-rc1
+## Changes between 1.1.0 and 1.2.0
 
 ### Clojure 1.4 By Default
 
@@ -20,13 +14,10 @@ We encourage all users to upgrade to 1.4, it is a drop-in replacement for the ma
 and extended. If not, `monger.joda-time` will only extend Clojure reader and BSON dates serialization/deserialization.
 
 
-
 ### MongoDB Java driver 2.9.0
 
-MongoDB Java driver dependency has been updated to 2.9.0[-RC1].
+MongoDB Java driver dependency has been updated to 2.9.0[-RC2].
 
-
-## Changes between 1.1.0 and 1.2.0-alpha1
 
 ### Eliminated Reflection Warnings in monger.joda-time
 
@@ -56,6 +47,8 @@ For example:
 ### monger.collection/insert-and-return no longer forcefully replaces existing document id
 
 `monger.collection/insert-and-return` now preserves existing document ids, just like `monger.collection/save-and-return` does.
+
+
 
 
 ## Changes between 1.1.0-rc1 and 1.1.0
