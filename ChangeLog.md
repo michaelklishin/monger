@@ -1,4 +1,12 @@
-## Changes between 1.2.0-alpha1 and 1.2.0-beta1
+## Changes between 1.2.0-alpha1 and 1.2.0-rc1
+
+### Clojure 1.4 By Default
+
+Monger now depends on `org.clojure/clojure` version `1.4.0`. It is still compatible with Clojure 1.3 and if your `project.clj` depends
+on 1.3, it will be used, but 1.4 is the default now.
+
+We encourage all users to upgrade to 1.4, it is a drop-in replacement for the majority of projects out there.
+
 
 ### monger.joda-time no longer requires clojure.data.json
 
