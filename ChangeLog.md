@@ -1,3 +1,7 @@
+## Changes between 1.2.0 and 1.2.1
+
+No changes yet.
+
 ## Changes between 1.1.0 and 1.2.0
 
 ### Clojure 1.4 By Default
