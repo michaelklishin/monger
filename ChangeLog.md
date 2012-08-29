@@ -16,7 +16,7 @@ and extended. If not, `monger.joda-time` will only extend Clojure reader and BSO
 
 ### MongoDB Java driver 2.9.0
 
-MongoDB Java driver dependency has been updated to 2.9.0[-RC2].
+MongoDB Java driver dependency has been updated to 2.9.0.
 
 
 ### Eliminated Reflection Warnings in monger.joda-time

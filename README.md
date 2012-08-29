@@ -11,14 +11,14 @@ ground up for Clojure 1.3+ and sits on top of the official MongoDB Java driver.
 There is one MongoDB client for Clojure that has been around since 2009. So, why create another one? Monger authors
 wanted a client that will
 
- * Support most of MongoDB 2.0+ features but only those that really matter. Grouping the way it is done today, for example, does not (it is easier to just use Map/Reduce directly).
+ * Support most of MongoDB 2.0+ features, focus on those that really matter.
  * Be [well documented](http://clojuremongodb.info).
  * Be [well tested](https://github.com/michaelklishin/monger/tree/master/test/monger/test).
- * Not carry technical debt from 2009 forever.
  * Target Clojure 1.3.0 and later from the ground up.
  * Be as close to the Mongo shell query language as practical
  * Integrate with libraries like clojure.data.json, Joda Time, [Ragtime](https://github.com/weavejester/ragtime).
  * Support URI connections to be friendly to Heroku and other PaaS providers.
+ * Not carry technical debt from 2009 forever.
  * Integrate usage of JavaScript files and ClojureScript (as soon as the compiler gets artifact it is possible to depend on for easy embedding).
 
 
@@ -52,7 +52,7 @@ definition to your `pom.xml`:
 
 With Leiningen:
 
-    [com.novemberain/monger "1.1.2"]
+    [com.novemberain/monger "1.2.0"]
 
 
 With Maven:
@@ -60,7 +60,7 @@ With Maven:
     <dependency>
       <groupId>com.novemberain</groupId>
       <artifactId>monger</artifactId>
-      <version>1.1.2</version>
+      <version>1.2.0</version>
     </dependency>
 
 
@@ -82,7 +82,7 @@ Our [test suite](https://github.com/michaelklishin/monger/tree/master/test/monge
 
 ## Supported Clojure versions
 
-Monger is built from the ground up for Clojure 1.3 and up.
+Monger is built from the ground up for Clojure 1.3 and up. Clojure 1.4 is recommended.
 
 
 ## Continuous Integration Status
