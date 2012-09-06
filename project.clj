@@ -6,7 +6,7 @@
   :dependencies [[org.clojure/clojure           "1.4.0"]
                  [org.mongodb/mongo-java-driver "2.9.0"]
                  [com.novemberain/validateur    "1.2.0"]
-                 [clojurewerkz/support          "0.6.0"]
+                 [clojurewerkz/support          "0.7.0"]
                  [ragtime/ragtime.core          "0.2.0"]]
   :test-selectors {:default     (fn [m]
                                   (and (not (:performance m))
@@ -19,6 +19,7 @@
                    :cache         :cache
                    :gridfs        :gridfs
                    :command       :command
+                   :integration   :integration
                    :performance   :performance
                    ;; as in, edge mongodb server
                    :edge-features  :edge-features
@@ -41,6 +42,7 @@
              :dev {:resource-paths ["test/resources"]
                    :dependencies  [[clj-time "0.4.2"               :exclusions [org.clojure/clojure]]
                                    [org.clojure/data.json  "0.1.2" :exclusions [org.clojure/clojure]]
+                                   [cheshire               "4.0.2" :exclusions [org.clojure/clojure]]
                                    [org.clojure/tools.cli  "0.2.1" :exclusions [org.clojure/clojure]]
                                    [org.clojure/core.cache "0.6.0" :exclusions [org.clojure/clojure]]
                                    [ring/ring-core         "1.1.0"]]

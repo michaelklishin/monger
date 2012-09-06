@@ -10,15 +10,35 @@
 (ns ^{:doc "Provides clojure.data.json/Write-JSON protocol extension for MongoDB-specific types, such as
             org.bson.types.ObjectId"}
   monger.json
-  (:import org.bson.types.ObjectId)
-  (:require [clojure.data.json :as json]
-            clojurewerkz.support.json))
+  (:import org.bson.types.ObjectId))
 
 ;;
 ;; API
 ;;
 
-(extend-protocol json/Write-JSON
-  ObjectId
-  (write-json [^ObjectId object out escape-unicode?]
-    (json/write-json (.toString object) out escape-unicode?)))
+(require 'clojurewerkz.support.json)
+
+(try
+  (require 'clojure.data.json)
+  (catch Throwable t
+    false))
+
+(try
+  (extend-protocol clojure.data.json/Write-JSON
+    ObjectId
+    (write-json [^ObjectId object out escape-unicode?]
+      (clojure.data.json/write-json (.toString object) out escape-unicode?)))
+  (catch Throwable _
+    false))
+
+(try
+  (require 'cheshire.custom)
+  (catch Throwable t
+    false))
+
+(try
+  (cheshire.custom/add-encoder ObjectId
+                               (fn [^ObjectId oid ^com.fasterxml.jackson.core.json.WriterBasedJsonGenerator generator]
+                                 (.writeString generator (.toString oid))))
+  (catch Throwable t
+    false))

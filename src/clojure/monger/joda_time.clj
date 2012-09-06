@@ -60,10 +60,4 @@
 ;; JSON serialization
 ;;
 
-(try
-  ;; try to load clojure.data.json. If available, load CLJW Support
-  ;; extensions.
-  (require 'clojure.data.json)
-  (require 'clojurewerkz.support.json)
-  (catch Throwable _
-    false))
+(require 'clojurewerkz.support.json)

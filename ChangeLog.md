@@ -1,6 +1,14 @@
 ## Changes between 1.2.0 and 1.3.0
 
-No changes yet.
+### Cheshire Support
+
+`monger.json` and `monger.joda-time` will now use [Cheshire](https://github.com/dakrone/cheshire) if it is available. [clojure.data.json](https://github.com/clojure/data.json)
+is no longer a hard dependency (but still supported if available).
+
+
+### ClojureWerkz Support 0.7.0
+
+ClojureWerkz Support dependency has been updated to version `0.7.0`.
 
 
 
