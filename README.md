@@ -16,7 +16,7 @@ wanted a client that will
  * Be [well tested](https://github.com/michaelklishin/monger/tree/master/test/monger/test).
  * Target Clojure 1.3.0 and later from the ground up.
  * Be as close to the Mongo shell query language as practical
- * Integrate with libraries like clojure.data.json, Joda Time, [Ragtime](https://github.com/weavejester/ragtime).
+ * Integrate with libraries like Joda Time, [Cheshire](https://github.com/dakrone/cheshire), clojure.data.json, [Ragtime](https://github.com/weavejester/ragtime).
  * Support URI connections to be friendly to Heroku and other PaaS providers.
  * Not carry technical debt from 2009 forever.
  * Integrate usage of JavaScript files and ClojureScript (as soon as the compiler gets artifact it is possible to depend on for easy embedding).
