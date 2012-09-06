@@ -1,10 +1,11 @@
 (ns monger.test.factory-dsl-test
-  (:use     clojure.test
-            [monger testkit joda-time]
-            monger.test.fixtures
-            [clj-time.core :only [days ago weeks now]])
+  (:use clojure.test
+        [monger testkit]
+        monger.test.fixtures
+        [clj-time.core :only [days ago weeks now]])
   (:require [monger.collection  :as mc]
-            [monger.test.helper :as helper])
+            [monger.test.helper :as helper]
+            monger.joda-time)
   (:import org.bson.types.ObjectId
            org.joda.time.DateTime))
 

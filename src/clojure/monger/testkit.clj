@@ -14,7 +14,7 @@
   monger.testkit
   (:require [monger.collection :as mc]
             [monger.result     :as mr])
-  (:use     [monger.internal.fn :only (expand-all expand-all-with) :as fntools])
+  (:use     [monger.internal.fn :only [expand-all expand-all-with]])
   (:import org.bson.types.ObjectId))
 
 

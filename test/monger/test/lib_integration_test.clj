@@ -1,12 +1,12 @@
 (ns monger.test.lib-integration-test
   (:use clojure.test
-        monger.json
-        monger.joda-time
         monger.conversion)
   (:import [org.joda.time DateTime DateMidnight]
            org.bson.types.ObjectId
            com.mongodb.DBObject)
-  (:require [clojure.data.json :as json]
+  (:require monger.json
+            monger.joda-time
+            [clojure.data.json :as json]
             [clj-time.core     :as t]))
 
 

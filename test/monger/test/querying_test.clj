@@ -11,7 +11,7 @@
             [monger.test.helper :as helper])
   (:use clojure.test
         monger.test.fixtures
-        [monger conversion query operators joda-time]
+        [monger conversion query operators]
         [clj-time.core :only [date-time]]))
 
 (helper/connect!)

@@ -4,7 +4,7 @@
         [monger.core :only [count]]
         monger.test.fixtures
         [monger operators conversion]
-        [monger.gridfs :only (store make-input-file store-file filename content-type metadata)])
+        [monger.gridfs :only [store make-input-file store-file filename content-type metadata]])
   (:require [monger.gridfs :as gridfs]
             [monger.test.helper :as helper]
             [clojure.java.io :as io])
