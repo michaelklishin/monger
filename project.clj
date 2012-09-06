@@ -50,8 +50,7 @@
              ;; only clj-time/JodaTime available, used to test monger.joda-time w/o clojure.data.json
              :dev2 {:resource-paths ["test/resources"]
                     :dependencies  [[clj-time "0.4.2"               :exclusions [org.clojure/clojure]]]}}
-  :aliases {"all" ["with-profile" "dev:dev,1.3:dev,1.5"]
-            "ci"  ["with-profile" "dev:dev,1.3:dev,1.5"]}
+  :aliases {"all" ["with-profile" "dev:dev,1.3"]}
   :repositories {"sonatype" {:url "http://oss.sonatype.org/content/repositories/releases"
                              :snapshots false
                              :releases {:checksum :fail :update :always}}
