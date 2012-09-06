@@ -8,3 +8,4 @@ TAGS
 checkouts/*
 doc/*
 deploy.docs.sh
+target/*
