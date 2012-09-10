@@ -1,5 +1,15 @@
 ## Changes between 1.2.0 and 1.3.0
 
+### Ragtime 0.3.0
+
+Ragtime dependency has been updated to 0.3.0.
+
+
+### MongoDB Java driver 2.9.1
+
+MongoDB Java driver dependency has been updated to 2.9.1.
+
+
 ### Cheshire Support
 
 `monger.json` and `monger.joda-time` will now use [Cheshire](https://github.com/dakrone/cheshire) if it is available. [clojure.data.json](https://github.com/clojure/data.json)
