@@ -101,7 +101,7 @@ Monger is part of the [group of Clojure libraries known as ClojureWerkz](http://
 ## Write Performance
 
 Monger insert operations are efficient and have very little overhead compared to the underlying Java driver. Here
-are some numbers on a MacBook Pro from fall 2010 with Core i7 and an Intel SSD drive:
+are some (very unscientific) numbers on a MacBook Pro from fall 2010 with Core i7 and an Intel SSD drive:
 
 ```
 Testing monger.test.stress
