@@ -231,7 +231,7 @@
                   (find {})
                   (paginate :page 1 :per-page 3)
                   (sort { :title 1 })
-                  (read-preference ReadPreference/primary)
+                  (read-preference (ReadPreference/primary))
                   (options com.mongodb.Bytes/QUERYOPTION_NOTIMEOUT))
         result2 (with-collection coll
                   (find {})
