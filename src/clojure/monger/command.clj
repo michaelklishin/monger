@@ -27,13 +27,13 @@
   ([collection]
      (collection-stats monger.core/*mongodb-database* collection))
   ([^DB database collection]
-     (monger.core/command database { :collstats collection })))
+     (monger.core/command database {:collstats collection})))
 
 (defn db-stats
   ([]
      (db-stats monger.core/*mongodb-database*))
   ([^DB database]
-     (monger.core/command database {:dbStats 1 })))
+     (monger.core/command database {:dbStats 1})))
 
 
 (defn reindex-collection
@@ -41,21 +41,21 @@
   ([^String collection]
      (reindex-collection monger.core/*mongodb-database* collection))
   ([^DB database ^String collection]
-     (monger.core/command database { :reIndex collection })))
+     (monger.core/command database {:reIndex collection})))
 
 (defn rename-collection
   "Changes the name of an existing collection using the renameCollection command"
   ([^String from ^String to]
      (reindex-collection monger.core/*mongodb-database* from to))
   ([^DB database ^String from ^String to]
-     (monger.core/command database { :renameCollection from :to to })))
+     (monger.core/command database (sorted-map :renameCollection from :to to))))
 
 (defn convert-to-capped
   "Converts an existing, non-capped collection to a capped collection using the convertToCapped command"
   ([^String collection ^long size]
      (convert-to-capped monger.core/*mongodb-database* collection size))
   ([^DB database ^String collection ^long size]
-     (monger.core/command database {:convertToCapped collection :size size})))
+     (monger.core/command database (sorted-map :convertToCapped collection :size size))))
 
 (defn empty-capped
   "Removes all documents from a capped collection using the emptycapped command"
@@ -77,7 +77,7 @@
   ([]
      (server-status monger.core/*mongodb-database*))
   ([^DB database]
-     (monger.core/command database {:serverStatus 1 })))
+     (monger.core/command database {:serverStatus 1})))
 
 
 (defn top
