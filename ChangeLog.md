@@ -26,6 +26,22 @@ MongoDB Java driver dependency has been updated to 2.9.2.
 `monger.json` and `monger.joda-time` will now use [Cheshire](https://github.com/dakrone/cheshire) if it is available. [clojure.data.json](https://github.com/clojure/data.json)
 is no longer a hard dependency (but still supported if available).
 
+Because `clojure.data.json` is no longer a hard Monger dependency, you need to either add it as explicit
+dependency to your project or switch to Cheshire.
+
+To switch to Cheshire (you may need to update your code that uses `clojure.data.json` directly!),
+add the following to your `:dependencies` list:
+
+``` clojure
+[cheshire "4.0.3"]
+```
+
+For `clojure.data.json` version `0.1.2.`:
+
+``` clojure
+[org.clojure/data.json "0.2.0"]
+```
+
 
 ### ClojureWerkz Support 0.7.0
 
