@@ -1,3 +1,8 @@
+## Changes between 1.3.1 and 1.3.2
+
+No changes yet.
+
+
 ## Changes between 1.3.0 and 1.3.1
 
 ### ClojureWerkz Support Upgrade
