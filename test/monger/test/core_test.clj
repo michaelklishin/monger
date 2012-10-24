@@ -13,6 +13,10 @@
   (let [connection (monger.core/connect)]
     (is (instance? com.mongodb.Mongo connection))))
 
+(deftest connect-and-disconnect
+  (monger.core/connect!)
+  (monger.core/disconnect!)
+  (monger.core/connect!))
 
 (deftest connect-to-mongo-with-default-host-and-explicit-port
   (let [connection (monger.core/connect { :port 27017 })]

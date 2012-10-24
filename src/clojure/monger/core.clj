@@ -181,7 +181,10 @@
   (let [c (apply connect args)]
     (set-connection! c)))
 
-
+(defn disconnect!
+  "Closes default connection to MongoDB"
+  []
+  (.close *mongodb-connection*))
 
 (defn set-db!
   "Sets *mongodb-database* var to given db, updates *mongodb-gridfs* var state. Recommended to be used for

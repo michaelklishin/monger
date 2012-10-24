@@ -1,13 +1,18 @@
 ## Changes between 1.2.0 and 1.3.0
 
+### monger.core/disconnect!
+
+`monger.core/disconnect!` closes the default database connection.
+
+
 ### Ragtime 0.3.0
 
 Ragtime dependency has been updated to 0.3.0.
 
 
-### MongoDB Java driver 2.9.1
+### MongoDB Java Driver Update
 
-MongoDB Java driver dependency has been updated to 2.9.1.
+MongoDB Java driver dependency has been updated to 2.9.2.
 
 
 ### Cheshire Support
