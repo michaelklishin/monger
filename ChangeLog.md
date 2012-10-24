@@ -1,6 +1,8 @@
 ## Changes between 1.3.0 and 1.3.1
 
-No changes yet
+### ClojureWerkz Support Upgrade
+
+ClojureWerkz Support dependency has been updated to version `0.8.0`.
 
 
 ## Changes between 1.2.0 and 1.3.0
