@@ -1,5 +1,10 @@
 ## Changes between 1.3.0 and 1.4.0
 
+### MongoDB Java Driver Update
+
+MongoDB Java driver dependency has been updated to 2.9.3.
+
+
 ### ClojureWerkz Support Upgrade
 
 ClojureWerkz Support dependency has been updated to version `0.8.0`.
