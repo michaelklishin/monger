@@ -7,7 +7,7 @@ MongoDB Java driver dependency has been updated to 2.9.3.
 
 ### ClojureWerkz Support Upgrade
 
-ClojureWerkz Support dependency has been updated to version `0.8.0`.
+ClojureWerkz Support dependency has been updated to version `0.9.0`.
 
 
 
