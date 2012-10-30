@@ -1,6 +1,13 @@
-## Changes between 1.3.2 and 1.3.3
+## Changes between 1.3.3 and 1.3.4
 
 No changes yet.
+
+
+## Changes between 1.3.2 and 1.3.3
+
+### ClojureWerkz Support Upgrade
+
+ClojureWerkz Support dependency has been updated to version `0.9.0`.
 
 
 ## Changes between 1.3.1 and 1.3.2
