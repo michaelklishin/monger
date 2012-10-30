@@ -1,13 +1,20 @@
-## Changes between 1.3.1 and 1.3.2
+## Changes between 1.3.2 and 1.3.3
 
 No changes yet.
+
+
+## Changes between 1.3.1 and 1.3.2
+
+### MongoDB Java Driver Update
+
+MongoDB Java driver dependency has been updated to 2.9.3.
 
 
 ## Changes between 1.3.0 and 1.3.1
 
 ### MongoDB Java Driver Update
 
-MongoDB Java driver dependency has been updated to 2.9.3.
+MongoDB Java driver dependency has been updated to 2.9.2.
 
 
 ### ClojureWerkz Support Upgrade
