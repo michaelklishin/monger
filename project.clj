@@ -32,10 +32,11 @@
                  :archive "https://groups.google.com/group/clojure-mongodb"
                  :post "clojure-mongodb@googlegroups.com"}
   :profiles {:1.3 {:dependencies [[org.clojure/clojure "1.3.0"]]}
+             :dj01x {:dependencies [[org.clojure/data.json  "0.1.2" :exclusions [org.clojure/clojure]]]}
+             :dj02x {:dependencies [[org.clojure/data.json  "0.2.1" :exclusions [org.clojure/clojure]]]}
              :1.5 {:dependencies [[org.clojure/clojure "1.5.0-master-SNAPSHOT"]]}
              :dev {:resource-paths ["test/resources"]
                    :dependencies  [[clj-time "0.4.4"               :exclusions [org.clojure/clojure]]
-                                   [org.clojure/data.json  "0.1.2" :exclusions [org.clojure/clojure]]
                                    [cheshire               "4.0.2" :exclusions [org.clojure/clojure]]
                                    [org.clojure/tools.cli  "0.2.1" :exclusions [org.clojure/clojure]]
                                    [org.clojure/core.cache "0.6.1" :exclusions [org.clojure/clojure]]
@@ -52,7 +53,7 @@
              ;; only clj-time/JodaTime available, used to test monger.joda-time w/o clojure.data.json
              :dev2 {:resource-paths ["test/resources"]
                     :dependencies  [[clj-time "0.4.2"               :exclusions [org.clojure/clojure]]]}}
-  :aliases {"all" ["with-profile" "dev:dev,1.3:dev,1.5"]}
+  :aliases {"all" ["with-profile" "dev:dev,1.3:dev,1.5:dev,dj01x:dev,dj02x"]}
   :repositories {"sonatype" {:url "http://oss.sonatype.org/content/repositories/releases"
                              :snapshots false
                              :releases {:checksum :fail :update :always}}

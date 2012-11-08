@@ -1,5 +1,10 @@
 ## Changes between 1.3.0 and 1.4.0
 
+### data.json Dependency Fixes
+
+`monger.json` no longer requires `data.json` to be present at compile time.
+
+
 ### MongoDB Java Driver Update
 
 MongoDB Java driver dependency has been updated to 2.9.3.
