@@ -1,6 +1,13 @@
-## Changes between 1.3.3 and 1.3.4
+## Changes between 1.3.4 and 1.3.5
 
 No changes yet.
+
+
+## Changes between 1.3.3 and 1.3.4
+
+### data.json Dependency Fixes
+
+`monger.json` no longer requires `data.json` to be present at compile time.
 
 
 ## Changes between 1.3.2 and 1.3.3
