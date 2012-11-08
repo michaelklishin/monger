@@ -13,23 +13,55 @@
   (:import org.bson.types.ObjectId))
 
 ;;
+;; Implementation
+;;
+
+;; copied from clojure.reducers
+(defmacro ^:private compile-if
+  "Evaluate `exp` and if it returns logical true and doesn't error, expand to
+  `then`.  Else expand to `else`.
+
+  (compile-if (Class/forName \"java.util.concurrent.ForkJoinTask\")
+    (do-cool-stuff-with-fork-join)
+    (fall-back-to-executor-services))"
+  [exp then else]
+  (if (try (eval exp)
+           (catch Throwable _ false))
+    `(do ~then)
+    `(do ~else)))
+
+
+
+;;
 ;; API
 ;;
 
 (require 'clojurewerkz.support.json)
 
-(try
-  (require 'clojure.data.json)
-  (catch Throwable t
-    false))
+;; all this madness would not be necessary if some people cared about backwards
+;; compatiblity of the libraries they maintain. Shame on the clojure.data.json maintainer. MK.
+(compile-if (and (find-ns 'clojure.data.json)
+                 clojure.data.json/JSONWriter)
+            (try
+              (extend-protocol clojure.data.json/JSONWriter
+                ObjectId
+                (-write [^ObjectId object out]
+                  (clojure.data.json/write (.toString object) out)))
+              (catch Throwable _
+                false))
+            (comment "Nothing to do, clojure.data.json is not available"))
 
-(try
-  (extend-protocol clojure.data.json/Write-JSON
-    ObjectId
-    (write-json [^ObjectId object out escape-unicode?]
-      (clojure.data.json/write-json (.toString object) out escape-unicode?)))
-  (catch Throwable _
-    false))
+(compile-if (and (find-ns 'clojure.data.json)
+                 clojure.data.json/Write-JSON)
+            (try
+              (extend-protocol clojure.data.json/Write-JSON
+                ObjectId
+                (write-json [^ObjectId object out escape-unicode?]
+                  (clojure.data.json/write-json (.toString object) out escape-unicode?)))
+              (catch Throwable _
+                false))
+            (comment "Nothing to do, clojure.data.json 0.1.x is not available"))
+
 
 (try
   (require 'cheshire.custom)
