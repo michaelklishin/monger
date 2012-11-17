@@ -41,7 +41,7 @@
                                    [org.clojure/tools.cli  "0.2.1" :exclusions [org.clojure/clojure]]
                                    [org.clojure/core.cache "0.6.1" :exclusions [org.clojure/clojure]]
                                    [ring/ring-core         "1.1.2"]]
-                   :plugins [[codox "0.6.1"]]
+                   :plugins [[codox "0.6.3"]]
                    :codox {:sources ["src/clojure"]
                            :output-dir "doc/api"
                            :exclude [monger.internal.pagination
