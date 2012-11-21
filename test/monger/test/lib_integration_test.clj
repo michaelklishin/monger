@@ -6,19 +6,19 @@
            com.mongodb.DBObject)
   (:require monger.json
             monger.joda-time
-            [clj-time.core     :as t]
-            [cheshire.custom   :as json2]))
+            [clj-time.core   :as t]
+            [cheshire.core   :as json]))
 
 
 (deftest ^{:integration true} serialization-of-joda-datetime-to-json
   (let [dt (t/date-time 2011 10 13 23 55 0)]
     (is (= "\"2011-10-13T23:55:00.000Z\""
-           (json2/encode dt)))))
+           (json/encode dt)))))
 
 (deftest ^{:integration true} serialization-of-joda-date-to-json
   (let [d (.toDate (t/date-time 2011 10 13 23 55 0))]
     (is (= "\"2011-10-13T23:55:00Z\""
-           (json2/encode d)))))
+           (json/encode d)))))
 
 (deftest ^{:integration true} conversion-of-joda-datetime-to-db-object
   (let [d (to-db-object (t/date-time 2011 10 13 23 55 0))]
