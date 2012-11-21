@@ -64,12 +64,12 @@
 
 
 (try
-  (require 'cheshire.custom)
+  (require 'cheshire.generate)
   (catch Throwable t
     false))
 
 (try
-  (cheshire.custom/add-encoder ObjectId
+  (cheshire.generate/add-encoder ObjectId
                                (fn [^ObjectId oid ^com.fasterxml.jackson.core.json.WriterBasedJsonGenerator generator]
                                  (.writeString generator (.toString oid))))
   (catch Throwable t
