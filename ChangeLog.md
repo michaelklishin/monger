@@ -1,5 +1,11 @@
 ## Changes between 1.3.0 and 1.4.0
 
+### Cheshire Upgrade
+
+`clojurewerkz.support.json` now requires [Cheshire] `5.0`. There were some incompatible changes
+in Cheshire `5.0`, see [Cheshire change log](https://github.com/dakrone/cheshire/blob/master/ChangeLog.md#changes-between-cheshire-500-and-40x).
+
+
 ### data.json Dependency Fixes
 
 `monger.json` no longer requires `data.json` to be present at compile time.
