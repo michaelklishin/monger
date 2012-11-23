@@ -75,7 +75,7 @@
     (is (= 2 (count result)))
     (is (= [doc1 doc3] result))))
 
-(deftest  query-with-sorting-on-multiple-fields
+(deftest query-with-sorting-on-multiple-fields
   (let [coll "docs"
         doc1  { :a 1 :b 2 :c 3 :text "Whatever" :_id (ObjectId.) }
         doc2  { :a 1 :b 1 :c 4 :text "Blah " :_id (ObjectId.) }
