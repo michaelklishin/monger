@@ -75,6 +75,32 @@
     (is (= 2 (count result)))
     (is (= [doc1 doc3] result))))
 
+(deftest ^{:focus true} query-with-sorting-on-multiple-fields
+  (let [coll "docs"
+        doc1  { :a 1 :b 2 :c 3 :text "Whatever" :_id (ObjectId.) }
+        doc2  { :a 1 :b 1 :c 4 :text "Blah " :_id (ObjectId.) }
+        doc3  { :a 10 :b 3 :c 1 :text "Abc"  :_id (ObjectId.) }
+        doc4  { :a 10 :b 3 :c 3 :text "Abc"  :_id (ObjectId.) }
+        _     (mgcol/insert-batch coll [doc1 doc2 doc3 doc4])
+        result1 (with-collection coll
+                  (find {})
+                  (limit 2)
+                  (fields [:a :b :c :text])
+                  (sort (sorted-map :a 1 :b 1 :text -1)))
+        result2 (with-collection coll
+                  (find {})
+                  (limit 2)
+                  (fields [:a :b :c :text])
+                  (sort (array-map :c 1 :text -1)))
+        result3 (with-collection coll
+                  (find {})
+                  (limit 2)
+                  (fields [:a :b :c :text])
+                  (sort (array-map :c -1 :text 1)))]
+    (is (= [doc2 doc1] result1))
+    (is (= [doc3 doc1] result2))
+    (is (= [doc2 doc4] result3))))
+
 
 ;; < ($lt), <= ($lte), > ($gt), >= ($gte)
 
