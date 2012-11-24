@@ -26,7 +26,7 @@
 (defrecord ClojureReaderBasedMongoDBSessionStore [^String collection-name])
 
 (defmethod print-dup java.util.Date
-  [d out]
+  [^java.util.Date d ^java.io.OutputStream out]
   (.write out
           (str "#="
                `(java.util.Date. ~(.getYear d)
