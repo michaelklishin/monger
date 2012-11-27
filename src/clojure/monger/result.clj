@@ -71,6 +71,11 @@
     [^MapReduceOutput result]
     (ok? ^DBObject (.getRaw result)))
 
+  Boolean
+  (ok?
+    [^Boolean b]
+    (= Boolean/TRUE b))
+  
   IPersistentMap
   (ok?
     [^IPersistentMap m]

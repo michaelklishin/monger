@@ -19,8 +19,9 @@
        * http://clojuremongodb.info/articles/gridfs.html"}
   monger.core
   (:refer-clojure :exclude [count])
-  (:use [monger.conversion])
-  (:import [com.mongodb Mongo MongoURI DB WriteConcern DBObject DBCursor Bytes MongoOptions ServerAddress MapReduceOutput]
+  (:use monger.conversion
+        [monger.result :only [ok?]])
+  (:import [com.mongodb MongoClient MongoClientURI DB WriteConcern DBObject DBCursor Bytes MongoClientOptions MongoClientOptions$Builder ServerAddress MapReduceOutput MongoException]
            [com.mongodb.gridfs GridFS]
            [java.util Map ArrayList]))
 
@@ -31,7 +32,7 @@
 (def ^:dynamic ^String *mongodb-host* "127.0.0.1")
 (def ^:dynamic ^long   *mongodb-port* 27017)
 
-(declare ^:dynamic ^Mongo        *mongodb-connection*)
+(declare ^:dynamic ^MongoClient  *mongodb-connection*)
 (declare ^:dynamic ^DB           *mongodb-database*)
 (def     ^:dynamic ^WriteConcern *mongodb-write-concern* WriteConcern/SAFE)
 
@@ -42,7 +43,7 @@
 ;; API
 ;;
 
-(defn ^com.mongodb.Mongo connect
+(defn ^com.mongodb.MongoClient connect
   "Connects to MongoDB. When used without arguments, connects to
 
    Arguments:
@@ -55,33 +56,33 @@
        (monger.core/connect { :host \"db3.intranet.local\", :port 27787 })
 
        ;; Connecting to a replica set with a couple of seeds
-       (let [^MongoOptions opts (mg/mongo-options :threads-allowed-to-block-for-connection-multiplier 300)
+       (let [^MongoClientOptions opts (mg/mongo-options :threads-allowed-to-block-for-connection-multiplier 300)
                            seeds [[\"192.168.1.1\" 27017] [\"192.168.1.2\" 27017] [\"192.168.1.1\" 27018]]
                            sas (map #(apply mg/server-address %) seeds)]
          (mg/connect! sas opts))
    "
   {:arglists '([]
-               [server-address options]
-               [[server-address & more] options]
-               [{ :keys [host port uri] :or { host *mongodb-host* port *mongodb-port* }}])}
+                 [server-address options]
+                   [[server-address & more] options]
+                     [{ :keys [host port uri] :or { host *mongodb-host* port *mongodb-port* }}])}
   ([]
-     (Mongo.))
-  ([server-address ^MongoOptions options]
+     (MongoClient.))
+  ([server-address ^MongoClientOptions options]
      (if (coll? server-address)
        ;; connect to a replica set
        (let [server-list ^ArrayList (ArrayList. ^java.util.Collection server-address)]
-         (Mongo. server-list options))
+         (MongoClient. server-list options))
        ;; connect to a single instance
-       (Mongo. ^ServerAddress server-address options)))
+       (MongoClient. ^ServerAddress server-address options)))
   ([{ :keys [host port uri] :or { host *mongodb-host* port *mongodb-port* }}]
-     (Mongo. ^String host ^Long port)))
+     (MongoClient. ^String host ^Long port)))
 
 
 (defn get-db-names
   "Gets a list of all database names present on the server"
   ([]
      (get-db-names *mongodb-connection*))
-  ([^Mongo connection]
+  ([^MongoClient connection]
      (set (.getDatabaseNames connection))))
 
 
@@ -96,19 +97,13 @@
      *mongodb-database*)
   ([^String name]
      (.getDB *mongodb-connection* name))
-  ([^Mongo connection ^String name]
+  ([^MongoClient connection ^String name]
      (.getDB connection name)))
 
 (defn ^com.mongodb.DB current-db
   "Returns currently used database"
   []
   *mongodb-database*)
-
-(defn authenticate
-  ([^String db ^String username ^chars password]
-     (authenticate *mongodb-connection* db username password))
-  ([^Mongo connection ^String db ^String username ^chars password]
-     (.authenticate (.getDB connection db) username password)))
 
 
 
@@ -140,44 +135,44 @@
   [& { :keys [connections-per-host threads-allowed-to-block-for-connection-multiplier
               max-wait-time connect-timeout socket-timeout socket-keep-alive auto-connect-retry max-auto-connect-retry-time
               safe w w-timeout fsync j] :or [auto-connect-retry true] }]
-  (let [mo (MongoOptions.)]
+  (let [mob (MongoClientOptions$Builder.)]
     (when connections-per-host
-      (set! (. mo connectionsPerHost) connections-per-host))
+      (.connectionsPerHost mob connections-per-host))
     (when threads-allowed-to-block-for-connection-multiplier
-      (set! (. mo threadsAllowedToBlockForConnectionMultiplier) threads-allowed-to-block-for-connection-multiplier))
+      (.threadsAllowedToBlockForConnectionMultiplier mob threads-allowed-to-block-for-connection-multiplier))
     (when max-wait-time
-      (set! (. mo maxWaitTime) max-wait-time))
+      (.maxWaitTime mob max-wait-time))
     (when connect-timeout
-      (set! (. mo connectTimeout) connect-timeout))
+      (.connectTimeout mob connect-timeout))
     (when socket-timeout
-      (set! (. mo socketTimeout) socket-timeout))
+      (.socketTimeout mob socket-timeout))
     (when socket-keep-alive
-      (set! (. mo socketKeepAlive) socket-keep-alive))
+      (.socketKeepAlive mob socket-keep-alive))
     (when auto-connect-retry
-      (set! (. mo autoConnectRetry) auto-connect-retry))
+      (.autoConnectRetry mob auto-connect-retry))
     (when max-auto-connect-retry-time
-      (set! (. mo maxAutoConnectRetryTime) max-auto-connect-retry-time))
+      (.maxAutoConnectRetryTime mob max-auto-connect-retry-time))
     (when safe
-      (set! (. mo safe) safe))
+      (.safe mob safe))
     (when w
-      (set! (. mo w) w))
+      (.w mob w))
     (when w-timeout
-      (set! (. mo wtimeout) w-timeout))
+      (.wtimeout mob w-timeout))
     (when j
-      (set! (. mo j) j))
+      (.j mob j))
     (when fsync
-      (set! (. mo fsync) fsync))
-    mo))
+      (.fsync mob fsync))
+    (.build mob)))
 
 
 (defn set-connection!
   "Sets given MongoDB connection as default by altering *mongodb-connection* var"
-  ^Mongo [^Mongo conn]
+  ^MongoClient [^MongoClient conn]
   (alter-var-root (var *mongodb-connection*) (constantly conn)))
 
 (defn connect!
   "Connect to MongoDB, store connection in the *mongodb-connection* var"
-  ^Mongo [& args]
+  ^MongoClient [& args]
   (let [c (apply connect args)]
     (set-connection! c)))
 
@@ -207,26 +202,31 @@
   (alter-var-root #'*mongodb-write-concern* (constantly wc)))
 
 
+(defn authenticate
+  ([^DB db ^String username ^chars password]
+     (authenticate *mongodb-connection* db username password))
+  ([^MongoClient connection ^DB db ^String username ^chars password]
+     (try
+       (.authenticate db username password)
+       ;; MongoDB Java driver's exception hierarchy is a little crazy
+       ;; and the exception we want is not a public class. MK.
+       (catch Exception _
+         false))))
+
 (defn connect-via-uri!
   "Connects to MongoDB using a URI, sets up default connection and database. Commonly used for PaaS-based applications,
    for example, running on Heroku. If username and password are provided, performs authentication."
-  [uri]
-  (let [uri  (MongoURI. uri)
-        ;; yes, you are not hallucinating. A class named MongoURI has a method called connectDB.
-        ;; I call it "college OOP". Or maybe "don't give a shit" OOP.
-        db   (.connectDB uri)
-        conn (.getMongo db)
+  [^String uri-string]
+  (let [uri  (MongoClientURI. uri-string)
+        conn (MongoClient. uri)
+        db   (.getDB conn (.getDatabase uri))
         user (.getUsername uri)
         pwd  (.getPassword uri)]
-    ;; I hope that whoever wrote the MongoDB Java driver connection/authentication parts
-    ;; wasn't sober while at it. MK.
-    ;;
-    ;; First we set connection, then DB, then authentcate
-    (set-connection! conn)
     (when (and user pwd)
-      (when-not (authenticate (.getName db) user pwd)
+      (when-not (authenticate conn db user pwd)
         (throw (IllegalArgumentException. (format "Could not authenticate with MongoDB. Either database name or credentials are invalid. Database name: %s, username: %s" (.getName db) user)))))
     ;; only do this *after* we authenticated because set-db! will try to set up a default GridFS instance. MK.
+    (set-connection! conn)
     (when db
       (set-db! db))
     conn))

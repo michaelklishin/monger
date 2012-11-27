@@ -4,7 +4,7 @@
   :min-lein-version "2.0.0"
   :license {:name "Eclipse Public License"}
   :dependencies [[org.clojure/clojure           "1.4.0"]
-                 [org.mongodb/mongo-java-driver "2.9.3"]
+                 [org.mongodb/mongo-java-driver "2.10.0"]
                  [com.novemberain/validateur    "1.2.0"]
                  [clojurewerkz/support          "0.10.0"]
                  [ragtime/ragtime.core          "0.3.0"]]
@@ -12,15 +12,16 @@
                                   (and (not (:performance m))
                                        (not (:edge-features m))
                                        (not (:time-consuming m))))
-                   :focus         :focus
-                   :updating      :updating
-                   :indexing      :indexing
-                   :external      :external
-                   :cache         :cache
-                   :gridfs        :gridfs
-                   :command       :command
-                   :integration   :integration
-                   :performance   :performance
+                   :focus          :focus
+                   :authentication :authentication
+                   :updating       :updating
+                   :indexing       :indexing
+                   :external       :external
+                   :cache          :cache
+                   :gridfs         :gridfs
+                   :command        :command
+                   :integration    :integration
+                   :performance    :performance
                    ;; as in, edge mongodb server
                    :edge-features  :edge-features
                    :time-consuming :time-consuming

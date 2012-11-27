@@ -12,8 +12,6 @@
 
 (helper/connect!)
 
-(use-fixtures :each purge-cached)
-
 (defn- megabytes
   [^long n]
   (* n 1024 1024))

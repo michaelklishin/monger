@@ -10,16 +10,6 @@
 
 
 
-(deftest test-add-user
-  (let [username "clojurewerkz/monger!"
-        pwd      (.toCharArray "monger!")
-        db-name  "monger-test4"]
-    ;; use a secondary database here. MK.
-    (monger.core/with-db (monger.core/get-db db-name)
-      (monger.db/add-user username pwd)
-      (is (monger.core/authenticate db-name username pwd)))))
-
-
 ;; do not run this test for CI, it complicates matters by messing up
 ;; authentication for some other tests :( MK.
 (when-not (System/getenv "CI")

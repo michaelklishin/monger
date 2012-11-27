@@ -10,20 +10,6 @@
 (helper/connect!)
 
 
-(deftest ^{:command true}  test-db-stats
-  (let [stats (mcom/db-stats)]
-    (is (ok? stats))
-    (is (= "monger-test" (get stats "db")))))
-
-(deftest ^{:command true} test-collection-stats
-  (let [collection "stat_test"
-        _          (mc/insert collection {:name "Clojure"})
-        check      (mc/count collection)
-        stats      (mcom/collection-stats collection)]  
-    (is (ok? stats))
-    (is (= "monger-test.stat_test" (get stats "ns")))
-    (is (= check (get stats "count")))))
-
 (deftest ^{:command true} test-reindex-collection
   (let [_      (mc/insert "test" {:name "Clojure"})
         result (mcom/reindex-collection "test")]
