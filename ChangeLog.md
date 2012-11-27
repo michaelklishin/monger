@@ -13,7 +13,7 @@ in Cheshire `5.0`, see [Cheshire change log](https://github.com/dakrone/cheshire
 
 ### MongoDB Java Driver Update
 
-MongoDB Java driver dependency has been updated to 2.9.3.
+MongoDB Java driver dependency has been updated to 2.10.0.
 
 
 ### ClojureWerkz Support Upgrade
