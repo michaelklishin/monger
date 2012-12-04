@@ -1,3 +1,10 @@
+## Changes between 1.4.0 and 1.5.0
+
+### MongoDB Java Driver Update
+
+MongoDB Java driver dependency has been [updated to 2.10.1](https://github.com/mongodb/mongo-java-driver/wiki/Release-Notes).
+
+
 ## Changes between 1.3.0 and 1.4.0
 
 ### Cheshire Upgrade
