@@ -606,7 +606,19 @@
      (.collectionExists db collection)))
 
 (defn create
-  "Creates a collection with a given name and options."
+  "Creates a collection with a given name and options.
+
+   Options are:
+
+   :capped (pass true to create a capped collection)
+   :max (number of documents)
+   :size (max allowed size of the collection, in bytes)
+
+   EXAMPLE:
+
+     ;; create a capped collection
+     (monger.collection/create \"coll\" {:capped true :size 100000 :max 10})
+  "
   ([^String collection ^Map options]
      (.createCollection monger.core/*mongodb-database* collection (to-db-object options)))
   ([^DB db ^String collection ^Map options]
@@ -665,16 +677,6 @@
   ([^DB db ^String collection ^String key ^Map query]
      (.distinct (.getCollection db (name collection)) ^String (to-db-object key) (to-db-object query))))
 
-
-;;
-;; create/capped collections
-;;
-
-(defn create
-  "Creates a collection. Options are: :capped (pass true to create a capped collection), :max (number of documents)
-   and :size (max allowed size of the collection, in bytes)."
-  [^String collection options]
-  (.createCollection ^DB monger.core/*mongodb-database* collection (to-db-object options)))
 
 ;;
 ;; Aggregation
