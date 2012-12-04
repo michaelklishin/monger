@@ -38,7 +38,7 @@
              :1.5 {:dependencies [[org.clojure/clojure "1.5.0-master-SNAPSHOT"]]}
              :dev {:resource-paths ["test/resources"]
                    :dependencies  [[clj-time "0.4.4"               :exclusions [org.clojure/clojure]]
-                                   [cheshire               "5.0.0" :exclusions [org.clojure/clojure]]
+                                   [cheshire               "5.0.1" :exclusions [org.clojure/clojure]]
                                    [org.clojure/tools.cli  "0.2.1" :exclusions [org.clojure/clojure]]
                                    [org.clojure/core.cache "0.6.1" :exclusions [org.clojure/clojure]]
                                    [ring/ring-core         "1.1.2"]]
