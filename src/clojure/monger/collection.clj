@@ -323,11 +323,11 @@
          (.count (.getCollection db (name collection)) (to-db-object conditions))))
 
 (defn any?
-  "Wether the collection has any items at all, or items matching query.
+  "Whether the collection has any items at all, or items matching query.
 
    EXAMPLES:
 
-    ;; wether the collection has any items
+    ;; whether the collection has any items
     (mgcol/any? collection)
 
     (mgcol/any? collection {:language \"Clojure\"}))
@@ -341,7 +341,7 @@
 
 
 (defn empty?
-  "Wether the collection is empty.
+  "Whether the collection is empty.
 
    EXAMPLES:
       (mgcol/empty? \"things\")
