@@ -35,7 +35,7 @@
   :profiles {:1.3 {:dependencies [[org.clojure/clojure "1.3.0"]]}
              :dj01x {:dependencies [[org.clojure/data.json  "0.1.2" :exclusions [org.clojure/clojure]]]}
              :dj02x {:dependencies [[org.clojure/data.json  "0.2.1" :exclusions [org.clojure/clojure]]]}
-             :1.5 {:dependencies [[org.clojure/clojure "1.5.0-master-SNAPSHOT"]]}
+             :1.5 {:dependencies [[org.clojure/clojure "1.5.0-RC1"]]}
              :dev {:resource-paths ["test/resources"]
                    :dependencies  [[clj-time "0.4.4"               :exclusions [org.clojure/clojure]]
                                    [cheshire               "5.0.1" :exclusions [org.clojure/clojure]]
