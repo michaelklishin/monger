@@ -1,10 +1,13 @@
-## Changes between 1.4.0 and 1.4.1
+## Changes between 1.4.1 and 1.4.2
 
 ### Explicit DBCursor Closure by monger.collection/find-maps and the like
 
 `monger.collection/find-maps` and the like will now explicitly close DB cursors.
 
 GH issue: 47
+
+
+## Changes between 1.4.0 and 1.4.1
 
 ### MongoDB Java Driver Update
 
