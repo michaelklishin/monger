@@ -164,24 +164,32 @@
    If you want to work directly with DBObject, use find.
   "
   ([^String collection]
-     (map (fn [x] (from-db-object x true)) (find collection)))
+    (with-open [dbc (find collection)]
+     (map (fn [x] (from-db-object x true)) dbc)))
   ([^String collection ^Map ref]
-     (map (fn [x] (from-db-object x true)) (find collection ref)))
+     (with-open [dbc (find collection ref)]
+       (map (fn [x] (from-db-object x true)) dbc)))
   ([^String collection ^Map ref fields]
-     (map (fn [x] (from-db-object x true)) (find collection ref fields)))
+     (with-open [dbc (find collection ref fields)]
+       (map (fn [x] (from-db-object x true)) dbc)))
   ([^DB db ^String collection ^Map ref fields]
-     (map (fn [x] (from-db-object x true)) (find db collection ref fields))))
+     (with-open [dbc (find db collection ref fields)]
+       (map (fn [x] (from-db-object x true)) dbc))))
 
 (defn find-seq
   "Queries for objects in this collection, returns ISeq of DBObjects."
   ([^String collection]
-     (seq (find collection)))
+     (with-open [dbc (find collection)]
+      (seq dbc)))
   ([^String collection ^Map ref]
-     (seq (find collection ref)))
+     (with-open [dbc (find collection ref)]
+      (seq dbc)))
   ([^String collection ^Map ref fields]
-     (seq (find collection ref fields)))
+     (with-open [dbc (find collection ref fields)]
+      (seq dbc)))
   ([^DB db ^String collection ^Map ref fields]
-     (seq (find db collection ref fields))))
+     (with-open [dbc (find db collection ref fields)]
+      (seq dbc))))
 
 ;;
 ;; monger.collection/find-one
