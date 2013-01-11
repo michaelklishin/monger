@@ -64,12 +64,12 @@
 
 (defn exec
   [{ :keys [^DBCollection collection query fields skip limit sort batch-size hint snapshot read-preference keywordize-fields options] :or { limit 0 batch-size 256 skip 0 } }]
-  (let [cursor (doto (.find collection (to-db-object query) (as-field-selector fields))
-                     (.limit limit)
-                     (.skip  skip)
-                     (.sort  (to-db-object sort))
-                     (.batchSize batch-size)
-                     (.hint (to-db-object hint)))]
+  (with-open [cursor (doto (.find collection (to-db-object query) (as-field-selector fields))
+                       (.limit limit)
+                       (.skip  skip)
+                       (.sort  (to-db-object sort))
+                       (.batchSize batch-size)
+                       (.hint (to-db-object hint)))]
     (when snapshot
       (.snapshot cursor))
     (when read-preference
