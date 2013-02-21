@@ -1,5 +1,11 @@
 ## Changes between 1.4.0 and 1.5.0
 
+### ClojureWerkz Support Upgrade
+
+ClojureWerkz Support dependency has been updated to version `0.14.0`.
+This means Monger now will use Cheshire `5.x` by default.
+
+
 ### Explicit DBCursor Closure by monger.collection/find-maps and the like
 
 `monger.collection/find-maps` and the like will now explicitly close DB cursors.
