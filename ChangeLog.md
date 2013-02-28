@@ -1,5 +1,18 @@
 ## Changes between 1.4.0 and 1.5.0
 
+### Authentication On Default Database
+
+`monger.core/authenticate` now has a 2-arity version that will authenticate
+on the default database:
+
+``` clojure
+(let [username "myservice"
+      pwd      "LGo5h#B`cTRQ>28tba6u"]
+  (monger.core/set-db! "mydb")
+  ;; authenticates requests for mydb
+  (monger.core/authenticate username (.toCharArray pwd)))
+```
+
 ### ClojureWerkz Support Upgrade
 
 ClojureWerkz Support dependency has been updated to version `0.14.0`.

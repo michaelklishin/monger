@@ -15,7 +15,7 @@
     (helper/connect!))
 
   (deftest ^{:authentication true} connect-to-mongo-via-uri-with-valid-credentials
-    (let [connection (monger.core/connect-via-uri! "mongodb://clojurewerkz/monger!:monger!@127.0.0.1/monger-test4")]
+    (let [connection (monger.core/connect-via-uri! "mongodb://clojurewerkz/monger:monger@127.0.0.1/monger-test4")]
       (is (= "monger-test4" (.getName (monger.core/current-db))))
       (is (= (-> connection .getAddress ^InetAddress (.sameHost "127.0.0.1"))))
       (mc/remove "documents")
@@ -34,7 +34,13 @@
     (helper/connect!)))
 
 
-(deftest ^{:authentication true} test-authentication-with-valid-credentials
+(deftest ^{:authentication true} test-authentication-with-valid-credentials-on-the-default-db
+  ;; see ./bin/ci/before_script.sh. MK.
+  (let [username "clojurewerkz/monger"
+        pwd      "monger"]
+    (is (monger.core/authenticate username (.toCharArray pwd)))))
+
+(deftest ^{:authentication true} test-authentication-with-valid-credentials-on-an-arbitrary-db
   ;; see ./bin/ci/before_script.sh. MK.
   (let [username "clojurewerkz/monger"
         pwd      "monger"]

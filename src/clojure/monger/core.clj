@@ -203,6 +203,8 @@
 
 
 (defn authenticate
+  ([^String username ^chars password]
+     (authenticate *mongodb-connection* *mongodb-database* username password))
   ([^DB db ^String username ^chars password]
      (authenticate *mongodb-connection* db username password))
   ([^MongoClient connection ^DB db ^String username ^chars password]
