@@ -8,7 +8,7 @@ on the default database:
 ``` clojure
 (let [username "myservice"
       pwd      "LGo5h#B`cTRQ>28tba6u"]
-  (monger.core/set-db! "mydb")
+  (monger.core/use-db! "mydb")
   ;; authenticates requests for mydb
   (monger.core/authenticate username (.toCharArray pwd)))
 ```
