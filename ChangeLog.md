@@ -1,5 +1,12 @@
 ## Changes between 1.4.0 and 1.5.0
 
+### Clojure 1.5 By Default
+
+Monger now depends on `org.clojure/clojure` version `1.5.0`. It is still compatible with Clojure 1.3+ and if your `project.clj` depends
+on a different version, it will be used, but 1.5 is the default now.
+
+We encourage all users to upgrade to 1.5, it is a drop-in replacement for the majority of projects out there.
+
 ### Authentication On Default Database
 
 `monger.core/authenticate` now has a 2-arity version that will authenticate
