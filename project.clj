@@ -3,9 +3,9 @@
   :url "http://clojuremongodb.info"
   :min-lein-version "2.0.0"
   :license {:name "Eclipse Public License"}
-  :dependencies [[org.clojure/clojure           "1.5.0"]
+  :dependencies [[org.clojure/clojure           "1.5.1"]
                  [org.mongodb/mongo-java-driver "2.10.1"]
-                 [com.novemberain/validateur    "1.2.0"]
+                 [com.novemberain/validateur    "1.4.0"]
                  [clojurewerkz/support          "0.14.0"]
                  [ragtime/ragtime.core          "0.3.0"]]
   :test-selectors {:default     (fn [m]
