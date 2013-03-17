@@ -28,8 +28,8 @@ on the default database:
 
 ### ClojureWerkz Support Upgrade
 
-ClojureWerkz Support dependency has been updated to version `0.14.0`.
-This means Monger now will use Cheshire `5.0.2`.
+ClojureWerkz Support dependency has been updated to version `0.15.0`.
+This means Monger now will use Cheshire `5.0.x`.
 
 
 ### Explicit DBCursor Closure by monger.collection/find-maps and the like
