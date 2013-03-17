@@ -5,8 +5,6 @@
 Monger's factory DSL (an undocumented experimental feature) has been removed from `monger.testkit`. It did
 not work as well as we expected and there are better alternatives available now.
 
-We recommend factory DSL users to consider [Stereotype](https://github.com/josephwilk/stereotype-clj).
-
 
 ### Clojure 1.5 By Default
 
