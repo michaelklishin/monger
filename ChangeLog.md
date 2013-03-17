@@ -1,5 +1,13 @@
 ## Changes between 1.4.0 and 1.5.0
 
+### Factory DSL Is Gone
+
+Monger's factory DSL (an undocumented experimental feature) has been removed from `monger.testkit`. It did
+not work as well as we expected and there are better alternatives available now.
+
+We recommend factory DSL users to consider [Stereotype](https://github.com/josephwilk/stereotype-clj).
+
+
 ### Clojure 1.5 By Default
 
 Monger now depends on `org.clojure/clojure` version `1.5.1`. It is still compatible with Clojure 1.3+ and if your `project.clj` depends
