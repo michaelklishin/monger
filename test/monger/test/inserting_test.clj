@@ -89,6 +89,8 @@
     (is (= {:rps 10 :eps 20} (:record (mc/find-map-by-id collection id))))))
 
 (deftest test-insert-a-document-with-dbref
+  (mc/remove "widgets")
+  (mc/remove "owners")
   (let [coll1 "widgets"
         coll2 "owners"
         oid   (ObjectId.)
