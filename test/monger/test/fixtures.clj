@@ -1,6 +1,5 @@
 (ns monger.test.fixtures
-  (:require [monger.collection :as mgcol])
-  (:use     monger.testkit))
+  (:use [monger.testkit :only [defcleaner]]))
 
 ;;
 ;; fixture functions
