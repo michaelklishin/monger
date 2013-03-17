@@ -161,3 +161,11 @@
     (dotimes [n 44]
       (is (monger.result/ok? (mc/insert-batch monger.core/*mongodb-database* "people" docs WriteConcern/NORMAL))))
     (is (= 88 (mc/count collection)))))
+
+(deftest insert-a-batch-of-basic-documents-from-a-lazy-sequence
+  (let [collection "people"
+        numbers    (range 0 1000)]
+    (is (monger.result/ok? (mc/insert-batch "people" (map (fn [^long l]
+                                                            {:n l})
+                                                          numbers))))
+    (is (= (count numbers) (mc/count collection)))))
