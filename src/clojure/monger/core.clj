@@ -134,7 +134,7 @@
 (defn mongo-options
   [& { :keys [connections-per-host threads-allowed-to-block-for-connection-multiplier
               max-wait-time connect-timeout socket-timeout socket-keep-alive auto-connect-retry max-auto-connect-retry-time
-              safe w w-timeout fsync j] :or [auto-connect-retry true] }]
+              description write-concern cursor-finalizer-enabled] :or [auto-connect-retry true] }]
   (let [mob (MongoClientOptions$Builder.)]
     (when connections-per-host
       (.connectionsPerHost mob connections-per-host))
@@ -152,16 +152,12 @@
       (.autoConnectRetry mob auto-connect-retry))
     (when max-auto-connect-retry-time
       (.maxAutoConnectRetryTime mob max-auto-connect-retry-time))
-    (when safe
-      (.safe mob safe))
-    (when w
-      (.w mob w))
-    (when w-timeout
-      (.wtimeout mob w-timeout))
-    (when j
-      (.j mob j))
-    (when fsync
-      (.fsync mob fsync))
+    (when description
+      (.description mob description))
+    (when write-concern
+      (.writeConcern mob write-concern))
+    (when cursor-finalizer-enabled
+      (.cursorFinalizerEnabled mob cursor-finalizer-enabled))
     (.build mob)))
 
 
