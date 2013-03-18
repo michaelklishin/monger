@@ -1,5 +1,10 @@
 ## Changes between 1.4.0 and 1.5.0
 
+### monger.core/mongo-options Updates
+
+`monger.core/mongo-options` options are now up-to-date with the most recent
+MongoDB Java driver.
+
 ### Factory DSL Is Gone
 
 Monger's factory DSL (an undocumented experimental feature) has been removed from `monger.testkit`. It did
