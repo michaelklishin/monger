@@ -1,5 +1,17 @@
 ## Changes between 1.4.0 and 1.5.0
 
+### New Geospatial Operators
+
+`monger.operators` now defines a few more operators for convenience:
+
+ * `$getWithin`
+ * `$getIntersects`
+ * `$near`
+
+Of course, these and any other new operators can be passed as strings (e.g. `"$near"`)
+as well.
+
+
 ### monger.core/mongo-options Updates
 
 `monger.core/mongo-options` options are now up-to-date with the most recent

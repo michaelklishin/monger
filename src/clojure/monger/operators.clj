@@ -228,3 +228,6 @@
 (defoperator $ifNull)
 (defoperator $cond)
 
+(defoperator $geoWithin)
+(defoperator $geoIntersects)
+(defoperator $near)
