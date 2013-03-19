@@ -23,6 +23,15 @@
   (:import com.mongodb.DB))
 
 
+;;
+;; API
+;;
+
+(defn admin-command
+  "Executes a command on the admin database"
+  [m]
+  (monger.core/command (monger.core/admin-db) m))
+
 (defn collection-stats
   ([collection]
      (collection-stats monger.core/*mongodb-database* collection))
@@ -83,3 +92,9 @@
 (defn top
   []
   (monger.core/command (monger.core/get-db "admin") {:top 1}))
+
+(defn search
+  ([^String collection query]
+     (monger.core/command {"text" collection "search" query}))
+  ([^DB database ^String collection query]
+     (monger.core/command database {"text" collection "search" query})))

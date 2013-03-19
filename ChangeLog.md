@@ -1,5 +1,29 @@
 ## Changes between 1.4.0 and 1.5.0
 
+### Full Text Search Support
+
+Full text search in MongoDB 2.4 can be used via commands but Monger 1.5 also provides
+convenience functions in the `monger.search` namespace:
+
+ * `monger.search/search` for performing queries
+ * `monger.search/results-from` for obtaining hit documents sorted by score
+
+``` clojure
+(require '[monger.collection :as mc])
+(require '[monger.search     :as ms])
+
+(mc/ensure-index coll {:subject "text" :content "text"})
+(mc/insert coll {:subject "hello there" :content "this should be searchable"})
+(mc/insert coll {:subject "untitled" :content "this is just noize"})
+
+(println (ms/results-from (ms/search coll "hello"))
+```
+
+
+### MongoDB Java Driver Update
+
+MongoDB Java driver dependency has been [updated to 2.11.0](https://github.com/mongodb/mongo-java-driver/wiki/Release-Notes).
+
 ### New Geospatial Operators
 
 `monger.operators` now defines a few more operators for convenience:

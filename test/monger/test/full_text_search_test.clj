@@ -1,0 +1,31 @@
+(ns monger.test.full-text-search-test
+  (:require [monger.core        :as mg]
+            [monger.collection  :as mc]
+            [monger.search      :as ms]
+            [monger.command     :as cmd]
+            [monger.test.helper :as helper])
+  (:use [clojure.test :only [deftest is use-fixtures]]
+        monger.test.fixtures
+        [monger.result :only [ok?]]))
+
+(helper/connect!)
+
+(defn enable-search
+  [f]
+  (is (ok? (cmd/admin-command {:setParameter "*" :textSearchEnabled true})))
+  (f))
+
+(use-fixtures :each purge-docs)
+(use-fixtures :once enable-search)
+
+(deftest ^{:edge-features true :search true} test-basic-full-text-search-query
+  (let [coll "docs"]
+    (mc/ensure-index coll {:subject "text" :content "text"})
+    (mc/insert coll {:subject "hello there" :content "this should be searchable"})
+    (mc/insert coll {:subject "untitled" :content "this is just noize"})
+    (let [res (ms/search coll "hello")
+          xs  (ms/results-from res)]
+      (is (ok? res))
+      (println res)
+      (is (= "hello there" (-> xs first :obj :subject)))
+      (is (= 1.0 (-> xs first :score))))))

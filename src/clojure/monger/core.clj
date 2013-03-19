@@ -188,6 +188,13 @@
 (def ^{:doc "Combines set-db! and get-db, so (use-db \"mydb\") is the same as (set-db! (get-db \"mydb\"))"}
   use-db! (comp set-db! get-db))
 
+(def ^:const admin-db-name "admin")
+
+(defn ^DB admin-db
+  "Returns admin database"
+  []
+  (get-db admin-db-name))
+
 
 (defn set-default-write-concern!
   [wc]
