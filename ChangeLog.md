@@ -24,6 +24,7 @@ convenience functions in the `monger.search` namespace:
 
 MongoDB Java driver dependency has been [updated to 2.11.0](https://github.com/mongodb/mongo-java-driver/wiki/Release-Notes).
 
+
 ### New Geospatial Operators
 
 `monger.operators` now defines a few more operators for convenience:
@@ -34,6 +35,17 @@ MongoDB Java driver dependency has been [updated to 2.11.0](https://github.com/m
 
 Of course, these and any other new operators can be passed as strings (e.g. `"$near"`)
 as well.
+
+
+### monger.core/admin-db
+
+`monger.core/admin-db` is a new convenience function that returns the `admin` database
+reference.
+
+### monger.command/admin-command
+
+`monger.command/admin-command` is a new convenience function for running commands
+on the `admin` database.
 
 
 ### monger.core/mongo-options Updates
