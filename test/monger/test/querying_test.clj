@@ -2,7 +2,7 @@
 
 (ns monger.test.querying-test
   (:refer-clojure :exclude [select find sort])
-  (:import  [com.mongodb WriteResult WriteConcern DBCursor DBObject CommandResult$CommandFailure ReadPreference]
+  (:import  [com.mongodb WriteResult WriteConcern DBCursor DBObject ReadPreference]
             org.bson.types.ObjectId
             java.util.Date)
   (:require [monger core util]

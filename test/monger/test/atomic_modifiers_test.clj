@@ -1,7 +1,7 @@
 (set! *warn-on-reflection* true)
 
 (ns monger.test.atomic-modifiers-test
-  (:import  [com.mongodb WriteResult WriteConcern DBCursor DBObject CommandResult$CommandFailure]
+  (:import  [com.mongodb WriteResult WriteConcern DBCursor DBObject]
             [org.bson.types ObjectId]
             [java.util Date])
   (:require [monger core util]

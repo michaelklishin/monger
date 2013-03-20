@@ -1,5 +1,5 @@
 (ns monger.test.map-reduce-test
-  (:import  [com.mongodb WriteResult WriteConcern DBCursor DBObject CommandResult$CommandFailure MapReduceOutput MapReduceCommand MapReduceCommand$OutputType]
+  (:import  [com.mongodb WriteResult WriteConcern DBCursor DBObject MapReduceOutput MapReduceCommand MapReduceCommand$OutputType]
             org.bson.types.ObjectId
             java.util.Date)
   (:require [monger core util]
