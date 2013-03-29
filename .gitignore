@@ -2,8 +2,7 @@ pom.xml
 *jar
 /lib/
 /classes/
-.lein-failures
-.lein-deps-sum
+.lein-*
 TAGS
 checkouts/*
 doc/*
