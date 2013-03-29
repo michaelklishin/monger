@@ -1,3 +1,8 @@
+## Changes between 1.5.0 and 1.6.0
+
+No changes yet.
+
+
 ## Changes between 1.4.0 and 1.5.0
 
 ### Full Text Search Support
