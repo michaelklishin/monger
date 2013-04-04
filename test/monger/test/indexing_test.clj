@@ -26,11 +26,11 @@
     (mc/create-index collection ["language"])
     (mc/drop-index collection "language_1")
     (is (nil? (second (mc/indexes-on collection))))
-    (mc/ensure-index collection { "language" 1 } {:unique true})
+    (mc/ensure-index collection (array-map "language" 1) {:unique true})
     (is (= "language_1"
            (:name (second (mc/indexes-on collection)))))
-    (mc/ensure-index collection { "language" 1 })
-    (mc/ensure-index collection { "language" 1 } { :unique true })
+    (mc/ensure-index collection (array-map "language" 1))
+    (mc/ensure-index collection (array-map "language" 1) { :unique true })
     (mc/drop-indexes collection)))
 
 (deftest ^{:indexing true :edge-features true :time-consuming true} test-ttl-collections
@@ -38,7 +38,7 @@
         ttl   30
         sleep 120]
     (mc/remove coll)
-    (mc/ensure-index coll {:created-at 1} {:expireAfterSeconds ttl})
+    (mc/ensure-index coll (array-map :created-at 1) {:expireAfterSeconds ttl})
     (dotimes [i 100]
       (mc/insert coll {:type "signup" :created-at (-> i secs ago) :i i}))
     (dotimes [i 100]

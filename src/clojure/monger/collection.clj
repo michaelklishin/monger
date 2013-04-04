@@ -544,9 +544,10 @@
    EXAMPLES
 
      ;; create a regular index
-     (monger.collection/ensure-index \"documents\" {\"language\" 1})
+     ;; clojure.core/array-map produces an ordered map
+     (monger.collection/ensure-index \"documents\" (array-map \"language\" 1))
      ;; create a unique index
-     (monger.collection/ensure-index \"pages\"     {:url 1} {:unique true})
+     (monger.collection/ensure-index \"pages\"     (array-map :url 1) {:unique true})
   "
   ([^String collection ^Map keys]
      (.ensureIndex (.getCollection monger.core/*mongodb-database* (name collection)) (as-field-selector keys)))
