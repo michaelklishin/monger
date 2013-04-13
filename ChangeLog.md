@@ -6,11 +6,12 @@
 implementation that can use any database:
 
 ``` clojure
+(require '[monger.core  :as mg])
 (require '[monger.cache :as cache])
 
 (let [db   (mg/get-db "altcache")
       coll "cache_entries"
-      c    (db-aware-monger-cache-factory db coll)]
+      c    (cache/db-aware-monger-cache-factory db coll)]
   (comment "This cache instance will use the altcache DB"))
 ```
 
