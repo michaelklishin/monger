@@ -1,3 +1,21 @@
+## Changes between 1.5.0 and 1.6.0
+
+### One More Cache Implementation
+
+`monger.cache/db-aware-monger-cache-factory` will return a MongoDB-backed `clojure.core.cache`
+implementation that can use any database:
+
+``` clojure
+(require '[monger.core  :as mg])
+(require '[monger.cache :as cache])
+
+(let [db   (mg/get-db "altcache")
+      coll "cache_entries"
+      c    (cache/db-aware-monger-cache-factory db coll)]
+  (comment "This cache instance will use the altcache DB"))
+```
+
+
 ## Changes between 1.4.0 and 1.5.0
 
 ### Full Text Search Support

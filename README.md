@@ -52,7 +52,7 @@ definition to your `pom.xml`:
 
 With Leiningen:
 
-    [com.novemberain/monger "1.5.0-rc1"]
+    [com.novemberain/monger "1.5.0"]
 
 
 With Maven:
@@ -60,7 +60,7 @@ With Maven:
     <dependency>
       <groupId>com.novemberain</groupId>
       <artifactId>monger</artifactId>
-      <version>1.5.0-rc1</version>
+      <version>1.5.0</version>
     </dependency>
 
 
@@ -132,6 +132,7 @@ on Github.
 
 ## License
 
-Copyright (C) 2011-2012 Michael S. Klishin
+Copyright (C) 2011-2013 [Michael S. Klishin](http://twitter.com/michaelklishin)
 
-Distributed under the [Eclipse Public License](http://www.eclipse.org/legal/epl-v10.html), the same as Clojure.
+Double licensed under the [Eclipse Public License](http://www.eclipse.org/legal/epl-v10.html) (the same as Clojure) or
+the [Apache Public License 2.0](http://www.apache.org/licenses/LICENSE-2.0.html).

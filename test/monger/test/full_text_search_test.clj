@@ -20,7 +20,7 @@
 
 (deftest ^{:edge-features true :search true} test-basic-full-text-search-query
   (let [coll "docs"]
-    (mc/ensure-index coll {:subject "text" :content "text"})
+    (mc/ensure-index coll (array-map :subject "text" :content "text"))
     (mc/insert coll {:subject "hello there" :content "this should be searchable"})
     (mc/insert coll {:subject "untitled" :content "this is just noize"})
     (let [res (ms/search coll "hello")
