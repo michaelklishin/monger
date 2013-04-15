@@ -404,6 +404,17 @@
               multi
               write-concern)))
 
+(defn ^WriteResult upsert
+  "Performs an upsert.
+
+   This is a convenience function that delegates to monger.collection/update and
+   sets :upsert to true.
+
+   See monger.collection/update documentation"
+  [^String collection ^Map conditions ^Map document & {:keys [upsert multi write-concern] :or {multi false
+                                                                                               write-concern monger.core/*mongodb-write-concern*}}]
+  (update collection conditions document :multi multi :write-concern write-concern))
+
 (defn ^WriteResult update-by-id
   "Update a document with given id"
   [^String collection id ^Map document & {:keys [upsert write-concern] :or {upsert false

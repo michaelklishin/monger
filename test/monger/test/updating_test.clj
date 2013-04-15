@@ -137,7 +137,7 @@
 
 
 
-(deftest ^{:updating true} upsert-a-document
+(deftest ^{:updating true} upsert-a-document-using-update
   (let [collection "libraries"
         doc-id       (monger.util/random-uuid)
         date         (Date.)
@@ -146,6 +146,19 @@
     (is (not (monger.result/updated-existing? (mc/update collection { :language "Clojure" } doc :upsert true))))
     (is (= 1 (mc/count collection)))
     (is (monger.result/updated-existing? (mc/update collection { :language "Clojure" } modified-doc :multi false :upsert true)))
+    (is (= 1 (mc/count collection)))
+    (is (= (modified-doc (mc/find-by-id collection doc-id))))
+    (mc/remove collection)))
+
+(deftest ^{:updating true} upsert-a-document-using-upsert
+  (let [collection "libraries"
+        doc-id       (monger.util/random-uuid)
+        date         (Date.)
+        doc          {:created-at date :data-store "MongoDB" :language "Clojure" :_id doc-id}
+        modified-doc {:created-at date :data-store "MongoDB" :language "Erlang"  :_id doc-id}]
+    (is (not (monger.result/updated-existing? (mc/upsert collection {:language "Clojure"} doc))))
+    (is (= 1 (mc/count collection)))
+    (is (monger.result/updated-existing? (mc/upsert collection {:language "Clojure"} modified-doc :multi false)))
     (is (= 1 (mc/count collection)))
     (is (= (modified-doc (mc/find-by-id collection doc-id))))
     (mc/remove collection)))
