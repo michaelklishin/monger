@@ -85,8 +85,10 @@
 
 (use-fixtures :each (fn [f]
                       (mc/remove "basic_monger_cache_entries")
+                      (mc/remove "db_aware_monger_cache_entries")
                       (f)
-                      (mc/remove "basic_monger_cache_entries")))
+                      (mc/remove "basic_monger_cache_entries")
+                      (mc/remove "db_aware_monger_cache_entries")))
 
 
 (deftest ^{:cache true}
@@ -143,7 +145,7 @@
 
 
 (deftest ^{:cache true}
-  test-lookup-with-basic-moger-cache
+  test-lookup-with-db-aware-moger-cache
   (testing "that lookup returns nil for misses"
     (let [db   (mg/get-db "altcache")
           coll "db_aware_monger_cache_entries"
