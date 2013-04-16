@@ -52,7 +52,7 @@ definition to your `pom.xml`:
 
 With Leiningen:
 
-    [com.novemberain/monger "1.5.0"]
+    [com.novemberain/monger "1.6.0-beta2"]
 
 
 With Maven:
@@ -60,7 +60,7 @@ With Maven:
     <dependency>
       <groupId>com.novemberain</groupId>
       <artifactId>monger</artifactId>
-      <version>1.5.0</version>
+      <version>1.6.0-beta2</version>
     </dependency>
 
 
