@@ -74,7 +74,7 @@
 (deftest ^{:updating true} save-a-new-document
   (let [collection "people"
         document       {:name "Joe" :age 30}]
-    (is (monger.result/ok? (mc/save "people" document)))
+    (is (mr/ok? (mc/save "people" document)))
     (is (= 1 (mc/count collection)))))
 
 (deftest ^{:updating true} save-and-return-a-new-document
@@ -99,7 +99,7 @@
   (let [collection "people"
         doc-id            "people-1"
         document          { :_id doc-id, :name "Joe",   :age 30 }]
-    (is (monger.result/ok? (mc/insert "people" document)))
+    (is (mr/ok? (mc/insert "people" document)))
     (is (= 1 (mc/count collection)))
     (mc/save collection { :_id doc-id, :name "Alan", :age 40 })
     (is (= 1 (mc/count collection { :name "Alan", :age 40 })))))
@@ -118,7 +118,7 @@
   (let [collection "people"
         doc-id            (monger.util/object-id)
         document          { :_id doc-id, :name "Joe",   :age 30 }]
-    (is (monger.result/ok? (mc/insert "people" document)))
+    (is (mr/ok? (mc/insert "people" document)))
     (is (= 1 (mc/count collection)))
     (is (= 0 (mc/count collection { :has_kids true })))
     (mc/update collection { :_id doc-id } { $set { :has_kids true } })
@@ -130,7 +130,7 @@
         doc-id     (monger.util/object-id)
         document   { :_id doc-id :abc 0 :def 10 }]
     (mc/remove collection)
-    (is (monger.result/ok? (mc/insert collection document)))
+    (is (mr/ok? (mc/insert collection document)))
     (is (= 1 (mc/count collection {:abc {$exists true} :def {$exists true}})))
     (mc/update collection {:abc {$exists true} :def {$exists true}} {$inc {:abc 1 :def 0}})
     (is (= 1 (mc/count collection { :abc 1 })))))
@@ -143,9 +143,9 @@
         date         (Date.)
         doc          { :created-at date, :data-store "MongoDB", :language "Clojure", :_id doc-id }
         modified-doc { :created-at date, :data-store "MongoDB", :language "Erlang",  :_id doc-id }]
-    (is (not (monger.result/updated-existing? (mc/update collection { :language "Clojure" } doc :upsert true))))
+    (is (not (mr/updated-existing? (mc/update collection { :language "Clojure" } doc :upsert true))))
     (is (= 1 (mc/count collection)))
-    (is (monger.result/updated-existing? (mc/update collection { :language "Clojure" } modified-doc :multi false :upsert true)))
+    (is (mr/updated-existing? (mc/update collection { :language "Clojure" } modified-doc :multi false :upsert true)))
     (is (= 1 (mc/count collection)))
     (is (= (modified-doc (mc/find-by-id collection doc-id))))
     (mc/remove collection)))
@@ -156,9 +156,10 @@
         date         (Date.)
         doc          {:created-at date :data-store "MongoDB" :language "Clojure" :_id doc-id}
         modified-doc {:created-at date :data-store "MongoDB" :language "Erlang"  :_id doc-id}]
-    (is (not (monger.result/updated-existing? (mc/upsert collection {:language "Clojure"} doc))))
+    (mc/remove collection)
+    (is (not (mr/updated-existing? (mc/upsert collection {:language "Clojure"} doc))))
     (is (= 1 (mc/count collection)))
-    (is (monger.result/updated-existing? (mc/upsert collection {:language "Clojure"} modified-doc :multi false)))
+    (is (mr/updated-existing? (mc/upsert collection {:language "Clojure"} modified-doc :multi false)))
     (is (= 1 (mc/count collection)))
     (is (= (modified-doc (mc/find-by-id collection doc-id))))
     (mc/remove collection)))

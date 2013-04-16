@@ -411,9 +411,9 @@
    sets :upsert to true.
 
    See monger.collection/update documentation"
-  [^String collection ^Map conditions ^Map document & {:keys [upsert multi write-concern] :or {multi false
-                                                                                               write-concern monger.core/*mongodb-write-concern*}}]
-  (update collection conditions document :multi multi :write-concern write-concern))
+  [^String collection ^Map conditions ^Map document & {:keys [multi write-concern] :or {multi false
+                                                                                        write-concern monger.core/*mongodb-write-concern*}}]
+  (update collection conditions document :multi multi :write-concern write-concern :upsert true))
 
 (defn ^WriteResult update-by-id
   "Update a document with given id"
