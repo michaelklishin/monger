@@ -85,10 +85,12 @@
 
 (use-fixtures :each (fn [f]
                       (mc/remove "basic_monger_cache_entries")
-                      (mc/remove "db_aware_monger_cache_entries")
+                      (let [db (mg/get-db "altcache")]
+                        (mc/remove db "db_aware_monger_cache_entries" {}))
                       (f)
                       (mc/remove "basic_monger_cache_entries")
-                      (mc/remove "db_aware_monger_cache_entries")))
+                      (let [db (mg/get-db "altcache")]
+                        (mc/remove db "db_aware_monger_cache_entries" {}))))
 
 
 (deftest ^{:cache true}
