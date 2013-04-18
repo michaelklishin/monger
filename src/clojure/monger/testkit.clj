@@ -26,13 +26,19 @@
    (defcleaner events)              ;; collection name will be taken from the events-collection var
    (defcleaner people \"accounts\") ;; collection name is given
   "
-  [entities & coll-name]
-  (let [coll-arg (if coll-name
-                   (str (first coll-name))
-                   (symbol (str entities "-collection")))
-        fn-name  (symbol (str "purge-" entities))]
-    `(defn ~fn-name
-       [f#]
-       (mc/remove ~coll-arg)
-       (f#)
-       (mc/remove ~coll-arg))))
+  ([entities]
+     (let [coll-arg (symbol  (str entities "-collection"))
+           fn-name  (symbol (str "purge-" entities))]
+       `(defn ~fn-name
+          [f#]
+          (mc/remove ~coll-arg)
+          (f#)
+          (mc/remove ~coll-arg))))
+  ([entities coll-name]
+     (let [coll-arg (name coll-name)
+           fn-name  (symbol (str "purge-" entities))]
+       `(defn ~fn-name
+          [f#]
+          (mc/remove ~coll-arg)
+          (f#)
+          (mc/remove ~coll-arg)))))

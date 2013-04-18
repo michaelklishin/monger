@@ -1,5 +1,19 @@
 ## Changes between 1.5.0 and 1.6.0
 
+### monger.multi.collection
+
+`monger.multi.collection` is a new namespace with functions that are very similar to those
+in the `monger.collection` namespace but always take a database reference as an explicit argument.
+
+They are supposed to be used in cases when relying on `monger.core/*mongodb-database*` is not
+enough.
+
+
+## monger.core/drop-db
+
+`monger.core/drop-db` is a new function that drops a database by name.
+
+
 ### One More Cache Implementation
 
 `monger.cache/db-aware-monger-cache-factory` will return a MongoDB-backed `clojure.core.cache`

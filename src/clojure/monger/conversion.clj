@@ -42,7 +42,7 @@
 (extend-protocol ConvertToDBObject
   nil
   (to-db-object [input]
-    input)
+    nil)
 
   String
   (to-db-object [^String input]

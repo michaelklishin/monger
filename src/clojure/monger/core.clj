@@ -105,6 +105,12 @@
   []
   *mongodb-database*)
 
+(defn drop-db
+  "Drops a database"
+  ([^String db]
+     (.dropDatabase *mongodb-connection* db))
+  ([^MongoClient conn ^String db]
+     (.dropDatabase conn db)))
 
 
 (defmacro with-connection
@@ -243,7 +249,7 @@
    Ordering of keys in the command document may matter. Please use sorted maps instead of map literals, for example:
    (sorted-map geoNear \"bars\" :near 50 :test 430 :num 10)
 
-   For commonly used commands (distinct, count, map/reduce, etc), use monger/command and monger/collection functions such as
+   For commonly used commands (distinct, count, map/reduce, etc), use monger.command and monger.collection functions such as
    /distinct, /count,  /drop, /dropIndexes, and /mapReduce respectively."
   ([^Map cmd]
      (.command ^DB *mongodb-database* ^DBObject (to-db-object cmd)))

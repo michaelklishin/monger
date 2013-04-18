@@ -9,36 +9,30 @@
 ;; the terms of this license.
 ;; You must not remove this notice, or any other, from this software.
 
-(ns ^{:doc "Provides key functionality for interaction with MongoDB: inserting, querying, updating and deleting documents, performing Aggregation Framework
-            queries, creating and dropping indexes, creating collections and more.
+(ns monger.collection
+  "Provides key functionality for interaction with MongoDB: inserting, querying, updating and deleting documents, performing Aggregation Framework
+   queries, creating and dropping indexes, creating collections and more.
 
-            For more advanced read queries, see monger.query.
+   For more advanced read queries, see monger.query.
 
-            Related documentation guides:
+   Related documentation guides:
 
-            * http://clojuremongodb.info/articles/getting_started.html
-            * http://clojuremongodb.info/articles/inserting.html
-            * http://clojuremongodb.info/articles/querying.html
-            * http://clojuremongodb.info/articles/updating.html
-            * http://clojuremongodb.info/articles/deleting.html
-            * http://clojuremongodb.info/articles/aggregation.html"}
-  monger.collection
+   * http://clojuremongodb.info/articles/getting_started.html
+   * http://clojuremongodb.info/articles/inserting.html
+   * http://clojuremongodb.info/articles/querying.html
+   * http://clojuremongodb.info/articles/updating.html
+   * http://clojuremongodb.info/articles/deleting.html
+   * http://clojuremongodb.info/articles/aggregation.html"
   (:refer-clojure :exclude [find remove count drop distinct empty?])
   (:import [com.mongodb Mongo DB DBCollection WriteResult DBObject WriteConcern DBCursor MapReduceCommand MapReduceCommand$OutputType]
            [java.util List Map]
            [clojure.lang IPersistentMap ISeq]
            org.bson.types.ObjectId)
-  (:require [monger core result])
-  (:use     [monger.conversion]))
+  (:require monger.core
+            monger.result)
+  (:use     monger.conversion
+            monger.constraints))
 
-;;
-;; Implementation
-;;
-
-(definline check-not-nil!
-  [ref ^String message]
-  `(when (nil? ~ref)
-     (throw (IllegalArgumentException. ~message))))
 
 
 ;;
