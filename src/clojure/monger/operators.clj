@@ -231,3 +231,5 @@
 (defoperator $geoWithin)
 (defoperator $geoIntersects)
 (defoperator $near)
+
+(defoperator $slice)
