@@ -220,6 +220,7 @@
 (defoperator $minute)
 (defoperator $month)
 (defoperator $second)
+(defoperator $millisecond)
 (defoperator $week)
 (defoperator $year)
 (defoperator $isoDate)
