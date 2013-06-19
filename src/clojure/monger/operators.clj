@@ -125,6 +125,13 @@
 ;;   (monger.collection/update "things" { :_id oid } { $unset { :weight 1 } })
 (defoperator $unset)
 
+;; $setOnInsert assigns values to fields during an upsert only when using the upsert option to the update operation performs an insert.
+;; New in version 2.4. http://docs.mongodb.org/manual/reference/operator/setOnInsert/
+;;
+;; EXAMPLES:
+;;   (monger.collection/find-and-modify "things" {:_id oid} {$set {:lastseen now} $setOnInsert {:firstseen now}} :upsert true)
+(defoperator $setOnInsert)
+
 ;; $rename renames a given field
 ;;
 ;; EXAMPLES:
