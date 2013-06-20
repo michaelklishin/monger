@@ -107,7 +107,7 @@
           oid   (ObjectId.)
           joe   (mc/insert db "owners" {:name "Joe" :_id oid})
           dbref (DBRef. (mg/current-db) coll2 oid)]
-      (mc/insert coll1 {:type "pentagon" :owner dbref})
+      (mc/insert db coll1 {:type "pentagon" :owner dbref})
       (let [fetched (mc/find-one-as-map db coll1 {:type "pentagon"})
             fo      (:owner fetched)]
         (is (= {:_id oid :name "Joe"} (from-db-object @fo true)))))))
@@ -127,7 +127,7 @@
     (is (= (:age doc)
            (:age result)))
     (is (:_id result))
-    (is (= 1 (mc/count collection)))))
+    (is (= 1 (mc/count db collection)))))
 
 (deftest  insert-and-return-a-basic-document-without-id-but-with-a-write-concern
   (let [db         (mg/get-db "altdb")
@@ -141,7 +141,7 @@
     (is (= (:ratio doc)
            (:ratio result)))    
     (is (:_id result))
-    (is (= 1 (mc/count collection)))))
+    (is (= 1 (mc/count db collection)))))
 
 (deftest  insert-and-return-with-a-provided-id
   (let [db         (mg/get-db "altdb")
@@ -150,7 +150,7 @@
         doc        {:name "Joe" :age 30 :_id oid}
         result     (mc/insert-and-return db :people doc)]
     (is (= (:_id result) (:_id doc) oid))
-    (is (= 1 (mc/count collection)))))
+    (is (= 1 (mc/count db collection)))))
 
 
 ;;
@@ -162,14 +162,14 @@
         collection "people"
         docs       [{:name "Joe" :age 30} {:name "Paul" :age 27}]]
     (is (monger.result/ok? (mc/insert-batch db "people" docs)))
-    (is (= 2 (mc/count collection)))))
+    (is (= 2 (mc/count db collection)))))
 
 (deftest insert-a-batch-of-basic-documents-without-ids-and-with-explicit-write-concern
   (let [db         (mg/get-db "altdb")
         collection "people"
         docs       [{:name "Joe" :age 30} {:name "Paul" :age 27}]]
     (is (monger.result/ok? (mc/insert-batch db "people" docs WriteConcern/NORMAL)))
-    (is (= 2 (mc/count collection)))))
+    (is (= 2 (mc/count db collection)))))
 
 (deftest insert-a-batch-of-basic-documents-with-explicit-database-without-ids-and-with-explicit-write-concern
   (let [db         (mg/get-db "altdb")
@@ -177,7 +177,7 @@
         docs       [{:name "Joe" :age 30} {:name "Paul" :age 27}]]
     (dotimes [n 44]
       (is (monger.result/ok? (mc/insert-batch db "people" docs WriteConcern/NORMAL))))
-    (is (= 88 (mc/count collection)))))
+    (is (= 88 (mc/count db collection)))))
 
 (deftest insert-a-batch-of-basic-documents-from-a-lazy-sequence
   (let [db         (mg/get-db "altdb")
@@ -186,4 +186,4 @@
     (is (monger.result/ok? (mc/insert-batch db "people" (map (fn [^long l]
                                                                {:n l})
                                                              numbers))))
-    (is (= (count numbers) (mc/count collection)))))
+    (is (= (count numbers) (mc/count db collection)))))
