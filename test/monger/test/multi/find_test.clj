@@ -141,5 +141,3 @@
     (mgcol/insert-batch db collection [{ :language "Clojure", :name "monger" }
                                        { :language "Clojure", :name "langohr" }])))
 
-(run-tests)
-
