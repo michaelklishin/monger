@@ -114,6 +114,25 @@
     (is (mgres/ok? (mgcol/update coll { :_id oid } { $unset { :published 1 :featured true } })))
     (is (= { :_id oid :title "Document 1" } (mgcol/find-map-by-id coll oid)))))
 
+;;
+;; $setOnInsert
+;;
+
+(deftest setOnInsert-in-upsert-for-non-existing-document
+  (let [coll "docs"
+        now  456
+        oid  (ObjectId.)]
+    (mgcol/find-and-modify coll {:_id oid} {$set {:lastseen now} $setOnInsert {:firstseen now}} :upsert true)
+    (is (= { :_id oid :lastseen now :firstseen now} (mgcol/find-map-by-id coll oid)))))
+
+(deftest setOnInsert-in-upsert-for-existing-document
+  (let [coll   "docs"
+        before 123
+        now    456
+        oid    (ObjectId.)]
+    (mgcol/insert coll { :_id oid :firstseen before :lastseen before})
+    (mgcol/find-and-modify coll {:_id oid} {$set {:lastseen now} $setOnInsert {:firstseen now}} :upsert true)
+    (is (= { :_id oid :lastseen now :firstseen before} (mgcol/find-map-by-id coll oid)))))
 
 ;;
 ;; $push
