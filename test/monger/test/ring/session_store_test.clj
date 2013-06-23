@@ -41,7 +41,7 @@
            {:library "Monger"}))))
 
 
-(deftest test-reading-a-session-that-does-exist
+(deftest test-reading-a-session-that-does-exist-given-db
   (let [db (monger.core/get-db)
         store (monger-store db "sessions")
         sk    (write-session store nil {:library "Monger"})
