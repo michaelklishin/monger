@@ -8,6 +8,8 @@ in the `monger.collection` namespace but always take a database reference as an 
 They are supposed to be used in cases when relying on `monger.core/*mongodb-database*` is not
 enough.
 
+Erik Bakstad contributed most of this work.
+
 
 ## monger.core/drop-db
 
@@ -773,7 +775,7 @@ If you need to use `keywordize`, use 4-arity:
 ### Query DSL has a way to specify if fields need to be keywordized
 
 It is now possible to opt-out of field keywordization in the query DSL:
-    
+
 ``` clojure
 (with-collection coll
   (find {})
@@ -799,7 +801,7 @@ monger.collection/find-map-by-id no longer ignore fields argument. Contributed b
 ### Meet monger.db and monger.command
 
 `monger.db` namespace was added to perform operations like adding users or dropping databases. Several functions from
-`monger.core` will eventually be moved there, but not for 1.0. 
+`monger.core` will eventually be moved there, but not for 1.0.
 
 `monger.command` namespace includes convenience methods for issuing MongoDB commands.
 
@@ -815,4 +817,3 @@ given ObjectId. `monger.collection/remove-by-id` is its counterpart for removing
 ### monger.core/get-db-names
 
 monger.core/get-db-names returns a set of databases. Contributed by Toby Hede.
-
