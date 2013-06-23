@@ -11,6 +11,11 @@ enough.
 Erik Bakstad contributed most of this work.
 
 
+### MongoDB Java Driver Update
+
+MongoDB Java driver dependency has been [updated to 2.11.2](https://github.com/mongodb/mongo-java-driver/wiki/Release-Notes).
+
+
 ## monger.core/drop-db
 
 `monger.core/drop-db` is a new function that drops a database by name.
