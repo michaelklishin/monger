@@ -25,8 +25,25 @@
     (is (= {} (read-session store "a-missing-key-1228277")))))
 
 
+(deftest test-reading-a-session-that-does-not-exist-given-db
+  (let [db (monger.core/get-db)
+        store (monger-store db "sessions")]
+    (is (= {} (read-session store "a-missing-key-1228277")))))
+
+
 (deftest test-reading-a-session-that-does-exist
   (let [store (monger-store)
+        sk    (write-session store nil {:library "Monger"})
+        m     (read-session store sk)]
+    (is sk)
+    (is (and (:_id m) (:date m)))
+    (is (= (dissoc m :_id :date)
+           {:library "Monger"}))))
+
+
+(deftest test-reading-a-session-that-does-exist-given-db
+  (let [db (monger.core/get-db)
+        store (monger-store db "sessions")
         sk    (write-session store nil {:library "Monger"})
         m     (read-session store sk)]
     (is sk)
@@ -47,8 +64,29 @@
            {:library "Ring"}))))
 
 
+(deftest test-updating-a-session-given-db
+  (let [db (monger.core/get-db)
+        store (monger-store db "sessions")
+        sk1   (write-session store nil {:library "Monger"})
+        sk2   (write-session store sk1 {:library "Ring"})
+        m     (read-session store sk2)]
+    (is (and sk1 sk2))
+    (is (and (:_id m) (:date m)))
+    (is (= sk1 sk2))
+    (is (= (dissoc m :_id :date)
+           {:library "Ring"}))))
+
+
 (deftest test-deleting-a-session
   (let [store (monger-store "sessions")
+        sk    (write-session store nil {:library "Monger"})]
+    (is (nil? (delete-session store sk)))
+    (is (= {} (read-session store sk)))))
+
+
+(deftest test-deleting-a-session-given-db
+  (let [db (monger.core/get-db)
+        store (monger-store db "sessions")
         sk    (write-session store nil {:library "Monger"})]
     (is (nil? (delete-session store sk)))
     (is (= {} (read-session store sk)))))
