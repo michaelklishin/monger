@@ -22,10 +22,10 @@
           key  "1"]
       (mc/remove db coll {})
       (is (not (mc/any? db coll {:_id key})))
-      (is (not (contains? (applied-migration-ids db) key)))
+      (is (not (some #{key} (applied-migration-ids db))))
       (add-migration-id db key)
       (is (mc/any? db coll {:_id key}))
-      (is (contains? (applied-migration-ids db) key))))
+      (is (some #{key} (applied-migration-ids db)))))
 
 
   (deftest test-remove-migration-id
@@ -35,6 +35,23 @@
       (mc/remove db coll {})
       (add-migration-id db key)
       (is (mc/any? db coll {:_id key}))
-      (is (contains? (applied-migration-ids db) key))
+      (is (some #{key} (applied-migration-ids db)))
       (remove-migration-id db key)
-      (is (not (contains? (applied-migration-ids db) key))))))
+      (is (not (some #{key} (applied-migration-ids db))))))
+
+
+  (deftest test-migrations-ordering
+    (let [db   (mg/get-db "monger-test")
+          coll "meta.migrations"
+          all-keys  [ "9" "4" "7" "1" "5" "3" "6" "2" "8"]]
+      (mc/remove db coll {})
+
+      (doseq [key all-keys]
+        (add-migration-id db key))
+
+      (doseq [key all-keys]
+        (is (mc/any? db coll {:_id key}))
+        (is (some #{key} (applied-migration-ids db))))
+
+      (testing "Applied migrations must come out in creation order"
+        (is (= all-keys (applied-migration-ids db)))))))
