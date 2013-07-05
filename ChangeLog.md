@@ -16,7 +16,7 @@ Erik Bakstad contributed most of this work.
 MongoDB Java driver dependency has been [updated to 2.11.2](https://github.com/mongodb/mongo-java-driver/wiki/Release-Notes).
 
 
-## monger.core/drop-db
+### monger.core/drop-db
 
 `monger.core/drop-db` is a new function that drops a database by name.
 
@@ -35,6 +35,12 @@ implementation that can use any database:
       c    (cache/db-aware-monger-cache-factory db coll)]
   (comment "This cache instance will use the altcache DB"))
 ```
+
+### Ragtime changes
+
+Bug fix: `monger.ragtime/applied-migration-ids` now returns a vector (instead of a set) in order to preserve the original creation order of the migrations.
+
+Ragtime dependency has been updated to 0.3.3.
 
 
 ## Changes between 1.4.0 and 1.5.0
