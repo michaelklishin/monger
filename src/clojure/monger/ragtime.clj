@@ -24,7 +24,7 @@
       (let [xs (with-collection migrations-collection
                  (find {})
                  (sort {:created_at 1}))]
-        (set (map :_id xs))))))
+        (vec (map :_id xs))))))
 
 
 (defn flush-migrations!
