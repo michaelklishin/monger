@@ -126,7 +126,7 @@
 ;; monger.multi.collection/find-and-modify
 ;;
 
-(defn ^DBObject find-and-modify
+(defn ^IPersistentMap find-and-modify
   "Like monger.collection/find-and-modify but always takes a database as explicit argument"
   ([^DB db ^String collection ^Map conditions ^Map document & {:keys [fields sort remove return-new upsert keywordize] :or
                                                                {fields nil sort nil remove false return-new false upsert false keywordize true}}]
@@ -282,7 +282,7 @@
                    name
                    unique?)))
 
-;;                                        
+;;
 ;; monger.multi.collection/indexes-on
 ;;
 
@@ -358,4 +358,3 @@
      (.distinct (.getCollection db (name collection)) ^String (to-db-object key)))
   ([^DB db ^String collection ^String key ^Map query]
      (.distinct (.getCollection db (name collection)) ^String (to-db-object key) (to-db-object query))))
-

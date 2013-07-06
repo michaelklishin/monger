@@ -227,7 +227,7 @@
 ;; monger.collection/find-and-modify
 ;;
 
-(defn ^DBObject find-and-modify
+(defn ^IPersistentMap find-and-modify
   "Atomically modify a document (at most one) and return it.
 
    EXAMPLES:
