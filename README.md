@@ -96,7 +96,7 @@ stable releaseis recommended.
 ## Monger Is a ClojureWerkz Project
 
 Monger is part of the [group of Clojure libraries known as ClojureWerkz](http://clojurewerkz.org), together with
-[Neocons](https://github.com/michaelklishin/neocons), [Langohr](https://github.com/michaelklishin/langohr), [Elastisch](https://github.com/clojurewerkz/elastisch), [Welle](https://github.com/michaelklishin/welle), [Quartzite](https://github.com/michaelklishin/quartzite) and several others.
+[Cassaforte](http://clojurecassandra.info), [Langohr](http://clojurerabbitmq.info), [Elastisch](http://clojureelasticsearch.info), [Titanium](http://titanium.clojurewerkz.org), [Quartzite](http://clojurequartz.info) and several others.
 
 
 ## Write Performance
