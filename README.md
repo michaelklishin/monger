@@ -23,23 +23,17 @@ wanted a client that will
 
 
 
-## Community
-
-[Monger has a mailing list](https://groups.google.com/forum/#!forum/clojure-mongodb). Feel free to join it and ask any questions you may have.
-
-To subscribe for announcements of releases, important changes and so on, please follow [@ClojureWerkz](https://twitter.com/#!/clojurewerkz) on Twitter.
-
-
 ## Project Maturity
 
-Monger is not a young project: started in July 2011, it is over 1 year old with active production use from week 1.
-
+Monger is not a young project: started in July 2011, it is over 2
+years old with active production use from week 1.
 
 
 ## Artifacts
 
-Monger artifacts are [released to Clojars](https://clojars.org/com.novemberain/monger). If you are using Maven, add the following repository
-definition to your `pom.xml`:
+Monger artifacts are [released to
+Clojars](https://clojars.org/com.novemberain/monger). If you are using
+Maven, add the following repository definition to your `pom.xml`:
 
 ``` xml
 <repository>
@@ -54,7 +48,6 @@ With Leiningen:
 
     [com.novemberain/monger "1.6.0"]
 
-
 With Maven:
 
     <dependency>
@@ -67,29 +60,44 @@ With Maven:
 
 ## Getting Started
 
-Please refer to our [Getting Started guide](http://clojuremongodb.info/articles/getting_started.html). Don't hesitate to join our [mailing list](https://groups.google.com/forum/#!forum/clojure-mongodb) and ask questions, too!
-
-
+Please refer to our [Getting Started
+guide](http://clojuremongodb.info/articles/getting_started.html). Don't
+hesitate to join our [mailing
+list](https://groups.google.com/forum/#!forum/clojure-mongodb) and ask
+questions, too!
 
 
 ## Documentation & Examples
 
-Please see our [documentation guides site](http://clojuremongodb.info/) and [API reference](http://reference.clojuremongodb.info).
+Please see our [documentation guides
+site](http://clojuremongodb.info/) and [API
+reference](http://reference.clojuremongodb.info).
 
-Our [test suite](https://github.com/michaelklishin/monger/tree/master/test/monger/test) also has many code examples.
+Our [test
+suite](https://github.com/michaelklishin/monger/tree/master/test/monger/test)
+also has many code examples.
 
+
+## Community
+
+[Monger has a mailing
+list](https://groups.google.com/forum/#!forum/clojure-mongodb). Feel
+free to join it and ask any questions you may have.
+
+To subscribe for announcements of releases, important changes and so
+on, please follow [@ClojureWerkz](https://twitter.com/#!/clojurewerkz)
+on Twitter.
 
 
 ## Supported Clojure versions
 
-Monger is built from the ground up for Clojure 1.3 and up. The most recent
-stable releaseis recommended.
+Monger requires Clojure 1.3 or later. The most recent
+stable release is highly recommended.
 
 
 ## Continuous Integration Status
 
 [![Continuous Integration status](https://secure.travis-ci.org/michaelklishin/monger.png)](http://travis-ci.org/michaelklishin/monger)
-
 
 
 
