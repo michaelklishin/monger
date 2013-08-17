@@ -107,10 +107,12 @@ Monger is part of the [group of Clojure libraries known as ClojureWerkz](http://
 [Cassaforte](http://clojurecassandra.info), [Langohr](http://clojurerabbitmq.info), [Elastisch](http://clojureelasticsearch.info), [Titanium](http://titanium.clojurewerkz.org), [Quartzite](http://clojurequartz.info) and several others.
 
 
-## Write Performance
+## Baseline Performance
 
-Monger insert operations are efficient and have very little overhead compared to the underlying Java driver. Here
-are some (very unscientific) numbers on a MacBook Pro from fall 2010 with Core i7 and an Intel SSD drive:
+Monger is efficient and has very little overhead
+compared to the underlying Java driver. Here is one (very
+unscientific) benchmark on a MacBook Pro from mid-2010 with Core i7
+and an Intel SSD drive:
 
 ```
 Testing monger.test.stress
@@ -122,7 +124,8 @@ Inserting  100000  documents...
 "Elapsed time: 515.969 msecs"
 ```
 
-With the `SAFE` write concern, it takes roughly 0.5 second to insert 100,000 documents with Clojure 1.3.0.
+With the `SAFE` write concern, it takes roughly 0.5 second to insert
+100,000 documents with Clojure 1.3.0.
 
 
 
