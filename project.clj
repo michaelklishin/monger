@@ -43,7 +43,7 @@
                                    [cheshire               "5.2.0" :exclusions [org.clojure/clojure]]
                                    [org.clojure/tools.cli  "0.2.4" :exclusions [org.clojure/clojure]]
                                    [org.clojure/core.cache "0.6.3" :exclusions [org.clojure/clojure]]
-                                   [ring/ring-core         "1.1.8"]]
+                                   [ring/ring-core         "1.2.0"]]
                    :plugins [[codox "0.6.4"]]
                    :codox {:sources ["src/clojure"]
                            :output-dir "doc/api"
