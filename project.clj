@@ -7,7 +7,7 @@
                  [org.mongodb/mongo-java-driver "2.11.2"]
                  [com.novemberain/validateur    "1.5.0"]
                  [clojurewerkz/support          "0.15.0"]
-                 [ragtime/ragtime.core          "0.3.3"]]
+                 [ragtime/ragtime.core          "0.3.4"]]
   :test-selectors {:default     (fn [m]
                                   (and (not (:performance m))
                                        (not (:edge-features m))
