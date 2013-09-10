@@ -1,3 +1,21 @@
+## Changes between 1.6.0 and 1.7.0
+
+### Cheshire Upgrade
+
+[Cheshire](https://github.com/dakrone/cheshire) dependency has been upgraded to 5.2.0
+
+
+### ClojureWerkz Support Upgrade
+
+ClojureWerkz Support dependency has been updated to version `0.17.0`.
+
+
+### Validateur 1.5.0
+
+[Validateur](https://github.com/michaelklishin/validateur) dependency has been upgraded to 1.5.0.
+
+
+
 ## Changes between 1.5.0 and 1.6.0
 
 ### monger.multi.collection
