@@ -26,6 +26,9 @@
 (extend-protocol ConvertToDBObject
   org.joda.time.base.AbstractInstant
   (to-db-object [^AbstractInstant input]
+    (to-db-object (.toDate input)))
+  org.joda.time.base.AbstractPartial
+  (to-db-object [^AbstractPartial input]
     (to-db-object (.toDate input))))
 
 (extend-protocol ConvertFromDBObject
@@ -55,6 +58,10 @@
   [^org.joda.time.base.AbstractInstant d out]
   (print-dup (.toDate d) out))
 
+
+(defmethod print-dup org.joda.time.base.AbstractPartial
+  [^org.joda.time.base.AbstractPartial d out]
+  (print-dup (.toDate d) out))
 
 ;;
 ;; JSON serialization
