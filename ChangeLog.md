@@ -1,5 +1,10 @@
 ## Changes between 1.6.0 and 1.7.0
 
+### Clojure 1.3 Is No Longer Supported
+
+Monger now officially supports Clojure 1.4+.
+
+
 ### Cheshire Upgrade
 
 [Cheshire](https://github.com/dakrone/cheshire) dependency has been upgraded to 5.2.0
