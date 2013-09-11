@@ -34,7 +34,9 @@
 (deftest ^{:integration true} conversion-of-joda-localdate-to-db-object
   (let [d (to-db-object (LocalDate. 2011 10 13))]
     (is (instance? java.util.Date d))
-    (is (= 1318456800000 (.getTime ^java.util.Date d)))))
+    (is (= 111 (.getYear ^java.util.Date d))) ;; how many years since 1900
+    (is (= 9 (.getMonth ^java.util.Date d))) ;; java.util.Date counts from 0
+    (is (= 13 (.getDate ^java.util.Date d)))))
 
 (deftest ^{:integration true} conversion-of-java-util-date-to-joda-datetime
   (let [input  (.toDate ^DateTime (t/date-time 2011 10 13 23 55 0))
