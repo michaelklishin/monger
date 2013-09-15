@@ -1,5 +1,13 @@
 ## Changes between 1.6.0 and 1.7.0
 
+### Joda Time Integration Improvements: LocalDate
+
+`LocalDate` instance serialization is now supported
+by Monger Joda Time integration.
+
+Contributed by Timo Sulg.
+
+
 ### Clojure 1.3 Is No Longer Supported
 
 Monger now officially supports Clojure 1.4+.
