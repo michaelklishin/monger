@@ -20,7 +20,7 @@ Monger now officially supports Clojure 1.4+.
 
 ### ClojureWerkz Support Upgrade
 
-ClojureWerkz Support dependency has been updated to version `0.17.0`.
+ClojureWerkz Support dependency has been updated to `0.19.0`.
 
 
 ### Validateur 1.5.0
