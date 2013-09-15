@@ -200,7 +200,7 @@
   Examples:
     (.count (find-all :products))
     (.count (find-all :products :criteria {:name 'Monger'} :fields {:_id -1}))
-    (.count (find-all :product :options {:notimeout true} :as :map))
+    (find-all :product :options {:notimeout true} :as :map)
   "
   [collection & {:keys [criteria fields options as] 
                   :or {criteria {}, fields {}, options nil, as nil}}]
