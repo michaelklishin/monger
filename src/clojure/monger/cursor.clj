@@ -1,9 +1,7 @@
 (ns monger.cursor
-  "Helpers function for dbCursor object: creating new cursor, 
-  CRUD functionality for cursor options
-  Related documentation guides:
-    * ...
-  "
+  "Helper-functions for dbCursor object: 
+    * to initialize new cursor, 
+    * for CRUD functionality of options of dbCursor"
   (:import  [com.mongodb DBCursor Bytes]
             [java.util List Map]
             [java.lang Integer]
@@ -11,7 +9,7 @@
   (:require [monger.conversion :refer [to-db-object from-db-object as-field-selector]]))
 
 (defn ^DBCursor make-db-cursor 
-  "initializes new db-collection."
+  "initializes new db-cursor."
   ([^String collection] (make-db-cursor collection {} {}))
   ([^String collection ^Map ref] (make-db-cursor collection ref {}))
   ([^String collection ^Map ref fields] 
@@ -43,12 +41,13 @@
                                    (get cursor-options (keyword opt) 0))))
 
 (defmulti add-options (fn [db-cur opts] (class opts)))
-
 (defmethod add-options Map [^DBCursor db-cur options]
-  "Applies cursor options with switch values, where true means switch on
-  and false removes specified options from current cursor.
-  example: (add-options db-cur {:notimeout true, :tailable false})
-  returns cursor."
+  "Changes options by using map of settings, which key specifies name of settings 
+  and boolean value specifies new state of the setting.
+  usage: 
+    (add-options db-cur {:notimeout true, :tailable false})
+  returns: 
+    ^DBCursor object."
   (doseq [[opt value] (seq options)]
     (if (= true value)
       (add-option! db-cur opt)
@@ -56,22 +55,35 @@
   db-cur)
 
 (defmethod add-options List [^DBCursor db-cur options]
-  "Takes list of options to add current key"
+  "Takes list of options and activates these options
+  usage:
+    (add-options db-cur [:notimeout :tailable])
+  returns:
+    ^DBCursor object"
   (doseq [opt (seq options)] 
     (add-option! db-cur opt))
   db-cur)
 
 (defmethod add-options Integer [^DBCursor db-cur, option]
-  "Takes com.mongodb.Byte value and adds it to current settings."
+  "Takes com.mongodb.Byte value and adds it to current settings.
+  usage:
+    (add-options db-cur com.mongodb.Bytes/QUERYOPTION_NOTIMEOUT)
+  returns:
+    ^DBCursor object"
   (.addOption db-cur option)
   db-cur)
 
 (defmethod add-options Keyword [^DBCursor db-cur, option]
+  "Takes just one keyword as name of settings and applies it to the db-cursor.
+  usage:
+    (add-options db-cur :notimeout)
+  returns:
+    ^DBCursor object"
   (add-option! db-cur option)
   db-cur)
 
 (defmethod add-options :default [^DBCursor db-cur, options]
-  (println "add-options dont support type for options: " (class options))
+  "Using add-options with not supported type of options just passes unchanged cursor"
   db-cur)
 
 (defn ^DBCursor reset-options

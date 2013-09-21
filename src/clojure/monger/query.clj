@@ -14,7 +14,8 @@
   monger.query
   (:refer-clojure :exclude [select find sort])
   (:require [monger.core]
-            [monger.internal pagination])
+            [monger.internal pagination]
+            [monger.cursor :as cursor :refer [add-options]])
   (:import [com.mongodb DB DBCollection DBObject DBCursor ReadPreference]
            [java.util List])
   (:use [monger conversion operators]))
@@ -75,7 +76,7 @@
     (when read-preference
       (.setReadPreference cursor read-preference))
     (when options
-      (.setOptions cursor options))
+      (add-options cursor options))
     (map (fn [x] (from-db-object x keywordize-fields))
          cursor)))
 
