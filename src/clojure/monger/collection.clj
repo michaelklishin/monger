@@ -25,8 +25,7 @@
    * http://clojuremongodb.info/articles/aggregation.html"
   (:refer-clojure :exclude [find remove count drop distinct empty?])
   (:import [com.mongodb Mongo DB DBCollection WriteResult DBObject WriteConcern 
-                        DBCursor MapReduceCommand MapReduceCommand$OutputType
-                        Bytes]
+                        DBCursor MapReduceCommand MapReduceCommand$OutputType]
            [java.util List Map]
            [clojure.lang IPersistentMap ISeq]
            org.bson.types.ObjectId)
@@ -123,91 +122,6 @@
 ;;
 ;; monger.collection/find
 ;;
-;;;;TODO: add query-options
-(comment
-  (import '[com.mongodb Mongo DB DBCollection WriteResult DBObject WriteConcern 
-                        DBCursor MapReduceCommand MapReduceCommand$OutputType
-                        Bytes]
-           '[java.util List Map]
-           '[clojure.lang IPersistentMap ISeq]
-           'org.bson.types.ObjectId)
-  (require '[monger.core :as mongo]
-           '[monger.result])
- 
-  (require '[monger.conversion :refer [from-db-object to-db-object as-field-selector]])
-
-  (mongo/connect!)
-  (mongo/set-db! (mongo/get-db "veye_dev"))
-  (def collection :products)
-  (def coll (.getCollection monger.core/*mongodb-database* (name collection)))
-)
-
-(defn ^DBCursor make-db-cursor 
-  ([^String collection] (make-db-cursor collection {} {}))
-  ([^String collection ^Map ref] (make-db-cursor collection ref {}))
-  ([^String collection ^Map ref fields] 
-    (.find
-      (.getCollection monger.core/*mongodb-database* (name collection))
-      (to-db-object ref)
-      (as-field-selector fields)))) 
-
-(def cursor-options-map {:awaitdata Bytes/QUERYOPTION_AWAITDATA
-                         :exhaust   Bytes/QUERYOPTION_EXHAUST
-                         :notimeout Bytes/QUERYOPTION_NOTIMEOUT
-                         :oplogreplay Bytes/QUERYOPTION_OPLOGREPLAY
-                         :partial Bytes/QUERYOPTION_PARTIAL
-                         :slaveok Bytes/QUERYOPTION_SLAVEOK
-                         :tailable Bytes/QUERYOPTION_TAILABLE})
-
-(defn get-cursor-options
-  ""
-  [db-cur]
-  (into {}
-    (for [[opt option-mask] cursor-options-map]
-      [opt (< 0 (bit-and (.getOptions db-cur) option-mask))])))
-
-(defn ^DBCursor apply-cursor-options [db-cur options]
-  "Applies cursor options and return cursor."
-  (doseq [[opt value] (seq options)]
-    (if (= true value)
-      (.addOption db-cur (get cursor-options-map opt 0))
-      (.setOptions db-cur (bit-and-not (.getOptions db-cur) (get cursor-options-map opt 0)))))
-  db-cur)
-
-(defmulti format-cursor (fn [db-cur as] as))
-
-(defmethod format-cursor :map [db-cur as]
-  (map #(from-db-object %1 true) db-cur))
-
-(defmethod format-cursor :seq [db-cur as]
-  (seq db-cur))
-
-(defmethod format-cursor :default [db-cur as]
-  db-cur)
-
-(defn find-all
-  "Queries for objects from specified collection and accepts additional parameters as keywords.
-  Arguments:
-    collection - required, name of collections as string or keyword value
-  Keyword arguments:
-    :criteria - clojure map of matching criterias, for example {:name 'Monger', :language 'Clojure'}
-    :fields   - specify fields, valid formats [:field1 :field2], {:_id -1, :name 1}
-    :options  - clojure map of options for cursors, for example {:notimeout true :partial false} 
-                allows notimeout and cancels shardings for query's cursor.
-    :as       - specifies format of response, ala unified method to replace find, find-maps, find-seq.
-                Valid values are :map, :seq and other values are ignored.
-
-  Examples:
-    (.count (find-all :products))
-    (.count (find-all :products :criteria {:name 'Monger'} :fields {:_id -1}))
-    (find-all :product :options {:notimeout true} :as :map)
-  "
-  [collection & {:keys [criteria fields options as] 
-                  :or {criteria {}, fields {}, options nil, as nil}}]
-    (let [db-cur (make-db-cursor collection criteria fields)]
-      (-> db-cur
-        (apply-cursor-options options)
-        (format-cursor as))))
 
 (defn ^DBCursor find
   "Queries for objects in this collection.
