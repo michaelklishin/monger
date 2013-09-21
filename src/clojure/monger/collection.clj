@@ -24,7 +24,8 @@
    * http://clojuremongodb.info/articles/deleting.html
    * http://clojuremongodb.info/articles/aggregation.html"
   (:refer-clojure :exclude [find remove count drop distinct empty?])
-  (:import [com.mongodb Mongo DB DBCollection WriteResult DBObject WriteConcern DBCursor MapReduceCommand MapReduceCommand$OutputType]
+  (:import [com.mongodb Mongo DB DBCollection WriteResult DBObject WriteConcern 
+                        DBCursor MapReduceCommand MapReduceCommand$OutputType]
            [java.util List Map]
            [clojure.lang IPersistentMap ISeq]
            org.bson.types.ObjectId)
@@ -32,7 +33,6 @@
             monger.result)
   (:use     monger.conversion
             monger.constraints))
-
 
 
 ;;
