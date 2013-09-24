@@ -1,4 +1,4 @@
-(defproject com.novemberain/monger "1.7.0-SNAPSHOT"
+(defproject com.novemberain/monger "1.7.0-beta1"
   :description "Monger is a Clojure MongoDB client for a more civilized age: friendly, flexible and with batteries included"
   :url "http://clojuremongodb.info"
   :min-lein-version "2.0.0"
