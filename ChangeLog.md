@@ -1,4 +1,24 @@
-## Changes between 1.6.0 and 1.7.0
+## Changes between 1.6.0 and 1.7.0-beta1
+
+### Fune Tuning Cursor Options
+
+`monger.query` DSL now provides a way to fine tune database cursor
+options:
+
+``` clojure
+(with-collection "products"
+  ...
+  (options {:notimeout true, :slaveok false}) ;; where keyword matches Bytes/QUERYOPTION_*
+  (options [:notimeout :slaveok])
+  (options com.mongodb.Bytes/QUERYOPTION_NOTIMEOUT) ;; support Java constants
+  (options :notimeout)
+  ...
+```
+
+`monger.cursor` is a new namespace that provides the plumbing for cursor
+fine tuning but should not be widely used directly.
+
+
 
 ### Joda Time Integration Improvements: LocalDate
 
