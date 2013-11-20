@@ -78,7 +78,7 @@
       (when read-preference
         (.setReadPreference cursor read-preference))
       (when options
-      (add-options cursor options))
+        (add-options cursor options))
       (loop []
         (when (.hasNext cursor)
           (yield y-out (from-db-object (.next cursor) keywordize-fields))
