@@ -18,7 +18,8 @@
             [monger.cursor :as cursor :refer [add-options]])
   (:import [com.mongodb DB DBCollection DBObject DBCursor ReadPreference]
            [java.util List])
-  (:use [monger conversion operators]))
+  (:use [monger conversion operators]
+        [yield]))
 
 
 ;;
@@ -65,21 +66,23 @@
 
 (defn exec
   [{ :keys [^DBCollection collection query fields skip limit sort batch-size hint snapshot read-preference keywordize-fields options] :or { limit 0 batch-size 256 skip 0 } }]
-  (with-open [cursor (doto (.find collection (to-db-object query) (as-field-selector fields))
+  (with-yielding [y-out 1]
+    (with-open [cursor (doto (.find collection (to-db-object query) (as-field-selector fields))
                        (.limit limit)
                        (.skip  skip)
                        (.sort  (to-db-object sort))
                        (.batchSize batch-size)
                        (.hint (to-db-object hint)))]
-    (when snapshot
-      (.snapshot cursor))
-    (when read-preference
-      (.setReadPreference cursor read-preference))
-    (when options
+      (when snapshot
+        (.snapshot cursor))
+      (when read-preference
+        (.setReadPreference cursor read-preference))
+      (when options
       (add-options cursor options))
-    (map (fn [x] (from-db-object x keywordize-fields))
-         cursor)))
-
+      (loop []
+        (when (.hasNext cursor)
+          (yield y-out (from-db-object (.next cursor) keywordize-fields))
+          (recur))))))
 ;;
 ;; API
 ;;
