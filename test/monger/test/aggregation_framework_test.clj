@@ -10,7 +10,7 @@
 
 (use-fixtures :each purge-docs)
 
-(deftest ^{:edge-features true} test-basic-single-stage-$project-aggregation
+(deftest test-basic-single-stage-$project-aggregation
   (let [collection "docs"
         batch      [{ :state "CA" :quantity 1 :price 199.00 }
                     { :state "NY" :quantity 2 :price 199.00 }
@@ -31,7 +31,7 @@
       (is (= expected result)))))
 
 
-(deftest ^{:edge-features true} test-basic-projection-with-multiplication
+(deftest test-basic-projection-with-multiplication
   (let [collection "docs"
         batch      [{ :state "CA" :quantity 1 :price 199.00 }
                     { :state "NY" :quantity 2 :price 199.00 }
@@ -51,7 +51,7 @@
       (is (= expected result)))))
 
 
-(deftest ^{:edge-features true} test-basic-total-aggregation
+(deftest test-basic-total-aggregation
   (let [collection "docs"
         batch      [{ :state "CA" :quantity 1 :price 199.00 }
                     { :state "NY" :quantity 2 :price 199.00 }
