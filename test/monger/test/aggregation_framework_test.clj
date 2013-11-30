@@ -1,9 +1,9 @@
 (ns monger.test.aggregation-framework-test
   (:require monger.core [monger.collection :as mc]
-            [monger.test.helper :as helper])
-  (:use clojure.test
-        monger.operators
-        monger.test.fixtures))
+            [monger.test.helper :as helper]
+            [clojure.test :refer :all]
+            [monger.operators :refer :all]
+            [monger.test.fixtures :refer :all]))
 
 
 (helper/connect!)
