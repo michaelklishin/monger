@@ -4,10 +4,10 @@
   (:require [monger.core :as mg]
             [monger.collection  :as mc]
             [monger.test.helper :as helper]
-            monger.ragtime)
-  (:use clojure.test
-        [monger.test.fixtures :only [purge-migrations]]
-        ragtime.core))
+            monger.ragtime
+            [clojure.test :refer :all]
+            [monger.test.fixtures :refer [purge-migrations]]
+            [ragtime.core :refer :all]))
 
 
 (helper/connect!)
