@@ -6,10 +6,11 @@
             [monger.collection       :as mc]
             [monger.result           :as mgres]
             [clojurewerkz.support.js :as js]
-            [monger.test.helper      :as helper])
-  (:use clojure.test
-        [monger operators conversion]
-        monger.test.fixtures))
+            [monger.test.helper      :as helper]
+            [clojure.test :refer :all]
+            [monger.operators :refer :all]
+            [monger.conversion :refer :all]
+            [monger.test.fixtures :refer :all]))
 
 (helper/connect!)
 
