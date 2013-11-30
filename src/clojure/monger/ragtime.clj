@@ -1,4 +1,5 @@
 (ns monger.ragtime
+  "Ragtime integration"
   (:refer-clojure :exclude [find sort])
   (:require [ragtime.core      :as ragtime]
             [monger.core       :as mg]
