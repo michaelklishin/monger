@@ -7,12 +7,12 @@
 ;; the terms of this license.
 ;; You must not remove this notice, or any other, from this software.
 
-(ns ^{:doc "Provides vars that represent various MongoDB operators, for example, $gt or $in or $regex.
-            They can be passed in queries as strings but using vars from this namespace makes the code
-            a bit cleaner and closer to what you would see in a MongoDB shell query.
+(ns monger.operators
+  "Provides vars that represent various MongoDB operators, for example, $gt or $in or $regex.
+   They can be passed in queries as strings but using vars from this namespace makes the code
+   a bit cleaner and closer to what you would see in a MongoDB shell query.
 
-            Related documentation guide: http://clojuremongodb.info/articles/querying.html"}
-  monger.operators)
+   Related documentation guide: http://clojuremongodb.info/articles/querying.html")
 
 (defmacro ^{:private true} defoperator
   [operator]
