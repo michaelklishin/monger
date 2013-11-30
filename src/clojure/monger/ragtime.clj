@@ -2,8 +2,8 @@
   (:refer-clojure :exclude [find sort])
   (:require [ragtime.core      :as ragtime]
             [monger.core       :as mg]
-            [monger.collection :as mc])
-  (:use [monger.query :only [with-collection find sort]])
+            [monger.collection :as mc]
+            [monger.query :refer [with-collection find sort]])
   (:import java.util.Date
            [com.mongodb DB WriteConcern]))
 
