@@ -1,7 +1,7 @@
 (ns monger.test.js-test
   (:require monger.js
-            [monger.test.helper :as helper])
-  (:use clojure.test))
+            [monger.test.helper :as helper]
+            [clojure.test :refer :all]))
 
 (helper/connect!)
 
