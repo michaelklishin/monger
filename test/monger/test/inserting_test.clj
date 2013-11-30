@@ -7,11 +7,11 @@
   (:require [monger.core        :as mg]
             [monger.util        :as mu]
             [monger.collection  :as mc]
-            [monger.test.helper :as helper])
-  (:use clojure.test
-        monger.operators
-        monger.conversion
-        monger.test.fixtures))
+            [monger.test.helper :as helper]
+            [clojure.test :refer :all]
+            [monger.operators :refer :all]
+            [monger.conversion :refer :all]
+            [monger.test.fixtures :refer :all]))
 
 (helper/connect!)
 
