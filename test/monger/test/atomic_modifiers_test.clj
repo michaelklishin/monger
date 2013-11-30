@@ -7,10 +7,10 @@
   (:require [monger core util]
             [monger.collection :as mgcol]
             [monger.result     :as mgres]
-            [monger.test.helper :as helper])
-  (:use [clojure.test]
-        [monger.operators]
-        [monger.test.fixtures]))
+            [monger.test.helper :as helper]
+            [clojure.test :refer :all]
+            [monger.operators :refer :all]
+            [monger.test.fixtures :refer :all]))
 
 (helper/connect!)
 
