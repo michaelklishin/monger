@@ -1,10 +1,10 @@
 (ns monger.test.core-test
   (:require [monger core collection util result]
             [monger.test.helper :as helper]            
-            [monger.collection :as mc])
-  (:import [com.mongodb MongoClient DB WriteConcern MongoClientOptions ServerAddress])
-  (:use clojure.test
-        [monger.core :only [server-address mongo-options]]))
+            [monger.collection :as mc]
+            [clojure.test :refer :all]
+            [monger.core :refer [server-address mongo-options]])
+  (:import [com.mongodb MongoClient DB WriteConcern MongoClientOptions ServerAddress]))
 
 (println (str "Using Clojure version " *clojure-version*))
 (helper/connect!)
