@@ -1,8 +1,10 @@
 (ns monger.test.cache-test
   (:require [monger.test.helper :as helper]
             [monger.core        :as mg]
-            [monger.collection  :as mc])
-  (:use clojure.core.cache clojure.test monger.cache)
+            [monger.collection  :as mc]
+            [clojure.core.cache :refer :all]
+            [clojure.test :refer :all]
+            [monger.cache :refer :all])
   (:import [clojure.core.cache BasicCache FIFOCache LRUCache TTLCache]
            java.util.UUID))
 
