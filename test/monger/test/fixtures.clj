@@ -1,5 +1,5 @@
 (ns monger.test.fixtures
-  (:use [monger.testkit :only [defcleaner]]))
+  (:require [monger.testkit :refer [defcleaner]]))
 
 ;;
 ;; fixture functions
