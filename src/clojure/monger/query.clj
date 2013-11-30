@@ -15,10 +15,11 @@
   (:refer-clojure :exclude [select find sort])
   (:require [monger.core]
             [monger.internal pagination]
-            [monger.cursor :as cursor :refer [add-options]])
+            [monger.cursor :as cursor :refer [add-options]]
+            [monger.conversion :refer :all]
+            [monger.operators :refer :all])
   (:import [com.mongodb DB DBCollection DBObject DBCursor ReadPreference]
-           [java.util List])
-  (:use [monger conversion operators]))
+           java.util.List))
 
 
 ;;
