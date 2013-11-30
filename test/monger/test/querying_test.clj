@@ -8,11 +8,13 @@
   (:require [monger core util]
             [monger.collection  :as mgcol]
             [monger.result      :as mgres]
-            [monger.test.helper :as helper])
-  (:use clojure.test
-        monger.test.fixtures
-        [monger conversion query operators]
-        [clj-time.core :only [date-time]]))
+            [monger.test.helper :as helper]
+            [clojure.test :refer :all]
+        [monger.test.fixtures :refer :all]
+        [monger.conversion :refer :all]
+        [monger.query :refer :all]
+        [monger.operators :refer :all]
+        [clj-time.core :refer [date-time]]))
 
 (helper/connect!)
 
