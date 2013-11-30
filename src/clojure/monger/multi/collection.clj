@@ -10,9 +10,9 @@
            [clojure.lang IPersistentMap ISeq]
            org.bson.types.ObjectId)
   (:require monger.core
-            monger.result)
-  (:use     monger.conversion
-            monger.constraints))
+            monger.result
+            [monger.conversion :refer :all]
+            [monger.constraints :refer :all]))
 
 
 ;;
