@@ -2,8 +2,8 @@
   (:import [com.mongodb Mongo DB DBCollection WriteResult DBObject WriteConcern DBCursor]
            java.util.Date)
   (:require monger.core
-            [monger.test.helper :as helper])
-  (:use     clojure.test))
+            [monger.test.helper :as helper]
+            [clojure.test :refer :all]))
 
 
 ;;
