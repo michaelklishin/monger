@@ -7,9 +7,9 @@
 ;; the terms of this license.
 ;; You must not remove this notice, or any other, from this software.
 
-(ns ^{:doc "Provides clojure.data.json/Write-JSON protocol extension for MongoDB-specific types, such as
-            org.bson.types.ObjectId"}
-  monger.json
+(ns monger.json
+  "Provides clojure.data.json/Write-JSON protocol extension for MongoDB-specific types, such as
+   org.bson.types.ObjectId"
   (:import org.bson.types.ObjectId))
 
 ;;
