@@ -4,11 +4,10 @@
   (:require [monger core util]
             [monger.collection  :as mc]
             [monger.result      :as mres]
-            [monger.test.helper :as helper])
-  (:use clojure.test
-        monger.operators
-        monger.test.fixtures))
-
+            [monger.test.helper :as helper]
+            [clojure.test :refer :all]
+            [monger.operators :refer :all]
+            [monger.test.fixtures :refer :all]))
 
 (helper/connect!)
 
