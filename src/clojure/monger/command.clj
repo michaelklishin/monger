@@ -18,8 +18,8 @@
    * http://clojuremongodb.info/articles/commands.html
    * http://clojuremongodb.info/articles/aggregation.html
    * http://clojuremongodb.info/articles/mapreduce.html"
-  (:require monger.core)
-  (:use monger.conversion)
+  (:require monger.core
+            [monger.conversion :refer :all])
   (:import com.mongodb.DB))
 
 
