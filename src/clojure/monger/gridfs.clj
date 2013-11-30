@@ -7,12 +7,11 @@
 ;; the terms of this license.
 ;; You must not remove this notice, or any other, from this software.
 
-(ns
-    ^{:doc "Provides functions and macros for working with GridFS: storing files in GridFS, streaming files from GridFS,
-            finding stored files.
+(ns monger.gridfs
+  "Provides functions and macros for working with GridFS: storing files in GridFS, streaming files from GridFS,
+   finding stored files.
 
-            Related documentation guide: http://clojuremongodb.info/articles/gridfs.html"}
-  monger.gridfs
+   Related documentation guide: http://clojuremongodb.info/articles/gridfs.html"
   (:refer-clojure :exclude [remove find])
   (:require monger.core
             [clojure.java.io :as io])
