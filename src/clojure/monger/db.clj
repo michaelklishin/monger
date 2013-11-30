@@ -9,6 +9,7 @@
 ;; You must not remove this notice, or any other, from this software.
 
 (ns monger.db
+  "Functions that provide operations on databases"
   (:refer-clojure :exclude [find remove count drop distinct empty?])
   (:import [com.mongodb Mongo DB DBCollection])
   (:require monger.core
