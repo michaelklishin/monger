@@ -1,7 +1,7 @@
 (ns monger.test.ring.session-store-test
   (:require [monger core util]
             [monger.collection  :as mc]
-            [monger.test.helper :as helper])  
+            [monger.test.helper :as helper])
   (:use clojure.test
         ring.middleware.session.store
         monger.ring.session-store))
