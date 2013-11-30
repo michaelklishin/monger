@@ -7,8 +7,8 @@
 ;; the terms of this license.
 ;; You must not remove this notice, or any other, from this software.
 
-(ns ^{:doc "Automated testing helpers"}
-  monger.testkit
+(ns monger.testkit
+  "Automated testing helpers"
   (:require [monger.collection :as mc]))
 
 
