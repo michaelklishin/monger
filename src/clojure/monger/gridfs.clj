@@ -14,9 +14,9 @@
    Related documentation guide: http://clojuremongodb.info/articles/gridfs.html"
   (:refer-clojure :exclude [remove find])
   (:require monger.core
-            [clojure.java.io :as io])
-  (:use monger.conversion
-        [clojurewerkz.support.fn :only [fpartial]])
+            [clojure.java.io :as io]
+            [monger.conversion :refer :all]
+            [clojurewerkz.support.fn :refer [fpartial]])
   (:import [com.mongodb DB DBObject]
            [com.mongodb.gridfs GridFS GridFSInputFile]
            [java.io InputStream File]))
