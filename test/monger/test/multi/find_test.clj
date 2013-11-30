@@ -7,11 +7,11 @@
             [monger.util        :as mu]
             [monger.multi.collection  :as mgcol]
             [monger.test.helper :as helper]
-            [monger.conversion :as mgcnv])
-  (:use clojure.test
-        monger.operators
-        monger.conversion
-        monger.test.fixtures))
+            [monger.conversion :as mgcnv]
+            [clojure.test :refer :all]
+            [monger.operators :refer :all]
+            [monger.test.fixtures :refer :all]
+            [monger.conversion :refer :all]))
 
 (helper/connect!)
 
