@@ -1,4 +1,4 @@
-;; Copyright (c) 2011-2012 Michael S. Klishin
+;; Copyright (c) 2011-2013 Michael S. Klishin
 ;; Copyright (c) 2012 Toby Hede
 ;; Copyright (c) 2012 Baishampayan Ghose
 ;;
