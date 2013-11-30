@@ -11,8 +11,8 @@
 (ns monger.db
   (:refer-clojure :exclude [find remove count drop distinct empty?])
   (:import [com.mongodb Mongo DB DBCollection])
-  (:require monger.core)
-  (:use monger.conversion))
+  (:require monger.core
+            [monger.conversion :refer :all]))
 
 
 
