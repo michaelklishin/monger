@@ -8,11 +8,11 @@
             [monger core util]
             [monger.multi.collection :as mc]
             [monger.result     :as mr]
-            [monger.test.helper :as helper])
-  (:use clojure.test
-        monger.operators
-        monger.test.fixtures
-        [monger.conversion :only [to-db-object]]))
+            [monger.test.helper :as helper]
+            [clojure.test :refer :all]
+            [monger.operators :refer :all]
+            [monger.test.fixtures :refer :all]
+            [monger.conversion :refer [to-db-object]]))
 
 (helper/connect!)
 
