@@ -1,13 +1,14 @@
 (ns monger.test.gridfs-test
   (:refer-clojure :exclude [count remove find])
-  (:use clojure.test
-        [monger.core :only [count]]
-        monger.test.fixtures
-        [monger operators conversion]
-        [monger.gridfs :only [store make-input-file store-file filename content-type metadata]])
   (:require [monger.gridfs :as gridfs]
             [monger.test.helper :as helper]
-            [clojure.java.io :as io])
+            [clojure.java.io :as io]
+            [clojure.test :refer :all]
+            [monger.core :refer [count]]
+            [monger.test.fixtures :refer :all]
+            [monger.operators :refer :all]
+            [monger.conversion :refer :all]
+            [monger.gridfs :refer [store make-input-file store-file filename content-type metadata]])
   (:import [java.io InputStream File FileInputStream]
            [com.mongodb.gridfs GridFS GridFSInputFile GridFSDBFile]))
 
