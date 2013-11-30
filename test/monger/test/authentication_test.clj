@@ -1,8 +1,8 @@
 (ns monger.test.authentication-test
   (:require [monger core util db]
             [monger.test.helper :as helper]
-            [monger.collection :as mc])
-  (:use clojure.test))
+            [monger.collection :as mc]
+            [clojure.test :refer :all]))
 
 (helper/connect!)
 
