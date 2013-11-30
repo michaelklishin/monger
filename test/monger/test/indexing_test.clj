@@ -4,10 +4,10 @@
   (:require [monger core util]
             [monger.collection :as mc]
             [monger.test.helper :as helper]
-            monger.joda-time)
-  (:use clojure.test
-        monger.test.fixtures
-        [clj-time.core :only [now secs ago from-now]]))
+            monger.joda-time
+            [clojure.test :refer :all]
+            [monger.test.fixtures :refer :all]
+            [clj-time.core :refer [now secs ago from-now]]))
 
 (helper/connect!)
 
