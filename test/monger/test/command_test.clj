@@ -2,10 +2,10 @@
   (:require [monger.core        :as mg]
             [monger.command     :as mcom]
             [monger.test.helper :as helper]
-            [monger.collection  :as mc])
-  (:use clojure.test
-        [monger.result :only [ok?]]
-        [monger.conversion :only [from-db-object]]))
+            [monger.collection  :as mc]
+            [clojure.test :refer :all]
+            [monger.result :refer [ok?]]
+            [monger.conversion :refer [from-db-object]]))
 
 (helper/connect!)
 
