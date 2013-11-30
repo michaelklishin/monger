@@ -10,10 +10,10 @@
             [monger.result     :as mgres]
             [monger.conversion :as mgcnv]
             [monger.js         :as js]
-            [monger.test.helper :as helper])
-  (:use [clojure.test]
-        [monger.operators]
-        [monger.test.fixtures]))
+            [monger.test.helper :as helper]
+            [clojure.test :refer :all]
+            [monger.operators :refer :all]
+            [monger.test.fixtures :refer :all]))
 
 (monger.core/connect!)
 (monger.core/set-db! (monger.core/get-db "monger-test"))
