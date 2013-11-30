@@ -3,10 +3,10 @@
             [monger.collection  :as mc]
             [monger.search      :as ms]
             [monger.command     :as cmd]
-            [monger.test.helper :as helper])
-  (:use [clojure.test :only [deftest is use-fixtures]]
-        monger.test.fixtures
-        [monger.result :only [ok?]]))
+            [monger.test.helper :as helper]
+            [clojure.test :refer [deftest is use-fixtures]]
+            [monger.test.fixtures :refer :all]
+            [monger.result :refer [ok?]]))
 
 (helper/connect!)
 
