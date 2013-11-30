@@ -1,9 +1,10 @@
 (ns monger.test.conversion-test
-  (:require [monger core collection])
+  (:require [monger core collection]
+            [clojure.test :refer :all]
+            [monger.conversion :refer :all])
   (:import [com.mongodb DBObject BasicDBObject BasicDBList]
            [java.util Date Calendar List ArrayList]
-           org.bson.types.ObjectId)
-  (:use clojure.test monger.conversion))
+           org.bson.types.ObjectId))
 
 
 ;;
