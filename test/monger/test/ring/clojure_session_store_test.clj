@@ -1,10 +1,10 @@
 (ns monger.test.ring.clojure-session-store-test
   (:require [monger core util]
             [monger.collection  :as mc]
-            [monger.test.helper :as helper])  
-  (:use clojure.test
-        ring.middleware.session.store
-        monger.ring.session-store))
+            [monger.test.helper :as helper]
+            [clojure.test :refer :all]
+            [ring.middleware.session.store :refer :all]
+            [monger.ring.session-store :refer :all]))
 
 
 (helper/connect!)
