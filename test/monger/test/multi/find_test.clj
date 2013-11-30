@@ -1,4 +1,3 @@
-
 (ns monger.test.multi.find-test
   (:import  [com.mongodb WriteResult WriteConcern DBCursor DBObject DBRef]
             org.bson.types.ObjectId
