@@ -3,10 +3,10 @@
 (ns monger.test.cursor-test
   (:import  [com.mongodb DBCursor DBObject Bytes]
             [java.util List Map])
-  (:require [monger.test.helper :as helper])
-  (:use clojure.test
-        monger.cursor
-        monger.test.fixtures))
+  (:require [monger.test.helper :as helper]
+            [clojure.test :refer :all]
+            [monger.cursor :refer :all]
+            [monger.test.fixtures :refer :all]))
 
 (helper/connect!)
 
