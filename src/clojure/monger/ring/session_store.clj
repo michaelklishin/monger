@@ -1,8 +1,8 @@
 (ns monger.ring.session-store
   (:require [ring.middleware.session.store :as ringstore]
             [monger.multi.collection       :as mc]
-            [monger.core                   :as mg])
-  (:use monger.conversion)
+            [monger.core                   :as mg]
+            [monger.conversion :refer :all])
   (:import [java.util UUID Date]
            [com.mongodb DB]
            ring.middleware.session.store.SessionStore))
