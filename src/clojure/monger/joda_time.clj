@@ -7,17 +7,18 @@
 ;; the terms of this license.
 ;; You must not remove this notice, or any other, from this software.
 
-(ns ^{:doc "An optional convenience namespaces for applications that heavily use dates and would prefer use JodaTime types
-            transparently when storing and loading them from MongoDB and serializing to JSON and/or with Clojure reader.
+(ns monger.joda-time
+    "An optional convenience namespaces for applications that heavily use dates and would prefer use JodaTime types
+    transparently when storing and loading them from MongoDB and serializing to JSON and/or with Clojure reader.
 
-            Enables automatic conversion of JodaTime date/time/instant instances to JDK dates (java.util.Date) when documents
-            are serialized and the other way around when documents are loaded. Extends clojure.data.json/Write-JSON protocol for
-            JodaTime types.
+    Enables automatic conversion of JodaTime date/time/instant instances to JDK dates (java.util.Date) when documents
+    are serialized and the other way around when documents are loaded. Extends clojure.data.json/Write-JSON protocol for
+    JodaTime types.
 
-            To use it, make sure you add dependencies on clj-time (or JodaTime) and clojure.data.json."} monger.joda-time
+    To use it, make sure you add dependencies on clj-time (or JodaTime) and clojure.data.json."
   (:import [org.joda.time DateTime DateTimeZone ReadableInstant]
            [org.joda.time.format ISODateTimeFormat])
-  (:use [monger.conversion]))
+  (:require [monger.conversion :refer :all]))
 
 ;;
 ;; API
