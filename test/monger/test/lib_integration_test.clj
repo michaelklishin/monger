@@ -1,13 +1,13 @@
 (ns monger.test.lib-integration-test
-  (:use clojure.test
-        monger.conversion)
   (:import [org.joda.time DateTime DateMidnight LocalDate]
            org.bson.types.ObjectId
            com.mongodb.DBObject)
   (:require monger.json
             monger.joda-time
             [clj-time.core   :as t]
-            [cheshire.core   :as json]))
+            [cheshire.core   :as json]
+            [clojure.test :refer :all]
+            [monger.conversion :refer :all]))
 
 
 (deftest ^{:integration true} serialization-of-joda-datetime-to-json
