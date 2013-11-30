@@ -7,16 +7,16 @@
 ;; the terms of this license.
 ;; You must not remove this notice, or any other, from this software.
 
-(ns ^{:doc "Provides functions that determine if a query (or other database operation)
-            was successful or not.
+(ns monger.result
+  "Provides functions that determine if a query (or other database operation)
+   was successful or not.
 
-            Related documentation guides:
+   Related documentation guides:
 
-            * http://clojuremongodb.info/articles/inserting.html
-            * http://clojuremongodb.info/articles/updating.html
-            * http://clojuremongodb.info/articles/commands.html
-            * http://clojuremongodb.info/articles/mapreduce.html"}
-  monger.result
+   * http://clojuremongodb.info/articles/inserting.html
+   * http://clojuremongodb.info/articles/updating.html
+   * http://clojuremongodb.info/articles/commands.html
+   * http://clojuremongodb.info/articles/mapreduce.html"
   (:import [com.mongodb DBObject WriteResult MapReduceOutput]
            clojure.lang.IPersistentMap)
   (:require monger.conversion))
