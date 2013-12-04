@@ -67,3 +67,22 @@
                                             {$group   {:_id   "$state"
                                                        :total {$sum "$subtotal"}}}]))]
       (is (= expected result)))))
+
+
+(deftest test-$first-aggregation-operator
+  (let [collection "docs"
+        batch      [{ :state "CA" }
+                    { :state "IL"}]
+        expected   "CA"]
+    (mc/insert-batch collection batch)
+    (let [result (:state (first (mc/aggregate collection [{$group { :_id 1 :state {$first "$state"} }}])))]
+      (is (= expected result)))))
+
+(deftest test-$last-aggregation-operator
+  (let [collection "docs"
+        batch      [{ :state "CA" }
+                    { :state "IL"}]
+        expected   "IL"]
+    (mc/insert-batch collection batch)
+    (let [result (:state (first (mc/aggregate collection [{$group { :_id 1 :state {$last "$state"} }}])))]
+      (is (= expected result)))))
