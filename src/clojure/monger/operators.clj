@@ -210,6 +210,9 @@
 (defoperator $avg)
 (defoperator $sum)
 
+(defoperator $first)
+(defoperator $last)
+
 (defoperator $add)
 (defoperator $divide)
 (defoperator $multiply)
