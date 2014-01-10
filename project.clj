@@ -5,8 +5,7 @@
   :license {:name "Eclipse Public License"}
   :dependencies [[org.clojure/clojure           "1.5.1"]
                  [org.mongodb/mongo-java-driver "2.11.3"]
-                 [clojurewerkz/support          "0.19.0"]
-                 [ragtime/ragtime.core          "0.3.4"]]
+                 [clojurewerkz/support          "0.19.0"]]
   :test-selectors {:default     (fn [m]
                                   (and (not (:performance m))
                                        (not (:edge-features m))
@@ -42,7 +41,8 @@
                                    [org.clojure/tools.cli  "0.2.4" :exclusions [org.clojure/clojure]]
                                    [org.clojure/core.cache "0.6.3" :exclusions [org.clojure/clojure]]
                                    [ring/ring-core         "1.2.0"]
-                                   [com.novemberain/validateur "1.5.0"]]
+                                   [com.novemberain/validateur "1.5.0"]
+                                   [ragtime/ragtime.core          "0.3.4"]]
                    :plugins [[codox "0.6.4"]]
                    :codox {:sources ["src/clojure"]
                            :output-dir "doc/api"
