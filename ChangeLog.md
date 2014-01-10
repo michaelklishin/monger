@@ -1,5 +1,9 @@
 ## Changes between 1.7.0-beta1 and 1.7.0
 
+### MongoDB Java Driver Update
+
+MongoDB Java driver dependency has been [updated to 2.11.3](https://github.com/mongodb/mongo-java-driver/releases/tag/r2.11.3).
+
 ### Validateur Dependency Dropped
 
 [Validateur](http://clojurevalidations.info) is no longer a dependency.
