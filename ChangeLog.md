@@ -4,6 +4,15 @@
 
 MongoDB Java driver dependency has been [updated to 2.11.3](https://github.com/mongodb/mongo-java-driver/releases/tag/r2.11.3).
 
+### Ragtime Dependency Dropped
+
+Ragtime is now an optional dependency: if your project uses `monger.ragtime`, you
+need to add Ragtime to your own `project.clj`:
+
+``` clojure
+[ragtime/ragtime.core          "0.3.4"]
+```
+
 ### Validateur Dependency Dropped
 
 [Validateur](http://clojurevalidations.info) is no longer a dependency.
