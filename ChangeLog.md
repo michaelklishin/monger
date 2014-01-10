@@ -1,3 +1,10 @@
+## Changes between 1.7.0-beta1 and 1.7.0
+
+### Validateur Dependency Dropped
+
+[Validateur](http://clojurevalidations.info) is no longer a dependency.
+
+
 ## Changes between 1.6.0 and 1.7.0-beta1
 
 ### Fune Tuning Cursor Options
