@@ -91,7 +91,7 @@ on Twitter.
 
 ## Supported Clojure versions
 
-Monger requires Clojure 1.3 or later. The most recent
+Monger requires Clojure 1.4+. The most recent
 stable release is highly recommended.
 
 
