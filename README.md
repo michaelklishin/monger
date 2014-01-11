@@ -46,14 +46,14 @@ Maven, add the following repository definition to your `pom.xml`:
 
 With Leiningen:
 
-    [com.novemberain/monger "1.7.0-beta1"]
+    [com.novemberain/monger "1.7.0"]
 
 With Maven:
 
     <dependency>
       <groupId>com.novemberain</groupId>
       <artifactId>monger</artifactId>
-      <version>1.7.0-beta1</version>
+      <version>1.7.0</version>
     </dependency>
 
 
