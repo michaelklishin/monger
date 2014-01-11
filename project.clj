@@ -5,7 +5,7 @@
   :license {:name "Eclipse Public License"}
   :dependencies [[org.clojure/clojure           "1.5.1"]
                  [org.mongodb/mongo-java-driver "2.11.3"]
-                 [clojurewerkz/support          "0.19.0"]]
+                 [clojurewerkz/support          "0.20.0"]]
   :test-selectors {:default     (fn [m]
                                   (and (not (:performance m))
                                        (not (:edge-features m))
