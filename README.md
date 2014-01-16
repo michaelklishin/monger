@@ -46,14 +46,14 @@ Maven, add the following repository definition to your `pom.xml`:
 
 With Leiningen:
 
-    [com.novemberain/monger "1.7.0-beta1"]
+    [com.novemberain/monger "1.7.0"]
 
 With Maven:
 
     <dependency>
       <groupId>com.novemberain</groupId>
       <artifactId>monger</artifactId>
-      <version>1.7.0-beta1</version>
+      <version>1.7.0</version>
     </dependency>
 
 
@@ -91,7 +91,7 @@ on Twitter.
 
 ## Supported Clojure versions
 
-Monger requires Clojure 1.3 or later. The most recent
+Monger requires Clojure 1.4+. The most recent
 stable release is highly recommended.
 
 

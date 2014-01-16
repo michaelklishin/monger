@@ -1,11 +1,11 @@
-(defproject com.novemberain/monger "1.7.0-beta2-SNAPSHOT"
+(defproject com.novemberain/monger "1.8.0-SNAPSHOT"
   :description "Monger is a Clojure MongoDB client for a more civilized age: friendly, flexible and with batteries included"
   :url "http://clojuremongodb.info"
   :min-lein-version "2.0.0"
   :license {:name "Eclipse Public License"}
   :dependencies [[org.clojure/clojure           "1.5.1"]
                  [org.mongodb/mongo-java-driver "2.11.3"]
-                 [clojurewerkz/support          "0.19.0"]]
+                 [clojurewerkz/support          "0.20.0"]]
   :test-selectors {:default     (fn [m]
                                   (and (not (:performance m))
                                        (not (:edge-features m))
