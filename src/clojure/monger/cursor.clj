@@ -6,7 +6,8 @@
             [java.util List Map]
             [java.lang Integer]
             [clojure.lang Keyword])
-  (:require [monger.conversion :refer [to-db-object from-db-object as-field-selector]]))
+  (:require [monger.core]
+            [monger.conversion :refer [to-db-object from-db-object as-field-selector]]))
 
 (defn ^DBCursor make-db-cursor 
   "initializes new db-cursor."
