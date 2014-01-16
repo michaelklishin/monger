@@ -26,8 +26,6 @@
 ;; Implementation
 ;;
 
-(def ^{:dynamic true} *query-collection*)
-
 ;;
 ;; Cursor/chain methods
 ;;
@@ -135,11 +133,12 @@
 
 (defmacro with-collection
   [^String coll & body]
-  `(binding [*query-collection* (if (string? ~coll)
-                                  (.getCollection ^DB monger.core/*mongodb-database* ~coll)
-                                  ~coll)]
-     (let [query# (-> (empty-query *query-collection*) ~@body)]
-       (exec query#))))
+  `(let [coll# ~coll
+         db-coll# (if (string? coll#)
+                    (.getCollection ^DB monger.core/*mongodb-database* ^String coll#)
+                    coll#)
+         query# (-> (empty-query db-coll#) ~@body)]
+     (exec query#)))
 
 (defmacro partial-query
   [& body]
