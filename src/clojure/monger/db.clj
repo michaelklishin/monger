@@ -1,4 +1,4 @@
-;; Copyright (c) 2011-2012 Michael S. Klishin
+;; Copyright (c) 2011-2014 Michael S. Klishin
 ;; Copyright (c) 2012 Toby Hede
 ;;
 ;; The use and distribution terms for this software are covered by the
