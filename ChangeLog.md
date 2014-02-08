@@ -1,3 +1,14 @@
+## Changes between 1.7.0 and 1.8.0-beta1
+
+### monger.core/connect-via-uri
+
+`monger.core/connect-via-uri` is a version of `monger.core/connect-via-uri!`
+which returns the connection instead of mutating a var.
+
+It should be used by projects that are built from reloadable
+components, together with `monger.multi.*`.
+
+
 ## Changes between 1.7.0-beta1 and 1.7.0
 
 ### MongoDB Java Driver Update

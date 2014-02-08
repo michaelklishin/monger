@@ -223,9 +223,10 @@
        (catch Exception _
          false))))
 
-(defn connect-via-uri!
-  "Connects to MongoDB using a URI, sets up default connection and database. Commonly used for PaaS-based applications,
-   for example, running on Heroku. If username and password are provided, performs authentication."
+(defn connect-via-uri
+  "Connects to MongoDB using a URI, returns the connection and database as a map with :conn and :db.
+   Commonly used for PaaS-based applications, for example, running on Heroku.
+   If username and password are provided, performs authentication."
   [^String uri-string]
   (let [uri  (MongoClientURI. uri-string)
         conn (MongoClient. uri)
@@ -235,7 +236,14 @@
     (when (and user pwd)
       (when-not (authenticate conn db user pwd)
         (throw (IllegalArgumentException. (format "Could not authenticate with MongoDB. Either database name or credentials are invalid. Database name: %s, username: %s" (.getName db) user)))))
-    ;; only do this *after* we authenticated because set-db! will try to set up a default GridFS instance. MK.
+    {:conn conn, :db db}))
+
+
+(defn connect-via-uri!
+  "Connects to MongoDB using a URI, sets up default connection and database. Commonly used for PaaS-based applications,
+   for example, running on Heroku. If username and password are provided, performs authentication."
+  [uri-string]
+  (let [{:keys [conn db]} (connect-via-uri uri-string)]
     (set-connection! conn)
     (when db
       (set-db! db))
