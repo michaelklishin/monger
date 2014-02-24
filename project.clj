@@ -61,5 +61,4 @@
                              :releases {:checksum :fail :update :always}}
                  "sonatype-snapshots" {:url "http://oss.sonatype.org/content/repositories/snapshots"
                                        :snapshots true
-                                       :releases {:checksum :fail :update :always}}}
-  :aot [monger.conversion])
+                                       :releases {:checksum :fail :update :always}}})
