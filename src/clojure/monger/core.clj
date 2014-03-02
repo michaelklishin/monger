@@ -263,6 +263,13 @@
   ([^DB database ^Map cmd]
      (.command ^DB database ^DBObject (to-db-object cmd))))
 
+(defn ^com.mongodb.CommandResult raw-command
+  "Like monger.core/command but accepts DBObjects"
+  ([^DBObject cmd]
+     (.command ^DB *mongodb-database* cmd))
+  ([^DB database ^DBObject cmd]
+     (.command database cmd)))
+
 (defprotocol Countable
   (count [this] "Returns size of the object"))
 

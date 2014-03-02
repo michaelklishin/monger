@@ -20,7 +20,7 @@
    * http://clojuremongodb.info/articles/mapreduce.html"
   (:require monger.core
             [monger.conversion :refer :all])
-  (:import com.mongodb.DB))
+  (:import [com.mongodb DB DBObject]))
 
 
 ;;
@@ -31,6 +31,11 @@
   "Executes a command on the admin database"
   [m]
   (monger.core/command (monger.core/admin-db) m))
+
+(defn raw-admin-command
+  "Executes a command on the admin database"
+  [^DBObject cmd]
+  (monger.core/raw-command (monger.core/admin-db) cmd))
 
 (defn collection-stats
   ([collection]
