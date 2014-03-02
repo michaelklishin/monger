@@ -1,3 +1,11 @@
+## Changes between 1.8.0-beta1 and 1.8.0-beta2
+
+### Default WriteConcern Change
+
+Monger now uses [`WriteConcern/ACKNOWLEDGED`](http://api.mongodb.org/java/2.12/com/mongodb/WriteConcern.html#ACKNOWLEDGED) by default. Functionality-wise
+it is the same as `WriteConcern/SAFE` in earlier versions.
+
+
 ## Changes between 1.7.0 and 1.8.0-beta1
 
 ### monger.core/connect-via-uri
