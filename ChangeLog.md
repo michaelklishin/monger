@@ -1,5 +1,9 @@
 ## Changes between 1.8.0-beta1 and 1.8.0-beta2
 
+### MongoDB Java Driver Update
+
+MongoDB Java driver dependency has been [updated to 2.12.x](https://github.com/mongodb/mongo-java-driver/releases/tag/r2.12.0-rc0).
+
 ### Default WriteConcern Change
 
 Monger now uses [`WriteConcern/ACKNOWLEDGED`](http://api.mongodb.org/java/2.12/com/mongodb/WriteConcern.html#ACKNOWLEDGED) by default. Functionality-wise
