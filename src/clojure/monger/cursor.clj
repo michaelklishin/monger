@@ -20,8 +20,10 @@
 
 (defn ^DBCursor make-db-cursor 
   "initializes new db-cursor."
-  ([^String collection] (make-db-cursor collection {} {}))
-  ([^String collection ^Map ref] (make-db-cursor collection ref {}))
+  ([^String collection]
+     (make-db-cursor collection {} {}))
+  ([^String collection ^Map ref]
+     (make-db-cursor collection ref {}))
   ([^String collection ^Map ref fields] 
     (.find
       (.getCollection monger.core/*mongodb-database* (name collection))
