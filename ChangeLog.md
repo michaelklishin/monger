@@ -1,5 +1,14 @@
 ## Changes between 1.8.0-beta1 and 1.8.0-beta2
 
+### monger.result Use with WriteConcerns is Deprecated
+
+MongoDB Java driver 2.12.x [no longer guarantees connection affinity](https://github.com/mongodb/mongo-java-driver/releases/tag/r2.12.0-rc0) for thread pool
+threads.
+
+This means that `WriteConcern#getLastError` is no longer a safe from concurrency
+hazards. Therefore the use of `monger.result` functions on `WriteConcern` instances
+is now **deprecated** in MongoDB Java client and Monger.
+
 ### MongoDB Java Driver Update
 
 MongoDB Java driver dependency has been [updated to 2.12.x](https://github.com/mongodb/mongo-java-driver/releases/tag/r2.12.0-rc0).
