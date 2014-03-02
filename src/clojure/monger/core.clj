@@ -33,7 +33,7 @@
 
 (declare ^:dynamic ^MongoClient  *mongodb-connection*)
 (declare ^:dynamic ^DB           *mongodb-database*)
-(def     ^:dynamic ^WriteConcern *mongodb-write-concern* WriteConcern/SAFE)
+(def     ^:dynamic ^WriteConcern *mongodb-write-concern* WriteConcern/ACKNOWLEDGED)
 
 (declare ^:dynamic ^GridFS       *mongodb-gridfs*)
 
