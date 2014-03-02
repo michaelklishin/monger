@@ -244,3 +244,6 @@
 (defoperator $near)
 
 (defoperator $slice)
+
+;; full text search
+(defoperator $text)
