@@ -111,6 +111,8 @@
 ;;  (monger.collection/update "scores" { :_id user-id } { :score 20 :bonus 10 } })
 (defoperator $inc)
 
+(defoperator $mul)
+
 ;; $set sets an existing (or non-existing) field (or set of fields) to value
 ;; $set supports all datatypes.
 ;;
