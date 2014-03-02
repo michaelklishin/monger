@@ -6,13 +6,19 @@
             [monger.test.helper :as helper]
             [clojure.test :refer [deftest is use-fixtures]]
             [monger.test.fixtures :refer :all]
-            [monger.result :refer [ok?]]))
+            [monger.result :refer [ok?]])
+  (:import com.mongodb.BasicDBObjectBuilder))
 
 (helper/connect!)
 
 (defn enable-search
   [f]
-  (is (ok? (cmd/admin-command (array-map :textSearchEnabled true :setParameter "*"))))
+  ;; {:textSearchEnabled true :setParameter 1}
+  (let [bldr (doto (BasicDBObjectBuilder.)
+               (.append "setParameter" 1)
+               (.append "textSearchEnabled" true))
+        cmd  (.get bldr)]
+    (is (ok? (cmd/raw-admin-command cmd))))
   (f))
 
 (use-fixtures :each purge-docs)
