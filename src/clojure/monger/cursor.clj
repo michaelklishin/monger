@@ -45,10 +45,12 @@
     (for [[opt option-mask] cursor-options]
       [opt (< 0 (bit-and (.getOptions db-cur) option-mask))])))
 
-(defn add-option! [^DBCursor db-cur, ^String opt]
+(defn add-option!
+  [^DBCursor db-cur ^String opt]
   (.addOption db-cur (get cursor-options (keyword opt) 0)))
 
-(defn remove-option! [^DBCursor db-cur, ^String opt]
+(defn remove-option!
+  [^DBCursor db-cur ^String opt]
   (.setOptions db-cur (bit-and-not (.getOptions db-cur)
                                    (get cursor-options (keyword opt) 0))))
 
