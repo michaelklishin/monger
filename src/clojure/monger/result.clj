@@ -9,7 +9,8 @@
 
 (ns monger.result
   "Provides functions that determine if a query (or other database operation)
-   was successful or not.
+   was successful or not. Note that the use of these functions on WriteResult instances
+   is DEPRECATED as of Monger 1.8.0.
 
    Related documentation guides:
 
