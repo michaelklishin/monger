@@ -43,7 +43,7 @@
                                    [ring/ring-core         "1.2.1"]
                                    [com.novemberain/validateur "2.0.0-beta3"]
                                    [ragtime/ragtime.core          "0.3.4"]]
-                   :plugins [[codox "0.6.4"]]
+                   :plugins [[codox 0.6.6]]
                    :codox {:sources ["src/clojure"]
                            :output-dir "doc/api"
                            :exclude [monger.internal.pagination
