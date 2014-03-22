@@ -33,7 +33,7 @@
   :profiles {:dj01x {:dependencies [[org.clojure/data.json  "0.1.2" :exclusions [org.clojure/clojure]]]}
              :dj02x {:dependencies [[org.clojure/data.json  "0.2.4" :exclusions [org.clojure/clojure]]]}
              :1.4    {:dependencies [[org.clojure/clojure "1.4.0"]]}
-             :1.6    {:dependencies [[org.clojure/clojure "1.6.0-RC1"]]}
+             :1.6    {:dependencies [[org.clojure/clojure "1.6.0-RC2"]]}
              :master {:dependencies [[org.clojure/clojure "1.6.0-master-SNAPSHOT"]]}
              :dev {:resource-paths ["test/resources"]
                    :dependencies  [[clj-time               "0.6.0" :exclusions [org.clojure/clojure]]
