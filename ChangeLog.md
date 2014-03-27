@@ -1,3 +1,11 @@
+## Changes between 1.8.0-beta2 and 1.8.0-beta3
+
+### Clojure 1.6
+
+Monger now depends on `org.clojure/clojure` version `1.6.0`. It is
+still compatible with Clojure 1.4 and if your `project.clj` depends on
+a different version, it will be used, but 1.6 is the default now.
+
 ## Changes between 1.8.0-beta1 and 1.8.0-beta2
 
 ### monger.result Use with WriteConcerns is Deprecated
