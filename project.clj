@@ -4,7 +4,7 @@
   :min-lein-version "2.0.0"
   :license {:name "Eclipse Public License"}
   :dependencies [[org.clojure/clojure           "1.6.0"]
-                 [org.mongodb/mongo-java-driver "2.12.0-rc0"]
+                 [org.mongodb/mongo-java-driver "2.12.1"]
                  [clojurewerkz/support          "0.20.0"]]
   :test-selectors {:default     (fn [m]
                                   (and (not (:performance m))
