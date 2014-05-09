@@ -1,5 +1,3 @@
-(set! *warn-on-reflection* true)
-
 (ns monger.test.cursor-test
   (:import  [com.mongodb DBCursor DBObject Bytes]
             [java.util List Map])
