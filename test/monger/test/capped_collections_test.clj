@@ -1,5 +1,3 @@
-(set! *warn-on-reflection* true)
-
 (ns monger.test.capped-collections-test
   (:require [monger core util]
             [monger.collection  :as mc]
