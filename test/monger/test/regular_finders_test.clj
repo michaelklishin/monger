@@ -28,6 +28,7 @@
 
 (deftest find-one-full-document-as-map-when-collection-is-empty
   (let [collection "docs"]
+    (mgcol/remove collection)
     (is (nil? (mgcol/find-one-as-map collection {})))))
 
 
@@ -37,6 +38,7 @@
         doc        { :data-store "MongoDB", :language "Clojure", :_id doc-id }
         _          (mgcol/insert collection doc)
         found-one (mgcol/find-one collection { :language "Clojure" })]
+    (is found-one)
     (is (= (:_id doc) (monger.util/get-id found-one)))
     (is (= (mgcnv/from-db-object found-one true) doc))
     (is (= (mgcnv/to-db-object doc) found-one))))
