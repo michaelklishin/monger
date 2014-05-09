@@ -1,5 +1,3 @@
-(set! *warn-on-reflection* true)
-
 (ns monger.test.ragtime-test
   (:require [monger.core :as mg]
             [monger.collection  :as mc]
