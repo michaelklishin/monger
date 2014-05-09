@@ -1,5 +1,3 @@
-(set! *warn-on-reflection* true)
-
 (ns monger.test.atomic-modifiers-test
   (:import  [com.mongodb WriteResult WriteConcern DBCursor DBObject]
             [org.bson.types ObjectId]
