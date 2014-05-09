@@ -18,7 +18,8 @@
 
 (helper/connect!)
 
-(use-fixtures :each purge-docs purge-things purge-locations)
+(use-fixtures :each purge-docs purge-things purge-locations
+  purge-querying-docs)
 
 
 ;;
@@ -28,7 +29,7 @@
 ;; by ObjectId
 
 (deftest query-full-document-by-object-id
-  (let [coll "docs"
+  (let [coll "querying_docs"
         oid  (ObjectId.)
         doc  { :_id oid :title "Introducing Monger" }]
     (mgcol/insert coll doc)
@@ -39,7 +40,7 @@
 ;; exact match over string field
 
 (deftest query-full-document-using-exact-matching-over-string-field
-  (let [coll "docs"
+  (let [coll "querying_docs"
         doc  { :title "monger" :language "Clojure" :_id (ObjectId.) }]
     (mgcol/insert coll doc)
     (is (= [doc] (mgcol/find-maps coll { :title "monger" })))
@@ -49,7 +50,7 @@
 ;; exact match over string field with limit
 
 (deftest query-full-document-using-exact-matching-over-string-with-field-with-limit
-  (let [coll "docs"
+  (let [coll "querying_docs"
         doc1  { :title "monger"  :language "Clojure" :_id (ObjectId.) }
         doc2  { :title "langohr" :language "Clojure" :_id (ObjectId.) }
         doc3  { :title "netty"   :language "Java" :_id (ObjectId.) }
@@ -64,7 +65,7 @@
 
 
 (deftest query-full-document-using-exact-matching-over-string-field-with-limit-and-offset
-  (let [coll "docs"
+  (let [coll "querying_docs"
         doc1  { :title "lucene"    :language "Java" :_id (ObjectId.) }
         doc2  { :title "joda-time" :language "Java" :_id (ObjectId.) }
         doc3  { :title "netty"     :language "Java" :_id (ObjectId.) }
@@ -78,7 +79,7 @@
     (is (= [doc1 doc3] result))))
 
 (deftest query-with-sorting-on-multiple-fields
-  (let [coll "docs"
+  (let [coll "querying_docs"
         doc1  { :a 1 :b 2 :c 3 :text "Whatever" :_id (ObjectId.) }
         doc2  { :a 1 :b 1 :c 4 :text "Blah " :_id (ObjectId.) }
         doc3  { :a 10 :b 3 :c 1 :text "Abc"  :_id (ObjectId.) }
@@ -107,38 +108,38 @@
 ;; < ($lt), <= ($lte), > ($gt), >= ($gte)
 
 (deftest query-using-dsl-and-$lt-operator-with-integers
-  (let [coll "docs"
+  (let [coll "querying_docs"
         doc1 { :language "Clojure" :_id (ObjectId.) :inception_year 2006 }
         doc2 { :language "Java"    :_id (ObjectId.) :inception_year 1992 }
         doc3 { :language "Scala"   :_id (ObjectId.) :inception_year 2003 }
         _      (mgcol/insert-batch coll [doc1 doc2])
-        lt-result (with-collection "docs"
+        lt-result (with-collection "querying_docs"
                     (find { :inception_year { $lt 2000 } })
                     (limit 2))]
     (is (= [doc2] (vec lt-result)))))
 
 
 (deftest query-using-dsl-and-$lt-operator-with-dates
-  (let [coll "docs"
+  (let [coll "querying_docs"
         ;; these rely on monger.joda-time being loaded. MK.
         doc1 { :language "Clojure" :_id (ObjectId.) :inception_year (date-time 2006 1 1) }
         doc2 { :language "Java"    :_id (ObjectId.) :inception_year (date-time 1992 1 2) }
         doc3 { :language "Scala"   :_id (ObjectId.) :inception_year (date-time 2003 3 3) }
         _    (mgcol/insert-batch coll [doc1 doc2])
-        lt-result (with-collection "docs"
+        lt-result (with-collection "querying_docs"
                     (find { :inception_year { $lt (date-time 2000 1 2) } })
                     (limit 2))]
     (is (= (map :_id [doc2])
            (map :_id (vec lt-result))))))
 
 (deftest query-using-both-$lte-and-$gte-operators-with-dates
-  (let [coll "docs"
+  (let [coll "querying_docs"
         ;; these rely on monger.joda-time being loaded. MK.
         doc1 { :language "Clojure" :_id (ObjectId.) :inception_year (date-time 2006 1 1) }
         doc2 { :language "Java"    :_id (ObjectId.) :inception_year (date-time 1992 1 2) }
         doc3 { :language "Scala"   :_id (ObjectId.) :inception_year (date-time 2003 3 3) }
         _    (mgcol/insert-batch coll [doc1 doc2 doc3])
-        lt-result (with-collection "docs"
+        lt-result (with-collection "querying_docs"
                     (find { :inception_year { $gt (date-time 2000 1 2) $lte (date-time 2007 2 2) } })
                     (sort { :inception_year 1 }))]
     (is (= (map :_id [doc3 doc1])
@@ -146,7 +147,7 @@
 
 
 (deftest query-using-$gt-$lt-$gte-$lte-operators-as-strings
-  (let [coll "docs"
+  (let [coll "querying_docs"
         doc1 { :language "Clojure" :_id (ObjectId.) :inception_year 2006 }
         doc2 { :language "Java"    :_id (ObjectId.) :inception_year 1992 }
         doc3 { :language "Scala"   :_id (ObjectId.) :inception_year 2003 }
@@ -166,7 +167,7 @@
 
 
 (deftest query-using-$gt-$lt-$gte-$lte-operators-using-dsl-composition
-  (let [coll "docs"
+  (let [coll "querying_docs"
         doc1 { :language "Clojure" :_id (ObjectId.) :inception_year 2006 }
         doc2 { :language "Java"    :_id (ObjectId.) :inception_year 1992 }
         doc3 { :language "Scala"   :_id (ObjectId.) :inception_year 2003 }
@@ -182,7 +183,7 @@
 ;; $all
 
 (deftest query-with-using-$all
-  (let [coll "docs"
+  (let [coll "querying_docs"
         doc1 { :_id (ObjectId.) :title "Clojure" :tags ["functional" "homoiconic" "syntax-oriented" "dsls" "concurrency features" "jvm"] }
         doc2 { :_id (ObjectId.) :title "Java"    :tags ["object-oriented" "jvm"] }
         doc3 { :_id (ObjectId.) :title "Scala"   :tags ["functional" "object-oriented" "dsls" "concurrency features" "jvm"] }
@@ -203,7 +204,7 @@
 ;; $exists
 
 (deftest query-with-find-one-as-map-using-$exists
-  (let [coll "docs"
+  (let [coll "querying_docs"
         doc1 { :_id (ObjectId.) :published-by "Jill The Blogger" :draft false :title "X announces another Y" }
         doc2 { :_id (ObjectId.) :draft true :title "Z announces a Y competitor" }
         _    (mgcol/insert-batch coll [doc1 doc2])
@@ -215,7 +216,7 @@
 ;; $mod
 
 (deftest query-with-find-one-as-map-using-$mod
-  (let [coll "docs"
+  (let [coll "querying_docs"
         doc1 { :_id (ObjectId.) :counter 25 }
         doc2 { :_id (ObjectId.) :counter 32 }
         doc3 { :_id (ObjectId.) :counter 63 }
@@ -231,7 +232,7 @@
 ;; $ne
 
 (deftest query-with-find-one-as-map-using-$ne
-  (let [coll "docs"
+  (let [coll "querying_docs"
         doc1 { :_id (ObjectId.) :counter 25 }
         doc2 { :_id (ObjectId.) :counter 32 }
         _    (mgcol/insert-batch coll [doc1 doc2])
@@ -246,7 +247,7 @@
 
 ;; pagination
 (deftest query-using-pagination-dsl
-  (let [coll "docs"
+  (let [coll "querying_docs"
         doc1 { :_id (ObjectId.) :title "Clojure" :tags ["functional" "homoiconic" "syntax-oriented" "dsls" "concurrency features" "jvm"] }
         doc2 { :_id (ObjectId.) :title "Java"    :tags ["object-oriented" "jvm"] }
         doc3 { :_id (ObjectId.) :title "Scala"   :tags ["functional" "object-oriented" "dsls" "concurrency features" "jvm"] }
@@ -280,7 +281,7 @@
 
 
 (deftest combined-querying-dsl-example1
-  (let [coll "docs"
+  (let [coll "querying_docs"
         ma-doc { :_id (ObjectId.) :name "Massachusetts" :iso "MA" :population 6547629  :joined_in 1788 :capital "Boston" }
         de-doc { :_id (ObjectId.) :name "Delaware"      :iso "DE" :population 897934   :joined_in 1787 :capital "Dover"  }
         ny-doc { :_id (ObjectId.) :name "New York"      :iso "NY" :population 19378102 :joined_in 1788 :capital "Albany" }
@@ -296,7 +297,7 @@
     (is (= result [ca-doc tx-doc ny-doc]))))
 
 (deftest combined-querying-dsl-example2
-  (let [coll "docs"
+  (let [coll "querying_docs"
         ma-doc { :_id (ObjectId.) :name "Massachusetts" :iso "MA" :population 6547629  :joined_in 1788 :capital "Boston" }
         de-doc { :_id (ObjectId.) :name "Delaware"      :iso "DE" :population 897934   :joined_in 1787 :capital "Dover"  }
         ny-doc { :_id (ObjectId.) :name "New York"      :iso "NY" :population 19378102 :joined_in 1788 :capital "Albany" }

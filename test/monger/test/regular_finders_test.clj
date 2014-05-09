@@ -15,7 +15,8 @@
 
 (helper/connect!)
 
-(use-fixtures :each purge-people purge-docs purge-things purge-libraries)
+(use-fixtures :each purge-people purge-docs purge-things purge-libraries
+  purge-finder-docs)
 
 
 ;;
@@ -23,17 +24,17 @@
 ;;
 
 (deftest find-one-full-document-when-collection-is-empty
-  (let [collection "docs"]
+  (let [collection "regular_finders_docs"]
     (is (nil? (mgcol/find-one collection {})))))
 
 (deftest find-one-full-document-as-map-when-collection-is-empty
-  (let [collection "docs"]
+  (let [collection "regular_finders_docs"]
     (mgcol/remove collection)
     (is (nil? (mgcol/find-one-as-map collection {})))))
 
 
 (deftest find-one-full-document-when-collection-has-matches
-  (let [collection "docs"
+  (let [collection "regular_finders_docs"
         doc-id     (monger.util/random-uuid)
         doc        { :data-store "MongoDB", :language "Clojure", :_id doc-id }
         _          (mgcol/insert collection doc)
@@ -44,7 +45,7 @@
     (is (= (mgcnv/to-db-object doc) found-one))))
 
 (deftest find-one-full-document-as-map-when-collection-has-matches
-  (let [collection "docs"
+  (let [collection "regular_finders_docs"
         doc-id     (monger.util/random-uuid)
         doc        { :data-store "MongoDB", :language "Clojure", :_id doc-id }]
     (mgcol/insert collection doc)
@@ -53,7 +54,7 @@
 
 
 (deftest find-one-partial-document-when-collection-has-matches
-  (let [collection "docs"
+  (let [collection "regular_finders_docs"
         doc-id     (monger.util/random-uuid)
         doc        { :data-store "MongoDB", :language "Clojure", :_id doc-id }
         _          (mgcol/insert collection doc)
@@ -64,7 +65,7 @@
 
 
 (deftest find-one-partial-document-using-field-negation-when-collection-has-matches
-  (let [collection       "docs"
+  (let [collection       "regular_finders_docs"
         doc-id           (monger.util/random-uuid)
         doc              { :data-store "MongoDB", :language "Clojure", :_id doc-id }
         _                (mgcol/insert collection doc)
@@ -76,7 +77,7 @@
 
 
 (deftest find-one-partial-document-as-map-when-collection-has-matches
-  (let [collection "docs"
+  (let [collection "regular_finders_docs"
         doc-id     (monger.util/random-uuid)
         doc        { :data-store "MongoDB", :language "Clojure", :_id doc-id }]
     (mgcol/insert collection doc)
@@ -84,7 +85,7 @@
 
 
 (deftest find-one-partial-document-as-map-when-collection-has-matches-with-keywordize
-  (let [collection "docs"
+  (let [collection "regular_finders_docs"
         doc-id     (monger.util/random-uuid)
         doc        { :data-store "MongoDB", :language "Clojure", :_id doc-id }
         fields     [:data-store]
@@ -95,7 +96,7 @@
 
 
 (deftest find-one-partial-document-as-map-when-collection-has-matches-with-keywordize-false
-  (let [collection "docs"
+  (let [collection "regular_finders_docs"
         doc-id     (monger.util/random-uuid)
         doc        { :data-store "MongoDB", :language "Clojure", :_id doc-id }
         fields     [:data-store]
@@ -188,12 +189,12 @@
 ;;
 
 (deftest find-full-document-when-collection-is-empty
-  (let [collection "docs"
+  (let [collection "regular_finders_docs"
         cursor     (mgcol/find collection)]
     (is (empty? (iterator-seq cursor)))))
 
 (deftest find-document-seq-when-collection-is-empty
-  (let [collection "docs"]
+  (let [collection "regular_finders_docs"]
     (is (empty? (mgcol/find-seq collection)))))
 
 (deftest find-multiple-documents-when-collection-is-empty

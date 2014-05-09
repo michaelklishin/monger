@@ -7,6 +7,8 @@
 
 (defcleaner people    "people")
 (defcleaner docs      "docs")
+(defcleaner finder-docs   "regular_finders_docs")
+(defcleaner querying-docs "querying_docs")
 (defcleaner things    "things")
 (defcleaner libraries "libraries")
 (defcleaner scores    "scores")
