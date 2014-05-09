@@ -1,5 +1,3 @@
-(set! *warn-on-reflection* true)
-
 (ns monger.test.querying-test
   (:refer-clojure :exclude [select find sort])
   (:import  [com.mongodb WriteResult WriteConcern DBCursor DBObject ReadPreference]
