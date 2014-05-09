@@ -14,12 +14,15 @@
 
 (helper/connect!)
 
-(defn drop-altdb
+(def db (mg/get-db "altdb"))
+
+(defn purge-altdb
   [f]
-  (mg/drop-db "altdb")
+  (mc/remove db "things")
+  (mc/remove db "libraries")
   (f))
 
-(use-fixtures :each drop-altdb)
+(use-fixtures :each purge-altdb)
 
 (deftest get-collection-size
   (let [db (mg/get-db "altdb")
