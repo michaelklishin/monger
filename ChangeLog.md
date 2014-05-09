@@ -1,4 +1,4 @@
-## Changes between 1.8.0-beta2 and 1.8.0-beta3
+## Changes between 1.8.0-beta2 and 1.8.0
 
 ### Clojure 1.6
 
