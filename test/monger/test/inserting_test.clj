@@ -1,5 +1,3 @@
-(set! *warn-on-reflection* true)
-
 (ns monger.test.inserting-test
   (:import  [com.mongodb WriteResult WriteConcern DBCursor DBObject DBRef]
             org.bson.types.ObjectId
