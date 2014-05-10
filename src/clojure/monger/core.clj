@@ -38,7 +38,7 @@
 ;; API
 ;;
 
-(defn ^com.mongodb.MongoClient connect
+(defn ^MongoClient connect
   "Connects to MongoDB. When used without arguments, connects to
 
    Arguments:
@@ -79,7 +79,7 @@
   (set (.getDatabaseNames conn)))
 
 
-(defn ^com.mongodb.DB get-db
+(defn ^DB get-db
   "Get database reference by name.
 
    EXAMPLES
@@ -92,6 +92,15 @@
   "Drops a database"
   [^MongoClient conn ^String db]
   (.dropDatabase conn db))
+
+(defn ^GridFS get-gridfs
+  "Get GridFS for the given database.
+
+   EXAMPLES
+
+       (monger.core/get-gridfs connection \"myapp_production\")"
+  [^MongoClient conn ^String name]
+  (GridFS. (.getDB conn name)))
 
 (defn server-address
   ([^String hostname]

@@ -20,7 +20,7 @@
   (:import [com.mongodb DB DBObject]
            org.bson.types.ObjectId
            [com.mongodb.gridfs GridFS GridFSInputFile]
-           [java.io InputStream File]))
+           [java.io InputStream ByteArrayInputStream File]))
 
 ;;
 ;; Implementation
@@ -50,42 +50,49 @@
   (remove fs {}))
 
 (defn all-files
-  [^GridFS fs query]
-  (.getFileList fs query))
+  ([^GridFS fs]
+     (.getFileList fs (to-db-object {})))
+  ([^GridFS fs query]
+     (.getFileList fs query)))
 
 (def ^{:private true} converter
   (fpartial from-db-object true))
 
 (defn files-as-maps
-  [^GridFS fs query]
-  (map converter (all-files fs (to-db-object query))))
+  ([^GridFS fs]
+     (files-as-maps fs {}))
+  ([^GridFS fs query]
+     (map converter (all-files fs (to-db-object query)))))
 
 
 ;;
 ;; Plumbing (low-level API)
 ;;
 
-(defprotocol GridFSInputFileFactory
-  (^com.mongodb.gridfs.GridFSInputFile make-input-file [input] "Makes GridFSInputFile out of the given input"))
+(defprotocol InputStreamFactory
+  (^InputStream to-input-stream [input] "Makes InputStream out of the given input"))
 
 (extend byte-array-type
-  GridFSInputFileFactory
-  {:make-input-file (fn [^bytes input]
-                      (.createFile ^GridFS monger.core/*mongodb-gridfs* input))})
+  InputStreamFactory
+  {:to-input-stream (fn [^bytes input]
+                      (ByteArrayInputStream. input))})
 
-(extend-protocol GridFSInputFileFactory
+(extend-protocol InputStreamFactory
   String
-  (make-input-file [^String input]
-    (.createFile ^GridFS monger.core/*mongodb-gridfs* ^InputStream (io/make-input-stream input {:encoding "UTF-8"})))
+  (to-input-stream [^String input]
+    (io/make-input-stream input {:encoding "UTF-8"}))
 
   File
-  (make-input-file [^File input]
-    (.createFile ^GridFS monger.core/*mongodb-gridfs* ^InputStream (io/make-input-stream input {:encoding "UTF-8"})))
+  (to-input-stream [^File input]
+    (io/make-input-stream input {:encoding "UTF-8"}))
 
   InputStream
-  (make-input-file [^InputStream input]
-    (.createFile ^GridFS monger.core/*mongodb-gridfs* ^InputStream input)))
+  (to-input-stream [^InputStream input]
+    input))
 
+(defn ^GridFSInputFile make-input-file
+  [^GridFS fs input]
+  (.createFile fs (to-input-stream input)))
 
 (defmacro store
   [^GridFSInputFile input & body]
@@ -93,9 +100,8 @@
      (.save f# GridFS/DEFAULT_CHUNKSIZE)
      (from-db-object f# true)))
 
-
 ;;
-;; "New" DSL, a higher-level API
+;; Higher-level API
 ;;
 
 (defn save
@@ -131,6 +137,14 @@
 (defn find
   [^GridFS fs query]
   (.find fs (to-db-object query)))
+
+(defn find-by-filename
+  [^GridFS fs ^String filename]
+  (.find fs (to-db-object {"filename" filename})))
+
+(defn find-by-md5
+  [^GridFS fs ^String md5]
+  (.find fs (to-db-object {"md5" md5})))
 
 (defn find-one
   [^GridFS fs query]
