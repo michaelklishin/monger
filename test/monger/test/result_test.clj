@@ -1,15 +1,10 @@
 (ns monger.test.result-test
   (:import [com.mongodb BasicDBObject WriteResult WriteConcern] java.util.Date)
-  (:require [monger core collection conversion]
-            [monger.test.helper :as helper]
+  (:require [monger.core :as mg]
+            [monger.collection :as mc]
+            monger.result
+            monger.util
             [clojure.test :refer :all]))
-
-(helper/connect!)
-
-;;
-;; MongoCommandResult
-;;
-
 
 (deftest test-ok?
   (let [result-that-is-not-ok-1 (doto (BasicDBObject.) (.put "ok" 0))
@@ -28,27 +23,29 @@
   (let [result-that-has-no-error1 (doto (BasicDBObject.) (.put "ok" 0))
         result-that-has-no-error2 (doto (BasicDBObject.) (.put "err" ""))
         result-that-has-error1    (doto (BasicDBObject.) (.put "err" (BasicDBObject.)))]
-        (is (not (monger.result/has-error? result-that-has-no-error1)))
-        (is (not (monger.result/has-error? result-that-has-no-error2)))
-        (is (monger.result/has-error?      result-that-has-error1))))
+    (is (not (monger.result/has-error? result-that-has-no-error1)))
+    (is (not (monger.result/has-error? result-that-has-no-error2)))
+    (is (monger.result/has-error?      result-that-has-error1))))
 
 
 (deftest test-updated-existing?-with-db-object
   (let [input1 (doto (BasicDBObject.) (.put "updatedExisting" true))
         input2 (doto (BasicDBObject.) (.put "updatedExisting" false))
         input3 (BasicDBObject.)]
-        (is (monger.result/updated-existing?      input1))
-        (is (not (monger.result/updated-existing? input2)))
-        (is (not (monger.result/updated-existing? input3)))))
+    (is (monger.result/updated-existing?      input1))
+    (is (not (monger.result/updated-existing? input2)))
+    (is (not (monger.result/updated-existing? input3)))))
 
-(deftest test-updated-existing?-with-write-result
-  (monger.collection/remove "libraries")
-  (let [collection "libraries"
-        doc-id       (monger.util/random-uuid)
-        date         (Date.)
-        doc          { :created-at date, :data-store "MongoDB", :language "Clojure", :_id doc-id }
-        modified-doc { :created-at date, :data-store "MongoDB", :language "Erlang",  :_id doc-id }]
-    (is (not (monger.result/updated-existing? (monger.collection/update collection { :language "Clojure" } doc :upsert true))))
-    (is (monger.result/updated-existing? (monger.collection/update collection { :language "Clojure" }      doc :upsert true)))
-    (monger.result/updated-existing? (monger.collection/update collection { :language "Clojure" } modified-doc :multi false :upsert true))
-    (monger.collection/remove collection)))
+(let [conn (mg/connect)
+      db   (mg/get-db conn "monger-test")]
+  (deftest test-updated-existing?-with-write-result
+    (mc/remove db "libraries")
+    (let [collection "libraries"
+          doc-id       (monger.util/random-uuid)
+          date         (Date.)
+          doc          { :created-at date, :data-store "MongoDB", :language "Clojure", :_id doc-id }
+          modified-doc { :created-at date, :data-store "MongoDB", :language "Erlang",  :_id doc-id }]
+      (is (not (monger.result/updated-existing? (mc/update db collection { :language "Clojure" } doc {:upsert true}))))
+      (is (monger.result/updated-existing? (mc/update db collection { :language "Clojure" }      doc {:upsert true})))
+      (monger.result/updated-existing? (mc/update db collection { :language "Clojure" } modified-doc {:multi false :upsert true}))
+      (mc/remove db collection))))
