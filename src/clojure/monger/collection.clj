@@ -212,28 +212,28 @@
       (mgcol/find-and-modify db collection {:language \"Python\"} {:language \"Clojure\"})
 
       ;; If multiple documents match, choose the first one in the specified order
-      (mgcol/find-and-modify db collection {:language \"Python\"} {:language \"Clojure\"} :sort {:language -1})
+      (mgcol/find-and-modify db collection {:language \"Python\"} {:language \"Clojure\"} {:sort {:language -1}})
 
       ;; Remove the object before returning
-      (mgcol/find-and-modify db collection {:language \"Python\"} {} :remove true)
+      (mgcol/find-and-modify db collection {:language \"Python\"} {} {:remove true})
 
       ;; Return the modified object instead of the old one
-      (mgcol/find-and-modify db collection {:language \"Python\"} {:language \"Clojure\"} :return-new true)
+      (mgcol/find-and-modify db collection {:language \"Python\"} {:language \"Clojure\"} {:return-new true})
 
       ;; Retrieve a subset of fields
-      (mgcol/find-and-modify db collection {:language \"Python\"} {:language \"Clojure\"} :fields [ :language ])
+      (mgcol/find-and-modify db collection {:language \"Python\"} {:language \"Clojure\"} {:fields [ :language ]})
 
       ;; Create the object if it doesn't exist
-      (mgcol/find-and-modify db collection {:language \"Factor\"} {:language \"Clojure\"} :upsert true)
+      (mgcol/find-and-modify db collection {:language \"Factor\"} {:language \"Clojure\"} {:upsert true})
 
   "
-  ([^DB db ^String coll ^Map conditions ^Map document & {:keys [fields sort remove return-new upsert keywordize] :or
-                                                         {fields nil
-                                                          sort nil
-                                                          remove false
-                                                          return-new false
-                                                          upsert false
-                                                          keywordize true}}]
+  ([^DB db ^String coll ^Map conditions ^Map document {:keys [fields sort remove return-new upsert keywordize] :or
+                                                       {fields nil
+                                                        sort nil
+                                                        remove false
+                                                        return-new false
+                                                        upsert false
+                                                        keywordize true}}]
      (let [coll (.getCollection db (name coll))
            maybe-fields (when fields (as-field-selector fields))
            maybe-sort (when sort (to-db-object sort))]
@@ -349,13 +349,13 @@
     (monger.collection/update db \"people\" {} {\"$set\" {:band \"The Beatles\"}} :multi true)
 
     ;; inserts the record if it did not exist in the collection
-    (monger.collection/update db \"people\" {:first_name \"Yoko\"} {:first_name \"Yoko\" :last_name \"Ono\"} :upsert true)
+    (monger.collection/update db \"people\" {:first_name \"Yoko\"} {:first_name \"Yoko\" :last_name \"Ono\"} {:upsert true)
 
   By default :upsert and :multi are false."
-  [^DB db ^String coll ^Map conditions ^Map document & {:keys [upsert multi write-concern]
-                                                        :or {upsert false
-                                                             multi false
-                                                             write-concern monger.core/*mongodb-write-concern*}}]
+  [^DB db ^String coll ^Map conditions ^Map document {:keys [upsert multi write-concern]
+                                                      :or {upsert false
+                                                           multi false
+                                                           write-concern monger.core/*mongodb-write-concern*}}]
   (.update (.getCollection db (name coll))
            (to-db-object conditions)
            (to-db-object document)
@@ -370,16 +370,16 @@
    sets :upsert to true.
 
    See monger.collection/update documentation"
-  [^DB db ^String coll ^Map conditions ^Map document & {:keys [multi write-concern]
-                                                        :or {multi false
-                                                             write-concern monger.core/*mongodb-write-concern*}}]
-  (update db coll conditions document :multi multi :write-concern write-concern :upsert true))
+  [^DB db ^String coll ^Map conditions ^Map document {:keys [multi write-concern]
+                                                      :or {multi false
+                                                           write-concern monger.core/*mongodb-write-concern*}}]
+  (update db coll conditions document {:multi multi :write-concern write-concern :upsert true}))
 
 (defn ^WriteResult update-by-id
   "Update a document with given id"
-  [^DB db ^String coll id ^Map document & {:keys [upsert write-concern]
-                                           :or {upsert false
-                                                write-concern monger.core/*mongodb-write-concern*}}]
+  [^DB db ^String coll id ^Map document {:keys [upsert write-concern]
+                                         :or {upsert false
+                                              write-concern monger.core/*mongodb-write-concern*}}]
   (check-not-nil! id "id must not be nil")
   (.update (.getCollection db (name coll))
            (to-db-object {:_id id})
