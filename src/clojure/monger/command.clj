@@ -20,7 +20,7 @@
    * http://clojuremongodb.info/articles/mapreduce.html"
   (:require monger.core
             [monger.conversion :refer :all])
-  (:import [com.mongodb DB DBObject]))
+  (:import [com.mongodb MongoClient DB DBObject]))
 
 
 ;;
