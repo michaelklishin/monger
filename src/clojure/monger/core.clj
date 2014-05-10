@@ -179,13 +179,13 @@
 
    For commonly used commands (distinct, count, map/reduce, etc), use monger.command and monger.collection functions such as
    /distinct, /count,  /drop, /dropIndexes, and /mapReduce respectively."
-  ([^DB database ^Map cmd]
-     (.command ^DB database ^DBObject (to-db-object cmd))))
+  [^DB database ^Map cmd]
+  (.command ^DB database ^DBObject (to-db-object cmd)))
 
 (defn ^com.mongodb.CommandResult raw-command
   "Like monger.core/command but accepts DBObjects"
-  ([^DB database ^DBObject cmd]
-     (.command database cmd)))
+  [^DB database ^DBObject cmd]
+  (.command database cmd))
 
 (defprotocol Countable
   (count [this] "Returns size of the object"))
