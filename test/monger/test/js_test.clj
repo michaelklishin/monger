@@ -1,9 +1,6 @@
 (ns monger.test.js-test
   (:require monger.js
-            [monger.test.helper :as helper]
             [clojure.test :refer :all]))
-
-(helper/connect!)
 
 (deftest load-js-resource-using-path-on-the-classpath
   (are [c path] (= c (count (monger.js/load-resource path)))
