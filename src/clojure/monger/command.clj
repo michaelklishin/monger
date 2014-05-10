@@ -53,8 +53,8 @@
 
 (defn rename-collection
   "Changes the name of an existing collection using the renameCollection command"
-  ([^DB db ^String from ^String to]
-     (monger.core/command db (sorted-map :renameCollection from :to to))))
+  [^DB db ^String from ^String to]
+  (monger.core/command db (sorted-map :renameCollection from :to to)))
 
 (defn convert-to-capped
   "Converts an existing, non-capped collection to a capped collection using the convertToCapped command"
