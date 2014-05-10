@@ -11,7 +11,7 @@
   "clojure.core.cache implementation(s) on top of MongoDB.
       
    Related documentation guide: http://clojuremongodb.info/articles/integration.html"
-  (:require [monger.collection  :as mc]
+  (:require [monger.collection  :as mc :refer [find-one find-by-id find-map-by-id]]
             [clojure.core.cache :as cache]
             [monger.conversion  :as cnv])
   (:import clojure.core.cache.CacheProtocol
@@ -24,24 +24,6 @@
 
 (def ^{:const true}
   default-cache-collection "cache_entries")
-
-
-(defn- ^DBObject find-one
-  [^DB db ^String collection ^Map ref]
-  (.findOne (.getCollection db (name collection))
-            (cnv/to-db-object ref)))
-
-(defn- find-by-id
-  "A version of monger.collection/find-by-id that does not require the
-   fields argument"
-  [^DB db ^String collection id]
-  (find-one db collection {:_id id}))
-
-(defn- find-map-by-id
-  "A version of monger.collection/find-by-map-id that accepts database
-   as an argument"
-  [^DB db ^String collection id]
-  (cnv/from-db-object ^DBObject (find-one db collection {:_id id}) true))
 
 ;;
 ;; API

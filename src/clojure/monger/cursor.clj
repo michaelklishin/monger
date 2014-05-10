@@ -11,7 +11,7 @@
   "Helper-functions for dbCursor object: 
     * to initialize new cursor, 
     * for CRUD functionality of options of dbCursor"
-  (:import  [com.mongodb DBCursor Bytes]
+  (:import  [com.mongodb DB DBCursor Bytes]
             [java.util List Map]
             [java.lang Integer]
             [clojure.lang Keyword])
@@ -20,13 +20,13 @@
 
 (defn ^DBCursor make-db-cursor 
   "initializes new db-cursor."
-  ([^String collection]
-     (make-db-cursor collection {} {}))
-  ([^String collection ^Map ref]
-     (make-db-cursor collection ref {}))
-  ([^String collection ^Map ref fields] 
+  ([^DB db ^String coll]
+     (make-db-cursor db coll {} {}))
+  ([^DB db ^String coll ^Map ref]
+     (make-db-cursor db coll ref {}))
+  ([^DB db ^String coll ^Map ref fields] 
     (.find
-      (.getCollection monger.core/*mongodb-database* (name collection))
+      (.getCollection db (name coll))
       (to-db-object ref)
       (as-field-selector fields)))) 
 

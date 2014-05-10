@@ -132,10 +132,10 @@
   (merge m { :limit per-page :skip (monger.internal.pagination/offset-for page per-page) }))
 
 (defmacro with-collection
-  [^String coll & body]
+  [^DB db ^String coll & body]
   `(let [coll# ~coll
          db-coll# (if (string? coll#)
-                    (.getCollection ^DB monger.core/*mongodb-database* ^String coll#)
+                    (.getCollection db ^String coll#)
                     coll#)
          query# (-> (empty-query db-coll#) ~@body)]
      (exec query#)))

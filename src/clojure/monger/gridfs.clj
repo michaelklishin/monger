@@ -18,6 +18,7 @@
             [monger.conversion :refer :all]
             [clojurewerkz.support.fn :refer [fpartial]])
   (:import [com.mongodb DB DBObject]
+           org.bson.types.ObjectId
            [com.mongodb.gridfs GridFS GridFSInputFile]
            [java.io InputStream File]))
 
@@ -41,37 +42,23 @@
 
 
 (defn remove
-  ([]
-     (remove {}))
-  ([query]
-     (.remove ^GridFS monger.core/*mongodb-gridfs* ^DBObject (to-db-object query)))
-  ([^GridFS fs query]
-     (.remove fs ^DBObject (to-db-object query))))
+  [^GridFS fs query]
+  (.remove fs ^DBObject (to-db-object query)))
 
 (defn remove-all
-  ([]
-     (remove {}))
-  ([^GridFS fs]
-     (remove fs {})))
+  [^GridFS fs]
+  (remove fs {}))
 
 (defn all-files
-  ([]
-     (.getFileList ^GridFS monger.core/*mongodb-gridfs*))
-  ([query]
-     (.getFileList ^GridFS monger.core/*mongodb-gridfs* query))
-  ([^GridFS fs query]
-     (.getFileList fs query)))
+  [^GridFS fs query]
+  (.getFileList fs query))
 
 (def ^{:private true} converter
   (fpartial from-db-object true))
 
 (defn files-as-maps
-  ([]
-     (map converter (all-files)))
-  ([query]
-     (map converter (all-files (to-db-object query))))
-  ([^GridFS fs query]
-     (map converter (all-files fs (to-db-object query)))))
+  [^GridFS fs query]
+  (map converter (all-files fs (to-db-object query))))
 
 
 ;;
@@ -141,48 +128,26 @@
 ;; Finders
 ;;
 
-(defprotocol Finders
-  (find     [input] "Finds multiple files using given input (an ObjectId, filename or query)")
-  (find-one [input] "Finds one file using given input (an ObjectId, filename or query)")
-  (find-maps       [input] "Finds multiple files using given input (an ObjectId, filename or query), returning a Clojure map")
-  (find-one-as-map [input] "Finds one file using given input (an ObjectId, filename or query), returning a Clojure map"))
+(defn find
+  [^GridFS fs query]
+  (.find fs (to-db-object query)))
 
-(extend-protocol Finders
-  String
-  (find [^String input]
-    (.find ^GridFS monger.core/*mongodb-gridfs* input))
-  (find-one [^String input]
-    (.findOne ^GridFS monger.core/*mongodb-gridfs* input))
-  (find-maps [^String input]
-    (map converter (find input)))
-  (find-one-as-map [^String input]
-    (converter (find-one input)))
+(defn find-one
+  [^GridFS fs query]
+  (.findOne fs (to-db-object query)))
 
-  org.bson.types.ObjectId
-  (find-one [^org.bson.types.ObjectId input]
-    (.findOne ^GridFS monger.core/*mongodb-gridfs* input))
-  (find-one-as-map [^org.bson.types.ObjectId input]
-    (converter (find-one input)))
+(defn find-maps
+  [^GridFS fs query]
+  (map converter (find fs query)))
 
+(defn find-one-as-map
+  [^GridFS fs query]
+  (converter (find-one fs query)))
 
-  DBObject
-  (find [^DBObject input]
-    (.find ^GridFS monger.core/*mongodb-gridfs* input))
-  (find-one [^DBObject input]
-    (.findOne ^GridFS monger.core/*mongodb-gridfs* input))
-  (find-maps [^DBObject input]
-    (map converter (find input)))
-  (find-one-as-map [^DBObject input]
-    (converter (find-one input)))
+(defn find-by-id
+  [^GridFS fs ^ObjectId id]
+  (.findOne fs id))
 
-  ;; using java.util.Map here results in (occasional) recursion
-  clojure.lang.IPersistentMap
-  (find [^java.util.Map input]
-    (find (to-db-object input)))
-  (find-one [^java.util.Map input]
-    (find-one (to-db-object input)))
-  (find-maps [^java.util.Map input]
-    (find-maps (to-db-object input)))
-  (find-one-as-map [^java.util.Map input]
-    (find-one-as-map (to-db-object input))))
-
+(defn find-map-by-id
+  [^GridFS fs ^ObjectId id]
+  (converter (find-one fs id)))

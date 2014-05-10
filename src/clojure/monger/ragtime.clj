@@ -22,7 +22,6 @@
   migrations-collection "meta.migrations")
 
 
-
 (extend-type com.mongodb.DB
   ragtime/Migratable
   (add-migration-id [db id]
@@ -30,15 +29,13 @@
   (remove-migration-id [db id]
     (mc/remove-by-id db migrations-collection id))
   (applied-migration-ids [db]
-    (mg/with-db db
-      (let [xs (with-collection migrations-collection
-                 (find {})
-                 (sort {:created_at 1}))]
-        (vec (map :_id xs))))))
+    (let [xs (with-collection db migrations-collection
+               (find {})
+               (sort {:created_at 1}))]
+      (vec (map :_id xs)))))
 
 
 (defn flush-migrations!
   "REMOVES all the information about previously performed migrations"
-  [db]
-  (mg/with-db db
-    (mc/remove migrations-collection)))
+  [^DB db]
+  (mc/remove db migrations-collection))

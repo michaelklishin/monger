@@ -16,25 +16,22 @@
             [monger.conversion :refer :all]))
 
 
+;;
+;; API
+;;
 
 (defn add-user
   "Adds a new user for this db"
-  ([^String username, ^chars password]
-     (.addUser ^DB monger.core/*mongodb-database* username password))
-  ([^DB database ^String username ^chars password]
-     (.addUser ^DB database username password)))
+  [^DB db ^String username ^chars password]
+  (.addUser db username password))
 
 
 (defn drop-db
   "Drops the currently set database (via core/set-db) or the specified database."
-  ([]
-     (.dropDatabase ^DB monger.core/*mongodb-database*))
-  ([^DB database]
-     (.dropDatabase ^DB database)))
+  [^DB db]
+  (.dropDatabase db))
 
 (defn get-collection-names
   "Returns a set containing the names of all collections in this database."
-  ([]
-     (set (.getCollectionNames ^DB monger.core/*mongodb-database*)))
-  ([^DB database]
-     (set (.getCollectionNames ^DB database))))
+  ([^DB db]
+     (set (.getCollectionNames db))))

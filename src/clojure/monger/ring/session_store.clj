@@ -9,7 +9,7 @@
 
 (ns monger.ring.session-store
   (:require [ring.middleware.session.store :as ringstore]
-            [monger.multi.collection       :as mc]
+            [monger.collection             :as mc]
             [monger.core                   :as mg]
             [monger.conversion :refer :all])
   (:import [java.util UUID Date]
@@ -78,12 +78,8 @@
 
 
 (defn session-store
-  ([]
-     (ClojureReaderBasedMongoDBSessionStore. mg/*mongodb-database* default-session-store-collection))
-  ([^String s]
-     (ClojureReaderBasedMongoDBSessionStore. mg/*mongodb-database* s))
-  ([^DB db ^String s]
-     (ClojureReaderBasedMongoDBSessionStore. db s)))
+  [^DB db ^String s]
+  (ClojureReaderBasedMongoDBSessionStore. db s))
 
 
 ;; this session store won't store namespaced keywords correctly but stores results in a way
@@ -111,9 +107,5 @@
 
 
 (defn monger-store
-  ([]
-     (MongoDBSessionStore. mg/*mongodb-database* default-session-store-collection))
-  ([^String s]
-     (MongoDBSessionStore. mg/*mongodb-database* s))
-  ([^DB db ^String s]
-     (MongoDBSessionStore. db s)))
+  [^DB db ^String s]
+  (MongoDBSessionStore. db s))
