@@ -148,7 +148,7 @@
 
 
 (defn authenticate
-  ([^MongoClient connection ^DB db ^String username ^chars password]
+  ([^DB db ^String username ^chars password]
      (try
        (.authenticate db username password)
        ;; MongoDB Java driver's exception hierarchy is a little crazy
@@ -167,7 +167,7 @@
         user (.getUsername uri)
         pwd  (.getPassword uri)]
     (when (and user pwd)
-      (when-not (authenticate conn db user pwd)
+      (when-not (authenticate db user pwd)
         (throw (IllegalArgumentException. (format "Could not authenticate with MongoDB. Either database name or credentials are invalid. Database name: %s, username: %s" (.getName db) user)))))
     {:conn conn :db db}))
 
