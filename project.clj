@@ -41,7 +41,7 @@
                                    [org.clojure/tools.cli  "0.3.1" :exclusions [org.clojure/clojure]]
                                    [org.clojure/core.cache "0.6.3" :exclusions [org.clojure/clojure]]
                                    [ring/ring-core         "1.2.1" :exclusions [org.clojure/clojure]]
-                                   [com.novemberain/validateur "2.1.0"]
+                                   [com.novemberain/validateur "2.1.0" :exclusions [org.clojure/clojure]]
                                    [ragtime/ragtime.core   "0.3.4" :exclusions [org.clojure/clojure]]]
                    :plugins [[codox "0.6.6"]]
                    :codox {:sources ["src/clojure"]
