@@ -63,7 +63,19 @@
      (merge (empty-query) { :collection coll })))
 
 (defn exec
-  [{ :keys [^DBCollection collection query fields skip limit sort batch-size hint snapshot read-preference keywordize-fields options] :or { limit 0 batch-size 256 skip 0 } }]
+  [{:keys [^DBCollection collection
+           query
+           fields
+           skip
+           limit
+           sort
+           batch-size
+           hint
+           snapshot
+           read-preference
+           keywordize-fields
+           options]
+    :or { limit 0 batch-size 256 skip 0 } }]
   (with-open [cursor (doto (.find collection (to-db-object query) (as-field-selector fields))
                        (.limit limit)
                        (.skip  skip)
@@ -135,7 +147,7 @@
   [^DB db ^String coll & body]
   `(let [coll# ~coll
          db-coll# (if (string? coll#)
-                    (.getCollection db ^String coll#)
+                    (.getCollection ~db ^String coll#)
                     coll#)
          query# (-> (empty-query db-coll#) ~@body)]
      (exec query#)))
