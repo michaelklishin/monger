@@ -19,12 +19,12 @@
     (mc/remove db "people")
     (mc/remove db "docs")
     (mc/remove db "things")
-    (mc/remove db "scores")
+    (mc/remove db "widgets")
     (f)
     (mc/remove db "people")
     (mc/remove db "docs")
     (mc/remove db "things")
-    (mc/remove db "scores"))
+    (mc/remove db "widgets"))
 
   (use-fixtures :each purge-collections)
 
