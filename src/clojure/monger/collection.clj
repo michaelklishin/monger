@@ -352,16 +352,18 @@
     (monger.collection/update db \"people\" {:first_name \"Yoko\"} {:first_name \"Yoko\" :last_name \"Ono\"} {:upsert true)
 
   By default :upsert and :multi are false."
-  [^DB db ^String coll ^Map conditions ^Map document {:keys [upsert multi write-concern]
-                                                      :or {upsert false
-                                                           multi false
-                                                           write-concern monger.core/*mongodb-write-concern*}}]
-  (.update (.getCollection db (name coll))
-           (to-db-object conditions)
-           (to-db-object document)
-           upsert
-           multi
-           write-concern))
+  ([^DB db ^String coll ^Map conditions ^Map document]
+     (update db coll conditions document {}))
+  ([^DB db ^String coll ^Map conditions ^Map document {:keys [upsert multi write-concern]
+                                                       :or {upsert false
+                                                            multi false
+                                                            write-concern monger.core/*mongodb-write-concern*}}]
+     (.update (.getCollection db (name coll))
+              (to-db-object conditions)
+              (to-db-object document)
+              upsert
+              multi
+              write-concern)))
 
 (defn ^WriteResult upsert
   "Performs an upsert.
@@ -370,23 +372,27 @@
    sets :upsert to true.
 
    See monger.collection/update documentation"
-  [^DB db ^String coll ^Map conditions ^Map document {:keys [multi write-concern]
-                                                      :or {multi false
-                                                           write-concern monger.core/*mongodb-write-concern*}}]
-  (update db coll conditions document {:multi multi :write-concern write-concern :upsert true}))
+  ([^DB db ^String coll ^Map conditions ^Map document]
+     (upsert db coll conditions document {}))
+  ([^DB db ^String coll ^Map conditions ^Map document {:keys [multi write-concern]
+                                                       :or {multi false
+                                                            write-concern monger.core/*mongodb-write-concern*}}]
+     (update db coll conditions document {:multi multi :write-concern write-concern :upsert true})))
 
 (defn ^WriteResult update-by-id
   "Update a document with given id"
-  [^DB db ^String coll id ^Map document {:keys [upsert write-concern]
-                                         :or {upsert false
-                                              write-concern monger.core/*mongodb-write-concern*}}]
-  (check-not-nil! id "id must not be nil")
-  (.update (.getCollection db (name coll))
-           (to-db-object {:_id id})
-           (to-db-object document)
-           upsert
-           false
-           write-concern))
+  ([^DB db ^String coll id ^Map document]
+     (update-by-id db coll id document {}))
+  ([^DB db ^String coll id ^Map document {:keys [upsert write-concern]
+                                          :or {upsert false
+                                               write-concern monger.core/*mongodb-write-concern*}}]
+     (check-not-nil! id "id must not be nil")
+     (.update (.getCollection db (name coll))
+              (to-db-object {:_id id})
+              (to-db-object document)
+              upsert
+              false
+              write-concern)))
 
 
 ;; monger.collection/save
