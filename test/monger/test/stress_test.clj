@@ -1,42 +1,35 @@
 (ns monger.test.stress-test
-  (:import [com.mongodb Mongo DB DBCollection WriteResult DBObject WriteConcern DBCursor]
-           java.util.Date)
-  (:require monger.core
-            [monger.test.helper :as helper]
-            [clojure.test :refer :all]))
+  (:require [monger.core :as mg]
+            [monger.collection :as mc]
+            [monger.conversion :refer [to-db-object]]
+            [clojure.test :refer :all])
+  (:import [com.mongodb WriteConcern]
+           java.util.Date))
 
 
-;;
-;; Fixture functions
-;;
+(let [conn (mg/connect)
+      db   (mg/get-db conn "monger-test")]
+  (defn purge-collection
+    [coll f]
+    (mc/remove db coll)
+    (f)
+    (mc/remove db coll))
 
-(defn purge-collection
-  [collection-name, f]
-  (monger.collection/remove collection-name)
-  (f)
-  (monger.collection/remove collection-name))
+  (defn purge-things-collection
+    [f]
+    (purge-collection "things" f))
 
-(defn purge-things-collection
-  [f]
-  (purge-collection "things" f))
+  (use-fixtures :each purge-things-collection)
 
-(use-fixtures :each purge-things-collection)
+  (monger.core/set-default-write-concern! WriteConcern/NORMAL)
 
-
-
-;;
-;; Tests
-;;
-
-(monger.core/set-default-write-concern! WriteConcern/NORMAL)
-
-(deftest ^{:performance true} insert-large-batches-of-documents-without-object-ids
-  (doseq [n [1000 10000 100000]]
-    (let [collection "things"
-          docs       (map (fn [i]
-                            (monger.conversion/to-db-object { :title "Untitled" :created-at (Date.) :number i }))
-                          (take n (iterate inc 1)))]
-      (monger.collection/remove collection)
-      (println "Inserting " n " documents...")
-      (time (monger.collection/insert-batch collection docs))
-      (is (= n (monger.collection/count collection))))))
+  (deftest ^{:performance true} insert-large-batches-of-documents-without-object-ids
+    (doseq [n [1000 10000 100000]]
+      (let [collection "things"
+            docs       (map (fn [i]
+                              (to-db-object { :title "Untitled" :created-at (Date.) :number i }))
+                            (take n (iterate inc 1)))]
+        (mc/remove db collection)
+        (println "Inserting " n " documents...")
+        (time (mc/insert-batch db collection docs))
+        (is (= n (mc/count db collection)))))))
