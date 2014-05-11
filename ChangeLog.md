@@ -1,6 +1,62 @@
 ## Changes between 1.8.0 and 2.0.0
 
-No changes yet.
+`2.0` is a major release that has **breaking public API changes**.
+
+### Explicit Connection/DB/GridFS Argument
+
+In Monger 2.0, all key public API functions require an explicit
+DB/connection/GridFS object to be provided instead of relying on
+a shared dynamic var. This makes Monger much easier to use with
+systems such as Component and Jig, as well as concurrent
+applications that need to work with multiple connections, database,
+or GridFS filesystems.
+
+In other words, instead of
+
+``` clojure
+(require '[monger.collection :as mc])
+
+(mc/insert "libraries" {:name "Monger"})
+```
+
+it is now necessary to do
+
+``` clojure
+(require '[monger.collection :as mc])
+
+(mc/insert db "libraries" {:name "Monger"})
+```
+
+This also means that `monger.core/connect!` and
+`monger.core/connect-via-uri!` were removed, as was
+`monger.multi` namespaces.
+
+To connect to MongoDB, use `monger.core/connect`:
+
+``` clojure
+(require '[monger.core :as mg])
+
+(let [conn (mg/connect)])
+```
+
+or `monger.core/connect-via-uri`:
+
+``` clojure
+(require '[monger.core :as mg])
+
+(let [{:keys [conn db]} (mg/connect-via-uri "mongodb://clojurewerkz/monger:monger@127.0.0.1/monger-test4")])
+```
+
+To get a database reference, use `monger.core/get-db`, which now requires a connection
+object:
+
+``` clojure
+(require '[monger.core :as mg])
+
+(let [conn (mg/connect)
+      db   (mg/get-db conn "monger-test")])
+```
+
 
 
 ## Changes between 1.8.0-beta2 and 1.8.0
