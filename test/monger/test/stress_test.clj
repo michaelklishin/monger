@@ -24,7 +24,7 @@
   (monger.core/set-default-write-concern! WriteConcern/NORMAL)
 
   (deftest ^{:performance true} insert-large-batches-of-documents-without-object-ids
-    (doseq [n [10 100 1000 10000 20000 30000]]
+    (doseq [n [10 100 1000 10000 20000]]
       (let [collection "things"
             docs       (map (fn [i]
                               (to-db-object { :title "Untitled" :created-at (Date.) :number i }))
