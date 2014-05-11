@@ -54,7 +54,7 @@
                                      monger.ring.session-store]}}
              ;; only clj-time/JodaTime available, used to test monger.joda-time w/o clojure.data.json
              :dev2 {:resource-paths ["test/resources"]
-                    :dependencies  [[clj-time "0.6.0"               :exclusions [org.clojure/clojure]]]}}
+                    :dependencies  [[clj-time "0.7.0"               :exclusions [org.clojure/clojure]]]}}
   :aliases {"all" ["with-profile" "dev:dev,1.4:dev,dj01x:dev,dj02x:dev,1.5"]}
   :repositories {"sonatype" {:url "http://oss.sonatype.org/content/repositories/releases"
                              :snapshots false
