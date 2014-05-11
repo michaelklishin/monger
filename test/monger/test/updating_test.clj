@@ -1,5 +1,5 @@
 (ns monger.test.updating-test
-  (:import  [com.mongodb WriteResult WriteConcern DBCursor DBObject]
+  (:import  [com.mongodb WriteResult WriteConcern DBObject]
             org.bson.types.ObjectId
             java.util.Date)
   (:require [monger.core :as mg]
