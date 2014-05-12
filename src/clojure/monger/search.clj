@@ -11,7 +11,7 @@
   "Full text search queries support (MongoDB 2.4+)"
   (:require [monger.command :as cmd]
             [monger.conversion :as cnv])
-  (:import [com.mongodb CommandResult BasicDBList DBObject]))
+  (:import [com.mongodb DB CommandResult BasicDBList DBObject]))
 
 ;;
 ;; Implementation
@@ -28,8 +28,8 @@
 
 (defn search
   "Performs a full text search query"
-  [^String collection query]
-  (cmd/search collection query))
+  [^DB db ^String collection query]
+  (cmd/search db collection query))
 
 (defn results-from
   "Returns a lazy sequence of results from a search query response, sorted by score.

@@ -63,7 +63,19 @@
      (merge (empty-query) { :collection coll })))
 
 (defn exec
-  [{ :keys [^DBCollection collection query fields skip limit sort batch-size hint snapshot read-preference keywordize-fields options] :or { limit 0 batch-size 256 skip 0 } }]
+  [{:keys [^DBCollection collection
+           query
+           fields
+           skip
+           limit
+           sort
+           batch-size
+           hint
+           snapshot
+           read-preference
+           keywordize-fields
+           options]
+    :or { limit 0 batch-size 256 skip 0 } }]
   (with-open [cursor (doto (.find collection (to-db-object query) (as-field-selector fields))
                        (.limit limit)
                        (.skip  skip)
@@ -132,10 +144,10 @@
   (merge m { :limit per-page :skip (monger.internal.pagination/offset-for page per-page) }))
 
 (defmacro with-collection
-  [^String coll & body]
+  [^DB db ^String coll & body]
   `(let [coll# ~coll
          db-coll# (if (string? coll#)
-                    (.getCollection ^DB monger.core/*mongodb-database* ^String coll#)
+                    (.getCollection ~db ^String coll#)
                     coll#)
          query# (-> (empty-query db-coll#) ~@body)]
      (exec query#)))

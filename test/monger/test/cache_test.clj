@@ -1,6 +1,5 @@
 (ns monger.test.cache-test
-  (:require [monger.test.helper :as helper]
-            [monger.core        :as mg]
+  (:require [monger.core        :as mg]
             [monger.collection  :as mc]
             [clojure.core.cache :refer :all]
             [clojure.test :refer :all]
@@ -83,87 +82,45 @@
 ;; Tests
 ;;
 
-(helper/connect!)
-
-(use-fixtures :each (fn [f]
-                      (mc/remove "basic_monger_cache_entries")
-                      (let [db (mg/get-db "altcache")]
-                        (mc/remove db "db_aware_monger_cache_entries" {}))
-                      (f)
-                      (mc/remove "basic_monger_cache_entries")
-                      (let [db (mg/get-db "altcache")]
-                        (mc/remove db "db_aware_monger_cache_entries" {}))))
+(let [conn (mg/connect)
+      db   (mg/get-db conn "monger-test")]
+  (use-fixtures :each (fn [f]
+                        (mc/remove db "basic_monger_cache_entries")
+                        (f)
+                        (mc/remove db "basic_monger_cache_entries")))
 
 
-(deftest ^{:cache true}
-  test-has?-with-basic-monger-cache
-  (testing "that has? returns false for misses"
-    (let [coll "basic_monger_cache_entries"
-          c    (basic-monger-cache-factory coll)]
-      (is (not (has? c (str (UUID/randomUUID)))))
-      (is (not (has? c (str (UUID/randomUUID)))))))
-  (testing "that has? returns true for hits"
-    (let [coll "basic_monger_cache_entries"
-          c    (basic-monger-cache-factory coll {"a" 1 "b" "cache" "c" 3/4})]
-      (is (has? c "a"))
-      (is (has? c "b"))
-      (is (has? c "c"))
-      (is (not (has? c "d"))))))
+  (deftest ^{:cache true}
+    test-has?-with-basic-monger-cache
+    (testing "that has? returns false for misses"
+      (let [coll "basic_monger_cache_entries"
+            c    (basic-monger-cache-factory db coll)]
+        (is (not (has? c (str (UUID/randomUUID)))))
+        (is (not (has? c (str (UUID/randomUUID)))))))
+    (testing "that has? returns true for hits"
+      (let [coll "basic_monger_cache_entries"
+            c    (basic-monger-cache-factory db coll {"a" 1 "b" "cache" "c" 3/4})]
+        (is (has? c "a"))
+        (is (has? c "b"))
+        (is (has? c "c"))
+        (is (not (has? c "d"))))))
 
 
-(deftest ^{:cache true}
-  test-lookup-with-basic-moger-cache
-  (testing "that lookup returns nil for misses"
-    (let [coll "basic_monger_cache_entries"
-          c    (basic-monger-cache-factory coll)]
-      (are [v] (is (nil? (lookup c v)))
-           :missing-key
-           "missing-key"
-           (gensym "missing-key"))))
-  (testing "that lookup returns cached values for hits"
-    (let [l (Long/valueOf 10000)
-          coll "basic_monger_cache_entries"
-          c    (basic-monger-cache-factory coll {:skey "Value" :lkey l "kkey" :keyword})]
-      (are [v k] (is (= v (lookup c k)))
-           "Value"   :skey
-           l         :lkey
-           "keyword" "kkey"))))
+  (deftest ^{:cache true}
+    test-lookup-with-basic-monger-cache
+    (testing "that lookup returns nil for misses"
+      (let [coll "basic_monger_cache_entries"
+            c    (basic-monger-cache-factory db coll)]
+        (are [v] (is (nil? (lookup c v)))
+             :missing-key
+             "missing-key"
+             (gensym "missing-key"))))
+    (testing "that lookup returns cached values for hits"
+      (let [l (Long/valueOf 10000)
+            coll "basic_monger_cache_entries"
+            c    (basic-monger-cache-factory db coll {:skey "Value" :lkey l "kkey" :keyword})]
+        (are [v k] (is (= v (lookup c k)))
+             "Value"   :skey
+             l         :lkey
+             "keyword" "kkey")))))
 
-
-(deftest ^{:cache true}
-  test-has?-with-db-aware-monger-cache
-  (testing "that has? returns false for misses"
-    (let [db   (mg/get-db "altcache")
-          coll "db_aware_monger_cache_entries"
-          c    (db-aware-monger-cache-factory db coll)]
-      (is (not (has? c (str (UUID/randomUUID)))))
-      (is (not (has? c (str (UUID/randomUUID)))))))
-  (testing "that has? returns true for hits"
-    (let [db   (mg/get-db "altcache")
-          coll "db_aware_monger_cache_entries"
-          c    (db-aware-monger-cache-factory db coll {"a" 1 "b" "cache" "c" 3/4})]
-      (is (has? c "a"))
-      (is (has? c "b"))
-      (is (has? c "c"))
-      (is (not (has? c "d"))))))
-
-
-(deftest ^{:cache true}
-  test-lookup-with-db-aware-moger-cache
-  (testing "that lookup returns nil for misses"
-    (let [db   (mg/get-db "altcache")
-          coll "db_aware_monger_cache_entries"
-          c    (db-aware-monger-cache-factory db coll)]
-      (are [v] (is (nil? (lookup c v)))
-           :missing-key
-           "missing-key"
-           (gensym "missing-key"))))
-  (testing "that lookup returns cached values for hits"
-    (let [l (Long/valueOf 10000)
-          db   (mg/get-db "altcache")
-          coll "db_aware_monger_cache_entries"
-          c    (db-aware-monger-cache-factory db coll {:skey "Value" :lkey l "kkey" :keyword})]
-      (are [v k] (is (= v (lookup c k)))
-           "Value"   :skey
-           l         :lkey
-           "keyword" "kkey"))))
