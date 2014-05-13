@@ -54,7 +54,7 @@
        ;; returns write result
        (monger.collection/insert db \"people\" {:name \"Joe\", :age 30})
 
-       (monger.collection/insert db \"people\" {:name \"Joe\", :age 30, WriteConcern/SAFE})
+       (monger.collection/insert db \"people\" {:name \"Joe\", :age 30, WriteConcern/REPLICAS_SAFE})
   "
   ([^DB db ^String coll document]
      (.insert (.getCollection db (name coll))
