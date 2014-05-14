@@ -57,6 +57,19 @@ object:
       db   (mg/get-db conn "monger-test")])
 ```
 
+### Options as Maps
+
+Functions that take options now require a proper Clojure map instead of
+pseudo keyword arguments:
+
+``` clojure
+# in Monger 1.x
+(mc/update db coll {} {:score 0} :multi true)
+
+# in Monger 2.x
+(mc/update db coll {} {:score 0} {:multi true})
+```
+
 
 
 ## Changes between 1.8.0-beta2 and 1.8.0
