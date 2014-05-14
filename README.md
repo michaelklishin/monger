@@ -46,14 +46,14 @@ Maven, add the following repository definition to your `pom.xml`:
 
 With Leiningen:
 
-    [com.novemberain/monger "1.8.0"]
+    [com.novemberain/monger "2.0.0-rc1"]
 
 With Maven:
 
     <dependency>
       <groupId>com.novemberain</groupId>
       <artifactId>monger</artifactId>
-      <version>1.8.0</version>
+      <version>2.0.0-rc1</version>
     </dependency>
 
 
@@ -105,27 +105,6 @@ stable release is highly recommended.
 
 Monger is part of the [group of Clojure libraries known as ClojureWerkz](http://clojurewerkz.org), together with
 [Cassaforte](http://clojurecassandra.info), [Langohr](http://clojurerabbitmq.info), [Elastisch](http://clojureelasticsearch.info), [Titanium](http://titanium.clojurewerkz.org), [Quartzite](http://clojurequartz.info) and several others.
-
-
-## Baseline Performance
-
-Monger is efficient and has very little overhead
-compared to the underlying Java driver. Here is one (very
-unscientific) benchmark on a MacBook Pro from mid-2010 with Core i7
-and an Intel SSD drive:
-
-```
-Testing monger.test.stress
-Inserting  1000  documents...
-"Elapsed time: 25.699 msecs"
-Inserting  10000  documents...
-"Elapsed time: 135.069 msecs"
-Inserting  100000  documents...
-"Elapsed time: 515.969 msecs"
-```
-
-With the `SAFE` write concern, it takes roughly 0.5 second to insert
-100,000 documents with Clojure 1.3.0.
 
 
 
