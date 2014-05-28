@@ -346,10 +346,10 @@
 
     ;; add :band field to all the records found in \"people\" collection, otherwise only the first matched record
     ;; will be updated
-    (monger.collection/update db \"people\" {} {\"$set\" {:band \"The Beatles\"}} :multi true)
+    (monger.collection/update db \"people\" {} {\"$set\" {:band \"The Beatles\"}} {:multi true})
 
     ;; inserts the record if it did not exist in the collection
-    (monger.collection/update db \"people\" {:first_name \"Yoko\"} {:first_name \"Yoko\" :last_name \"Ono\"} {:upsert true)
+    (monger.collection/update db \"people\" {:first_name \"Yoko\"} {:first_name \"Yoko\" :last_name \"Ono\"} {:upsert true})
 
   By default :upsert and :multi are false."
   ([^DB db ^String coll ^Map conditions ^Map document]
