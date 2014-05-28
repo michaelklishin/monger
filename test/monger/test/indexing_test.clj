@@ -12,7 +12,7 @@
   (deftest ^{:indexing true} test-creating-and-dropping-indexes
     (let [collection "libraries"]
       (mc/drop-indexes db collection)
-      (mc/create-index db collection { "language" 1 })
+      (mc/create-index db collection {"language" 1})
       (is (= "language_1"
              (:name (second (mc/indexes-on db collection)))))
       (mc/drop-index db collection "language_1")
@@ -23,7 +23,7 @@
       (is (= "language_1"
              (:name (second (mc/indexes-on db collection)))))
       (mc/ensure-index db collection (array-map "language" 1))
-      (mc/ensure-index db collection (array-map "language" 1) { :unique true })
+      (mc/ensure-index db collection (array-map "language" 1) {:unique true})
       (mc/drop-indexes db collection)))
 
   (deftest ^{:indexing true :time-consuming true} test-ttl-collections
