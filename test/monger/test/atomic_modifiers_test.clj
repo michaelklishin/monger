@@ -1,10 +1,10 @@
 (ns monger.test.atomic-modifiers-test
   (:import  [com.mongodb WriteResult WriteConcern DBObject]
-            [org.bson.types ObjectId]
+            org.bson.types.ObjectId
             java.util.Date)
   (:require [monger.core :as mg]
             [monger.collection :as mc]
-            [monger.result     :as mgres]
+            [monger.result :refer [ok?]]
             [clojure.test :refer :all]
             [monger.operators :refer :all]))
 
@@ -31,33 +31,33 @@
   (deftest increment-a-single-existing-field-using-$inc-modifier
     (let [coll "scores"
           oid  (ObjectId.)]
-      (mc/insert db coll { :_id oid :username "l33r0y" :score 100 })
-      (mc/update db coll { :_id oid } { $inc { :score 20 } })
+      (mc/insert db coll {:_id oid :username "l33r0y" :score 100})
+      (mc/update db coll {:_id oid} {$inc {:score 20}})
       (is (= 120 (:score (mc/find-map-by-id db coll oid))))))
 
   (deftest set-a-single-non-existing-field-using-$inc-modifier
     (let [coll "scores"
           oid  (ObjectId.)]
-      (mc/insert db coll { :_id oid :username "l33r0y" })
-      (mc/update db coll { :_id oid } { $inc { :score 30 } })
+      (mc/insert db coll {:_id oid :username "l33r0y"})
+      (mc/update db coll {:_id oid} {$inc {:score 30}})
       (is (= 30 (:score (mc/find-map-by-id db coll oid))))))
 
 
   (deftest increment-multiple-existing-fields-using-$inc-modifier
     (let [coll "scores"
           oid  (ObjectId.)]
-      (mc/insert db coll { :_id oid :username "l33r0y" :score 100 :bonus 0 })
-      (mc/update db coll { :_id oid } {$inc { :score 20 :bonus 10 } })
-      (is (= { :_id oid :score 120 :bonus 10 :username "l33r0y" }
+      (mc/insert db coll {:_id oid :username "l33r0y" :score 100 :bonus 0})
+      (mc/update db coll {:_id oid} {$inc {:score 20 :bonus 10}})
+      (is (= {:_id oid :score 120 :bonus 10 :username "l33r0y"}
              (mc/find-map-by-id db coll oid)))))
 
 
   (deftest increment-and-set-multiple-existing-fields-using-$inc-modifier
     (let [coll "scores"
           oid  (ObjectId.)]
-      (mc/insert db coll { :_id oid :username "l33r0y" :score 100 })
-      (mc/update db coll { :_id oid } { $inc { :score 20 :bonus 10 } })
-      (is (= { :_id oid :score 120 :bonus 10 :username "l33r0y" }
+      (mc/insert db coll {:_id oid :username "l33r0y" :score 100})
+      (mc/update db coll {:_id oid} {$inc {:score 20 :bonus 10}})
+      (is (= {:_id oid :score 120 :bonus 10 :username "l33r0y"}
              (mc/find-map-by-id db coll oid)))))
 
 
@@ -69,32 +69,32 @@
   (deftest update-a-single-existing-field-using-$set-modifier
     (let [coll "things"
           oid  (ObjectId.)]
-      (mc/insert db coll { :_id oid :weight 10.0 })
-      (mc/update db coll { :_id oid } { $set { :weight 20.5 } })
+      (mc/insert db coll {:_id oid :weight 10.0})
+      (mc/update db coll {:_id oid} {$set {:weight 20.5}})
       (is (= 20.5 (:weight (mc/find-map-by-id db coll oid [:weight]))))))
 
   (deftest set-a-single-non-existing-field-using-$set-modifier
     (let [coll "things"
           oid  (ObjectId.)]
-      (mc/insert db coll { :_id oid :weight 10.0 })
-      (mc/update db coll { :_id oid } { $set { :height 17.2 } })
+      (mc/insert db coll {:_id oid :weight 10.0})
+      (mc/update db coll {:_id oid} {$set {:height 17.2}})
       (is (= 17.2 (:height (mc/find-map-by-id db coll oid [:height]))))))
 
   (deftest update-multiple-existing-fields-using-$set-modifier
     (let [coll "things"
           oid  (ObjectId.)]
-      (mc/insert db coll { :_id oid :weight 10.0 :height 15.2 })
-      (mc/update db coll { :_id oid } { $set { :weight 20.5 :height 25.6 } })
-      (is (= { :_id oid :weight 20.5 :height 25.6 }
+      (mc/insert db coll {:_id oid :weight 10.0 :height 15.2})
+      (mc/update db coll {:_id oid} {$set {:weight 20.5 :height 25.6}})
+      (is (= {:_id oid :weight 20.5 :height 25.6}
              (mc/find-map-by-id db coll oid [:weight :height])))))
 
 
   (deftest update-and-set-multiple-fields-using-$set-modifier
     (let [coll "things"
           oid  (ObjectId.)]
-      (mc/insert db coll { :_id oid :weight 10.0 })
-      (mc/update db coll { :_id oid } {$set { :weight 20.5 :height 25.6 } })
-      (is (= { :_id oid :weight 20.5 :height 25.6 }
+      (mc/insert db coll {:_id oid :weight 10.0})
+      (mc/update db coll {:_id oid} {$set {:weight 20.5 :height 25.6}})
+      (is (= {:_id oid :weight 20.5 :height 25.6}
              (mc/find-map-by-id db coll oid [:weight :height])))))
 
 
@@ -105,27 +105,27 @@
   (deftest unset-a-single-existing-field-using-$unset-modifier
     (let [coll "docs"
           oid  (ObjectId.)]
-      (mc/insert db coll { :_id oid :title "Document 1" :published true })
-      (mc/update db coll { :_id oid } { $unset { :published 1 } })
-      (is (= { :_id oid :title "Document 1" }
+      (mc/insert db coll {:_id oid :title "Document 1" :published true})
+      (mc/update db coll {:_id oid} {$unset {:published 1}})
+      (is (= {:_id oid :title "Document 1"}
              (mc/find-map-by-id db coll oid)))))
 
 
   (deftest unset-multiple-existing-fields-using-$unset-modifier
     (let [coll "docs"
           oid  (ObjectId.)]
-      (mc/insert db coll { :_id oid :title "Document 1" :published true :featured true })
-      (mc/update db coll { :_id oid } { $unset { :published 1 :featured true } })
-      (is (= { :_id oid :title "Document 1" }
+      (mc/insert db coll {:_id oid :title "Document 1" :published true :featured true})
+      (mc/update db coll {:_id oid} {$unset {:published 1 :featured true}})
+      (is (= {:_id oid :title "Document 1"}
              (mc/find-map-by-id db coll oid)))))
 
 
   (deftest unsetting-an-unexisting-field-using-$unset-modifier-is-not-considered-an-issue
     (let [coll "docs"
           oid  (ObjectId.)]
-      (mc/insert db coll { :_id oid :title "Document 1" :published true })
-      (is (mgres/ok? (mc/update db coll { :_id oid } { $unset { :published 1 :featured true } })))
-      (is (= { :_id oid :title "Document 1" }
+      (mc/insert db coll {:_id oid :title "Document 1" :published true})
+      (is (ok? (mc/update db coll {:_id oid} {$unset {:published 1 :featured true}})))
+      (is (= {:_id oid :title "Document 1"}
              (mc/find-map-by-id db coll oid)))))
 
   ;;
@@ -137,7 +137,7 @@
           now  456
           oid  (ObjectId.)]
       (mc/find-and-modify db coll {:_id oid} {$set {:lastseen now} $setOnInsert {:firstseen now}} {:upsert true})
-      (is (= { :_id oid :lastseen now :firstseen now}
+      (is (= {:_id oid :lastseen now :firstseen now}
              (mc/find-map-by-id db coll oid)))))
 
   (deftest setOnInsert-in-upsert-for-existing-document
@@ -145,9 +145,9 @@
           before 123
           now    456
           oid    (ObjectId.)]
-      (mc/insert db coll { :_id oid :firstseen before :lastseen before})
+      (mc/insert db coll {:_id oid :firstseen before :lastseen before})
       (mc/find-and-modify db coll {:_id oid} {$set {:lastseen now} $setOnInsert {:firstseen now}} {:upsert true})
-      (is (= { :_id oid :lastseen now :firstseen before}
+      (is (= {:_id oid :lastseen now :firstseen before}
              (mc/find-map-by-id db coll oid)))))
 
   ;;
@@ -158,18 +158,18 @@
     (let [coll  "docs"
           oid   (ObjectId.)
           title "$push modifier appends value to field"]
-      (mc/insert db coll { :_id oid :title title })
-      (mc/update db coll { :_id oid } { $push { :tags "modifiers" } })
-      (is (= { :_id oid :title title :tags ["modifiers"] }
+      (mc/insert db coll {:_id oid :title title})
+      (mc/update db coll {:_id oid} {$push {:tags "modifiers"}})
+      (is (= {:_id oid :title title :tags ["modifiers"]}
              (mc/find-map-by-id db coll oid)))))
 
   (deftest add-value-to-an-existing-array-using-$push-modifier
     (let [coll  "docs"
           oid   (ObjectId.)
           title "$push modifier appends value to field"]
-      (mc/insert db coll { :_id oid :title title :tags ["mongodb"] })
-      (mc/update db coll { :_id oid } { $push { :tags "modifiers" } })
-      (is (= { :_id oid :title title :tags ["mongodb" "modifiers"] }
+      (mc/insert db coll {:_id oid :title title :tags ["mongodb"]})
+      (mc/update db coll {:_id oid} {$push {:tags "modifiers"}})
+      (is (= {:_id oid :title title :tags ["mongodb" "modifiers"]}
              (mc/find-map-by-id db coll oid)))))
 
 
@@ -179,9 +179,9 @@
     (let [coll  "docs"
           oid   (ObjectId.)
           title "$push modifier appends value to field"]
-      (mc/insert db coll { :_id oid :title title :tags ["mongodb"] })
-      (mc/update db coll { :_id oid } { $push { :tags ["modifiers" "operators"] } })
-      (is (= { :_id oid :title title :tags ["mongodb" ["modifiers" "operators"]] }
+      (mc/insert db coll {:_id oid :title title :tags ["mongodb"]})
+      (mc/update db coll {:_id oid} {$push {:tags ["modifiers" "operators"]}})
+      (is (= {:_id oid :title title :tags ["mongodb" ["modifiers" "operators"]]}
              (mc/find-map-by-id db coll oid)))))
 
 
@@ -190,10 +190,10 @@
     (let [coll  "docs"
           oid   (ObjectId.)
           title "$push modifier appends value to field"]
-      (mc/insert db coll { :_id oid :title title :tags ["mongodb"] })
-      (mc/update db coll { :_id oid } { $push { :tags "modifiers" } })
-      (mc/update db coll { :_id oid } { $push { :tags "modifiers" } })
-      (is (= { :_id oid :title title :tags ["mongodb" "modifiers" "modifiers"] }
+      (mc/insert db coll {:_id oid :title title :tags ["mongodb"]})
+      (mc/update db coll {:_id oid} {$push {:tags "modifiers"}})
+      (mc/update db coll {:_id oid} {$push {:tags "modifiers"}})
+      (is (= {:_id oid :title title :tags ["mongodb" "modifiers" "modifiers"]}
              (mc/find-map-by-id db coll oid)))))
 
   ;;
@@ -204,18 +204,18 @@
     (let [coll  "docs"
           oid   (ObjectId.)
           title "$pushAll modifier appends multiple values to field"]
-      (mc/insert db coll { :_id oid :title title })
-      (mc/update db coll { :_id oid } { $pushAll { :tags ["mongodb" "docs"] } })
-      (is (= { :_id oid :title title :tags ["mongodb" "docs"] }
+      (mc/insert db coll {:_id oid :title title})
+      (mc/update db coll {:_id oid} {$pushAll {:tags ["mongodb" "docs"]}})
+      (is (= {:_id oid :title title :tags ["mongodb" "docs"]}
              (mc/find-map-by-id db coll oid)))))
 
   (deftest add-value-to-an-existing-array-using-$pushAll-modifier
     (let [coll  "docs"
           oid   (ObjectId.)
           title "$pushAll modifier appends multiple values to field"]
-      (mc/insert db coll { :_id oid :title title :tags ["mongodb"] })
-      (mc/update db coll { :_id oid } { $pushAll { :tags ["modifiers" "docs"] } })
-      (is (= { :_id oid :title title :tags ["mongodb" "modifiers" "docs"] }
+      (mc/insert db coll {:_id oid :title title :tags ["mongodb"]})
+      (mc/update db coll {:_id oid} {$pushAll {:tags ["modifiers" "docs"]}})
+      (is (= {:_id oid :title title :tags ["mongodb" "modifiers" "docs"]}
              (mc/find-map-by-id db coll oid)))))
 
 
@@ -223,9 +223,9 @@
     (let [coll  "docs"
           oid   (ObjectId.)
           title "$pushAll modifier appends multiple values to field"]
-      (mc/insert db coll { :_id oid :title title :tags ["mongodb" "docs"] })
-      (mc/update db coll { :_id oid } { $pushAll { :tags ["modifiers" "docs"] } })
-      (is (= { :_id oid :title title :tags ["mongodb" "docs" "modifiers" "docs"] }
+      (mc/insert db coll {:_id oid :title title :tags ["mongodb" "docs"]})
+      (mc/update db coll {:_id oid} {$pushAll {:tags ["modifiers" "docs"]}})
+      (is (= {:_id oid :title title :tags ["mongodb" "docs" "modifiers" "docs"]}
              (mc/find-map-by-id db coll oid)))))
 
 
@@ -237,18 +237,18 @@
     (let [coll  "docs"
           oid   (ObjectId.)
           title "$addToSet modifier appends value to field unless it is already there"]
-      (mc/insert db coll { :_id oid :title title })
-      (mc/update db coll { :_id oid } { $addToSet { :tags "modifiers" } })
-      (is (= { :_id oid :title title :tags ["modifiers"] }
+      (mc/insert db coll {:_id oid :title title})
+      (mc/update db coll {:_id oid} {$addToSet {:tags "modifiers"}})
+      (is (= {:_id oid :title title :tags ["modifiers"]}
              (mc/find-map-by-id db coll oid)))))
 
   (deftest add-value-to-an-existing-array-using-$addToSet-modifier
     (let [coll  "docs"
           oid   (ObjectId.)
           title "$addToSet modifier appends value to field unless it is already there"]
-      (mc/insert db coll { :_id oid :title title :tags ["mongodb"] })
-      (mc/update db coll { :_id oid } { $addToSet { :tags "modifiers" } })
-      (is (= { :_id oid :title title :tags ["mongodb" "modifiers"] }
+      (mc/insert db coll {:_id oid :title title :tags ["mongodb"]})
+      (mc/update db coll {:_id oid} {$addToSet {:tags "modifiers"}})
+      (is (= {:_id oid :title title :tags ["mongodb" "modifiers"]}
              (mc/find-map-by-id db coll oid)))))
 
 
@@ -256,10 +256,10 @@
     (let [coll  "docs"
           oid   (ObjectId.)
           title "$addToSet modifier appends value to field unless it is already there"]
-      (mc/insert db coll { :_id oid :title title :tags ["mongodb"] })
-      (mc/update db coll { :_id oid } { $addToSet { :tags "modifiers" } })
-      (mc/update db coll { :_id oid } { $addToSet { :tags "modifiers" } })
-      (is (= { :_id oid :title title :tags ["mongodb" "modifiers"] }
+      (mc/insert db coll {:_id oid :title title :tags ["mongodb"]})
+      (mc/update db coll {:_id oid} {$addToSet {:tags "modifiers"}})
+      (mc/update db coll {:_id oid} {$addToSet {:tags "modifiers"}})
+      (is (= {:_id oid :title title :tags ["mongodb" "modifiers"]}
              (mc/find-map-by-id db coll oid)))))
 
 
@@ -271,27 +271,27 @@
     (let [coll   "docs"
           oid    (ObjectId.)
           title "$pop modifier removes last or first value in the array"]
-      (mc/insert db coll { :_id oid :title title :tags ["products" "apple" "reviews"] })
-      (mc/update db coll { :_id oid } { $pop { :tags 1 } })
-      (is (= { :_id oid :title title :tags ["products" "apple"] }
+      (mc/insert db coll {:_id oid :title title :tags ["products" "apple" "reviews"]})
+      (mc/update db coll {:_id oid} {$pop {:tags 1}})
+      (is (= {:_id oid :title title :tags ["products" "apple"]}
              (mc/find-map-by-id db coll oid)))))
 
   (deftest unshift-first-value-in-the-array-using-$pop-modifier
     (let [coll   "docs"
           oid    (ObjectId.)
           title "$pop modifier removes last or first value in the array"]
-      (mc/insert db coll { :_id oid :title title :tags ["products" "apple" "reviews"] })
-      (mc/update db coll { :_id oid } { $pop { :tags -1 } })
-      (is (= { :_id oid :title title :tags ["apple" "reviews"] }
+      (mc/insert db coll {:_id oid :title title :tags ["products" "apple" "reviews"]})
+      (mc/update db coll {:_id oid} {$pop {:tags -1}})
+      (is (= {:_id oid :title title :tags ["apple" "reviews"]}
              (mc/find-map-by-id db coll oid)))))
 
   (deftest pop-last-values-from-multiple-arrays-using-$pop-modifier
     (let [coll   "docs"
           oid    (ObjectId.)
           title "$pop modifier removes last or first value in the array"]
-      (mc/insert db coll { :_id oid :title title :tags ["products" "apple" "reviews"] :categories ["apple" "reviews" "drafts"] })
-      (mc/update db coll { :_id oid } { $pop { :tags 1 :categories 1 } })
-      (is (= { :_id oid :title title :tags ["products" "apple"] :categories ["apple" "reviews"] }
+      (mc/insert db coll {:_id oid :title title :tags ["products" "apple" "reviews"] :categories ["apple" "reviews" "drafts"]})
+      (mc/update db coll {:_id oid} {$pop {:tags 1 :categories 1}})
+      (is (= {:_id oid :title title :tags ["products" "apple"] :categories ["apple" "reviews"]}
              (mc/find-map-by-id db coll oid)))))
 
 
@@ -303,18 +303,18 @@
     (let [coll   "docs"
           oid    (ObjectId.)
           title "$pull modifier removes all value entries in the array"]
-      (mc/insert db coll { :_id oid :title title :measurements [1.0 1.2 1.2 1.2 1.1 1.1 1.2 1.3 1.0] })
-      (mc/update db coll { :_id oid } { $pull { :measurements 1.2 } })
-      (is (= { :_id oid :title title :measurements [1.0 1.1 1.1 1.3 1.0] }
+      (mc/insert db coll {:_id oid :title title :measurements [1.0 1.2 1.2 1.2 1.1 1.1 1.2 1.3 1.0]})
+      (mc/update db coll {:_id oid} {$pull {:measurements 1.2}})
+      (is (= {:_id oid :title title :measurements [1.0 1.1 1.1 1.3 1.0]}
              (mc/find-map-by-id db coll oid)))))
 
   (deftest remove-all-value-entries-from-array-using-$pull-modifier-based-on-a-condition
     (let [coll   "docs"
           oid    (ObjectId.)
           title "$pull modifier removes all value entries in the array"]
-      (mc/insert db coll { :_id oid :title title :measurements [1.0 1.2 1.2 1.2 1.1 1.1 1.2 1.3 1.0] })
-      (mc/update db coll { :_id oid } { $pull { :measurements { $gte 1.2 } } })
-      (is (= { :_id oid :title title :measurements [1.0 1.1 1.1 1.0] }
+      (mc/insert db coll {:_id oid :title title :measurements [1.0 1.2 1.2 1.2 1.1 1.1 1.2 1.3 1.0]})
+      (mc/update db coll {:_id oid} {$pull {:measurements {$gte 1.2}}})
+      (is (= {:_id oid :title title :measurements [1.0 1.1 1.1 1.0]}
              (mc/find-map-by-id db coll oid)))))
   ;;
   ;; $pullAll
@@ -324,9 +324,9 @@
     (let [coll   "docs"
           oid    (ObjectId.)
           title "$pullAll modifier removes entries of multiple values in the array"]
-      (mc/insert db coll { :_id oid :title title :measurements [1.0 1.2 1.2 1.2 1.1 1.1 1.2 1.3 1.0] })
-      (mc/update db coll { :_id oid } { $pullAll { :measurements [1.0 1.1 1.2] } })
-      (is (= { :_id oid :title title :measurements [1.3] }
+      (mc/insert db coll {:_id oid :title title :measurements [1.0 1.2 1.2 1.2 1.1 1.1 1.2 1.3 1.0]})
+      (mc/update db coll {:_id oid} {$pullAll {:measurements [1.0 1.1 1.2]}})
+      (is (= {:_id oid :title title :measurements [1.3]}
              (mc/find-map-by-id db coll oid)))))
 
 
@@ -339,9 +339,9 @@
           oid    (ObjectId.)
           title "$rename renames fields"
           v     [1.0 1.2 1.2 1.2 1.1 1.1 1.2 1.3 1.0]]
-      (mc/insert db coll { :_id oid :title title :measurements v })
-      (mc/update db coll { :_id oid } { $rename { :measurements "results" } })
-      (is (= { :_id oid :title title :results v }
+      (mc/insert db coll {:_id oid :title title :measurements v})
+      (mc/update db coll {:_id oid} {$rename {:measurements "results"}})
+      (is (= {:_id oid :title title :results v}
              (mc/find-map-by-id db coll oid)))))
 
 
