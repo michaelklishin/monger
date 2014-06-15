@@ -88,10 +88,11 @@
   ([^String hostname ^Long port]
      (ServerAddress. hostname port)))
 
-(defn mongo-options
-  [& { :keys [connections-per-host threads-allowed-to-block-for-connection-multiplier
-              max-wait-time connect-timeout socket-timeout socket-keep-alive auto-connect-retry max-auto-connect-retry-time
-              description write-concern cursor-finalizer-enabled] :or [auto-connect-retry true] }]
+(defn ^MongoClientOptions$Builder mongo-options-builder
+  [{:keys [connections-per-host threads-allowed-to-block-for-connection-multiplier
+           max-wait-time connect-timeout socket-timeout socket-keep-alive auto-connect-retry max-auto-connect-retry-time
+           description write-concern cursor-finalizer-enabled read-preference
+           required-replica-set-name] :or [auto-connect-retry true]}]
   (let [mob (MongoClientOptions$Builder.)]
     (when connections-per-host
       (.connectionsPerHost mob connections-per-host))
@@ -107,14 +108,24 @@
       (.socketKeepAlive mob socket-keep-alive))
     (when auto-connect-retry
       (.autoConnectRetry mob auto-connect-retry))
+    ;; deprecated
     (when max-auto-connect-retry-time
       (.maxAutoConnectRetryTime mob max-auto-connect-retry-time))
+    (when read-preference
+      (.readPreference mob read-preference))
     (when description
       (.description mob description))
     (when write-concern
       (.writeConcern mob write-concern))
     (when cursor-finalizer-enabled
       (.cursorFinalizerEnabled mob cursor-finalizer-enabled))
+    (when required-replica-set-name
+      (.requiredReplicaSetName mob required-replica-set-name))
+    mob))
+
+(defn ^MongoClientOptions mongo-options
+  [opts]
+  (let [mob (mongo-options-builder opts)]
     (.build mob)))
 
 (defn disconnect

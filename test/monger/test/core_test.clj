@@ -16,12 +16,12 @@
     (mg/disconnect conn)))
 
 (deftest connect-to-mongo-with-default-host-and-explicit-port
-  (let [connection (mg/connect { :port 27017 })]
+  (let [connection (mg/connect {:port 27017})]
     (is (instance? com.mongodb.MongoClient connection))))
 
 
 (deftest connect-to-mongo-with-default-port-and-explicit-host
-  (let [connection (mg/connect { :host "127.0.0.1" })]
+  (let [connection (mg/connect {:host "127.0.0.1"})]
     (is (instance? com.mongodb.MongoClient connection))))
 
 (deftest test-server-address
@@ -32,13 +32,13 @@
     (is (= port (.getPort sa)))))
 
 (deftest use-existing-mongo-connection
-  (let [^MongoClientOptions opts (mongo-options :threads-allowed-to-block-for-connection-multiplier 300)
+  (let [^MongoClientOptions opts (mongo-options {:threads-allowed-to-block-for-connection-multiplier 300})
         connection               (MongoClient. "127.0.0.1" opts)
         db                       (mg/get-db connection "monger-test")]
     (mg/disconnect connection)))
 
 (deftest connect-to-mongo-with-extra-options
-  (let [^MongoClientOptions opts (mongo-options :threads-allowed-to-block-for-connection-multiplier 300)
+  (let [^MongoClientOptions opts (mongo-options {:threads-allowed-to-block-for-connection-multiplier 300})
         ^ServerAddress sa        (server-address "127.0.0.1" 27017)
         conn                     (mg/connect sa opts)]
     (mg/disconnect conn)))
