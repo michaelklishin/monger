@@ -29,8 +29,8 @@
            [java.util List Map]
            [clojure.lang IPersistentMap ISeq]
            org.bson.types.ObjectId)
-  (:require monger.core
-            monger.result
+  (:require [monger.core :as mc]
+            [monger.result :as mres]
             [monger.conversion :refer :all]
             [monger.constraints :refer :all]))
 
@@ -44,22 +44,15 @@
 ;;
 
 (defn ^WriteResult insert
-  "Saves @document@ to @collection@ and returns write result monger.result/ok? and similar functions operate on. You can optionally specify WriteConcern.
+  "Saves document to collection and returns a write result monger.result/ok?
+   and similar functions operate on. You can optionally specify a WriteConcern.
 
    In case you need the exact inserted document returned, with the :_id key generated,
-   use monger.collection/insert-and-return instead.
-
-   EXAMPLES:
-
-       ;; returns write result
-       (monger.collection/insert db \"people\" {:name \"Joe\", :age 30})
-
-       (monger.collection/insert db \"people\" {:name \"Joe\", :age 30, WriteConcern/REPLICAS_SAFE})
-  "
+   use monger.collection/insert-and-return instead."
   ([^DB db ^String coll document]
      (.insert (.getCollection db (name coll))
               (to-db-object document)
-              ^WriteConcern monger.core/*mongodb-write-concern*))
+              ^WriteConcern mc/*mongodb-write-concern*))
   ([^DB db ^String coll document ^WriteConcern concern]
      (.insert (.getCollection db (name coll))
               (to-db-object document)
@@ -69,41 +62,28 @@
 (defn ^clojure.lang.IPersistentMap insert-and-return
   "Like monger.collection/insert but returns the inserted document as a persistent Clojure map.
 
-  If the :_id key wasn't set on the document, it will be generated and merged into the returned map.
-
-   EXAMPLES:
-
-       ;; returns the entire document with :_id generated
-       (monger.collection/insert-and-return db \"people\" {:name \"Joe\", :age 30})
-
-       (monger.collection/insert-and-return db \"people\" {:name \"Joe\", :age 30, WriteConcern/SAFE})
-  "
+  If the :_id key wasn't set on the document, it will be generated and merged into the returned
+  map."
   ([^DB db ^String coll document]
-     (insert-and-return db coll document ^WriteConcern monger.core/*mongodb-write-concern*))
+     (insert-and-return db coll document ^WriteConcern mc/*mongodb-write-concern*))
   ([^DB db ^String coll document ^WriteConcern concern]
-     ;; MongoDB Java driver will generate the _id and set it but it tries to mutate the inserted DBObject
-     ;; and it does not work very well in our case, because that DBObject is short lived and produced
-     ;; from the Clojure map we are passing in. Plus, this approach is very awkward with immutable data
-     ;; structures being the default. MK.
+     ;; MongoDB Java driver will generate the _id and set it but it
+     ;; tries to mutate the inserted DBObject and it does not work
+     ;; very well in our case, because that DBObject is short lived
+     ;; and produced from the Clojure map we are passing in. Plus,
+     ;; this approach is very awkward with immutable data structures
+     ;; being the default. MK.
      (let [doc (merge {:_id (ObjectId.)} document)]
        (insert db coll doc concern)
        doc)))
 
 
 (defn ^WriteResult insert-batch
-  "Saves @documents@ do @collection@. You can optionally specify WriteConcern as a third argument.
-
-  EXAMPLES:
-
-      (monger.collection/insert-batch db \"people\" [{:name \"Joe\", :age 30}, {:name \"Paul\", :age 27}])
-
-      (monger.collection/insert-batch db \"people\" [{:name \"Joe\", :age 30}, {:name \"Paul\", :age 27}] WriteConcern/NORMAL)
-
-  "
+  "Saves documents do collection. You can optionally specify WriteConcern as a third argument."
   ([^DB db ^String coll ^List documents]
      (.insert (.getCollection db (name coll))
               ^List (to-db-object documents)
-              ^WriteConcern monger.core/*mongodb-write-concern*))
+              ^WriteConcern mc/*mongodb-write-concern*))
   ([^DB db ^String coll ^List documents ^WriteConcern concern]
      (.insert (.getCollection db (name coll))
               ^List (to-db-object documents)
@@ -116,18 +96,7 @@
 (defn ^DBCursor find
   "Queries for objects in this collection.
    This function returns DBCursor, which allows you to iterate over DBObjects.
-   If you want to manipulate clojure sequences maps, please @find-maps@.
-
-   EXAMPLES:
-      ;; return all objects in this collection.
-      (mgcol/find db \"people\")
-
-      ;; return all objects matching query
-      (mgcol/find db \"people\" {:company \"Comp Corp\"})
-
-      ;; return all objects matching query, taking only specified fields
-      (mgcol/find db \"people\" {:company \"Comp Corp\"} [:first_name :last_name])
-  "
+   If you want to manipulate clojure sequences maps, use find-maps."
   ([^DB db ^String coll]
      (.find (.getCollection db (name coll))))
   ([^DB db ^String coll ^Map ref]
@@ -141,8 +110,7 @@
 (defn find-maps
   "Queries for objects in this collection.
    This function returns clojure Seq of Maps.
-   If you want to work directly with DBObject, use find.
-  "
+   If you want to work directly with DBObject, use find."
   ([^DB db ^String coll]
      (with-open [dbc (find db coll)]
        (map (fn [x] (from-db-object x true)) dbc)))
@@ -170,17 +138,7 @@
 ;;
 
 (defn ^DBObject find-one
-  "Returns a single DBObject from this collection matching the query.
-
-   EXAMPLES:
-
-      (mgcol/find-one db collection {:language \"Clojure\"})
-
-      ;; Return only :language field.
-      ;; Note that _id field is always returned.
-      (mgcol/find-one db collection {:language \"Clojure\"} [:language])
-
-  "
+  "Returns a single DBObject from this collection matching the query."
   ([^DB db ^String coll ^Map ref]
      (.findOne (.getCollection db (name coll))
                (to-db-object ref)))
@@ -204,29 +162,7 @@
 ;;
 
 (defn ^IPersistentMap find-and-modify
-  "Atomically modify a document (at most one) and return it.
-
-   EXAMPLES:
-
-      ;; Find and modify a document
-      (mgcol/find-and-modify db collection {:language \"Python\"} {:language \"Clojure\"})
-
-      ;; If multiple documents match, choose the first one in the specified order
-      (mgcol/find-and-modify db collection {:language \"Python\"} {:language \"Clojure\"} {:sort {:language -1}})
-
-      ;; Remove the object before returning
-      (mgcol/find-and-modify db collection {:language \"Python\"} {} {:remove true})
-
-      ;; Return the modified object instead of the old one
-      (mgcol/find-and-modify db collection {:language \"Python\"} {:language \"Clojure\"} {:return-new true})
-
-      ;; Retrieve a subset of fields
-      (mgcol/find-and-modify db collection {:language \"Python\"} {:language \"Clojure\"} {:fields [ :language ]})
-
-      ;; Create the object if it doesn't exist
-      (mgcol/find-and-modify db collection {:language \"Factor\"} {:language \"Clojure\"} {:upsert true})
-
-  "
+  "Atomically modify a document (at most one) and return it."
   ([^DB db ^String coll ^Map conditions ^Map document {:keys [fields sort remove return-new upsert keywordize] :or
                                                        {fields nil
                                                         sort nil
@@ -246,16 +182,7 @@
 ;;
 
 (defn ^DBObject find-by-id
-  "Returns a single object with matching _id field.
-
-   EXAMPLES:
-
-      (mgcol/find-one-by-id collection (ObjectId. \"4ef45ab4744e9fd632640e2d\"))
-
-      ;; Return only :language field.
-      ;; Note that _id field is always returned.
-      (mgcol/find-one-by-id collection (ObjectId. \"4ef45ab4744e9fd632640e2d\") [:language])
-  "
+  "Returns a single object with matching _id field."
   ([^DB db ^String coll id]
      (check-not-nil! id "id must not be nil")
      (find-one db coll {:_id id}))
@@ -282,26 +209,14 @@
 (defn count
   "Returns the number of documents in this collection.
 
-  Takes optional conditions as an argument.
-
-      (monger.collection/count db coll)
-
-      (monger.collection/count db coll {:first_name \"Paul\"})"
+  Takes optional conditions as an argument."
   (^long [^DB db ^String coll]
          (.count (.getCollection db (name coll))))
   (^long [^DB db ^String coll ^Map conditions]
          (.count (.getCollection db (name coll)) (to-db-object conditions))))
 
 (defn any?
-  "Whether the collection has any items at all, or items matching query.
-
-   EXAMPLES:
-
-    ;; whether the collection has any items
-    (mgcol/any? db coll)
-
-    (mgcol/any? db coll {:language \"Clojure\"}))
- "
+  "Whether the collection has any items at all, or items matching query."
   ([^DB db ^String coll]
      (> (count db coll) 0))
   ([^DB db ^String coll ^Map conditions]
@@ -309,11 +224,7 @@
 
 
 (defn empty?
-  "Whether the collection is empty.
-
-   EXAMPLES:
-      (mgcol/empty? db \"things\")
-   "
+  "Whether the collection is empty."
   [^DB db ^String coll]
   (= (count db coll {}) 0))
 
@@ -322,42 +233,21 @@
 (defn ^WriteResult update
   "Performs an update operation.
 
-  Please note that update is potentially destructive operation. It will update your document with the given set
-  emptying the fields not mentioned in (^Map document). In order to only change certain fields, please use
+  Please note that update is potentially destructive operation. It updates document with the given set
+  emptying the fields not mentioned in the new document. In order to only change certain fields, use
   \"$set\".
 
-  EXAMPLES
+  You can use all the MongoDB modifier operations ($inc, $set, $unset, $push, $pushAll, $addToSet, $pop, $pull
+  $pullAll, $rename, $bit) here as well.
 
-      (monger.collection/update db \"people\" {:first_name \"Raul\"} {\"$set\" {:first_name \"Paul\"}})
-
-  You can use all the Mongodb Modifier Operations ($inc, $set, $unset, $push, $pushAll, $addToSet, $pop, $pull
-  $pullAll, $rename, $bit) here, as well
-
-  EXAMPLES
-
-    (monger.collection/update db \"people\" {:first_name \"Paul\"} {\"$set\" {:index 1}})
-    (monger.collection/update db \"people\" {:first_name \"Paul\"} {\"$inc\" {:index 5}})
-
-    (monger.collection/update db \"people\" {:first_name \"Paul\"} {\"$unset\" {:years_on_stage 1}})
-
-  It also takes modifiers, such as :upsert and :multi.
-
-  EXAMPLES
-
-    ;; add :band field to all the records found in \"people\" collection, otherwise only the first matched record
-    ;; will be updated
-    (monger.collection/update db \"people\" {} {\"$set\" {:band \"The Beatles\"}} {:multi true})
-
-    ;; inserts the record if it did not exist in the collection
-    (monger.collection/update db \"people\" {:first_name \"Yoko\"} {:first_name \"Yoko\" :last_name \"Ono\"} {:upsert true})
-
+  It also takes options, such as :upsert and :multi.
   By default :upsert and :multi are false."
   ([^DB db ^String coll ^Map conditions ^Map document]
      (update db coll conditions document {}))
   ([^DB db ^String coll ^Map conditions ^Map document {:keys [upsert multi write-concern]
                                                        :or {upsert false
                                                             multi false
-                                                            write-concern monger.core/*mongodb-write-concern*}}]
+                                                            write-concern mc/*mongodb-write-concern*}}]
      (.update (.getCollection db (name coll))
               (to-db-object conditions)
               (to-db-object document)
@@ -376,7 +266,7 @@
      (upsert db coll conditions document {}))
   ([^DB db ^String coll ^Map conditions ^Map document {:keys [multi write-concern]
                                                        :or {multi false
-                                                            write-concern monger.core/*mongodb-write-concern*}}]
+                                                            write-concern mc/*mongodb-write-concern*}}]
      (update db coll conditions document {:multi multi :write-concern write-concern :upsert true})))
 
 (defn ^WriteResult update-by-id
@@ -385,7 +275,7 @@
      (update-by-id db coll id document {}))
   ([^DB db ^String coll id ^Map document {:keys [upsert write-concern]
                                           :or {upsert false
-                                               write-concern monger.core/*mongodb-write-concern*}}]
+                                               write-concern mc/*mongodb-write-concern*}}]
      (check-not-nil! id "id must not be nil")
      (.update (.getCollection db (name coll))
               (to-db-object {:_id id})
@@ -404,16 +294,11 @@
    If the object is already in the database, it will be updated.
 
    This function returns write result. If you want to get the exact persisted document back,
-   use `save-and-return`.
-
-   EXAMPLES
-
-       (monger.collection/save db \"people\" {:first_name \"Ian\" :last_name \"Gillan\"})
-   "
+   use `save-and-return`."
   ([^DB db ^String coll ^Map document]
      (.save (.getCollection db (name coll))
             (to-db-object document)
-            monger.core/*mongodb-write-concern*))
+            mc/*mongodb-write-concern*))
   ([^DB db ^String coll ^Map document ^WriteConcern write-concern]
      (.save (.getCollection db (name coll))
             (to-db-object document)
@@ -428,14 +313,9 @@
    This function returns the exact persisted document back, including the `:_id` key in
    case of an insert.
 
-   If you want to get write result back, use `save`.
-
-   EXAMPLES
-
-       (monger.collection/save-and-return \"people\" {:first_name \"Ian\" :last_name \"Gillan\"})
-   "
+   If you want to get write result back, use `save`."
   ([^DB db ^String coll ^Map document]
-     (save-and-return db coll document ^WriteConcern monger.core/*mongodb-write-concern*))
+     (save-and-return db coll document ^WriteConcern mc/*mongodb-write-concern*))
   ([^DB db ^String coll ^Map document ^WriteConcern write-concern]
      ;; see the comment in insert-and-return. Here we additionally need to make sure to not scrap the :_id key if
      ;; it is already present. MK.
@@ -447,15 +327,7 @@
 ;; monger.collection/remove
 
 (defn ^WriteResult remove
-  "Removes objects from the database.
-
-  EXAMPLES
-
-      (monger.collection/remove db collection) ;; Removes all documents from DB
-
-      (monger.collection/remove db collection {:language \"Clojure\"}) ;; Removes documents based on given query
-
-  "
+  "Removes objects from the database."
   ([^DB db ^String coll]
      (.remove (.getCollection db (name coll)) (to-db-object {})))
   ([^DB db ^String coll ^Map conditions]
@@ -481,15 +353,7 @@
 ;;
 
 (defn create-index
-  "Forces creation of index on a set of fields, if one does not already exists.
-
-  EXAMPLES
-
-      ;; Will create an index on the \"language\" field
-      (monger.collection/create-index db collection {\"language\" 1})
-      (monger.collection/create-index db collection {\"language\" 1} {:unique true :name \"unique_language\"})
-
-  "
+  "Forces creation of index on a set of fields, if one does not already exists."
   ([^DB db ^String coll ^Map keys]
      (.createIndex (.getCollection db (name coll)) (as-field-selector keys)))
   ([^DB db ^String coll ^Map keys ^Map options]
@@ -509,16 +373,7 @@
    Options are:
 
    :unique (boolean) to create a unique index
-   :name (string) to specify a custom index name and not rely on the generated one
-
-   EXAMPLES
-
-     ;; create a regular index
-     ;; clojure.core/array-map produces an ordered map
-     (monger.collection/ensure-index db \"documents\" (array-map \"language\" 1))
-     ;; create a unique index
-     (monger.collection/ensure-index db \"pages\"     (array-map :url 1) {:unique true})
-  "
+   :name (string) to specify a custom index name and not rely on the generated one"
   ([^DB db ^String coll ^Map keys]
      (.ensureIndex (.getCollection db (name coll)) (as-field-selector keys)))
   ([^DB db ^String coll ^Map keys ^Map options]
@@ -537,13 +392,7 @@
 ;;
 
 (defn indexes-on
-  "Return a list of the indexes for this collection.
-
-   EXAMPLES
-
-     (monger.collection/indexes-on collection)
-
-  "
+  "Return a list of the indexes for this collection."
   [^DB db ^String coll]
   (from-db-object (.getIndexInfo (.getCollection db (name coll))) true))
 
@@ -569,12 +418,7 @@
 
 
 (defn exists?
-  "Checks weather collection with certain name exists.
-
-   EXAMPLE:
-
-      (monger.collection/exists? db \"coll\")
-  "
+  "Checks weather collection with certain name exists."
   ([^DB db ^String coll]
      (.collectionExists db coll)))
 
@@ -585,33 +429,17 @@
 
    :capped (pass true to create a capped collection)
    :max (number of documents)
-   :size (max allowed size of the collection, in bytes)
-
-   EXAMPLE:
-
-     ;; create a capped collection
-     (monger.collection/create db \"coll\" {:capped true :size 100000 :max 10})
-  "
+   :size (max allowed size of the collection, in bytes)"
   [^DB db ^String coll ^Map options]
   (.createCollection db coll (to-db-object options)))
 
 (defn drop
-  "Deletes collection from database.
-
-   EXAMPLE:
-
-      (monger.collection/drop \"collection-to-drop\")
-  "
+  "Deletes collection from database."
   [^DB db ^String coll]
   (.drop (.getCollection db (name coll))))
 
 (defn rename
-  "Renames collection.
-
-   EXAMPLE:
-
-      (monger.collection/rename db \"old_name\" \"new_name\")
-   "
+  "Renames collection."
   ([^DB db ^String from, ^String to]
      (.rename (.getCollection db from) to))
   ([^DB db ^String from ^String to drop-target?]
@@ -652,7 +480,7 @@
 
   See http://docs.mongodb.org/manual/applications/aggregation/ to learn more."
   [^DB db ^String coll stages]
-  (let [res (monger.core/command db {:aggregate coll :pipeline stages})]
+  (let [res (mc/command db {:aggregate coll :pipeline stages})]
     ;; this is what DBCollection#distinct does. Turning a blind's eye!
     (.throwOnError res)
     (map #(from-db-object % true) (.get res "result"))))
