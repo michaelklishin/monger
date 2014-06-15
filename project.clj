@@ -36,7 +36,7 @@
              :1.5    {:dependencies [[org.clojure/clojure "1.5.1"]]}
              :master {:dependencies [[org.clojure/clojure "1.7.0-master-SNAPSHOT"]]}
              :dev {:resource-paths ["test/resources"]
-                   :dependencies  [[clj-time               "0.6.0" :exclusions [org.clojure/clojure]]
+                   :dependencies  [[clj-time               "0.7.0" :exclusions [org.clojure/clojure]]
                                    [cheshire               "5.3.1" :exclusions [org.clojure/clojure]]
                                    [org.clojure/tools.cli  "0.3.1" :exclusions [org.clojure/clojure]]
                                    [org.clojure/core.cache "0.6.3" :exclusions [org.clojure/clojure]]
