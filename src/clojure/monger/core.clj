@@ -43,19 +43,7 @@
 
    Arguments:
      :host (\"127.0.0.1\" by default)
-     :port (27017 by default)
-
-   EXAMPLES
-
-       (monger.core/connect)
-       (monger.core/connect {:host \"db3.intranet.local\" :port 27787})
-
-       ;; Connecting to a replica set with a couple of seeds
-       (let [^MongoClientOptions opts (mg/mongo-options :threads-allowed-to-block-for-connection-multiplier 300)
-                           seeds [[\"192.168.1.1\" 27017] [\"192.168.1.2\" 27017] [\"192.168.1.1\" 27018]]
-                           sas (map #(apply mg/server-address %) seeds)]
-         (mg/connect! sas opts))
-   "
+     :port (27017 by default)"
   {:arglists '([]
                  [server-address options]
                    [[server-address & more] options]
@@ -80,11 +68,7 @@
 
 
 (defn ^DB get-db
-  "Get database reference by name.
-
-   EXAMPLES
-
-       (monger.core/get-db connection \"myapp_production\")"
+  "Get database reference by name."
   [^MongoClient conn ^String name]
   (.getDB conn name))
 
@@ -94,11 +78,7 @@
   (.dropDatabase conn db))
 
 (defn ^GridFS get-gridfs
-  "Get GridFS for the given database.
-
-   EXAMPLES
-
-       (monger.core/get-gridfs connection \"myapp_production\")"
+  "Get GridFS for the given database."
   [^MongoClient conn ^String name]
   (GridFS. (.getDB conn name)))
 
