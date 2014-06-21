@@ -25,7 +25,7 @@ wanted a client that will
 
 ## Project Maturity
 
-Monger is not a young project: started in July 2011, it is over 2
+Monger is not a young project: started in July 2011, it is about 3
 years old with active production use from week 1.
 
 
