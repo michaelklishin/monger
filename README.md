@@ -69,9 +69,7 @@ questions, too!
 
 ## Documentation & Examples
 
-Please see our [documentation guides
-site](http://clojuremongodb.info/) and [API
-reference](http://reference.clojuremongodb.info).
+Please see our [documentation guides site](http://clojuremongodb.info/) and [API reference](http://reference.clojuremongodb.info).
 
 Our [test
 suite](https://github.com/michaelklishin/monger/tree/master/test/monger/test)
