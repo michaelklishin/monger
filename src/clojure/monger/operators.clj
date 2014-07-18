@@ -147,8 +147,18 @@
 ;;   (mgcol/update "docs" { :_id oid } { $push { :tags "modifiers" } })
 (defoperator $push)
 
+;; $each is a modifier for the $push and $addToSet operators for appending multiple values to an array field.
+;; Without the $each modifier $push and $addToSet will append an array as a single value.
+;; MongoDB 2.4 adds support for the $each modifier to the $push operator.
+;; In MongoDB 2.2 the $each modifier can only be used with the $addToSet operator.
+;;
+;; EXAMPLES:
+;;   (mgcol/update coll { :_id oid } { $push { :tags { $each ["mongodb" "docs"] } } })
+(defoperator $each)
+
 ;; $pushAll appends each value in value_array to field, if field is an existing array, otherwise sets field to the array value_array
 ;; if field is not present. If field is present but is not an array, an error condition is raised.
+;; Deprecated since MongoDB 2.4, $push with $each modifier should be used instead.
 ;;
 ;; EXAMPLES:
 ;;   (mgcol/update coll { :_id oid } { $pushAll { :tags ["mongodb" "docs"] } })
