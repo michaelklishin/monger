@@ -197,6 +197,37 @@
              (mc/find-map-by-id db coll oid)))))
 
   ;;
+  ;; $push $each
+  ;;
+
+  (deftest initialize-an-array-using-$push-$each-modifier
+    (let [coll  "docs"
+          oid   (ObjectId.)
+          title "$push with $each modifier appends multiple values to field"]
+      (mc/insert db coll {:_id oid :title title})
+      (mc/update db coll {:_id oid} {$push {:tags {$each ["mongodb" "docs"]}}})
+      (is (= {:_id oid :title title :tags ["mongodb" "docs"]}
+             (mc/find-map-by-id db coll oid)))))
+
+  (deftest add-values-to-an-existing-array-using-$push-$each-modifier
+    (let [coll  "docs"
+          oid   (ObjectId.)
+          title "$push with $each modifier appends multiple values to field"]
+      (mc/insert db coll {:_id oid :title title :tags ["mongodb"]})
+      (mc/update db coll {:_id oid} {$push {:tags {$each ["modifiers" "docs"]}}})
+      (is (= {:_id oid :title title :tags ["mongodb" "modifiers" "docs"]}
+             (mc/find-map-by-id db coll oid)))))
+
+  (deftest double-add-value-to-an-existing-array-using-$push-$each-modifier
+    (let [coll  "docs"
+          oid   (ObjectId.)
+          title "$push with $each modifier appends multiple values to field"]
+      (mc/insert db coll {:_id oid :title title :tags ["mongodb" "docs"]})
+      (mc/update db coll {:_id oid} {$push {:tags {$each ["modifiers" "docs"]}}})
+      (is (= {:_id oid :title title :tags ["mongodb" "docs" "modifiers" "docs"]}
+             (mc/find-map-by-id db coll oid)))))
+
+  ;;
   ;; $pushAll
   ;;
 
@@ -262,6 +293,36 @@
       (is (= {:_id oid :title title :tags ["mongodb" "modifiers"]}
              (mc/find-map-by-id db coll oid)))))
 
+  ;;
+  ;; $addToSet $each
+  ;;
+
+  (deftest initialize-an-array-using-$addToSet-$each-modifier
+    (let [coll  "docs"
+          oid   (ObjectId.)
+          title "$addToSet with $each modifier appends multiple values to field unless they are already there"]
+      (mc/insert db coll {:_id oid :title title})
+      (mc/update db coll {:_id oid} {$addToSet {:tags {$each ["mongodb" "docs"]}}})
+      (is (= {:_id oid :title title :tags ["mongodb" "docs"]}
+             (mc/find-map-by-id db coll oid)))))
+
+  (deftest add-values-to-an-existing-array-using-$addToSet-$each-modifier
+    (let [coll  "docs"
+          oid   (ObjectId.)
+          title "$addToSet with $each modifier appends multiple values to field unless they are already there"]
+      (mc/insert db coll {:_id oid :title title :tags ["mongodb"]})
+      (mc/update db coll {:_id oid} {$addToSet {:tags {$each ["modifiers" "docs"]}}})
+      (is (= {:_id oid :title title :tags ["mongodb" "modifiers" "docs"]}
+             (mc/find-map-by-id db coll oid)))))
+
+  (deftest double-add-value-to-an-existing-array-using-$addToSet-$each-modifier
+    (let [coll  "docs"
+          oid   (ObjectId.)
+          title "$addToSet with $each modifier appends multiple values to field unless they are already there"]
+      (mc/insert db coll {:_id oid :title title :tags ["mongodb" "docs"]})
+      (mc/update db coll {:_id oid} {$addToSet {:tags {$each ["modifiers" "docs" "operators"]}}})
+      (is (= {:_id oid :title title :tags ["mongodb" "docs" "modifiers" "operators"]}
+             (mc/find-map-by-id db coll oid)))))
 
   ;;
   ;; $pop
