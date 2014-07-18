@@ -1,3 +1,12 @@
+## Changes between 2.0.0 and 2.1.0
+
+### $each Operator
+
+The `$each` operator now can be used via `monger.operators`.
+
+Contributed by Juha Jokimäki.
+
+
 ## Changes between 1.8.0 and 2.0.0
 
 `2.0` is a major release that has **breaking public API changes**.
