@@ -30,9 +30,11 @@
   (.toString (new BigInteger n (SecureRandom.)) num-base))
 
 (defn ^ObjectId object-id
-  "Returns a new BSON object id"
-  []
-  (ObjectId.))
+  "Returns a new BSON object id, or converts str to BSON object id"
+  ([]
+     (ObjectId.))
+  ([s]
+     (ObjectId. s)))
 
 (defprotocol GetDocumentId
   (get-id  [input] "Returns document id"))
