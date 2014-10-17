@@ -23,7 +23,7 @@
    * http://clojuremongodb.info/articles/updating.html
    * http://clojuremongodb.info/articles/deleting.html
    * http://clojuremongodb.info/articles/aggregation.html"
-  (:refer-clojure :exclude [find remove count drop distinct empty?])
+  (:refer-clojure :exclude [find remove count drop distinct empty? update])
   (:import [com.mongodb Mongo DB DBCollection WriteResult DBObject WriteConcern 
             DBCursor MapReduceCommand MapReduceCommand$OutputType]
            [java.util List Map]
