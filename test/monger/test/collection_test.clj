@@ -163,7 +163,15 @@
       (mc/insert-batch db coll batch)
       (is (= "bed" (:type (mc/find-one-as-map db coll {:_id 2}))))
       (mc/update-by-id db coll 2 {"$set" {:type "living room"}})
-      (is (= "living room" (:type (mc/find-one-as-map db coll {:_id 2}))))))
+      (is (= "living room" (:type (mc/find-one-as-map db coll {:_id 2})))))
+
+    (deftest test-update-by-ids
+      (mc/insert-batch db coll batch)
+      (is (= "bed" (:type (mc/find-one-as-map db coll {:_id 2}))))
+      (is (= "bottle" (:type (mc/find-one-as-map db coll {:_id 3}))))
+      (mc/update-by-ids db coll [2 3] {"$set" {:type "dog"}})
+      (is (= "dog" (:type (mc/find-one-as-map db coll {:_id 2}))))
+      (is (= "dog" (:type (mc/find-one-as-map db coll {:_id 3}))))))
 
   ;;
   ;; miscellenous
