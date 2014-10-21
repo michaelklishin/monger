@@ -284,6 +284,21 @@
               false
               write-concern)))
 
+(defn ^WriteResult update-by-ids
+  "Update documents by given ids"
+  ([^DB db ^String coll ids ^Map document]
+     (update-by-ids db coll ids document {}))
+  ([^DB db ^String coll ids ^Map document {:keys [upsert write-concern]
+                                           :or {upsert false
+                                                write-concern mc/*mongodb-write-concern*}}]
+     (check-not-nil! (seq ids) "ids must not be nil or empty")
+     (.update (.getCollection db (name coll))
+              (to-db-object {:_id {"$in" ids}})
+              (to-db-object document)
+              upsert
+              true
+              write-concern)))
+
 
 ;; monger.collection/save
 
