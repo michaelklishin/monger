@@ -137,6 +137,33 @@
       (is (= ["CA" "IL" "NY"] (sort (mc/distinct db collection :state {}))))
       (is (= ["CA" "NY"] (sort (mc/distinct db collection :state {:price {$gt 100.00}}))))))
 
+  ;;
+  ;; update
+  ;;
+
+  (let [coll "things"
+        batch [{:_id 1 :type "rock" :size "small"}
+               {:_id 2 :type "bed" :size "bed-sized"}
+               {:_id 3 :type "bottle" :size "1.5 liters"}]]
+
+    (deftest test-update
+      (mc/insert-batch db coll batch)
+      (is (= "small" (:size (mc/find-one-as-map db coll {:type "rock"}))))
+      (mc/update db coll {:type "rock"} {"$set" {:size "huge"}})
+      (is (= "huge" (:size (mc/find-one-as-map db coll {:type "rock"})))))
+
+    (deftest test-upsert
+      (is (mc/empty? db coll))
+      (mc/upsert db coll {:_id 4} {"$set" {:size "tiny"}})
+      (is (not (mc/empty? db coll)))
+      (mc/upsert db coll {:_id 4} {"$set" {:size "big"}})
+      (is (= [{:_id 4 :size "big"}] (mc/find-maps db coll {:_id 4}))))
+
+    (deftest test-update-by-id
+      (mc/insert-batch db coll batch)
+      (is (= "bed" (:type (mc/find-one-as-map db coll {:_id 2}))))
+      (mc/update-by-id db coll 2 {"$set" {:type "living room"}})
+      (is (= "living room" (:type (mc/find-one-as-map db coll {:_id 2}))))))
 
   ;;
   ;; miscellenous
