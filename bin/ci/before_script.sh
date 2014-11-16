@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# MongoDB seems to need some time to boot first. MK.
+sleep 5
+
 # MongoDB Java driver won't run authentication twice on the same DB instance,
 # so we need to use multiple DBs.
 mongo --eval 'db.addUser("clojurewerkz/monger", "monger")' monger-test
