@@ -36,7 +36,7 @@
              :1.7    {:dependencies [[org.clojure/clojure "1.7.0-alpha4"]]}
              :master {:dependencies [[org.clojure/clojure "1.7.0-master-SNAPSHOT"]]}
              :dev {:resource-paths ["test/resources"]
-                   :dependencies  [[clj-time               "0.7.0" :exclusions [org.clojure/clojure]]
+                   :dependencies  [[clj-time               "0.8.0" :exclusions [org.clojure/clojure]]
                                    [cheshire               "5.3.1" :exclusions [org.clojure/clojure]]
                                    [org.clojure/tools.cli  "0.3.1" :exclusions [org.clojure/clojure]]
                                    [org.clojure/core.cache "0.6.3" :exclusions [org.clojure/clojure]]
@@ -54,7 +54,7 @@
                                      monger.ring.session-store]}}
              ;; only clj-time/JodaTime available, used to test monger.joda-time w/o clojure.data.json
              :dev2 {:resource-paths ["test/resources"]
-                    :dependencies  [[clj-time "0.6.0"               :exclusions [org.clojure/clojure]]]}}
+                    :dependencies  [[clj-time "0.8.0"               :exclusions [org.clojure/clojure]]]}}
   :aliases {"all" ["with-profile" "dev:dev,1.5:dev,dj01x:dev,dj02x:dev,1.7"]}
   :repositories {"sonatype" {:url "http://oss.sonatype.org/content/repositories/releases"
                              :snapshots false
