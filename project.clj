@@ -2,7 +2,8 @@
   :description "Monger is a Clojure MongoDB client for a more civilized age: friendly, flexible and with batteries included"
   :url "http://clojuremongodb.info"
   :min-lein-version "2.5.0"
-  :license {:name "Eclipse Public License"}
+  :license {:name "Eclipse Public License"
+            :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure           "1.6.0"]
                  [org.mongodb/mongo-java-driver "2.12.1"]
                  [clojurewerkz/support          "1.1.0"]]
