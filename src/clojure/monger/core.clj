@@ -175,7 +175,7 @@
   "Runs a database command (please check MongoDB documentation for the complete list of commands).
 
    Ordering of keys in the command document may matter. Please use sorted maps instead of map literals, for example:
-   (sorted-map geoNear db \"bars\" :near 50 :test 430 :num 10)
+   (array-map :near 50 :test 430 :num 10)
 
    For commonly used commands (distinct, count, map/reduce, etc), use monger.command and monger.collection functions such as
    /distinct, /count,  /drop, /dropIndexes, and /mapReduce respectively."
