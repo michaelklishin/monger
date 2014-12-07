@@ -1,5 +1,13 @@
 ## Changes between 2.0.0 and 2.1.0
 
+### Clojure 1.7 Compatibility
+
+Monger now compiles with Clojure 1.7.
+
+### MongoDB Java Driver Update
+
+MongoDB Java driver dependency has been updated to `2.12.4`.
+
 ### $each Operator
 
 The `$each` operator now can be used via `monger.operators`.
