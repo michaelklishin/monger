@@ -1,3 +1,18 @@
+## Changes between 2.0.0 and 2.0.1
+
+### Clojure 1.7 Compatibility
+
+Monger now compiles with Clojure 1.7.
+
+### ClojureWerkz Support Update
+
+Support has been updated to `1.1.0`.
+
+### MongoDB Java Driver Update
+
+MongoDB Java driver dependency has been updated to `2.12.4`.
+
+
 ## Changes between 1.8.0 and 2.0.0
 
 `2.0` is a major release that has **breaking public API changes**.
