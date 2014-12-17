@@ -95,8 +95,8 @@ stable release is highly recommended.
 
 ## Continuous Integration Status
 
-[![Continuous Integration status](https://secure.travis-ci.org/michaelklishin/monger.png)](http://travis-ci.org/michaelklishin/monger)
-[![Dependencies Status](http://jarkeeper.com/michaelklishin/monger/status.png)](http://jarkeeper.com/michaelklishin/monger)
+[![Continuous Integration status](https://secure.travis-ci.org/michaelklishin/monger.svg)](http://travis-ci.org/michaelklishin/monger)
+[![Dependencies Status](http://jarkeeper.com/michaelklishin/monger/status.svg)](http://jarkeeper.com/michaelklishin/monger)
 
 
 ## Monger Is a ClojureWerkz Project
