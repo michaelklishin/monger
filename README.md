@@ -2,8 +2,7 @@
 
 Monger is an idiomatic [Clojure MongoDB driver](http://clojuremongodb.info) for a more civilized age.
 
-It has batteries included, offers powerful expressive query DSL, strives to support every MongoDB 2.0+ feature and has sane defaults. Monger is built from the
-ground up for Clojure 1.3+ and sits on top of the official MongoDB Java driver.
+It has batteries included, offers powerful expressive query DSL, strives to support every MongoDB 2.0+ feature and has sane defaults. Monger is built from for modern Clojure versions and sits on top of the official MongoDB Java driver.
 
 
 ## Project Goals
@@ -89,14 +88,14 @@ on Twitter.
 
 ## Supported Clojure versions
 
-Monger requires Clojure 1.4+. The most recent
+Monger requires Clojure 1.6+. The most recent
 stable release is highly recommended.
 
 
 ## Continuous Integration Status
 
-[![Continuous Integration status](https://secure.travis-ci.org/michaelklishin/monger.png)](http://travis-ci.org/michaelklishin/monger)
-[![Dependencies Status](http://jarkeeper.com/michaelklishin/monger/status.png)](http://jarkeeper.com/michaelklishin/monger)
+[![Continuous Integration status](https://secure.travis-ci.org/michaelklishin/monger.svg)](http://travis-ci.org/michaelklishin/monger)
+[![Dependencies Status](http://jarkeeper.com/michaelklishin/monger/status.svg)](http://jarkeeper.com/michaelklishin/monger)
 
 
 ## Monger Is a ClojureWerkz Project
