@@ -14,7 +14,7 @@ wanted a client that will
  * Support most of MongoDB 2.0+ features, focus on those that really matter.
  * Be [well documented](http://clojuremongodb.info).
  * Be [well tested](https://github.com/michaelklishin/monger/tree/master/test/monger/test).
- * Target Clojure 1.3.0 and later from the ground up.
+ * Target modern Clojure versions.
  * Be as close to the Mongo shell query language as practical
  * Integrate with libraries like Joda Time, [Cheshire](https://github.com/dakrone/cheshire), clojure.data.json, [Ragtime](https://github.com/weavejester/ragtime).
  * Support URI connections to be friendly to Heroku and other PaaS providers.
@@ -25,7 +25,7 @@ wanted a client that will
 
 ## Project Maturity
 
-Monger is not a young project: started in July 2011, it is about 3
+Monger is not a young project: started in July 2011, it is over 3
 years old with active production use from week 1.
 
 
