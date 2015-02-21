@@ -102,7 +102,7 @@
           coll2 "owners"
           oid   (ObjectId.)
           joe   (mc/insert db coll2 {:name "Joe" :_id oid})
-          dbref (DBRef. db coll2 oid)]
+          dbref (DBRef. coll2 oid)]
       (mc/insert db coll1 {:type "pentagon" :owner dbref})
       (let [fetched (mc/find-one-as-map db coll1 {:type "pentagon"})
             fo      (:owner fetched)]
