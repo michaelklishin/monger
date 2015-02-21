@@ -28,12 +28,10 @@
       (add-option! db-cur :notimeout)
       (is (= (:notimeout cursor-options)
              (.getOptions db-cur)))
-      ;; setting tailable will also set awaitdata in 2.12.x. MK.
       (add-option! db-cur :tailable)
       (is (= (.getOptions db-cur)
              (bit-or (:notimeout cursor-options)
-                     (:tailable cursor-options)
-                     (:awaitdata cursor-options))))))
+                     (:tailable cursor-options))))))
 
   (deftest remove-option-from-cursor
     (let [db-cur (make-db-cursor db :docs)]
