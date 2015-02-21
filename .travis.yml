@@ -9,3 +9,7 @@ jdk:
   - oraclejdk8
 services:
   - mongodb
+branches:
+  only:
+    - master
+    - 2.1.x-stable
