@@ -82,8 +82,8 @@
   DBObject
   (to-db-object [^DBObject input] input)
 
-  com.novemberain.monger.DBRef
-  (to-db-object [^com.novemberain.monger.DBRef dbref]
+  com.mongodb.DBRef
+  (to-db-object [^com.mongodb.DBRef dbref]
     dbref)
 
   Object
@@ -118,7 +118,7 @@
 
   com.mongodb.DBRef
   (from-db-object [^com.mongodb.DBRef input keywordize]
-    (com.novemberain.monger.DBRef. input))
+    input)
 
   DBObject
   (from-db-object [^DBObject input keywordize]
