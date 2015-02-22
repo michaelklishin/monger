@@ -17,67 +17,22 @@
    * http://clojuremongodb.info/articles/updating.html
    * http://clojuremongodb.info/articles/commands.html
    * http://clojuremongodb.info/articles/mapreduce.html"
-  (:import [com.mongodb DBObject WriteResult MapReduceOutput]
-           clojure.lang.IPersistentMap)
+  (:import [com.mongodb WriteResult])
   (:require monger.conversion))
-
-
-;;
-;; Implementation
-;;
-
-(defn- okayish?
-  [value]
-  (contains? #{true "true" 1 1.0} value))
-
 
 ;;
 ;; API
 ;;
 
-(defprotocol MongoCommandResult
-  (ok?               [input] "Returns true if command result is a success")
-  (has-error?        [input] "Returns true if command result indicates an error")
-  (updated-existing? [input] "Returns true if command result has `updatedExisting` field set to true"))
+(defprotocol WriteResultPredicates
+  (acknowledged?     [input] "Returns true if write result is a success")
+  (updated-existing? [input] "Returns true if write result has updated an existing document"))
 
-(extend-protocol MongoCommandResult
-  DBObject
-  (ok?
-    [^DBObject result]
-    (okayish? (.get result "ok")))
-  (has-error?
-    [^DBObject result]
-    ;; yes, this is exactly the logic MongoDB Java driver uses.
-    (> (count (str (.get result "err"))) 0))
-  (updated-existing?
-    [^DBObject result]
-    (let [v ^Boolean (.get result "updatedExisting")]
-      (and v (Boolean/valueOf v))))
-
-
+(extend-protocol WriteResultPredicates
   WriteResult
-  (ok?
+  (acknowledged?
     [^WriteResult result]
-    (and (not (nil? result)) (ok? (.getLastError result))))
-  (has-error?
-    [^WriteResult result]
-    (has-error? (.getLastError result)))
+    (.wasAcknowledged result))
   (updated-existing?
     [^WriteResult result]
-    (updated-existing? (.getLastError result)))
-
-  MapReduceOutput
-  (ok?
-    [^MapReduceOutput result]
-    (ok? ^DBObject (.getRaw result)))
-
-  Boolean
-  (ok?
-    [^Boolean b]
-    (= Boolean/TRUE b))
-  
-  IPersistentMap
-  (ok?
-    [^IPersistentMap m]
-    (okayish? (or (get m :ok)
-                  (get m "ok")))))
+    (.isUpdateOfExisting result)))
