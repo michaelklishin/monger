@@ -200,21 +200,3 @@
     ;; MongoDB Java driver could use a lot more specific type than Iterable but
     ;; it always uses DBCollection#find to popular result set. MK.
     (.count ^DBCursor (.results this))))
-
-(defn ^DBObject get-last-error
-  "Returns the the error (if there is one) from the previous operation on this connection.
-
-   The result of this command looks like:
-
-      #<CommandResult { \"serverUsed\" : \"127.0.0.1:27017\" , \"n\" : 0 , \"connectionId\" : 66 , \"err\" :  null  , \"ok\" : 1.0}>\"
-
-   The value for err will be null if no error occurred, or a description otherwise.
-
-   Important note: when calling this method directly, it is undefined which connection \"getLastError\" is called on.
-   You may need to explicitly use a \"consistent Request\", see requestStart() For most purposes it is better not to call this method directly but instead use WriteConcern."
-  ([^DB database]
-     (.getLastError ^DB database))
-  ([^DB database ^Integer w ^Integer wtimeout ^Boolean fsync]
-     (.getLastError ^DB database w wtimeout fsync))
-  ([^DB database ^WriteConcern write-concern]
-     (.getLastError ^DB database write-concern)))
