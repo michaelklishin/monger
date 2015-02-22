@@ -21,8 +21,6 @@
 
   (use-fixtures :each purge-things-collection)
 
-  (monger.core/set-default-write-concern! WriteConcern/NORMAL)
-
   (deftest ^{:performance true} insert-large-batches-of-documents-without-object-ids
     (doseq [n [10 100 1000 10000 20000]]
       (let [collection "things"

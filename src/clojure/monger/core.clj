@@ -18,8 +18,7 @@
    * http://clojuremongodb.info/articles/commands.html
    * http://clojuremongodb.info/articles/gridfs.html"
   (:refer-clojure :exclude [count])
-  (:require [monger.conversion :refer :all]
-            [monger.result :refer [ok?]])
+  (:require [monger.conversion :refer :all])
   (:import [com.mongodb MongoClient MongoClientURI DB WriteConcern DBObject DBCursor Bytes MongoClientOptions MongoClientOptions$Builder ServerAddress MapReduceOutput MongoException]
            [com.mongodb.gridfs GridFS]
            [java.util Map ArrayList]))

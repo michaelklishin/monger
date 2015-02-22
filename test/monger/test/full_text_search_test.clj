@@ -4,7 +4,7 @@
             [monger.search      :as ms]
             [monger.command     :as cmd]
             [clojure.test :refer [deftest is use-fixtures]]
-              [monger.result :refer [ok?]])
+            [monger.result :refer [acknowledged?]])
   (:import com.mongodb.BasicDBObjectBuilder))
 
 (let [conn (mg/connect)
@@ -18,7 +18,7 @@
                  (.append "setParameter" 1)
                  (.append "textSearchEnabled" true))
           cmd  (.get bldr)]
-      (is (ok? (cmd/raw-admin-command conn cmd))))
+      (is (acknowledged? (cmd/raw-admin-command conn cmd))))
     (f))
 
   (defn purge-collections

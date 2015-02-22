@@ -55,10 +55,3 @@
         dbs  (mg/get-db-names conn)]  
     (is (not (empty? dbs)))
     (is (dbs "monger-test"))))
-
-(deftest get-last-error
-  (let [connection (mg/connect)
-        db         (mg/get-db connection "monger-test")]
-    (is (monger.result/ok? (mg/get-last-error db)))
-    (is (monger.result/ok? (mg/get-last-error db WriteConcern/NORMAL)))
-    (is (monger.result/ok? (mg/get-last-error db 1 100 true)))))

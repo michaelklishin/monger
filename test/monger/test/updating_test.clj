@@ -78,7 +78,7 @@
   (deftest ^{:updating true} save-a-new-document
     (let [collection "people"
           document       {:name "Joe" :age 30}]
-      (is (mr/ok? (mc/save db "people" document)))
+      (is (mc/save db "people" document))
       (is (= 1 (mc/count db collection)))))
 
   (deftest ^{:updating true} save-and-return-a-new-document
@@ -103,7 +103,7 @@
     (let [collection "people"
           doc-id            "people-1"
           document          { :_id doc-id, :name "Joe",   :age 30 }]
-      (is (mr/ok? (mc/insert db collection document)))
+      (is (mc/insert db collection document))
       (is (= 1 (mc/count db collection)))
       (mc/save db collection { :_id doc-id, :name "Alan", :age 40 })
       (is (= 1 (mc/count db collection { :name "Alan", :age 40 })))))
@@ -122,7 +122,7 @@
     (let [collection "people"
           doc-id            (mu/object-id)
           document          { :_id doc-id, :name "Joe",   :age 30 }]
-      (is (mr/ok? (mc/insert db collection document)))
+      (is (mc/insert db collection document))
       (is (= 1 (mc/count db collection)))
       (is (= 0 (mc/count db collection { :has_kids true })))
       (mc/update db collection { :_id doc-id } { $set { :has_kids true } })
@@ -134,7 +134,7 @@
           doc-id     (mu/object-id)
           document   { :_id doc-id :abc 0 :def 10 }]
       (mc/remove db collection)
-      (is (mr/ok? (mc/insert db collection document)))
+      (is (mc/insert db collection document))
       (is (= 1 (mc/count db collection {:abc {$exists true} :def {$exists true}})))
       (mc/update db collection {:abc {$exists true} :def {$exists true}} {$inc {:abc 1 :def 0}})
       (is (= 1 (mc/count db collection { :abc 1 })))))

@@ -44,8 +44,8 @@
 ;;
 
 (defn ^WriteResult insert
-  "Saves document to collection and returns a write result monger.result/ok?
-   and similar functions operate on. You can optionally specify a WriteConcern.
+  "Saves document to collection and returns a write result monger.result/acknowledged?
+   and related functions operate on. You can optionally specify a WriteConcern.
 
    In case you need the exact inserted document returned, with the :_id key generated,
    use monger.collection/insert-and-return instead."

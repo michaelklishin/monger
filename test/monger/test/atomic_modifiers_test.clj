@@ -4,7 +4,7 @@
             java.util.Date)
   (:require [monger.core :as mg]
             [monger.collection :as mc]
-            [monger.result :refer [ok?]]
+            [monger.result :refer [acknowledged?]]
             [clojure.test :refer :all]
             [monger.operators :refer :all]))
 
@@ -124,7 +124,7 @@
     (let [coll "docs"
           oid  (ObjectId.)]
       (mc/insert db coll {:_id oid :title "Document 1" :published true})
-      (is (ok? (mc/update db coll {:_id oid} {$unset {:published 1 :featured true}})))
+      (is (acknowledged? (mc/update db coll {:_id oid} {$unset {:published 1 :featured true}})))
       (is (= {:_id oid :title "Document 1"}
              (mc/find-map-by-id db coll oid)))))
 
