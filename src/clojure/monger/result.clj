@@ -27,6 +27,8 @@
 ;;
 
 (defn- okayish?
+  "MongoDB protocol seem to be using 4 distinct values to indicate logical truth.
+  This function makes dealing with that slightly more manageable."
   [value]
   (contains? #{true "true" 1 1.0} value))
 
@@ -47,7 +49,7 @@
     (okayish? (.get result "ok")))
   (has-error?
     [^DBObject result]
-    ;; yes, this is exactly the logic MongoDB Java driver uses.
+    ;; yes, really. This is exactly the logic MongoDB Java driver uses.
     (> (count (str (.get result "err"))) 0))
   (updated-existing?
     [^DBObject result]
