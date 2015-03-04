@@ -8,3 +8,5 @@ checkouts/*
 doc/*
 deploy.docs.sh
 target/*
+.idea/
+*.iml
