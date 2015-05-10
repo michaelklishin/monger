@@ -17,7 +17,7 @@
    * http://clojuremongodb.info/articles/updating.html
    * http://clojuremongodb.info/articles/commands.html
    * http://clojuremongodb.info/articles/mapreduce.html"
-  (:import [com.mongodb WriteResult])
+  (:import [com.mongodb WriteResult CommandResult])
   (:require monger.conversion))
 
 ;;
@@ -35,4 +35,9 @@
     (.wasAcknowledged result))
   (updated-existing?
     [^WriteResult result]
-    (.isUpdateOfExisting result)))
+    (.isUpdateOfExisting result))
+
+  CommandResult
+  (acknowledged?
+    [^CommandResult result]
+    (.ok result)))
