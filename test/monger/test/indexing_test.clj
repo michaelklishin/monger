@@ -13,16 +13,18 @@
     (let [collection "libraries"]
       (mc/drop-indexes db collection)
       (mc/create-index db collection {"language" 1})
-      (is (= "language_1"
+      (is (= "language_"
              (:name (second (mc/indexes-on db collection)))))
-      (mc/drop-index db collection "language_1")
+      (mc/drop-indexes db collection)
       (mc/create-index db collection ["language"])
-      (mc/drop-index db collection "language_1")
+      (mc/drop-index db collection {"language" 1})
       (is (nil? (second (mc/indexes-on db collection))))
       (mc/ensure-index db collection (array-map "language" 1) {:unique true})
-      (is (= "language_1"
+      (is (= "language_"
              (:name (second (mc/indexes-on db collection)))))
+      (mc/drop-indexes db collection)
       (mc/ensure-index db collection (array-map "language" 1))
+      (mc/drop-indexes db collection)
       (mc/ensure-index db collection (array-map "language" 1) {:unique true})
       (mc/drop-indexes db collection)))
 
