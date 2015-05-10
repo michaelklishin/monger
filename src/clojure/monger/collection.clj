@@ -390,13 +390,13 @@
    :unique (boolean) to create a unique index
    :name (string) to specify a custom index name and not rely on the generated one"
   ([^DB db ^String coll ^Map keys]
-     (.ensureIndex (.getCollection db (name coll)) (as-field-selector keys)))
+     (.createIndex (.getCollection db (name coll)) (as-field-selector keys)))
   ([^DB db ^String coll ^Map keys ^Map options]
-     (.ensureIndex (.getCollection db (name coll))
+     (.createIndex (.getCollection db (name coll))
                    (as-field-selector keys)
                    (to-db-object options)))
   ([^DB db ^String coll ^Map keys ^String name unique?]
-     (.ensureIndex (.getCollection db (name coll))
+     (.createIndex (.getCollection db (name coll))
                    (as-field-selector keys)
                    name
                    unique?)))
@@ -418,8 +418,10 @@
 
 (defn drop-index
   "Drops an index from this collection."
-  [^DB db ^String coll ^String idx-name]
-  (.dropIndex (.getCollection db (name coll)) idx-name))
+  [^DB db ^String coll idx]
+  (.dropIndex (.getCollection db (name coll)) (if (string? idx)
+                                                idx
+                                                (to-db-object idx))))
 
 (defn drop-indexes
   "Drops all indixes from this collection."
