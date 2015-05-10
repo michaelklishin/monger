@@ -8,3 +8,4 @@ checkouts/*
 doc/*
 deploy.docs.sh
 target/*
+todo.org
