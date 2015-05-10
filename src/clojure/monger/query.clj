@@ -41,7 +41,6 @@
 ;; :skip - Skips the first N results.
 ;; :limit - Returns a maximum of N results.
 ;; :batch-size - limits the nubmer of elements returned in one batch.
-;; :hint - force Mongo to use a specific index for a query in order to improve performance.
 ;; :snapshot - sses snapshot mode for the query. Snapshot mode assures no duplicates are returned, or objects missed
 ;;    which were present at both the start and end of the query's execution (if an object is new during the query, or
 ;;    deleted during the query, it may or may not be returned, even with snapshot mode). Note that short query responses
@@ -55,7 +54,6 @@
       :skip              0
       :limit             0
       :batch-size        256
-      :hint              nil
       :snapshot          false
       :keywordize-fields true
       })
@@ -80,10 +78,11 @@
                        (.limit limit)
                        (.skip  skip)
                        (.sort  (to-db-object sort))
-                       (.batchSize batch-size)
-                       (.hint (to-db-object hint)))]
+                       (.batchSize batch-size))]
     (when snapshot
       (.snapshot cursor))
+    (when hint
+      (.hint (to-db-object hint)))
     (when read-preference
       (.setReadPreference cursor read-preference))
     (when options
