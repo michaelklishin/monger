@@ -43,6 +43,7 @@
                                    [org.clojure/core.cache "0.6.3" :exclusions [org.clojure/clojure]]
                                    [ring/ring-core         "1.3.0" :exclusions [org.clojure/clojure]]
                                    [com.novemberain/validateur "2.4.2" :exclusions [org.clojure/clojure]]
+                                   [ch.qos.logback/logback-classic "1.1.3" :exclusions [org.slf4j/slf4j-api]]
                                    [ragtime/ragtime.core   "0.3.7" :exclusions [org.clojure/clojure]]]
                    :plugins [[codox "0.8.10"]]
                    :codox {:sources ["src/clojure"]
