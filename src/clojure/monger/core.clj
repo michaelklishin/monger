@@ -56,6 +56,15 @@
          (MongoClient. server-list options))
        ;; connect to a single instance
        (MongoClient. ^ServerAddress server-address options)))
+  ([server-address ^MongoClientOptions options credentials]
+     (let [creds (if (coll? credentials)
+                   credentials
+                   [credentials])]
+       (if (coll? server-address)
+         (let [server-list ^ArrayList (ArrayList. ^java.util.Collection server-address)
+               ]
+           (MongoClient. server-list creds options))
+       (MongoClient. ^ServerAddress server-address options))))
   ([{ :keys [host port uri] :or { host *mongodb-host* port *mongodb-port* }}]
      (MongoClient. ^String host ^Long port)))
 
