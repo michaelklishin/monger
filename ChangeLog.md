@@ -1,3 +1,11 @@
+## Changes between 2.1.0 and 3.0.0
+
+### JSON Serialization of BSON Timestamps
+
+JSON serialisation extensions now support BSON timestamps.
+
+Contributed by Tom McMillen.
+
 ## Changes between 2.0.0 and 2.1.0
 
 ### Clojure 1.7 Compatibility
