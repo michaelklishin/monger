@@ -81,7 +81,3 @@
 (defn top
   [^MongoClient conn]
   (monger.core/command (monger.core/admin-db conn) {:top 1}))
-
-(defn search
-  [^DB db ^String collection query]
-  (monger.core/command db {"text" collection "search" query}))

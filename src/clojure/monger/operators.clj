@@ -259,3 +259,6 @@
 
 ;; full text search
 (defoperator $text)
+(defoperator $search)
+(defoperator $language)
+(defoperator $natural)
