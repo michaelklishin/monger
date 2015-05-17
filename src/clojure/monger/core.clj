@@ -19,7 +19,8 @@
    * http://clojuremongodb.info/articles/gridfs.html"
   (:refer-clojure :exclude [count])
   (:require [monger.conversion :refer :all])
-  (:import [com.mongodb MongoClient MongoClientURI DB WriteConcern DBObject DBCursor Bytes MongoClientOptions MongoClientOptions$Builder ServerAddress MapReduceOutput MongoException]
+  (:import [com.mongodb MongoClient MongoClientURI MongoCredential DB WriteConcern DBObject DBCursor Bytes
+            MongoClientOptions MongoClientOptions$Builder ServerAddress MapReduceOutput MongoException]
            [com.mongodb.gridfs GridFS]
            [java.util Map ArrayList]))
 
@@ -46,7 +47,7 @@
   {:arglists '([]
                  [server-address options]
                    [[server-address & more] options]
-                     [{ :keys [host port uri] :or { host *mongodb-host* port *mongodb-port* }}])}
+                     [{:keys [host port uri] :or { host *mongodb-host* port *mongodb-port*}}])}
   ([]
      (MongoClient.))
   ([server-address ^MongoClientOptions options]
@@ -61,13 +62,23 @@
                    credentials
                    [credentials])]
        (if (coll? server-address)
-         (let [server-list ^ArrayList (ArrayList. ^java.util.Collection server-address)
-               ]
+         (let [server-list ^ArrayList (ArrayList. ^java.util.Collection server-address)]
            (MongoClient. server-list creds options))
        (MongoClient. ^ServerAddress server-address options))))
   ([{ :keys [host port uri] :or { host *mongodb-host* port *mongodb-port* }}]
      (MongoClient. ^String host ^Long port)))
 
+(defn ^MongoClient connect-with-credentials
+  "Connect with provided credentials and default options"
+  ([credentials]
+     (connect-with-credentials *mongodb-host* *mongodb-port* credentials))  
+  ([^String hostname credentials]
+     (connect-with-credentials hostname *mongodb-port* credentials))
+  ([^String hostname port credentials]
+     (MongoClient. [(ServerAddress. hostname port)]
+                   (if (coll? credentials)
+                     credentials
+                     [credentials]))))
 
 (defn get-db-names
   "Gets a list of all database names present on the server"
@@ -155,15 +166,6 @@
   (alter-var-root #'*mongodb-write-concern* (constantly wc)))
 
 
-(defn authenticate
-  ([^DB db ^String username ^chars password]
-     (try
-       (.authenticate db username password)
-       ;; MongoDB Java driver's exception hierarchy is a little crazy
-       ;; and the exception we want is not a public class. MK.
-       (catch Exception _
-         false))))
-
 (defn connect-via-uri
   "Connects to MongoDB using a URI, returns the connection and database as a map with :conn and :db.
    Commonly used for PaaS-based applications, for example, running on Heroku.
@@ -171,12 +173,7 @@
   [^String uri-string]
   (let [uri  (MongoClientURI. uri-string)
         conn (MongoClient. uri)
-        db   (.getDB conn (.getDatabase uri))
-        user (.getUsername uri)
-        pwd  (.getPassword uri)]
-    (when (and user pwd)
-      (when-not (authenticate db user pwd)
-        (throw (IllegalArgumentException. (format "Could not authenticate with MongoDB. Either database name or credentials are invalid. Database name: %s, username: %s" (.getName db) user)))))
+        db   (.getDB conn (.getDatabase uri))]
     {:conn conn :db db}))
 
 (defn ^com.mongodb.CommandResult command

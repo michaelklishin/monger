@@ -1,5 +1,6 @@
 (ns monger.test.authentication-test
   (:require [monger util db]
+            [monger.credentials :as mcr]
             [monger.core :as mg]
             [monger.collection :as mc]
             [clojure.test :refer :all]))
@@ -33,21 +34,9 @@
 ;; Regular connecton
 ;;
 
-(let [conn (mg/connect)
-      db   (mg/get-db conn "monger-test")]
-  (deftest ^{:authentication true} test-authentication-with-valid-credentials-on-the-default-db
+(deftest ^{:authentication true} test-authentication-with-valid-credentials
     ;; see ./bin/ci/before_script.sh. MK.
-    (let [username "clojurewerkz/monger"
-          pwd      "monger"]
-      (is (mg/authenticate db username (.toCharArray pwd)))))
-
-  (deftest ^{:authentication true} test-authentication-with-valid-credentials-on-an-arbitrary-db
-    ;; see ./bin/ci/before_script.sh. MK.
-    (let [username "clojurewerkz/monger"
-          pwd      "monger"]
-      (is (mg/authenticate (mg/get-db conn "monger-test") username (.toCharArray pwd)))))
-
-  (deftest ^{:authentication true} test-authentication-with-invalid-credentials
-    (let [username    "monger"
-          ^String pwd (monger.util/random-str 128 32)]
-      (is (not (mg/authenticate (mg/get-db conn "monger-test2") username (.toCharArray pwd)))))))
+  (doseq [s ["monger-test" "monger-test2" "monger-test3" "monger-test4"]]
+    (let [creds (mcr/for "clojurewerkz/monger" "monger-test" "monger")
+          conn  (mg/connect-with-credentials "127.0.0.1" creds)]
+      (mc/remove (mg/get-db conn "monger-test") "documents"))))
