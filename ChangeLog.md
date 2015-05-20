@@ -1,10 +1,67 @@
 ## Changes between 2.1.0 and 3.0.0
 
+Monger 3.0 is based on the [MongoDB Java driver 3.0]()
+and has some (relatively minor) **breaking API changes**.
+
+### Error Handling Built Around Write Concerns
+
+Monger no longer provides `monger.core/get-last-error`. It is no
+longer needed: write concerns and exceptions is now the primary way for clients
+to be notified of operation failures.
+
+### New Authentication API
+
+MongoDB 3.0 supports different authentication mechanisms. Multiple
+credentials can be specified for a single connection. The client
+and the server then can negotiate what authentication mechanism to use
+and which set of credentials succeed.
+
+Monger introduces a new namespace for credential instantiation:
+`monger.credentials`. The most common function that relies on
+authentication mechanism negotiation is `monger.credentials/for`:
+
+``` clojure
+(require '[monger.core :as mg])
+(require '[monger.credentials :as mcr])
+
+(let [creds (mcr/for "username" "db-name" "pa$$w0rd")
+      conn  (mg/connect-with-credentials "127.0.0.1" creds)]
+      )
+```
+
+`mg/connect-with-credentials` is the most convenient function to
+connect with if you plan on using authentication.
+
+When connecting using a URI, the API hasn't changed.
+
+### monger.search is Gone
+
+`monger.search` is gone. MongoDB 3.0 supports search queries
+using regular query operators, namely `$text`. `monger.operators` is
+extended to include `$text`, `$search`, `$language`, and `$natural`.
+
+An example of a search query in 3.0:
+
+``` clojure
+(require '[monger.core :as mg])
+(require '[monger.credentials :as mcr])
+(require '[monger.collection :as mc])
+(require '[monger.operators :refer [$text $search]])
+
+(let [creds (mcr/for "username" "db-name" "pa$$w0rd")
+      conn  (mg/connect-with-credentials "127.0.0.1" creds)
+      db    (mg/get-db conn "db-name")]
+  (mc/find-maps db "collection" {$text {$search "hello"}}))
+```
+
+
 ### JSON Serialization of BSON Timestamps
 
 JSON serialisation extensions now support BSON timestamps.
 
 Contributed by Tom McMillen.
+
+
 
 ## Changes between 2.0.0 and 2.1.0
 
