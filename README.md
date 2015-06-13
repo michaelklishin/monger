@@ -10,7 +10,7 @@ It has batteries included, offers powerful expressive query DSL, strives to supp
 There is one MongoDB client for Clojure that has been around since 2009. So, why create another one? Monger authors
 wanted a client that will
 
- * Support most of MongoDB 2.0+ features, focus on those that really matter.
+ * Support most of modern MongoDB features, focus on those that really matter.
  * Be [well documented](http://clojuremongodb.info).
  * Be [well tested](https://github.com/michaelklishin/monger/tree/master/test/monger/test).
  * Target modern Clojure versions.
@@ -101,7 +101,7 @@ stable release is highly recommended.
 ## Monger Is a ClojureWerkz Project
 
 Monger is part of the [group of Clojure libraries known as ClojureWerkz](http://clojurewerkz.org), together with
-[Cassaforte](http://clojurecassandra.info), [Langohr](http://clojurerabbitmq.info), [Elastisch](http://clojureelasticsearch.info), [Titanium](http://titanium.clojurewerkz.org), [Quartzite](http://clojurequartz.info) and several others.
+[Cassaforte](http://clojurecassandra.info), [Langohr](http://clojurerabbitmq.info), [Elastisch](http://clojureelasticsearch.info), [Quartzite](http://clojurequartz.info) and several others.
 
 
 
