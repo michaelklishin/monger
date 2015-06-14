@@ -1,6 +1,6 @@
 ## Changes between 2.1.0 and 3.0.0
 
-Monger 3.0 is based on the [MongoDB Java driver 3.0]()
+Monger 3.0 is based on the [MongoDB Java driver 3.0](https://www.mongodb.com/blog/post/introducing-30-java-driver)
 and has some (relatively minor) **breaking API changes**.
 
 ### Error Handling Built Around Write Concerns
