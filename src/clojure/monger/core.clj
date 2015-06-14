@@ -90,12 +90,14 @@
            (MongoClient. server-list creds options))
        (MongoClient. ^ServerAddress server-address options))))
   ([{ :keys [host port uri] :or { host *mongodb-host* port *mongodb-port* }}]
-     (MongoClient. ^String host ^Long port)))
+    (if uri
+       (MongoClient. (MongoClientURI. uri))
+       (MongoClient. ^String host ^Long port))))
 
 (defn ^MongoClient connect-with-credentials
   "Connect with provided credentials and default options"
   ([credentials]
-     (connect-with-credentials *mongodb-host* *mongodb-port* credentials))  
+     (connect-with-credentials *mongodb-host* *mongodb-port* credentials))
   ([^String hostname credentials]
      (connect-with-credentials hostname *mongodb-port* credentials))
   ([^String hostname port credentials]
