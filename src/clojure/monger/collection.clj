@@ -51,7 +51,7 @@
    * http://clojuremongodb.info/articles/deleting.html
    * http://clojuremongodb.info/articles/aggregation.html"
   (:refer-clojure :exclude [find remove count drop distinct empty? update])
-  (:import [com.mongodb Mongo DB DBCollection WriteResult DBObject WriteConcern 
+  (:import [com.mongodb Mongo DB DBCollection WriteResult DBObject WriteConcern
             DBCursor MapReduceCommand MapReduceCommand$OutputType]
            [java.util List Map]
            [clojure.lang IPersistentMap ISeq]
@@ -523,8 +523,8 @@
   "Executes an aggregation query. MongoDB 2.2+ only.
 
   See http://docs.mongodb.org/manual/applications/aggregation/ to learn more."
-  [^DB db ^String coll stages]
-  (let [res (mc/command db {:aggregate coll :pipeline stages})]
+  [^DB db ^String coll stages & [^Boolean allow-disk-use]]
+  (let [res (mc/command db {:aggregate coll :pipeline stages :allowDiskUse (boolean allow-disk-use)})]
     ;; this is what DBCollection#distinct does. Turning a blind's eye!
     (.throwOnError res)
     (map #(from-db-object % true) (.get res "result"))))
