@@ -523,11 +523,13 @@
   "Executes an aggregation query. MongoDB 2.2+ only.
 
   See http://docs.mongodb.org/manual/applications/aggregation/ to learn more."
-  [^DB db ^String coll stages]
-  (let [res (mc/command db {:aggregate coll :pipeline stages})]
-    ;; this is what DBCollection#distinct does. Turning a blind's eye!
-    (.throwOnError res)
-    (map #(from-db-object % true) (.get res "result"))))
+  ([^DB db ^String coll stages]
+     (aggregate db coll stages {}))
+  ([^DB db ^String coll stages opts]
+     (let [res (mc/command db (merge {:aggregate coll :pipeline stages} opts))]
+       ;; this is what DBCollection#distinct does. Turning a blind's eye!
+       (.throwOnError res)
+       (map #(from-db-object % true) (.get res "result")))))
 
 
 ;;
