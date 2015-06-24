@@ -104,4 +104,14 @@
       (is (= 6 (mc/count db coll)))
       (let [result (set (map #(select-keys % [:state :quantity])
                              (mc/aggregate db coll [{$project {:state 1 :quantity 1}}] :cursor {:batch-size 10})))]
-        (is (= expected result))))))
+        (is (= expected result)))))
+
+  (deftest test-explain-aggregate
+    (let [batch [{:state "CA" :price 100}
+                 {:state "CA" :price 10}
+                 {:state "IL" :price 50}]
+          expected-keys #{:ok :stages}]
+      (mc/insert-batch db coll batch)
+      (let [result (mc/explain-aggregate db coll [{$match {:state "CA"}}])
+            key-in-result? (partial contains? result)]
+        (is (every? key-in-result? expected-keys))))))

@@ -515,7 +515,16 @@
         res (.aggregate coll pipe agg-opts)]
     (map #(from-db-object % true) (iterator-seq res))))
 
+(defn explain-aggregate
+  "Returns the explain plan for an aggregation query. MongoDB 2.2+ only.
 
+  See http://docs.mongodb.org/manual/applications/aggregation/ to learn more."
+  [^DB db ^String coll stages & opts]
+  (let [coll (.getCollection db coll)
+        agg-opts (build-aggregation-options opts)
+        pipe (java.util.ArrayList. (to-db-object stages))
+        res (.explainAggregate coll pipe agg-opts)]
+    (from-db-object res true)))
 ;;
 ;; Misc
 ;;
