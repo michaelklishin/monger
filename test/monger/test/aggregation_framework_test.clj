@@ -85,4 +85,33 @@
           expected   "IL"]
       (mc/insert-batch db coll batch)
       (let [result (:state (first (mc/aggregate db coll [{$group {:_id 1 :state {$last "$state"}}}])))]
-        (is (= expected result))))))
+        (is (= expected result)))))
+
+  (deftest test-cursor-aggregation
+    (let [batch      [{:state "CA" :quantity 1 :price 199.00}
+                      {:state "NY" :quantity 2 :price 199.00}
+                      {:state "NY" :quantity 1 :price 299.00}
+                      {:state "IL" :quantity 2 :price 11.50 }
+                      {:state "CA" :quantity 2 :price 2.95  }
+                      {:state "IL" :quantity 3 :price 5.50  }]
+          expected    #{{:quantity 1 :state "CA"}
+                        {:quantity 2 :state "NY"}
+                        {:quantity 1 :state "NY"}
+                        {:quantity 2 :state "IL"}
+                        {:quantity 2 :state "CA"}
+                        {:quantity 3 :state "IL"}}]
+      (mc/insert-batch db coll batch)
+      (is (= 6 (mc/count db coll)))
+      (let [result (set (map #(select-keys % [:state :quantity])
+                             (mc/aggregate db coll [{$project {:state 1 :quantity 1}}] :cursor {:batch-size 10})))]
+        (is (= expected result)))))
+
+  (deftest test-explain-aggregate
+    (let [batch [{:state "CA" :price 100}
+                 {:state "CA" :price 10}
+                 {:state "IL" :price 50}]
+          expected-keys #{:ok :stages}]
+      (mc/insert-batch db coll batch)
+      (let [result (mc/explain-aggregate db coll [{$match {:state "CA"}}])
+            key-in-result? (partial contains? result)]
+        (is (every? key-in-result? expected-keys))))))

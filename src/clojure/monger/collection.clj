@@ -51,9 +51,11 @@
    * http://clojuremongodb.info/articles/deleting.html
    * http://clojuremongodb.info/articles/aggregation.html"
   (:refer-clojure :exclude [find remove count drop distinct empty? update])
-  (:import [com.mongodb Mongo DB DBCollection WriteResult DBObject WriteConcern 
-            DBCursor MapReduceCommand MapReduceCommand$OutputType]
+  (:import [com.mongodb Mongo DB DBCollection WriteResult DBObject WriteConcern
+            DBCursor MapReduceCommand MapReduceCommand$OutputType AggregationOutput
+            AggregationOptions AggregationOptions$OutputMode]
            [java.util List Map]
+           [java.util.concurrent TimeUnit]
            [clojure.lang IPersistentMap ISeq]
            org.bson.types.ObjectId)
   (:require [monger.core :as mc]
@@ -519,19 +521,39 @@
 ;; Aggregation
 ;;
 
+(defn- build-aggregation-options [{:keys [^Boolean allow-disk-use cursor ^Long max-time]}]
+  (cond-> (AggregationOptions/builder)
+     allow-disk-use       (.allowDiskUse allow-disk-use)
+     cursor               (.outputMode AggregationOptions$OutputMode/CURSOR)
+     max-time             (.maxTime max-time TimeUnit/MILLISECONDS)
+     (:batch-size cursor) (.batchSize (int (:batch-size cursor)))
+     true                 .build))
+
 (defn aggregate
   "Executes an aggregation query. MongoDB 2.2+ only.
+   Accepts the options :allow-disk-use and :cursor (a map with the :batch-size
+   key), as described in the MongoDB manual. Additionally, the :max-time option
+  is supported, for specifying a limit on the execution time of the query in
+  milliseconds.
 
   See http://docs.mongodb.org/manual/applications/aggregation/ to learn more."
-  ([^DB db ^String coll stages]
-     (aggregate db coll stages {}))
-  ([^DB db ^String coll stages opts]
-     (let [res (mc/command db (merge {:aggregate coll :pipeline stages} opts))]
-       ;; this is what DBCollection#distinct does. Turning a blind's eye!
-       (.throwOnError res)
-       (map #(from-db-object % true) (.get res "result")))))
+  [^DB db ^String coll stages & opts]
+  (let [coll (.getCollection db coll)
+        agg-opts (build-aggregation-options opts)
+        pipe (java.util.ArrayList. (to-db-object stages))
+        res (.aggregate coll pipe agg-opts)]
+    (map #(from-db-object % true) (iterator-seq res))))
 
+(defn explain-aggregate
+  "Returns the explain plan for an aggregation query. MongoDB 2.2+ only.
 
+  See http://docs.mongodb.org/manual/applications/aggregation/ to learn more."
+  [^DB db ^String coll stages & opts]
+  (let [coll (.getCollection db coll)
+        agg-opts (build-aggregation-options opts)
+        pipe (java.util.ArrayList. (to-db-object stages))
+        res (.explainAggregate coll pipe agg-opts)]
+    (from-db-object res true)))
 ;;
 ;; Misc
 ;;
