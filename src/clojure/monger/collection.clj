@@ -422,10 +422,10 @@
      (.createIndex (.getCollection db (name coll))
                    (as-field-selector keys)
                    (to-db-object options)))
-  ([^DB db ^String coll ^Map keys ^String name unique?]
+  ([^DB db ^String coll ^Map keys ^String index-name unique?]
      (.createIndex (.getCollection db (name coll))
                    (as-field-selector keys)
-                   name
+                   index-name
                    unique?)))
 
 

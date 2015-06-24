@@ -26,6 +26,8 @@
       (mc/ensure-index db collection (array-map "language" 1))
       (mc/drop-indexes db collection)
       (mc/ensure-index db collection (array-map "language" 1) {:unique true})
+      (mc/drop-indexes db collection)
+      (mc/ensure-index db collection (array-map "language" 1) "index-name" true)
       (mc/drop-indexes db collection)))
 
   (deftest ^{:indexing true :time-consuming true} test-ttl-collections
