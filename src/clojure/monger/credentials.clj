@@ -41,7 +41,7 @@
 ;; API
 ;;
 
-(defn ^MongoCredential for
+(defn ^MongoCredential create
   "Creates a MongoCredential instance with an unspecified mechanism.
    The client will negotiate the best mechanism based on the
    version of the server that the client is authenticating to."

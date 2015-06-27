@@ -37,6 +37,6 @@
 (deftest ^{:authentication true} test-authentication-with-valid-credentials
     ;; see ./bin/ci/before_script.sh. MK.
   (doseq [s ["monger-test" "monger-test2" "monger-test3" "monger-test4"]]
-    (let [creds (mcr/for "clojurewerkz/monger" "monger-test" "monger")
+    (let [creds (mcr/create "clojurewerkz/monger" "monger-test" "monger")
           conn  (mg/connect-with-credentials "127.0.0.1" creds)]
       (mc/remove (mg/get-db conn "monger-test") "documents"))))
