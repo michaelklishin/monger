@@ -54,6 +54,12 @@ An example of a search query in 3.0:
   (mc/find-maps db "collection" {$text {$search "hello"}}))
 ```
 
+### Add allow-disk-use and Cursor Options to Aggregates
+
+`monger.collection/aggregate` now supports `:cursor` and `:allow-disk-use` options.
+
+Contributed by Bartek Marcinowski.
+
 
 ### JSON Serialization of BSON Timestamps
 
