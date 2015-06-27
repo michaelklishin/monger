@@ -521,7 +521,8 @@
 ;; Aggregation
 ;;
 
-(defn- build-aggregation-options [{:keys [^Boolean allow-disk-use cursor ^Long max-time]}]
+(defn- build-aggregation-options
+  [{:keys [^Boolean allow-disk-use cursor ^Long max-time]}]
   (cond-> (AggregationOptions/builder)
      allow-disk-use       (.allowDiskUse allow-disk-use)
      cursor               (.outputMode AggregationOptions$OutputMode/CURSOR)
