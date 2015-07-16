@@ -232,7 +232,7 @@
     (let [collection "libraries"
           _          (mc/insert db collection { :language "Clojure", :name "monger" })
           result     (mc/find db collection { :language "Clojure"} [:language])]
-      (is (= (seq [:_id :language]) (keys (mgcnv/from-db-object (.next result) true))))))
+      (is (= (set [:_id :language]) (-> (mgcnv/from-db-object (.next result) true) keys set)))))
 
   (deftest find-and-iterate-over-multiple-documents-the-hard-way
     (let [collection "libraries"]
