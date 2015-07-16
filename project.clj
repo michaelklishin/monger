@@ -33,7 +33,7 @@
                  :post "clojure-mongodb@googlegroups.com"}
   :profiles {:dj02x {:dependencies [[org.clojure/data.json  "0.2.6" :exclusions [org.clojure/clojure]]]}
              :1.6    {:dependencies [[org.clojure/clojure "1.6.0"]]}
-             :master {:dependencies [[org.clojure/clojure "1.7.0-master-SNAPSHOT"]]}
+             :master {:dependencies [[org.clojure/clojure "1.8.0-master-SNAPSHOT"]]}
              :dev {:resource-paths ["test/resources"]
                    :dependencies  [[clj-time               "0.8.0" :exclusions [org.clojure/clojure]]
                                    [cheshire               "5.3.1" :exclusions [org.clojure/clojure]]
