@@ -55,3 +55,18 @@
         dbs  (mg/get-db-names conn)]  
     (is (not (empty? dbs)))
     (is (dbs "monger-test"))))
+
+(deftest monger-options-test
+  (let [opts {:connections-per-host 1
+              :threads-allowed-to-block-for-connection-multiplier 1
+              :max-wait-time 1
+              :connect-timeout 1
+              :socket-timeout 1
+              :socket-keep-alive true
+              :auto-connect-retry true
+              :max-auto-connect-retry-time 1
+              :description "Description"
+              :write-concern com.mongodb.WriteConcern/JOURNAL_SAFE
+              :cursor-finalizer-enabled true
+              :required-replica-set-name "rs"}]
+    (is (instance? com.mongodb.MongoClientOptions$Builder (mg/mongo-options-builder opts)))))
