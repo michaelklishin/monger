@@ -137,7 +137,7 @@
   [{:keys [connections-per-host threads-allowed-to-block-for-connection-multiplier
            max-wait-time connect-timeout socket-timeout socket-keep-alive auto-connect-retry max-auto-connect-retry-time
            description write-concern cursor-finalizer-enabled read-preference
-           required-replica-set-name] :or [auto-connect-retry true]}]
+           required-replica-set-name]}]
   (let [mob (MongoClientOptions$Builder.)]
     (when connections-per-host
       (.connectionsPerHost mob connections-per-host))
@@ -151,11 +151,6 @@
       (.socketTimeout mob socket-timeout))
     (when socket-keep-alive
       (.socketKeepAlive mob socket-keep-alive))
-    (when auto-connect-retry
-      (.autoConnectRetry mob auto-connect-retry))
-    ;; deprecated
-    (when max-auto-connect-retry-time
-      (.maxAutoConnectRetryTime mob max-auto-connect-retry-time))
     (when read-preference
       (.readPreference mob read-preference))
     (when description
