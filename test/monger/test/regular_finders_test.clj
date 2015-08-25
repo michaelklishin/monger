@@ -281,4 +281,12 @@
         (doseq [i clojure-libs]
           (let [doc (mgcnv/from-db-object i true)]
             (is (= (:language doc) "Clojure"))))
-        (is (empty? (mc/find db collection { :language "Erlang" } [:name])))))))
+        (is (empty? (mc/find db collection { :language "Erlang" } [:name]))))))
+
+  (deftest find-maps-with-keywordize-false
+    (let [collection "libraries"]
+      (mc/insert-batch db collection [{ :language "Clojure", :name "monger" }
+                                      { :language "Clojure", :name "langohr" }])
+      (let [results (mc/find-maps db collection {:name "langohr"} [] false)]
+        (is (= 1 (.count results)))
+        (is (= (get (first results) "language") "Clojure"))))))

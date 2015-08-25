@@ -147,8 +147,10 @@
      (with-open [dbc (find db coll ref)]
        (map (fn [x] (from-db-object x true)) dbc)))
   ([^DB db ^String coll ^Map ref fields]
+     (find-maps db coll ref fields true))
+  ([^DB db ^String coll ^Map ref fields keywordize]
      (with-open [dbc (find db coll ref fields)]
-       (map (fn [x] (from-db-object x true)) dbc))))
+       (map (fn [x] (from-db-object x keywordize)) dbc))))
 
 (defn find-seq
   "Queries for objects in this collection, returns ISeq of DBObjects."

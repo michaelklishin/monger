@@ -10,3 +10,5 @@ deploy.docs.sh
 target/*
 todo.org
 .nrepl-*
+.idea/
+*.iml
