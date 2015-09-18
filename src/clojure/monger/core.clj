@@ -88,7 +88,7 @@
        (if (coll? server-address)
          (let [server-list ^ArrayList (ArrayList. ^java.util.Collection server-address)]
            (MongoClient. server-list creds options))
-       (MongoClient. ^ServerAddress server-address options))))
+         (MongoClient. ^ServerAddress server-address creds options))))
   ([{ :keys [host port uri] :or { host *mongodb-host* port *mongodb-port* }}]
     (if uri
        (MongoClient. (MongoClientURI. uri))
