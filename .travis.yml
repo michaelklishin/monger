@@ -1,6 +1,7 @@
 language: clojure
 lein: lein2
 before_script:
+  - mongod --version
   - ./bin/ci/before_script.sh
 script: lein2 do clean, javac, test
 jdk:
