@@ -1,8 +1,15 @@
-## Changes between 3.0.0 and 3.0.1
+## Changes between 3.0.0 and 3.1.0
+
+### Authencation Function No Longer Ignores Credentials
+
+In some cases Monger ignored provided credentials.
+
+Contributed by Artem Chistyakov.
 
 ### MongoDB Java Driver Update
 
-MongoDB Java driver dependency has been updated to `3.0.3`.
+MongoDB Java driver dependency has been updated to `3.0.4`.
+
 
 
 ## Changes between 2.1.0 and 3.0.0
