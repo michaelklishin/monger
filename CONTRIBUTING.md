@@ -1,10 +1,11 @@
 ## Pre-requisites
 
-The project uses [Leiningen 2](https://leiningen.org) and requires MongoDB `2.4+` to be running
-locally. Make
-sure you have those two installed and then run tests against all supported Clojure versions using
+The project uses [Leiningen 2](http://leiningen.org) and requires a recent MongoDB to be running
+locally. Make sure you have those two installed and then run tests against all supported Clojure versions using
 
-    lein2 all test
+    ./bin/ci/before_script.sh
+    lein all do clean, javac, test
+
 
 ## Pull Requests
 
