@@ -115,15 +115,6 @@
   Object
   (from-db-object [input keywordize] input)
 
-  Map
-  (from-db-object [^Map input keywordize]
-    (reduce (if keywordize
-              (fn [m ^String k]
-                (assoc m (keyword k) (from-db-object (.get input k) true)))
-              (fn [m ^String k]
-                (assoc m k (from-db-object (.get input k) false))))
-            {} (.keySet input)))
-
   List
   (from-db-object [^List input keywordize]
     (vec (map #(from-db-object % keywordize) input)))
@@ -141,9 +132,6 @@
     ;; DBObject provides .toMap, but the implementation in
     ;; subclass GridFSFile unhelpfully throws
     ;; UnsupportedOperationException.
-    ;; This is the same code as with Map. The code can't be shared using a
-    ;; function because reflection would kill the performance and DBObject
-    ;; and Map don't share a interface.
     (reduce (if keywordize
               (fn [m ^String k]
                 (assoc m (keyword k) (from-db-object (.get input k) true)))
