@@ -112,20 +112,20 @@
                 (.put "name" name)
                 (.put "age"  age))
         output (from-db-object input false)]
-    (is (= (output { "name" name, "age" age })))
+    (is (= output { "name" name, "age" age }))
     (is (= (output "name") name))
     (is (nil? (output :name)))
     (is (= (output "age") age))
     (is (nil? (output "points")))))
 
-(deftest convert-flat-db-object-to-map-without-keywordizing
+(deftest convert-flat-db-object-to-map-with-keywordizing
   (let [name   "Michael"
         age    26
         input (doto (BasicDBObject.)
                 (.put "name" name)
                 (.put "age"  age))
         output (from-db-object input true)]
-    (is (= (output { :name name, :age age })))
+    (is (= output { :name name, :age age }))
     (is (= (output :name) name))
     (is (nil? (output "name")))
     (is (= (output :age) age))
