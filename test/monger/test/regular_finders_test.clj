@@ -147,14 +147,14 @@
           doc-id     (mu/random-uuid)
           doc        { :data-store "MongoDB", :language "Clojure", :_id doc-id }]
       (mc/insert db collection doc)
-      (is (= (doc (mc/find-by-id db collection doc-id))))))
+      (is (= doc (mc/find-by-id db collection doc-id)))))
 
   (deftest find-full-document-by-object-id-when-document-does-exist
     (let [collection "libraries"
           doc-id     (ObjectId.)
           doc        { :data-store "MongoDB", :language "Clojure", :_id doc-id }]
       (mc/insert db collection doc)
-      (is (= (doc (mc/find-by-id db collection doc-id))))))
+      (is (= doc (mc/find-by-id db collection doc-id)))))
 
   (deftest find-full-document-map-by-string-id-when-document-does-exist
     (let [collection "libraries"
