@@ -105,7 +105,6 @@
 
 
 
-(declare associate-pairs)
 (defprotocol ConvertFromDBObject
   (from-db-object [input keywordize] "Converts given DBObject instance to a piece of Clojure data"))
 
@@ -118,7 +117,12 @@
 
   Map
   (from-db-object [^Map input keywordize]
-    (associate-pairs (.entrySet input) keywordize))
+    (reduce (if keywordize
+              (fn [m ^String k]
+                (assoc m (keyword k) (from-db-object (.get input k) true)))
+              (fn [m ^String k]
+                (assoc m k (from-db-object (.get input k) false))))
+            {} (.keySet input)))
 
   List
   (from-db-object [^List input keywordize]
@@ -136,22 +140,16 @@
   (from-db-object [^DBObject input keywordize]
     ;; DBObject provides .toMap, but the implementation in
     ;; subclass GridFSFile unhelpfully throws
-    ;; UnsupportedOperationException. This part is taken from congomongo and
-    ;; may need revisiting at a later point. MK.
-    (associate-pairs (for [key-set (.keySet input)] [key-set (.get input key-set)])
-                     keywordize)))
-
-
-(defn- associate-pairs [pairs keywordize]
-  ;; Taking the keywordize test out of the fn reduces derefs
-  ;; dramatically, which was the main barrier to matching pure-Java
-  ;; performance for this marshalling. Taken from congomongo. MK.
-  (reduce (if keywordize
-            (fn [m [^String k v]]
-              (assoc m (keyword k) (from-db-object v true)))
-            (fn [m [^String k v]]
-              (assoc m k (from-db-object v false))))
-          {} (reverse pairs)))
+    ;; UnsupportedOperationException.
+    ;; This is the same code as with Map. The code can't be shared using a
+    ;; function because reflection would kill the performance and DBObject
+    ;; and Map don't share a interface.
+    (reduce (if keywordize
+              (fn [m ^String k]
+                (assoc m (keyword k) (from-db-object (.get input k) true)))
+              (fn [m ^String k]
+                (assoc m k (from-db-object (.get input k) false))))
+            {} (.keySet input))))
 
 
 
