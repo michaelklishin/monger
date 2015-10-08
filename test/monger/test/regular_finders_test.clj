@@ -8,7 +8,8 @@
             [monger.result     :as mgres]
             [monger.conversion :as mgcnv]
             [clojure.test :refer :all]
-            [monger.operators :refer :all]))
+            [monger.operators :refer :all]
+            [monger.conversion :refer [to-db-object]]))
 
 (let [conn (mg/connect)
       db   (mg/get-db conn "monger-test")]
@@ -147,36 +148,36 @@
           doc-id     (mu/random-uuid)
           doc        { :data-store "MongoDB", :language "Clojure", :_id doc-id }]
       (mc/insert db collection doc)
-      (is (= (doc (mc/find-by-id db collection doc-id))))))
+      (is (= (to-db-object doc) (mc/find-by-id db collection doc-id)))))
 
   (deftest find-full-document-by-object-id-when-document-does-exist
     (let [collection "libraries"
           doc-id     (ObjectId.)
           doc        { :data-store "MongoDB", :language "Clojure", :_id doc-id }]
       (mc/insert db collection doc)
-      (is (= (doc (mc/find-by-id db collection doc-id))))))
+      (is (= (to-db-object doc) (mc/find-by-id db collection doc-id)))))
 
   (deftest find-full-document-map-by-string-id-when-document-does-exist
     (let [collection "libraries"
           doc-id     (mu/random-uuid)
           doc        { :data-store "MongoDB", :language "Clojure", :_id doc-id }]
       (mc/insert db collection doc)
-      (is (= (doc (mc/find-map-by-id db collection doc-id))))))
+      (is (= doc (mc/find-map-by-id db collection doc-id)))))
 
   (deftest find-full-document-map-by-object-id-when-document-does-exist
     (let [collection "libraries"
           doc-id     (ObjectId.)
           doc        { :data-store "MongoDB", :language "Clojure", :_id doc-id }]
       (mc/insert db collection doc)
-      (is (= (doc (mc/find-map-by-id db collection doc-id))))))
+      (is (= doc (mc/find-map-by-id db collection doc-id)))))
 
   (deftest find-partial-document-by-id-when-document-does-exist
     (let [collection "libraries"
           doc-id     (mu/random-uuid)
           doc        { :data-store "MongoDB", :language "Clojure", :_id doc-id }]
       (mc/insert db collection doc)
-      (is (= ({ :language "Clojure" }
-              (mc/find-by-id db collection doc-id [ :language ]))))))
+      (is (= (to-db-object { :_id doc-id :language "Clojure" })
+             (mc/find-by-id db collection doc-id [ :language ])))))
 
 
   (deftest find-partial-document-as-map-by-id-when-document-does-exist

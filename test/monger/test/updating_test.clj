@@ -33,9 +33,9 @@
           doc          { :created-at date, :data-store "MongoDB", :language "Clojure", :_id doc-id }
           modified-doc { :created-at date, :data-store "MongoDB", :language "Erlang",  :_id doc-id }]
       (mc/insert db collection doc)
-      (is (= (doc (mc/find-by-id db collection doc-id))))
-      (mc/update db collection { :_id doc-id } { :language "Erlang" })
-      (is (= (modified-doc (mc/find-by-id db collection doc-id))))))
+      (is (= (to-db-object doc) (mc/find-by-id db collection doc-id)))
+      (mc/update db collection { :_id doc-id } { $set { :language "Erlang" } })
+      (is (= (to-db-object modified-doc) (mc/find-by-id db collection doc-id)))))
 
   (deftest ^{:updating true} update-document-by-id-without-upsert-using-update-by-id
     (let [collection "libraries"
@@ -44,9 +44,9 @@
           doc          { :created-at date, :data-store "MongoDB", :language "Clojure", :_id doc-id }
           modified-doc { :created-at date, :data-store "MongoDB", :language "Erlang",  :_id doc-id }]
       (mc/insert db collection doc)
-      (is (= (doc (mc/find-by-id db collection doc-id))))
-      (mc/update-by-id db collection doc-id { :language "Erlang" })
-      (is (= (modified-doc (mc/find-by-id db collection doc-id))))))
+      (is (= (to-db-object doc) (mc/find-by-id db collection doc-id)))
+      (mc/update-by-id db collection doc-id { $set { :language "Erlang" } })
+      (is (= (to-db-object modified-doc) (mc/find-by-id db collection doc-id)))))
 
   (deftest ^{:updating true} update-nested-document-fields-without-upsert-using-update-by-id
     (let [collection "libraries"
@@ -55,9 +55,9 @@
           doc          { :created-at date :data-store "MongoDB" :language { :primary "Clojure" } :_id doc-id }
           modified-doc { :created-at date :data-store "MongoDB" :language { :primary "Erlang"  } :_id doc-id }]
       (mc/insert db collection doc)
-      (is (= (doc (mc/find-by-id db collection doc-id))))
+      (is (= (to-db-object doc) (mc/find-by-id db collection doc-id)))
       (mc/update-by-id db collection doc-id { $set { "language.primary" "Erlang" }})
-      (is (= (modified-doc (mc/find-by-id db collection doc-id))))))
+      (is (= (to-db-object modified-doc) (mc/find-by-id db collection doc-id)))))
 
 
   (deftest ^{:updating true} update-multiple-documents
@@ -151,7 +151,7 @@
       (is (= 1 (mc/count db collection)))
       (is (mr/updated-existing? (mc/update db collection { :language "Clojure" } modified-doc {:multi false :upsert true})))
       (is (= 1 (mc/count db collection)))
-      (is (= (modified-doc (mc/find-by-id db collection doc-id))))
+      (is (= (to-db-object modified-doc) (mc/find-by-id db collection doc-id)))
       (mc/remove db collection)))
 
   (deftest ^{:updating true} upsert-a-document-using-upsert
@@ -165,5 +165,5 @@
       (is (= 1 (mc/count db collection)))
       (is (mr/updated-existing? (mc/upsert db collection {:language "Clojure"} modified-doc {:multi false})))
       (is (= 1 (mc/count db collection)))
-      (is (= (modified-doc (mc/find-by-id db collection doc-id))))
+      (is (= (to-db-object modified-doc) (mc/find-by-id db collection doc-id)))
       (mc/remove db collection))))

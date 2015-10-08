@@ -12,12 +12,12 @@
 (when-not (System/getenv "CI")
   (deftest ^{:authentication true} connect-to-mongo-via-uri-without-credentials
     (let [{:keys [conn db]} (mg/connect-via-uri "mongodb://127.0.0.1/monger-test4")]
-      (is (= (-> conn .getAddress ^InetAddress (.sameHost "127.0.0.1"))))))
+      (is (-> conn .getAddress (.sameHost "127.0.0.1")))))
 
   (deftest ^{:authentication true} connect-to-mongo-via-uri-with-valid-credentials
     (let [{:keys [conn db]} (mg/connect-via-uri "mongodb://clojurewerkz/monger:monger@127.0.0.1/monger-test4")]
       (is (= "monger-test4" (.getName db)))
-      (is (= (-> conn .getAddress ^InetAddress (.sameHost "127.0.0.1"))))
+      (is (-> conn .getAddress (.sameHost "127.0.0.1")))
       (mc/remove db "documents")
       ;; make sure that the database is selected
       ;; and operations get through.
@@ -27,7 +27,7 @@
 (if-let [uri (System/getenv "MONGOHQ_URL")]
   (deftest ^{:external true :authentication true} connect-to-mongo-via-uri-with-valid-credentials
     (let [{:keys [conn db]} (mg/connect-via-uri uri)]
-      (is (= (-> conn .getAddress ^InetAddress (.sameHost "127.0.0.1")))))))
+      (is (-> conn .getAddress (.sameHost "127.0.0.1"))))))
 
 
 ;;
