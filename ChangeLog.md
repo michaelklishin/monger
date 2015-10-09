@@ -1,5 +1,14 @@
 ## Changes between 3.0.0 and 3.1.0
 
+### Improved DBObject to Clojure Map conversion performance
+
+New `from-db-object` implementation for `DBObject` avoids creation of an unnecessary
+sequence and instead directly accesses `DBObject` instance in reduce. This should
+offer performance improvement of about 20%. A performance test can be found
+at [monger.test.stress-test](https://github.com/michaelklishin/monger/blob/master/test/monger/test/stress_test.clj).
+
+Contributed by Juho Teperi.
+
 ### Authencation Function No Longer Ignores Credentials
 
 In some cases Monger ignored provided credentials.
