@@ -66,6 +66,8 @@
               :auto-connect-retry true
               :max-auto-connect-retry-time 1
               :description "Description"
+              :ssl-enabled true
+              :ssl-invalid-hostname-allowed true
               :write-concern com.mongodb.WriteConcern/JOURNAL_SAFE
               :cursor-finalizer-enabled true
               :required-replica-set-name "rs"}]

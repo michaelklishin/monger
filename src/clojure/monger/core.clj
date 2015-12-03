@@ -137,7 +137,7 @@
   [{:keys [connections-per-host threads-allowed-to-block-for-connection-multiplier
            max-wait-time connect-timeout socket-timeout socket-keep-alive auto-connect-retry max-auto-connect-retry-time
            description write-concern cursor-finalizer-enabled read-preference
-           required-replica-set-name]}]
+           required-replica-set-name ssl-invalid-hostname-allowed ssl-enabled]}]
   (let [mob (MongoClientOptions$Builder.)]
     (when connections-per-host
       (.connectionsPerHost mob connections-per-host))
@@ -155,6 +155,10 @@
       (.readPreference mob read-preference))
     (when description
       (.description mob description))
+    (when ssl-enabled
+      (.sslEnabled mob ssl-enabled))
+    (when ssl-invalid-hostname-allowed
+      (.sslInvalidHostNameAllowed mob ssl-invalid-hostname-allowed))
     (when write-concern
       (.writeConcern mob write-concern))
     (when cursor-finalizer-enabled
