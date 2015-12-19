@@ -45,15 +45,9 @@
                                    [com.novemberain/validateur "2.4.2" :exclusions [org.clojure/clojure]]
                                    [ch.qos.logback/logback-classic "1.1.3" :exclusions [org.slf4j/slf4j-api]]
                                    [ragtime/ragtime.core   "0.3.7" :exclusions [org.clojure/clojure]]]
-                   :plugins [[codox "0.8.10"]]
-                   :codox {:sources ["src/clojure"]
-                           :output-dir "doc/api"
-                           :exclude [monger.internal.pagination
-                                     monger.internal.fn
-                                     ;; these are not fully baked yet or have changes
-                                     ;; that are not entirely backwards compatible with 1.0. MK.
-                                     monger.testkit
-                                     monger.ring.session-store]}}
+                   :plugins [[lein-codox "0.9.0"]]
+                   :codox {:source-paths ["src/clojure"]
+                           :namespaces [#"^monger\.(?!internal)"]}}
              ;; only clj-time/JodaTime available, used to test monger.joda-time w/o clojure.data.json
              :dev2 {:resource-paths ["test/resources"]
                     :dependencies  [[clj-time "0.8.0"               :exclusions [org.clojure/clojure]]]}}
