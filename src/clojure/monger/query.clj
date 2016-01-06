@@ -106,7 +106,7 @@
     (when snapshot
       (.snapshot cursor))
     (when hint
-      (.hint (to-db-object hint)))
+      (.hint cursor (to-db-object hint)))
     (when read-preference
       (.setReadPreference cursor read-preference))
     (when options
