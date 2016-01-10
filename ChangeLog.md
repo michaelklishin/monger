@@ -1,3 +1,14 @@
+## Changes between 3.0.1 and 3.0.2
+
+### MongoDB Java Driver Update
+
+MongoDB Java driver dependency has been updated to `3.2.0`.
+
+### Cursor Hinting Option Fix
+
+Contributed by Stijn Opheide.
+
+
 ## Changes between 3.0.0 and 3.0.1
 
 ### Authencation Function No Longer Ignores Credentials
