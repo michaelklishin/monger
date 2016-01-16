@@ -23,6 +23,11 @@ In some cases Monger ignored provided credentials.
 
 Contributed by Artem Chistyakov.
 
+### Macro Type Hint Fixes
+
+Contributed by Andre Ambrosio Boechat.
+
+
 
 ## Changes between 2.1.0 and 3.0.0
 
