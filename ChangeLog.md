@@ -1,3 +1,10 @@
+## Changes between 3.0.2 and 3.0.3 (unreleased)
+
+### Macro Type Hint Fixes
+
+Contributed by Andre Ambrosio Boechat.
+
+
 ## Changes between 3.0.1 and 3.0.2
 
 ### MongoDB Java Driver Update
