@@ -167,10 +167,11 @@
   (merge m { :limit per-page :skip (monger.internal.pagination/offset-for page per-page) }))
 
 (defmacro with-collection
-  [^DB db ^String coll & body]
+  [db coll & body]
   `(let [coll# ~coll
+         ^DB db# ~db
          db-coll# (if (string? coll#)
-                    (.getCollection ~db ^String coll#)
+                    (.getCollection db# coll#)
                     coll#)
          query# (-> (empty-query db-coll#) ~@body)]
      (exec query#)))
