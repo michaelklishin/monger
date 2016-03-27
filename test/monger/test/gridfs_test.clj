@@ -82,7 +82,7 @@
 
   (deftest ^{:gridfs true} test-finding-individual-files-on-gridfs
     (testing "gridfs/find-one"
-      (purge-gridfs*)    
+      (purge-gridfs*)
       (let [input   "./test/resources/mongo/js/mapfun1.js"
             ct     "binary/octet-stream"
             fname  "monger.test.gridfs.file5"
@@ -121,7 +121,46 @@
           (is (= {:meta "data"} (:metadata m))))
         (are [a query] (is (= a (:md5 (gridfs/find-one-as-map fs query))))
              md5 {:_id (:_id stored)}
-             md5 {:md5 md5}))))
+             md5 {:md5 md5})))
+    (testing "gridfs/find-by-id"
+      (purge-gridfs*)
+      (let [input   "./test/resources/mongo/js/mapfun1.js"
+            ct     "binary/octet-stream"
+            fname  "monger.test.gridfs.file5"
+            md5    "14a09deabb50925a3381315149017bbd"
+            stored (store-file (make-input-file fs input)
+                               (filename fname)
+                               (content-type ct))]
+        (is (= 1 (count (gridfs/all-files fs))))
+        (is (:_id stored))
+        (is (:uploadDate stored))
+        (is (= 62 (:length stored)))
+        (is (= md5 (:md5 stored)))
+        (is (= fname (:filename stored)))
+        (is (= ct (:contentType stored)))
+        (are [a id] (is (= a (:md5 (from-db-object (gridfs/find-by-id fs id) true))))
+             md5 (:_id stored))))
+    (testing "gridfs/find-map-by-id"
+      (purge-gridfs*)
+      (let [input   "./test/resources/mongo/js/mapfun1.js"
+            ct      "binary/octet-stream"
+            fname "monger.test.gridfs.file6"
+            md5      "14a09deabb50925a3381315149017bbd"
+            stored  (store-file (make-input-file fs input)
+                                (filename fname)
+                                (metadata (to-db-object {:meta "data"}))
+                                (content-type ct))]
+        (is (= 1 (count (gridfs/all-files fs))))
+        (is (:_id stored))
+        (is (:uploadDate stored))
+        (is (= 62 (:length stored)))
+        (is (= md5 (:md5 stored)))
+        (is (= fname (:filename stored)))
+        (is (= ct (:contentType stored)))
+        (let [m (gridfs/find-map-by-id fs (:_id stored))]
+          (is (= {:meta "data"} (:metadata m))))
+        (are [a id] (is (= a (:md5 (gridfs/find-map-by-id fs id))))
+          md5 (:_id stored)))))
 
   (deftest ^{:gridfs true} test-finding-multiple-files-on-gridfs
     (let [input   "./test/resources/mongo/js/mapfun1.js"

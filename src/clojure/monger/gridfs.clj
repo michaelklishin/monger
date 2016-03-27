@@ -188,4 +188,4 @@
 
 (defn find-map-by-id
   [^GridFS fs ^ObjectId id]
-  (converter (find-one fs id)))
+  (converter (find-by-id fs id)))
