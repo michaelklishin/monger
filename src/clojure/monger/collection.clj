@@ -61,7 +61,8 @@
   (:require [monger.core :as mc]
             [monger.result :as mres]
             [monger.conversion :refer :all]
-            [monger.constraints :refer :all]))
+            [monger.constraints :refer :all]
+            [monger.util :refer [into-array-list]]))
 
 
 ;;
@@ -450,9 +451,9 @@
 (defn drop-index
   "Drops an index from this collection."
   [^DB db ^String coll idx]
-  (.dropIndex (.getCollection db (name coll)) (if (string? idx)
-                                                idx
-                                                (to-db-object idx))))
+  (if (string? idx)
+    (.dropIndex (.getCollection db (name coll)) ^String idx)
+    (.dropIndex (.getCollection db (name coll)) (to-db-object idx))))
 
 (defn drop-indexes
   "Drops all indixes from this collection."
@@ -524,6 +525,7 @@
 ;;
 
 (defn- build-aggregation-options
+  ^AggregationOptions
   [{:keys [^Boolean allow-disk-use cursor ^Long max-time]}]
   (cond-> (AggregationOptions/builder)
      allow-disk-use       (.allowDiskUse allow-disk-use)
@@ -543,7 +545,7 @@
   [^DB db ^String coll stages & opts]
   (let [coll (.getCollection db coll)
         agg-opts (build-aggregation-options opts)
-        pipe (java.util.ArrayList. (to-db-object stages))
+        pipe (into-array-list (to-db-object stages))
         res (.aggregate coll pipe agg-opts)]
     (map #(from-db-object % true) (iterator-seq res))))
 
@@ -554,7 +556,7 @@
   [^DB db ^String coll stages & opts]
   (let [coll (.getCollection db coll)
         agg-opts (build-aggregation-options opts)
-        pipe (java.util.ArrayList. (to-db-object stages))
+        pipe (into-array-list (to-db-object stages))
         res (.explainAggregate coll pipe agg-opts)]
     (from-db-object res true)))
 ;;

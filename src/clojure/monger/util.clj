@@ -57,7 +57,7 @@
   "Returns a new BSON object id, or converts str to BSON object id"
   ([]
      (ObjectId.))
-  ([s]
+  ([^String s]
      (ObjectId. s)))
 
 (defprotocol GetDocumentId
@@ -73,3 +73,8 @@
   (get-id
     [^IPersistentMap object]
     (or (:_id object) (object "_id"))))
+
+(defn into-array-list
+  "Coerce a j.u.Collection into a j.u.ArrayList."
+  ^java.util.ArrayList [^java.util.Collection coll]
+  (java.util.ArrayList. coll))
