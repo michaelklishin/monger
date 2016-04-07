@@ -42,11 +42,12 @@
    * http://clojuremongodb.info/articles/commands.html
    * http://clojuremongodb.info/articles/gridfs.html"
   (:refer-clojure :exclude [count])
-  (:require [monger.conversion :refer :all])
+  (:require [monger.conversion :refer :all]
+            [monger.util :refer [into-array-list]])
   (:import [com.mongodb MongoClient MongoClientURI MongoCredential DB WriteConcern DBObject DBCursor Bytes
             MongoClientOptions MongoClientOptions$Builder ServerAddress MapReduceOutput MongoException]
            [com.mongodb.gridfs GridFS]
-           [java.util Map ArrayList]))
+           [java.util Map]))
 
 ;;
 ;; Defaults
@@ -77,18 +78,18 @@
   ([server-address ^MongoClientOptions options]
      (if (coll? server-address)
        ;; connect to a replica set
-       (let [server-list ^ArrayList (ArrayList. ^java.util.Collection server-address)]
+       (let [server-list (into-array-list server-address)]
          (MongoClient. server-list options))
        ;; connect to a single instance
        (MongoClient. ^ServerAddress server-address options)))
   ([server-address ^MongoClientOptions options credentials]
-     (let [creds (if (coll? credentials)
-                   credentials
-                   [credentials])]
+   (let [creds (into-array-list (if (coll? credentials)
+                                  credentials
+                                  [credentials]))]
        (if (coll? server-address)
-         (let [server-list ^ArrayList (ArrayList. ^java.util.Collection server-address)]
-           (MongoClient. server-list creds options))
-         (MongoClient. ^ServerAddress server-address creds options))))
+         (let [server-list (into-array-list server-address)]
+           (MongoClient. server-list ^java.util.List creds options))
+         (MongoClient. ^ServerAddress server-address ^java.util.List creds options))))
   ([{ :keys [host port uri] :or { host *mongodb-host* port *mongodb-port* }}]
     (if uri
        (MongoClient. (MongoClientURI. uri))
@@ -100,11 +101,11 @@
      (connect-with-credentials *mongodb-host* *mongodb-port* credentials))
   ([^String hostname credentials]
      (connect-with-credentials hostname *mongodb-port* credentials))
-  ([^String hostname port credentials]
-     (MongoClient. [(ServerAddress. hostname port)]
-                   (if (coll? credentials)
-                     credentials
-                     [credentials]))))
+  ([^String hostname ^long port credentials]
+     (MongoClient. (into-array-list [(ServerAddress. hostname port)])
+                   (into-array-list (if (coll? credentials)
+                                      credentials
+                                      [credentials])))))
 
 (defn get-db-names
   "Gets a list of all database names present on the server"
