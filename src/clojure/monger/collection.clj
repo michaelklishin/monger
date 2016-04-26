@@ -226,13 +226,13 @@
   "Returns a single object, converted to map with matching _id field."
   ([^DB db ^String coll id]
      (check-not-nil! id "id must not be nil")
-     (from-db-object ^DBObject (find-one-as-map db coll {:_id id}) true))
+     (find-one-as-map db coll {:_id id}))
   ([^DB db ^String coll id fields]
      (check-not-nil! id "id must not be nil")
-     (from-db-object ^DBObject (find-one-as-map db coll {:_id id} fields) true))
+     (find-one-as-map db coll {:_id id} fields))
   ([^DB db ^String coll id fields keywordize]
      (check-not-nil! id "id must not be nil")
-     (from-db-object ^DBObject (find-one-as-map db coll {:_id id} fields) keywordize)))
+     (find-one-as-map db coll {:_id id} fields keywordize)))
 
 ;;
 ;; monger.collection/count
