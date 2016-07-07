@@ -137,8 +137,11 @@
 (defn ^MongoClientOptions$Builder mongo-options-builder
   [{:keys [connections-per-host threads-allowed-to-block-for-connection-multiplier
            max-wait-time connect-timeout socket-timeout socket-keep-alive auto-connect-retry max-auto-connect-retry-time
-           description write-concern cursor-finalizer-enabled read-preference
-           required-replica-set-name]}]
+           description write-concern cursor-finalizer-enabled read-preference required-replica-set-name
+           add-command-listener always-use-mbeans codec-registry db-decoder-factory db-encoder-factory
+           heartbeat-connect-timeout heartbeat-frequency heartbeat-socket-timeout local-threshold
+           max-connection-idle-time max-connection-life-time min-connections-per-host min-heartbeat-frequency
+           read-concern server-selection-timeout socket-factory ssl-enabled ssl-invalid-host-name-allowed]}]
   (let [mob (MongoClientOptions$Builder.)]
     (when connections-per-host
       (.connectionsPerHost mob connections-per-host))
@@ -162,6 +165,42 @@
       (.cursorFinalizerEnabled mob cursor-finalizer-enabled))
     (when required-replica-set-name
       (.requiredReplicaSetName mob required-replica-set-name))
+    (when add-command-listener
+      (.addCommandListener mob add-command-listener))
+    (when always-use-mbeans
+      (.alwaysUseMBeans mob always-use-mbeans))
+    (when codec-registry
+      (.codecRegistry mob codec-registry))
+    (when db-decoder-factory
+      (.dbDecoderFactory mob db-decoder-factory))
+    (when db-encoder-factory
+      (.dbEncoderFactory mob db-encoder-factory))
+    (when heartbeat-connect-timeout
+      (.heartbeatConnectTimeout mob heartbeat-connect-timeout))
+    (when heartbeat-frequency
+      (.heartbeatFrequency mob heartbeat-frequency))
+    (when heartbeat-socket-timeout
+      (.heartbeatSocketTimeout mob heartbeat-socket-timeout))
+    (when local-threshold
+      (.localThreshold mob local-threshold))
+    (when max-connection-idle-time
+      (.maxConnectionIdleTime mob max-connection-idle-time))
+    (when max-connection-life-time
+      (.maxConnectionLifeTime mob max-connection-life-time))
+    (when min-connections-per-host
+      (.minConnectionsPerHost mob min-connections-per-host))
+    (when min-heartbeat-frequency
+      (.minHeartbeatFrequency mob min-heartbeat-frequency))
+    (when read-concern
+      (.readConcern mob read-concern))
+    (when server-selection-timeout
+      (.serverSelectionTimeout mob server-selection-timeout))
+    (when socket-factory
+      (.socketFactory mob socket-factory))
+    (when ssl-enabled
+      (.sslEnabled mob ssl-enabled))
+    (when ssl-invalid-host-name-allowed
+      (.sslInvalidHostNameAllowed mob ssl-invalid-host-name-allowed))
     mob))
 
 (defn ^MongoClientOptions mongo-options
