@@ -286,3 +286,9 @@
 (defoperator $search)
 (defoperator $language)
 (defoperator $natural)
+
+;; $currentDate operator sets the value of a field to the current date, either as a Date or a timestamp. The default type is Date.
+;;
+;; EXAMPLES:
+;;   (mgcol/update coll { :_id oid } { $currentDate { :lastModified true } })
+(defoperator $currentDate)
