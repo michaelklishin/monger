@@ -4,7 +4,7 @@
   :min-lein-version "2.5.1"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
-  :dependencies [[org.clojure/clojure        "1.7.0"]
+  :dependencies [[org.clojure/clojure        "1.8.0"]
                  [org.mongodb/mongodb-driver "3.2.0"]
                  [clojurewerkz/support       "1.1.0"]]
   :test-selectors {:default     (fn [m]
@@ -33,8 +33,9 @@
                  :post "clojure-mongodb@googlegroups.com"}
   :profiles {:dj02x {:dependencies [[org.clojure/data.json  "0.2.6" :exclusions [org.clojure/clojure]]]}
              :1.6    {:dependencies [[org.clojure/clojure "1.6.0"]]}
-             :1.8    {:dependencies [[org.clojure/clojure "1.8.0"]]}
-             :master {:dependencies [[org.clojure/clojure "1.8.0-master-SNAPSHOT"]]}
+             :1.7    {:dependencies [[org.clojure/clojure "1.7.0"]]}
+             :1.9    {:dependencies [[org.clojure/clojure "1.9.0-alpha11"]]}
+             :master {:dependencies [[org.clojure/clojure "1.9.0-master-SNAPSHOT"]]}
              :dev {:resource-paths ["test/resources"]
                    :dependencies  [[clj-time               "0.8.0" :exclusions [org.clojure/clojure]]
                                    [cheshire               "5.5.0" :exclusions [org.clojure/clojure]]
