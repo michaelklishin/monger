@@ -5,7 +5,7 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure        "1.8.0"]
-                 [org.mongodb/mongodb-driver "3.2.0"]
+                 [org.mongodb/mongodb-driver "3.3.0"]
                  [clojurewerkz/support       "1.1.0"]]
   :test-selectors {:default     (fn [m]
                                   (and (not (:performance m))

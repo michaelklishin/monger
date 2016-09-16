@@ -2,7 +2,7 @@
 
 ### MongoDB Java Driver Update
 
-MongoDB Java driver dependency has been updated to `3.2.0`.
+MongoDB Java driver dependency has been updated to `3.3.0`.
 
 ### Cursor Hinting Option Fix
 
