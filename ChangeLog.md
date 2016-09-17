@@ -1,4 +1,9 @@
-## Changes between 3.0.x and 3.1.0
+## Changes between 3.1.x and 3.2.0 (unreleased)
+
+No changes yet.
+
+
+## Changes between 3.0.x and 3.1.0 (September 17th, 2016)
 
 ### MongoDB Java Driver Update
 
