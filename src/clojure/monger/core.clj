@@ -70,9 +70,10 @@
      :host (\"127.0.0.1\" by default)
      :port (27017 by default)"
   {:arglists '([]
-                 [server-address options]
-                   [[server-address & more] options]
-                     [{:keys [host port uri] :or { host *mongodb-host* port *mongodb-port*}}])}
+               [server-address options]
+               [server-address options credentials]
+               [[server-address & more] options]
+               [{:keys [host port uri] :or { host *mongodb-host* port *mongodb-port*}}])}
   ([]
      (MongoClient.))
   ([server-address ^MongoClientOptions options]
