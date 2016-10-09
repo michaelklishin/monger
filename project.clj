@@ -34,7 +34,7 @@
   :profiles {:dj02x {:dependencies [[org.clojure/data.json  "0.2.6" :exclusions [org.clojure/clojure]]]}
              :1.6    {:dependencies [[org.clojure/clojure "1.6.0"]]}
              :1.7    {:dependencies [[org.clojure/clojure "1.7.0"]]}
-             :1.9    {:dependencies [[org.clojure/clojure "1.9.0-alpha11"]]}
+             :1.9    {:dependencies [[org.clojure/clojure "1.9.0-alpha13"]]}
              :master {:dependencies [[org.clojure/clojure "1.9.0-master-SNAPSHOT"]]}
              :dev {:resource-paths ["test/resources"]
                    :dependencies  [[clj-time               "0.8.0" :exclusions [org.clojure/clojure]]
