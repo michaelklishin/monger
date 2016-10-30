@@ -80,10 +80,16 @@
 ;;   (mgcol/find-maps "languages" { :tags { $nin [ "functional" ] } } )
 (defoperator $nin)
 
+;; $eq is "equals" comparator
+;;
+;; EXAMPLES:
+;;   (monger.collection/find "libraries" { :language { $eq "Clojure" }})
+(defoperator $eq)
+
 ;; $ne is "non-equals" comparator
 ;;
 ;; EXAMPLES:
-;;   (monger.collection/find "libraries" {$ne { :language "Clojure" }})
+;;   (monger.collection/find "libraries" { :language { $ne "Clojure" }})
 (defoperator $ne)
 
 ;; $elemMatch checks if an element in an array matches the specified expression
@@ -95,6 +101,13 @@
 
 (defoperator $regex)
 (defoperator $options)
+
+;; Matches documents that satisfy a JavaScript expression.
+;;
+;; EXAMPLES:
+;;
+;;   (monger.collection/find "people" { $where "this.placeOfBirth === this.address.city" })
+(defoperator $where)
 
 ;;
 ;; LOGIC OPERATORS
@@ -275,9 +288,18 @@
 (defoperator $ifNull)
 (defoperator $cond)
 
+;; Geospatial
 (defoperator $geoWithin)
 (defoperator $geoIntersects)
 (defoperator $near)
+(defoperator $nearSphere)
+(defoperator $geometry)
+(defoperator $maxDistance)
+(defoperator $minDistance)
+(defoperator $center)
+(defoperator $centerSphere)
+(defoperator $box)
+(defoperator $polygon)
 
 (defoperator $slice)
 
@@ -292,3 +314,9 @@
 ;; EXAMPLES:
 ;;   (mgcol/update coll { :_id oid } { $currentDate { :lastModified true } })
 (defoperator $currentDate)
+
+;; Isolates intermediate multi-document updates from other clients.
+;;
+;; EXAMPLES:
+;;   (mgcol/update "libraries" { :language "Clojure", $isolated 1 } { $inc { :popularity 1 } } {:multi true})
+(defoperator $isolated)
