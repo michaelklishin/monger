@@ -80,6 +80,12 @@
 ;;   (mgcol/find-maps "languages" { :tags { $nin [ "functional" ] } } )
 (defoperator $nin)
 
+;; $eq is "equals" comparator
+;;
+;; EXAMPLES:
+;;   (monger.collection/find "libraries" { :language { $eq "Clojure" }})
+(defoperator $eq)
+
 ;; $ne is "non-equals" comparator
 ;;
 ;; EXAMPLES:

@@ -55,6 +55,18 @@
            1 {:users {$gt 10 $lt 150}})))
 
   ;;
+  ;; $eq
+  ;;
+
+  (deftest find-with-eq-operator
+    (let [collection "libraries"]
+      (mc/insert-batch db collection [{:language "Ruby"    :name "mongoid"  :users 1 :displayName nil}
+                                      {:language "Clojure" :name "langohr"  :users 5}
+                                      {:language "Clojure" :name "incanter" :users 15}
+                                      {:language "Scala"   :name "akka"     :users 150}])
+      (is (= 2 (.count (mc/find db collection {:language {$eq "Clojure"}}))))))
+
+  ;;
   ;; $ne
   ;;
 
