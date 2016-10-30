@@ -3,9 +3,27 @@
             [monger.collection :as mc]
             [monger.js         :as js]
             [clojure.test :refer :all]
-            [monger.operators :refer :all]))
+            [clojure.set :refer [difference]]
+            [monger.operators :refer :all])
+  (:import [com.mongodb QueryOperators]))
 
 ;; (use-fixtures :each purge-people purge-docs purge-things purge-libraries)
+
+(deftest every-query-operator-is-defined
+  (let [driver-query-operators (->> (.getDeclaredFields QueryOperators) (map #(.get % nil)) set)
+        monger-query-operators (->> (ns-publics 'monger.operators) (map (comp name first)) set)
+        ; $within is deprecated and replaced by $geoWithin since v2.4.
+        ; $uniqueDocs is deprecated since v2.6.
+        deprecated-query-operators #{"$within" "$uniqueDocs"}
+        ; Query modifier operators that are deprecated in the mongo shell since v3.2
+        deprecated-meta-operators #{"$comment" "$explain" "$hint" "$maxScan"
+                                    "$maxTimeMS" "$max" "$min" "$orderby"
+                                    "$returnKey" "$showDiskLoc" "$snapshot" "$query"}
+        undefined-non-deprecated-operators (difference driver-query-operators
+                                                       deprecated-query-operators
+                                                       deprecated-meta-operators
+                                                       monger-query-operators)]
+    (is (= #{} undefined-non-deprecated-operators))))
 
 (let [conn (mg/connect)
       db   (mg/get-db conn "monger-test")]
