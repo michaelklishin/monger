@@ -125,4 +125,10 @@
            {:language {$regex "clo.*" $options "i"}} 2
            {:name     {$regex "aK.*" $options "i"}} 1
            {:language {$regex ".*by"}} 1
-           {:language {$regex ".*ala.*"}} 1))))
+           {:language {$regex ".*ala.*"}} 1)))
+
+  (deftest find-with-js-expression
+    (let [collection "people"]
+      (mc/insert-batch db collection [{:name "Bob" :placeOfBirth "New York" :address {:city "New York"}}
+                                      {:name "Alice" :placeOfBirth "New York" :address {:city "Los Angeles"}}])
+      (is (= 1 (.count (mc/find db collection {$where "this.placeOfBirth === this.address.city"})))))))

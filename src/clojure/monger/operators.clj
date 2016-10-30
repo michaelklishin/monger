@@ -96,6 +96,13 @@
 (defoperator $regex)
 (defoperator $options)
 
+;; Matches documents that satisfy a JavaScript expression.
+;;
+;; EXAMPLES:
+;;
+;;   (monger.collection/find "people" { $where "this.placeOfBirth === this.address.city" })
+(defoperator $where)
+
 ;;
 ;; LOGIC OPERATORS
 ;;
