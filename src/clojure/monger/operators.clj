@@ -275,9 +275,18 @@
 (defoperator $ifNull)
 (defoperator $cond)
 
+;; Geospatial
 (defoperator $geoWithin)
 (defoperator $geoIntersects)
 (defoperator $near)
+(defoperator $nearSphere)
+(defoperator $geometry)
+(defoperator $maxDistance)
+(defoperator $minDistance)
+(defoperator $center)
+(defoperator $centerSphere)
+(defoperator $box)
+(defoperator $polygon)
 
 (defoperator $slice)
 
