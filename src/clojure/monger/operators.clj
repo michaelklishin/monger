@@ -314,3 +314,9 @@
 ;; EXAMPLES:
 ;;   (mgcol/update coll { :_id oid } { $currentDate { :lastModified true } })
 (defoperator $currentDate)
+
+;; Isolates intermediate multi-document updates from other clients.
+;;
+;; EXAMPLES:
+;;   (mgcol/update "libraries" { :language "Clojure", $isolated 1 } { $inc { :popularity 1 } } {:multi true})
+(defoperator $isolated)
