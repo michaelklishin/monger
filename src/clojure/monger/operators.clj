@@ -83,7 +83,7 @@
 ;; $ne is "non-equals" comparator
 ;;
 ;; EXAMPLES:
-;;   (monger.collection/find "libraries" {$ne { :language "Clojure" }})
+;;   (monger.collection/find "libraries" { :language { $ne "Clojure" }})
 (defoperator $ne)
 
 ;; $elemMatch checks if an element in an array matches the specified expression

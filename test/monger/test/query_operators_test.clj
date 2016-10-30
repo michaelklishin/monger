@@ -64,7 +64,7 @@
                                       {:language "Clojure" :name "langohr"  :users 5}
                                       {:language "Clojure" :name "incanter" :users 15}
                                       {:language "Scala"   :name "akka"     :users 150}])
-      (is (= 2 (.count (mc/find db collection {$ne {:language "Clojure"}}))))))
+      (is (= 2 (.count (mc/find db collection {:language {$ne "Clojure"}}))))))
 
 
   ;;
