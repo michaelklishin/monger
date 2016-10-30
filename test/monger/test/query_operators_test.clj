@@ -58,7 +58,7 @@
   ;; $ne
   ;;
 
-  (deftest find-with-and-or-operators
+  (deftest find-with-ne-operator
     (let [collection "libraries"]
       (mc/insert-batch db collection [{:language "Ruby"    :name "mongoid"  :users 1}
                                       {:language "Clojure" :name "langohr"  :users 5}
