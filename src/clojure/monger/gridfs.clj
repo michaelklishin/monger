@@ -116,7 +116,7 @@
 
 (defn ^GridFSInputFile make-input-file
   [^GridFS fs input]
-  (.createFile fs (to-input-stream input)))
+  (.createFile fs (to-input-stream input) true))
 
 (defmacro store
   [^GridFSInputFile input & body]

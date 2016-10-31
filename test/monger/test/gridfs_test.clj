@@ -78,6 +78,16 @@
                   (content-type "application/octet-stream"))
       (is (= 1 (count (gridfs/all-files fs))))))
 
+  (deftest ^{:gridfs true} test-deleting-file-instance-on-disk-after-storing
+    (let [tmp-file (File/createTempFile "monger.test.gridfs" "test-deleting-file-instance-on-disk-after-storing")
+          _        (spit tmp-file "to be deleted")]
+      (is (= 0 (count (gridfs/all-files fs))))
+      (store-file (make-input-file fs tmp-file)
+                  (filename "test-deleting-file-instance-on-disk-after-storing")
+                  (content-type "application/octet-stream"))
+      (is (= 1 (count (gridfs/all-files fs))))
+      (is (.delete tmp-file))))
+
 
 
   (deftest ^{:gridfs true} test-finding-individual-files-on-gridfs
