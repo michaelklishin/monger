@@ -265,7 +265,7 @@
 (defoperator $add)
 (defoperator $divide)
 (defoperator $multiply)
-(defoperator $substract)
+(defoperator $subtract)
 
 (defoperator $strcasecmp)
 (defoperator $substr)
