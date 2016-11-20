@@ -114,9 +114,30 @@
   (to-input-stream [^InputStream input]
     input))
 
+(defprotocol GridFSInputFileFactory
+  (^GridFSInputFile create-gridfs-file [input ^GridFS fs] "Creates a file entry"))
+
+(extend byte-array-type
+  GridFSInputFileFactory
+  {:create-gridfs-file (fn [^bytes input ^GridFS fs]
+                         (.createFile fs input))})
+
+(extend-protocol GridFSInputFileFactory
+  String
+  (create-gridfs-file [^String input ^GridFS fs]
+    (.createFile fs (io/file input)))
+
+  File
+  (create-gridfs-file [^File input ^GridFS fs]
+    (.createFile fs input))
+
+  InputStream
+  (create-gridfs-file [^InputStream input ^GridFS fs]
+    (.createFile fs input)))
+
 (defn ^GridFSInputFile make-input-file
   [^GridFS fs input]
-  (.createFile fs (to-input-stream input)))
+  (create-gridfs-file input fs))
 
 (defmacro store
   [^GridFSInputFile input & body]
