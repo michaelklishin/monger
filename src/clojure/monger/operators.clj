@@ -227,8 +227,8 @@
 ;; an error condition is raised.
 ;;
 ;; EXAMPLES:
-;;   (mgcol/update coll { :_id oid } { $pull { :measurements 1.2 } })
-;;   (mgcol/update coll { :_id oid } { $pull { :measurements { $gte 1.2 } } })
+;;   (mgcol/update coll { :_id oid } { $pullAll { :measurements 1.2 } })
+;;   (mgcol/update coll { :_id oid } { $pullAll { :measurements { $gte 1.2 } } })
 (defoperator $pullAll)
 
 (defoperator $bit)
