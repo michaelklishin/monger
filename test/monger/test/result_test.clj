@@ -15,8 +15,11 @@
           date         (Date.)
           doc          { :created-at date :data-store "MongoDB" :language "Clojure" :_id doc-id }
           modified-doc { :created-at date :data-store "MongoDB" :language "Erlang"  :_id doc-id }]
-      (is (not (mgres/updated-existing? (mc/update db collection { :language "Clojure" } doc {:upsert true}))))
-      (is (mgres/updated-existing? (mc/update db collection { :language "Clojure" }      doc {:upsert true})))
-      (mgres/updated-existing? (mc/update db collection { :language "Clojure" } modified-doc {:multi false :upsert true}))
+      (let [result (mc/update db collection { :language "Clojure" } doc {:upsert true})]
+        (is (not (mgres/updated-existing? result)))
+        (is (= 1 (mgres/affected-count result))))
+      (is (mgres/updated-existing? (mc/update db collection { :language "Clojure" } doc {:upsert true})))
+      (is (mgres/updated-existing? (mc/update db collection { :language "Clojure" } modified-doc {:multi false :upsert true})))
+      (is (= 1 (mgres/affected-count (mc/remove db collection { :_id doc-id }))))
       (mc/remove db collection)
       (mg/disconnect conn))))

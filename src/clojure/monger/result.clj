@@ -65,3 +65,8 @@
   (acknowledged?
     [^CommandResult result]
     (.ok result)))
+
+(defn affected-count
+  "Get the number of documents affected"
+  [^WriteResult result]
+  (.getN result))
