@@ -5,7 +5,7 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure        "1.8.0"]
-                 [org.mongodb/mongodb-driver "3.3.0"]
+                 [org.mongodb/mongodb-driver "3.4.2"]
                  [clojurewerkz/support       "1.1.0"]]
   :test-selectors {:default     (fn [m]
                                   (and (not (:performance m))
@@ -27,7 +27,7 @@
                    :all           (constantly true)}
   :source-paths      ["src/clojure"]
   :java-source-paths ["src/java"]
-  :javac-options     ["-target" "1.6" "-source" "1.6"]
+  :javac-options     ["-target" "1.7" "-source" "1.7"]
   :mailing-list {:name "clojure-mongodb"
                  :archive "https://groups.google.com/group/clojure-mongodb"
                  :post "clojure-mongodb@googlegroups.com"}
