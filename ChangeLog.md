@@ -1,6 +1,12 @@
 ## Changes between 3.1.x and 3.2.0 (unreleased)
 
-No changes yet.
+### MongoDB Java Driver Update
+
+MongoDB Java driver dependency has been updated to `3.4.x`.
+
+This means that Monger now **requires JDK 7**.
+
+Contributed by @Linicks.
 
 
 ## Changes between 3.0.x and 3.1.0 (September 17th, 2016)
