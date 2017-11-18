@@ -1,5 +1,5 @@
 # Monger, a modern Clojure MongoDB Driver
-
+[![Build Status](https://travis-ci.org/xingzhefeng/monger.svg?branch=master)](https://travis-ci.org/xingzhefeng/monger)
 Monger is an idiomatic [Clojure MongoDB driver](http://clojuremongodb.info) for a more civilized age.
 
 It has batteries included, offers powerful expressive query DSL, strives to support every MongoDB 2.0+ feature and has sane defaults. Monger is built from for modern Clojure versions and sits on top of the official MongoDB Java driver.
