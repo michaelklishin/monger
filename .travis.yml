@@ -1,4 +1,5 @@
 language: clojure
+sudo: required
 lein: lein
 before_script:
   - ./bin/ci/install_mongodb.sh
