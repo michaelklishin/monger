@@ -4,7 +4,8 @@
             [monger.conversion :refer :all])
   (:import [com.mongodb DBObject BasicDBObject BasicDBList]
            [java.util Date Calendar List ArrayList]
-           org.bson.types.ObjectId))
+           org.bson.types.ObjectId
+           (org.bson.types Decimal128)))
 
 
 ;;
@@ -100,6 +101,13 @@
 (deftest convert-integer-from-dbobject
   (is (= 2 (from-db-object 2 false)))
   (is (= 2 (from-db-object 2 true))))
+
+(deftest convert-decimal-from-dbobject
+  (is (= 2.3M (from-db-object (Decimal128. 2.3M) false)))
+  (is (= 2.3M (from-db-object (Decimal128. 2.3M) true)))
+  (is (= 2.3M (from-db-object (Decimal128/parse "2.3") true)))
+  (is (not= 2.32M (from-db-object (Decimal128/parse "2.3") true)))
+  )
 
 (deftest convert-float-from-dbobject
   (is (= 3.3 (from-db-object 3.3 false)))

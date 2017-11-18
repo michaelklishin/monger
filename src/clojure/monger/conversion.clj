@@ -46,7 +46,8 @@
   (:import [com.mongodb DBObject BasicDBObject BasicDBList DBCursor]
            [clojure.lang IPersistentMap Named Keyword Ratio]
            [java.util List Map Date Set]
-           org.bson.types.ObjectId))
+           org.bson.types.ObjectId
+           (org.bson.types Decimal128)))
 
 (defprotocol ConvertToDBObject
   (^com.mongodb.DBObject to-db-object [input] "Converts given piece of Clojure data to BasicDBObject MongoDB Java driver uses"))
@@ -104,7 +105,6 @@
 
 
 
-
 (defprotocol ConvertFromDBObject
   (from-db-object [input keywordize] "Converts given DBObject instance to a piece of Clojure data"))
 
@@ -114,6 +114,11 @@
 
   Object
   (from-db-object [input keywordize] input)
+
+  Decimal128
+  (from-db-object [^Decimal128 input keywordize]
+    (.bigDecimalValue input)
+    )
 
   List
   (from-db-object [^List input keywordize]
@@ -138,7 +143,6 @@
               (fn [m ^String k]
                 (assoc m k (from-db-object (.get input k) false))))
             {} (.keySet input))))
-
 
 
 (defprotocol ConvertToObjectId
