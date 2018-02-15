@@ -320,3 +320,6 @@
 ;; EXAMPLES:
 ;;   (mgcol/update "libraries" { :language "Clojure", $isolated 1 } { $inc { :popularity 1 } } {:multi true})
 (defoperator $isolated)
+
+(defoperator $count)
+(defoperator $dateToString)
