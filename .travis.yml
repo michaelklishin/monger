@@ -7,8 +7,6 @@ before_script:
   - ./bin/ci/before_script.sh
 script: lein do clean, javac, test
 jdk:
-  - openjdk7
-  - oraclejdk7
   - oraclejdk8
   - oraclejdk9
 services:
