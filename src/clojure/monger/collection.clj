@@ -541,13 +541,17 @@
   is supported, for specifying a limit on the execution time of the query in
   milliseconds.
 
+  :keywordize option that control if resulting map keys will be turned into keywords, default is true.
+
   See http://docs.mongodb.org/manual/applications/aggregation/ to learn more."
   [^DB db ^String coll stages & opts]
   (let [coll (.getCollection db coll)
         agg-opts (build-aggregation-options opts)
         pipe (into-array-list (to-db-object stages))
-        res (.aggregate coll pipe agg-opts)]
-    (map #(from-db-object % true) (iterator-seq res))))
+        res (.aggregate coll pipe agg-opts)
+        {:keys [^Boolean keywordize]
+         :or            {keywordize true}} opts]
+    (map #(from-db-object % keywordize) (iterator-seq res))))
 
 (defn explain-aggregate
   "Returns the explain plan for an aggregation query. MongoDB 2.2+ only.

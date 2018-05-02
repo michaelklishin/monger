@@ -15,6 +15,27 @@
 
   (use-fixtures :each purge-collections)
 
+  (deftest test-basic-single-stage-$project-aggregation-no-keywordize
+    (let [batch      [{"state" "CA" "quantity" 1 "price" 199.00}
+                      {"state" "NY" "quantity" 2 "price" 199.00}
+                      {"state" "NY" "quantity" 1 "price" 299.00}
+                      {"state" "IL" "quantity" 2 "price" 11.50 }
+                      {"state" "CA" "quantity" 2 "price" 2.95  }
+                      {"state" "IL" "quantity" 3 "price" 5.50  }]
+          expected    #{{"quantity" 1 "state" "CA"}
+                        {"quantity" 2 "state" "NY"}
+                        {"quantity" 1 "state" "NY"}
+                        {"quantity" 2 "state" "IL"}
+                        {"quantity" 2 "state" "CA"}
+                        {"quantity" 3 "state" "IL"}}]
+      (mc/insert-batch db coll batch)
+      (is (= 6 (mc/count db coll)))
+      (let [result (->>
+                     (mc/aggregate db coll [{$project {"state" 1 "quantity" 1}}] :keywordize false)
+                     (map #(select-keys % ["state" "quantity"]))
+                     (set))]
+        (is (= expected result)))))
+
   (deftest test-basic-single-stage-$project-aggregation
     (let [batch      [{:state "CA" :quantity 1 :price 199.00}
                       {:state "NY" :quantity 2 :price 199.00}
