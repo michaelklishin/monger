@@ -1,14 +1,14 @@
 language: clojure
-lein: lein2
+sudo: required
+lein: lein
 before_script:
-  - ./bin/ci/install_mongodb.sh  
+  - ./bin/ci/install_mongodb.sh
   - mongod --version
   - ./bin/ci/before_script.sh
-script: lein2 do clean, javac, test
+script: lein do clean, javac, test
 jdk:
-  - openjdk7
-  - oraclejdk7
   - oraclejdk8
+  - oraclejdk9
 services:
   - mongodb
 branches:
