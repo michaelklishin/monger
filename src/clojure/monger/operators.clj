@@ -184,6 +184,9 @@
 ;;   (mgcol/update "docs" { :_id oid } { $push { :tags "modifiers" } })
 (defoperator $push)
 
+;; $position modifies the behavior of $push per https://docs.mongodb.com/manual/reference/operator/update/position/
+(defoperator $position)
+
 ;; $each is a modifier for the $push and $addToSet operators for appending multiple values to an array field.
 ;; Without the $each modifier $push and $addToSet will append an array as a single value.
 ;; MongoDB 2.4 adds support for the $each modifier to the $push operator.
