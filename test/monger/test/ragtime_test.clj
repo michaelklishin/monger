@@ -2,7 +2,7 @@
   (:require [monger.core :as mg]
             [monger.collection  :as mc]
             monger.ragtime
-            [ragtime.core :refer :all]
+            [ragtime.protocols :refer :all]
             [clojure.test :refer :all]))
 
 
