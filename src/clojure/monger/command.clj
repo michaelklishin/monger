@@ -4,7 +4,7 @@
 ;; The APL v2.0:
 ;;
 ;; ----------------------------------------------------------------------------------
-;; Copyright (c) 2011-2015 Michael S. Klishin, Alex Petrov, and the ClojureWerkz Team
+;; Copyright (c) 2011-2018 Michael S. Klishin, Alex Petrov, and the ClojureWerkz Team
 ;; Copyright (c) 2012 Toby Hede
 ;;
 ;; Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,7 +23,7 @@
 ;; The EPL v1.0:
 ;;
 ;; ----------------------------------------------------------------------------------
-;; Copyright (c) 2011-2015 Michael S. Klishin, Alex Petrov, and the ClojureWerkz Team.
+;; Copyright (c) 2011-2018 Michael S. Klishin, Alex Petrov, and the ClojureWerkz Team.
 ;; Copyright (c) 2012 Toby Hede
 ;; All rights reserved.
 ;;
