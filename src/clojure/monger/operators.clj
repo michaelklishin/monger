@@ -196,14 +196,6 @@
 ;;   (mgcol/update coll { :_id oid } { $push { :tags { $each ["mongodb" "docs"] } } })
 (defoperator $each)
 
-;; $pushAll appends each value in value_array to field, if field is an existing array, otherwise sets field to the array value_array
-;; if field is not present. If field is present but is not an array, an error condition is raised.
-;; Deprecated since MongoDB 2.4, $push with $each modifier should be used instead.
-;;
-;; EXAMPLES:
-;;   (mgcol/update coll { :_id oid } { $pushAll { :tags ["mongodb" "docs"] } })
-(defoperator $pushAll)
-
 ;; $addToSet Adds value to the array only if its not in the array already, if field is an existing array, otherwise sets field to the
 ;; array value if field is not present. If field is present but is not an array, an error condition is raised.
 ;;
