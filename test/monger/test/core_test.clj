@@ -70,3 +70,7 @@
               :cursor-finalizer-enabled true
               :required-replica-set-name "rs"}]
     (is (instance? com.mongodb.MongoClientOptions$Builder (mg/mongo-options-builder opts)))))
+
+(deftest connect-to-uri-without-db-name
+  (let [uri "mongodb://localhost:27017"]
+    (is (thrown? Exception (mg/connect-via-uri uri)))))

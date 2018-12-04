@@ -233,10 +233,13 @@
    Commonly used for PaaS-based applications, for example, running on Heroku.
    If username and password are provided, performs authentication."
   [^String uri-string]
-  (let [uri  (MongoClientURI. uri-string)
-        conn (MongoClient. uri)
-        db   (.getDB conn (.getDatabase uri))]
-    {:conn conn :db db}))
+  (let [uri    (MongoClientURI. uri-string)
+        conn   (MongoClient. uri)
+        dbName (.getDatabase uri)]
+    (if (nil? dbName)
+      (throw (Exception. "No database name specified in uri"))
+      (let [db (.getDB conn dbName)]
+        {:conn conn :db db}))))
 
 (defn ^com.mongodb.CommandResult command
   "Runs a database command (please check MongoDB documentation for the complete list of commands).
