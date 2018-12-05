@@ -73,4 +73,4 @@
 
 (deftest connect-to-uri-without-db-name
   (let [uri "mongodb://localhost:27017"]
-    (is (thrown? Exception (mg/connect-via-uri uri)))))
+    (is (thrown? IllegalArgumentException (mg/connect-via-uri uri)))))

@@ -236,8 +236,8 @@
   (let [uri    (MongoClientURI. uri-string)
         conn   (MongoClient. uri)
         dbName (.getDatabase uri)]
-    (if (nil? dbName)
-      (throw (Exception. "No database name specified in uri"))
+    (if (not dbName)
+      (throw (IllegalArgumentException. "No database name specified in uri"))
       (let [db (.getDB conn dbName)]
         {:conn conn :db db}))))
 
