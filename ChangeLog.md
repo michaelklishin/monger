@@ -1,12 +1,25 @@
-## Changes between 3.1.x and 3.2.0 (unreleased)
+## Changes between 3.1.x and 3.5.0 (unreleased)
 
 ### MongoDB Java Driver Update
 
-MongoDB Java driver dependency has been updated to `3.4.x`.
+MongoDB Java driver dependency has been updated to `3.9.x`.
 
-This means that Monger now **requires JDK 7**.
+This means that Monger now **requires JDK 8**.
 
 Contributed by @Linicks.
+
+### 3rd Party Library Compatibility
+
+ * Cheshire `5.8.x`
+ * clj-time `0.15.1`
+ * ring-core `0.15.1`
+ * Ragtime `0.7.x`.
+
+### URI Connection Usability Improvement
+
+URIs that don't specify a database will now be rejected as invalid.
+
+Contributed by Chris Broome.
 
 
 ## Changes between 3.0.x and 3.1.0 (September 17th, 2016)
