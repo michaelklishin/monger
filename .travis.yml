@@ -1,8 +1,8 @@
 language: clojure
 sudo: required
 lein: lein
+dist: xenial
 before_script:
-  - ./bin/ci/install_mongodb.sh
   - mongod --version
   - ./bin/ci/before_script.sh
 script: lein do clean, javac, test
