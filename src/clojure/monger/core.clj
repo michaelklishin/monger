@@ -234,12 +234,10 @@
    If username and password are provided, performs authentication."
   [^String uri-string]
   (let [uri    (MongoClientURI. uri-string)
-        conn   (MongoClient. uri)
-        dbName (.getDatabase uri)]
-    (if (not dbName)
-      (throw (IllegalArgumentException. "No database name specified in uri"))
-      (let [db (.getDB conn dbName)]
-        {:conn conn :db db}))))
+        conn   (MongoClient. uri)]
+    (if-let [dbName (.getDatabase uri)]
+      {:conn conn :db (.getDB conn dbName)}
+      (throw (IllegalArgumentException. "No database name specified in URI. Monger requires a database to be explicitly configured.")))))
 
 (defn ^com.mongodb.CommandResult command
   "Runs a database command (please check MongoDB documentation for the complete list of commands).
