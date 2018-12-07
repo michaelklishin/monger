@@ -27,7 +27,7 @@
                    :all           (constantly true)}
   :source-paths      ["src/clojure"]
   :java-source-paths ["src/java"]
-  :javac-options     ["-target" "1.7" "-source" "1.7"]
+  :javac-options     ["-target" "1.8" "-source" "1.8"]
   :mailing-list {:name "clojure-mongodb"
                  :archive "https://groups.google.com/group/clojure-mongodb"
                  :post "clojure-mongodb@googlegroups.com"}
