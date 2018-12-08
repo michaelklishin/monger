@@ -3,15 +3,17 @@ sudo: required
 lein: lein
 dist: xenial
 before_script:
+  # Give MongoDB server some time to boot
+  - sleep 15
   - mongod --version
   - ./bin/ci/before_script.sh
 script: lein do clean, javac, test
 jdk:
   - oraclejdk8
-  - oraclejdk9
+  - oraclejdk11
 services:
   - mongodb
 branches:
   only:
     - master
-    - 3.0.x-stable
+    - 3.5.x-stable
