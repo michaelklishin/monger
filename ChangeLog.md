@@ -1,4 +1,9 @@
-## Changes between 3.1.x and 3.5.0 (unreleased)
+## Changes between 3.5.x and 3.6.0 (unreleased)
+
+No changes yet.
+
+
+## Changes between 3.1.x and 3.5.0 (Dec 10th, 2018)
 
 ### MongoDB Java Driver Update
 
