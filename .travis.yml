@@ -9,8 +9,9 @@ before_script:
   - ./bin/ci/before_script.sh
 script: lein do clean, javac, test
 jdk:
-  - oraclejdk8
-  - oraclejdk11
+  - oraclejdk10
+  - oraclejdk11  
+  - oraclejdk12
 services:
   - mongodb
 branches:
