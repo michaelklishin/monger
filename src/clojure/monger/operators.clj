@@ -4,7 +4,7 @@
 ;; The APL v2.0:
 ;;
 ;; ----------------------------------------------------------------------------------
-;; Copyright (c) 2011-2015 Michael S. Klishin, Alex Petrov, and the ClojureWerkz Team
+;; Copyright (c) 2011-2018 Michael S. Klishin, Alex Petrov, and the ClojureWerkz Team
 ;;
 ;; Licensed under the Apache License, Version 2.0 (the "License");
 ;; you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
 ;; The EPL v1.0:
 ;;
 ;; ----------------------------------------------------------------------------------
-;; Copyright (c) 2011-2015 Michael S. Klishin, Alex Petrov, and the ClojureWerkz Team.
+;; Copyright (c) 2011-2018 Michael S. Klishin, Alex Petrov, and the ClojureWerkz Team.
 ;; All rights reserved.
 ;;
 ;; This program and the accompanying materials are made available under the terms of
@@ -184,6 +184,9 @@
 ;;   (mgcol/update "docs" { :_id oid } { $push { :tags "modifiers" } })
 (defoperator $push)
 
+;; $position modifies the behavior of $push per https://docs.mongodb.com/manual/reference/operator/update/position/
+(defoperator $position)
+
 ;; $each is a modifier for the $push and $addToSet operators for appending multiple values to an array field.
 ;; Without the $each modifier $push and $addToSet will append an array as a single value.
 ;; MongoDB 2.4 adds support for the $each modifier to the $push operator.
@@ -192,14 +195,6 @@
 ;; EXAMPLES:
 ;;   (mgcol/update coll { :_id oid } { $push { :tags { $each ["mongodb" "docs"] } } })
 (defoperator $each)
-
-;; $pushAll appends each value in value_array to field, if field is an existing array, otherwise sets field to the array value_array
-;; if field is not present. If field is present but is not an array, an error condition is raised.
-;; Deprecated since MongoDB 2.4, $push with $each modifier should be used instead.
-;;
-;; EXAMPLES:
-;;   (mgcol/update coll { :_id oid } { $pushAll { :tags ["mongodb" "docs"] } })
-(defoperator $pushAll)
 
 ;; $addToSet Adds value to the array only if its not in the array already, if field is an existing array, otherwise sets field to the
 ;; array value if field is not present. If field is present but is not an array, an error condition is raised.

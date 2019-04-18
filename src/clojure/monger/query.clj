@@ -4,7 +4,7 @@
 ;; The APL v2.0:
 ;;
 ;; ----------------------------------------------------------------------------------
-;; Copyright (c) 2011-2015 Michael S. Klishin, Alex Petrov, and the ClojureWerkz Team
+;; Copyright (c) 2011-2018 Michael S. Klishin, Alex Petrov, and the ClojureWerkz Team
 ;;
 ;; Licensed under the Apache License, Version 2.0 (the "License");
 ;; you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
 ;; The EPL v1.0:
 ;;
 ;; ----------------------------------------------------------------------------------
-;; Copyright (c) 2011-2015 Michael S. Klishin, Alex Petrov, and the ClojureWerkz Team.
+;; Copyright (c) 2011-2018 Michael S. Klishin, Alex Petrov, and the ClojureWerkz Team.
 ;; All rights reserved.
 ;;
 ;; This program and the accompanying materials are made available under the terms of
@@ -43,6 +43,7 @@
             [monger.conversion :refer :all]
             [monger.operators :refer :all])
   (:import [com.mongodb DB DBCollection DBObject DBCursor ReadPreference]
+           [java.util.concurrent TimeUnit]
            java.util.List))
 
 
@@ -96,6 +97,7 @@
            snapshot
            read-preference
            keywordize-fields
+           max-time
            options]
     :or { limit 0 batch-size 256 skip 0 } }]
   (with-open [cursor (doto (.find collection (to-db-object query) (as-field-selector fields))
@@ -109,6 +111,8 @@
       (.hint cursor (to-db-object hint)))
     (when read-preference
       (.setReadPreference cursor read-preference))
+    (when max-time
+      (.maxTime cursor max-time TimeUnit/MILLISECONDS))
     (when options
       (add-options cursor options))
     (map (fn [x] (from-db-object x keywordize-fields))
@@ -153,6 +157,10 @@
 (defn read-preference
   [m ^ReadPreference rp]
   (merge m { :read-preference rp }))
+
+(defn max-time
+  [m ^long max-time]
+  (merge m { :max-time max-time }))
 
 (defn options
   [m opts]

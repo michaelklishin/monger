@@ -2,13 +2,18 @@
 [![Build Status](https://travis-ci.org/xingzhefeng/monger.svg?branch=master)](https://travis-ci.org/xingzhefeng/monger)
 Monger is an idiomatic [Clojure MongoDB driver](http://clojuremongodb.info) for a more civilized age.
 
-It has batteries included, offers powerful expressive query DSL, strives to support every MongoDB 2.0+ feature and has sane defaults. Monger is built from for modern Clojure versions and sits on top of the official MongoDB Java driver.
+It has batteries included, offers powerful expressive query DSL,
+strives to support modern MongoDB features and have the "look and feel" and
+flexibility of the MongoDB shell.
+
+Monger is built from for modern Clojure versions and sits on top of
+the official MongoDB Java driver.
 
 
 ## Project Goals
 
 There is one MongoDB client for Clojure that has been around since 2009. So, why create another one? Monger authors
-wanted a client that will
+wanted a client that would
 
  * Support most of modern MongoDB features, focus on those that really matter.
  * Be [well documented](http://clojuremongodb.info).
@@ -45,14 +50,14 @@ Maven, add the following repository definition to your `pom.xml`:
 
 With Leiningen:
 
-    [com.novemberain/monger "3.1.0"]
+    [com.novemberain/monger "3.5.0"]
 
 With Maven:
 
     <dependency>
       <groupId>com.novemberain</groupId>
       <artifactId>monger</artifactId>
-      <version>3.1.0</version>
+      <version>3.5.0</version>
     </dependency>
 
 
@@ -70,15 +75,13 @@ questions, too!
 
 Please see our [documentation guides site](http://clojuremongodb.info/) and [API reference](http://reference.clojuremongodb.info).
 
-Our [test
-suite](https://github.com/michaelklishin/monger/tree/master/test/monger/test)
+Our [test suite](https://github.com/michaelklishin/monger/tree/master/test/monger/test)
 also has many code examples.
 
 
 ## Community
 
-[Monger has a mailing
-list](https://groups.google.com/forum/#!forum/clojure-mongodb). Feel
+[Monger has a mailing list](https://groups.google.com/forum/#!forum/clojure-mongodb). Feel
 free to join it and ask any questions you may have.
 
 To subscribe for announcements of releases, important changes and so
@@ -88,14 +91,13 @@ on Twitter.
 
 ## Supported Clojure versions
 
-Monger requires Clojure 1.6+. The most recent
+Monger requires Clojure 1.8+. The most recent
 stable release is highly recommended.
 
 
 ## Continuous Integration Status
 
 [![Continuous Integration status](https://secure.travis-ci.org/michaelklishin/monger.svg)](http://travis-ci.org/michaelklishin/monger)
-[![Dependencies Status](http://jarkeeper.com/michaelklishin/monger/status.svg)](http://jarkeeper.com/michaelklishin/monger)
 
 
 ## Monger Is a ClojureWerkz Project
@@ -120,7 +122,7 @@ on Github.
 
 ## License
 
-Copyright (C) 2011-2016 [Michael S. Klishin](http://twitter.com/michaelklishin), Alex Petrov, and the ClojureWerkz team.
+Copyright (C) 2011-2018 [Michael S. Klishin](http://twitter.com/michaelklishin), Alex Petrov, and the ClojureWerkz team.
 
 Double licensed under the [Eclipse Public License](http://www.eclipse.org/legal/epl-v10.html) (the same as Clojure) or
 the [Apache Public License 2.0](http://www.apache.org/licenses/LICENSE-2.0.html).

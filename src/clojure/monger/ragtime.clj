@@ -4,7 +4,7 @@
 ;; The APL v2.0:
 ;;
 ;; ----------------------------------------------------------------------------------
-;; Copyright (c) 2011-2015 Michael S. Klishin, Alex Petrov, and the ClojureWerkz Team
+;; Copyright (c) 2011-2018 Michael S. Klishin, Alex Petrov, and the ClojureWerkz Team
 ;;
 ;; Licensed under the Apache License, Version 2.0 (the "License");
 ;; you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
 ;; The EPL v1.0:
 ;;
 ;; ----------------------------------------------------------------------------------
-;; Copyright (c) 2011-2015 Michael S. Klishin, Alex Petrov, and the ClojureWerkz Team.
+;; Copyright (c) 2011-2018 Michael S. Klishin, Alex Petrov, and the ClojureWerkz Team.
 ;; All rights reserved.
 ;;
 ;; This program and the accompanying materials are made available under the terms of
@@ -34,7 +34,7 @@
 (ns monger.ragtime
   "Ragtime integration"
   (:refer-clojure :exclude [find sort])
-  (:require [ragtime.core      :as ragtime]
+  (:require [ragtime.protocols :as proto]
             [monger.core       :as mg]
             [monger.collection :as mc]
             [monger.query :refer [with-collection find sort]])
@@ -47,7 +47,7 @@
 
 
 (extend-type com.mongodb.DB
-  ragtime/Migratable
+  proto/DataStore
   (add-migration-id [db id]
     (mc/insert db migrations-collection {:_id id :created_at (Date.)} WriteConcern/FSYNC_SAFE))
   (remove-migration-id [db id]

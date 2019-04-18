@@ -174,7 +174,7 @@
 
 
   ;; this is a common mistake, I leave it here to demonstrate it. You almost never
-  ;; actually want to do this! What you really want is to use $pushAll instead of $push. MK.
+  ;; actually want to do this! What you really want is to use $push with $each instead of $push. MK.
   (deftest add-array-value-to-an-existing-array-using-$push-modifier
     (let [coll  "docs"
           oid   (ObjectId.)
@@ -228,34 +228,34 @@
              (mc/find-map-by-id db coll oid)))))
 
   ;;
-  ;; $pushAll
+  ;; $push + $each (formerly $pushAll)
   ;;
 
-  (deftest initialize-an-array-using-$pushAll-modifier
+  (deftest initialize-an-array-using-$push-and-$each-modifiers
     (let [coll  "docs"
           oid   (ObjectId.)
           title "$pushAll modifier appends multiple values to field"]
       (mc/insert db coll {:_id oid :title title})
-      (mc/update db coll {:_id oid} {$pushAll {:tags ["mongodb" "docs"]}})
+      (mc/update db coll {:_id oid} {$push {:tags {$each ["mongodb" "docs"]}}})
       (is (= {:_id oid :title title :tags ["mongodb" "docs"]}
              (mc/find-map-by-id db coll oid)))))
 
-  (deftest add-value-to-an-existing-array-using-$pushAll-modifier
+  (deftest add-value-to-an-existing-array-using-$push-and-$each-modifier
     (let [coll  "docs"
           oid   (ObjectId.)
           title "$pushAll modifier appends multiple values to field"]
       (mc/insert db coll {:_id oid :title title :tags ["mongodb"]})
-      (mc/update db coll {:_id oid} {$pushAll {:tags ["modifiers" "docs"]}})
+      (mc/update db coll {:_id oid} {$push {:tags {$each ["modifiers" "docs"]}}})
       (is (= {:_id oid :title title :tags ["mongodb" "modifiers" "docs"]}
              (mc/find-map-by-id db coll oid)))))
 
 
-  (deftest double-add-value-to-an-existing-array-using-$pushAll-modifier
+  (deftest double-add-value-to-an-existing-array-using-$push-and-$each-modifier
     (let [coll  "docs"
           oid   (ObjectId.)
           title "$pushAll modifier appends multiple values to field"]
       (mc/insert db coll {:_id oid :title title :tags ["mongodb" "docs"]})
-      (mc/update db coll {:_id oid} {$pushAll {:tags ["modifiers" "docs"]}})
+      (mc/update db coll {:_id oid} {$push {:tags {$each ["modifiers" "docs"]}}})
       (is (= {:_id oid :title title :tags ["mongodb" "docs" "modifiers" "docs"]}
              (mc/find-map-by-id db coll oid)))))
 

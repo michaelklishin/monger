@@ -5,7 +5,7 @@
 ;;
 ;; ----------------------------------------------------------------------------------
 ;; Portions of the code are Copyright (c) 2009 Andrew Boekhoff
-;; Copyright (c) 2011-2015 Michael S. Klishin, Alex Petrov, and the ClojureWerkz Team
+;; Copyright (c) 2011-2018 Michael S. Klishin, Alex Petrov, and the ClojureWerkz Team
 ;;
 ;; Licensed under the Apache License, Version 2.0 (the "License");
 ;; you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@
 ;;
 ;; ----------------------------------------------------------------------------------
 ;; Portions of the code are Copyright (c) 2009 Andrew Boekhoff
-;; Copyright (c) 2011-2015 Michael S. Klishin, Alex Petrov, and the ClojureWerkz Team.
+;; Copyright (c) 2011-2018 Michael S. Klishin, Alex Petrov, and the ClojureWerkz Team.
 ;; All rights reserved.
 ;;
 ;; This program and the accompanying materials are made available under the terms of

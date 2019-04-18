@@ -15,7 +15,7 @@
       (is (-> conn .getAddress (.sameHost "127.0.0.1")))))
 
   (deftest ^{:authentication true} connect-to-mongo-via-uri-with-valid-credentials
-    (let [{:keys [conn db]} (mg/connect-via-uri "mongodb://clojurewerkz/monger:monger@127.0.0.1/monger-test4")]
+    (let [{:keys [conn db]} (mg/connect-via-uri "mongodb://clojurewerkz%2Fmonger:monger@127.0.0.1/monger-test4")]
       (is (= "monger-test4" (.getName db)))
       (is (-> conn .getAddress (.sameHost "127.0.0.1")))
       (mc/remove db "documents")
