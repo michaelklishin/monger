@@ -134,6 +134,7 @@
                       {:state "CA" :quantity 2 :price 2.95  }
                       {:state "IL" :quantity 3 :price 5.50  }]]
       (mc/insert-batch db collection batch)
+      (is (= ["CA" "IL" "NY"] (sort (mc/distinct db collection :state))))
       (is (= ["CA" "IL" "NY"] (sort (mc/distinct db collection :state {}))))
       (is (= ["CA" "NY"] (sort (mc/distinct db collection :state {:price {$gt 100.00}}))))))
 
