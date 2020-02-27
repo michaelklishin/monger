@@ -102,6 +102,25 @@
 (defoperator $regex)
 (defoperator $options)
 
+;; comment on a query predicate
+(defoperator $comment)
+(defoperator $explain)
+(defoperator $hint)
+(defoperator $maxTimeMS)
+(defoperator $orderBy)
+(defoperator $query)
+(defoperator $returnKey)
+(defoperator $showDiskLoc)
+(defoperator $natural)
+
+
+;;
+;; EVALUATION (QUERY)
+;;
+
+(defoperator $expr)
+(defoperator $jsonSchema)
+
 ;; Matches documents that satisfy a JavaScript expression.
 ;;
 ;; EXAMPLES:
@@ -227,6 +246,10 @@
 (defoperator $pullAll)
 
 (defoperator $bit)
+(defoperator $bitsAllClear)
+(defoperator $bitsAllSet)
+(defoperator $bitsAnyClear)
+(defoperator $bitsAnySet)
 
 (defoperator $exists)
 (defoperator $mod)
@@ -236,36 +259,130 @@
 
 
 ;;
-;; Aggregation in 2.2
+;; Aggregation in 4.2
 ;;
 
+(defoperator $addFields)
+(defoperator $bucket)
+(defoperator $bucketAuto)
+(defoperator $collStats)
+(defoperator $facet)
+(defoperator $geoNear)
+(defoperator $graphLookup)
+(defoperator $indexStats)
+(defoperator $listSessions)
+(defoperator $lookup)
 (defoperator $match)
+(defoperator $merge)
+(defoperator $out)
+(defoperator $planCacheStats)
 (defoperator $project)
+(defoperator $redact)
+(defoperator $replaceRoot)
+(defoperator $replaceWith)
+(defoperator $sample)
 (defoperator $limit)
 (defoperator $skip)
 (defoperator $unwind)
 (defoperator $group)
 (defoperator $sort)
+(defoperator $sortByCount)
+
+(defoperator $currentOp)
+(defoperator $listLocalSessions)
 
 (defoperator $cmp)
 
 (defoperator $min)
 (defoperator $max)
 (defoperator $avg)
+(defoperator $stdDevPop)
+(defoperator $stdDevSamp)
 (defoperator $sum)
+(defoperator $let)
 
 (defoperator $first)
 (defoperator $last)
 
+(defoperator $abs)
 (defoperator $add)
+(defoperator $ceil)
 (defoperator $divide)
+(defoperator $exp)
+(defoperator $floor)
+(defoperator $ln)
+(defoperator $log)
+(defoperator $log10)
 (defoperator $multiply)
+(defoperator $pow)
+(defoperator $round)
+(defoperator $sqrt)
 (defoperator $subtract)
+(defoperator $trunc)
+(defoperator $literal)
+
+(defoperator $arrayElemAt)
+(defoperator $arrayToObject)
+(defoperator $concatArrays)
+(defoperator $filter)
+(defoperator $indexOfArray)
+(defoperator $isArray)
+(defoperator $map)
+(defoperator $objectToArray)
+(defoperator $range)
+(defoperator $reduce)
+(defoperator $reverseArray)
+(defoperator $zip)
+(defoperator $mergeObjects)
+
+(defoperator $allElementsTrue)
+(defoperator $anyElementsTrue)
+(defoperator $setDifference)
+(defoperator $setEquals)
+(defoperator $setIntersection)
+(defoperator $setIsSubset)
+(defoperator $setUnion)
 
 (defoperator $strcasecmp)
 (defoperator $substr)
+(defoperator $substrBytes)
+(defoperator $substrCP)
 (defoperator $toLower)
+(defoperator $toString)
 (defoperator $toUpper)
+(defoperator $concat)
+(defoperator $indexOfBytes)
+(defoperator $indexOfCP)
+(defoperator $ltrim)
+(defoperator $regexFind)
+(defoperator $regexFindAll)
+(defoperator $regexMatch)
+(defoperator $rtrim)
+(defoperator $split)
+(defoperator $strLenBytes)
+(defoperator $subLenCP)
+(defoperator $trim)
+
+(defoperator $sin)
+(defoperator $cos)
+(defoperator $tan)
+(defoperator $asin)
+(defoperator $acos)
+(defoperator $atan)
+(defoperator $atan2)
+(defoperator $asinh)
+(defoperator $acosh)
+(defoperator $atanh)
+(defoperator $radiansToDegrees)
+(defoperator $degreesToRadians)
+
+(defoperator $convert)
+(defoperator $toBool)
+(defoperator $toDecimal)
+(defoperator $toDouble)
+(defoperator $toInt)
+(defoperator $toLong)
+(defoperator $toObjectId)
 
 (defoperator $dayOfMonth)
 (defoperator $dayOfWeek)
@@ -278,10 +395,19 @@
 (defoperator $week)
 (defoperator $year)
 (defoperator $isoDate)
+(defoperator $dateFromParts)
+(defoperator $dateFromString)
+(defoperator $dateToParts)
+(defoperator $dateToString)
+(defoperator $isoDayOfWeek)
+(defoperator $isoWeek)
+(defoperator $isoWeekYear)
+(defoperator $toDate)
 
 
 (defoperator $ifNull)
 (defoperator $cond)
+(defoperator $switch)
 
 ;; Geospatial
 (defoperator $geoWithin)
@@ -300,6 +426,7 @@
 
 ;; full text search
 (defoperator $text)
+(defoperator $meta)
 (defoperator $search)
 (defoperator $language)
 (defoperator $natural)
@@ -317,4 +444,3 @@
 (defoperator $isolated)
 
 (defoperator $count)
-(defoperator $dateToString)
