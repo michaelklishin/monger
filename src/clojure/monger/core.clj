@@ -136,56 +136,78 @@
      (ServerAddress. hostname port)))
 
 (defn ^MongoClientOptions$Builder mongo-options-builder
-  [{:keys [connections-per-host threads-allowed-to-block-for-connection-multiplier
-           max-wait-time connect-timeout socket-timeout socket-keep-alive auto-connect-retry max-auto-connect-retry-time
-           description write-concern cursor-finalizer-enabled read-preference required-replica-set-name
-           add-command-listener always-use-mbeans codec-registry db-decoder-factory db-encoder-factory
-           heartbeat-connect-timeout heartbeat-frequency heartbeat-socket-timeout local-threshold
-           max-connection-idle-time max-connection-life-time min-connections-per-host min-heartbeat-frequency
-           read-concern server-selection-timeout socket-factory ssl-enabled ssl-invalid-host-name-allowed]}]
+  [{:keys [add-cluster-listener add-cluster-listeners add-command-listener add-command-listeners
+           add-connection-pool-listener add-connection-pool-listeners add-server-listener add-server-listeners
+           add-server-monitor-listener add-server-monitor-listeners always-use-mbeans application-name
+           codec-registry compressor-list connect-timeout connections-per-host cursor-finalizer-enabled
+           db-decoder-factory db-encoder-factory description heartbeat-connect-timeout heartbeat-frequency
+           heartbeat-socket-timeout local-threshold max-connection-idle-time max-connection-life-time
+           max-wait-time min-connections-per-host min-heartbeat-frequency read-concern read-preference
+           required-replica-set-name retry-writes server-selection-timeout server-selector socket-keep-alive 
+           socket-factory socket-timeout ssl-context ssl-enabled ssl-invalid-host-name-allowed
+           threads-allowed-to-block-for-connection-multiplier write-concern]}]
   (let [mob (MongoClientOptions$Builder.)]
-    (when connections-per-host
-      (.connectionsPerHost mob connections-per-host))
-    (when threads-allowed-to-block-for-connection-multiplier
-      (.threadsAllowedToBlockForConnectionMultiplier mob threads-allowed-to-block-for-connection-multiplier))
-    (when max-wait-time
-      (.maxWaitTime mob max-wait-time))
-    (when connect-timeout
-      (.connectTimeout mob connect-timeout))
-    (when socket-timeout
-      (.socketTimeout mob socket-timeout))
-    (when socket-keep-alive
-      (.socketKeepAlive mob socket-keep-alive))
-    (when read-preference
-      (.readPreference mob read-preference))
-    (when description
-      (.description mob description))
-    (when write-concern
-      (.writeConcern mob write-concern))
-    (when cursor-finalizer-enabled
-      (.cursorFinalizerEnabled mob cursor-finalizer-enabled))
-    (when required-replica-set-name
-      (.requiredReplicaSetName mob required-replica-set-name))
+    (when add-cluster-listener
+      (.addClusterListener mob add-cluster-listener))
+    (when add-cluster-listeners
+      (doseq [cluster-listener add-cluster-listeners]
+        (.addClusterListener mob cluster-listener)))
     (when add-command-listener
       (.addCommandListener mob add-command-listener))
+    (when add-command-listeners
+      (doseq [command-listener add-command-listeners]
+        (.addCommandListener mob command-listener)))
+    (when add-connection-pool-listener
+      (.addConnectionPoolListener mob add-connection-pool-listener))
+    (when add-connection-pool-listeners
+      (doseq [connection-pool-listener add-connection-pool-listeners]
+        (.addConnectionPoolListener mob connection-pool-listener)))
+    (when add-server-listener
+      (.addServerListener mob add-server-listener))
+    (when add-server-listeners
+      (doseq [server-listener add-server-listeners]
+        (.addServerListener mob server-listener)))
+    (when add-server-monitor-listener
+      (.addServerMonitorListener mob add-server-monitor-listener))
+    (when add-server-monitor-listeners
+      (doseq [server-monitor-listener add-server-monitor-listeners]
+        (.addServerMonitorListener mob server-monitor-listener)))
+    (when always-use-mbeans
+      (.alwaysUseMBeans mob always-use-mbeans))
+    (when application-name
+      (.applicationName mob application-name))
     (when always-use-mbeans
       (.alwaysUseMBeans mob always-use-mbeans))
     (when codec-registry
       (.codecRegistry mob codec-registry))
+    (when compressor-list
+      (.compressorList mob compressor-list))
+    (when connections-per-host
+      (.connectionsPerHost mob connections-per-host))
+    (when connect-timeout
+      (.connectTimeout mob connect-timeout))
+    (when cursor-finalizer-enabled
+      (.cursorFinalizerEnabled mob cursor-finalizer-enabled))
     (when db-decoder-factory
       (.dbDecoderFactory mob db-decoder-factory))
     (when db-encoder-factory
       (.dbEncoderFactory mob db-encoder-factory))
+    (when description
+      (.description mob description))
     (when heartbeat-connect-timeout
       (.heartbeatConnectTimeout mob heartbeat-connect-timeout))
     (when heartbeat-frequency
       (.heartbeatFrequency mob heartbeat-frequency))
     (when heartbeat-socket-timeout
       (.heartbeatSocketTimeout mob heartbeat-socket-timeout))
+    (when ssl-context
+      (.sslContext mob ssl-context))
     (when local-threshold
       (.localThreshold mob local-threshold))
     (when max-connection-idle-time
       (.maxConnectionIdleTime mob max-connection-idle-time))
+    (when max-wait-time
+      (.maxWaitTime mob max-wait-time))
     (when max-connection-life-time
       (.maxConnectionLifeTime mob max-connection-life-time))
     (when min-connections-per-host
@@ -194,14 +216,30 @@
       (.minHeartbeatFrequency mob min-heartbeat-frequency))
     (when read-concern
       (.readConcern mob read-concern))
+    (when read-preference
+      (.readPreference mob read-preference))
+    (when required-replica-set-name
+      (.requiredReplicaSetName mob required-replica-set-name))
+    (when retry-writes
+      (.retryWrites mob retry-writes))
     (when server-selection-timeout
       (.serverSelectionTimeout mob server-selection-timeout))
+    (when server-selector
+      (.serverSelector mob server-selector))
+    (when socket-keep-alive
+      (.socketKeepAlive mob socket-keep-alive))
     (when socket-factory
       (.socketFactory mob socket-factory))
+    (when socket-timeout
+      (.socketTimeout mob socket-timeout))
     (when ssl-enabled
       (.sslEnabled mob ssl-enabled))
     (when ssl-invalid-host-name-allowed
       (.sslInvalidHostNameAllowed mob ssl-invalid-host-name-allowed))
+    (when threads-allowed-to-block-for-connection-multiplier
+      (.threadsAllowedToBlockForConnectionMultiplier mob threads-allowed-to-block-for-connection-multiplier))
+    (when write-concern
+      (.writeConcern mob write-concern))
     mob))
 
 (defn ^MongoClientOptions mongo-options
