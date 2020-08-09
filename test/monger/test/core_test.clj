@@ -57,18 +57,49 @@
     (is (dbs "monger-test"))))
 
 (deftest monger-options-test
-  (let [opts {:connections-per-host 1
-              :threads-allowed-to-block-for-connection-multiplier 1
-              :max-wait-time 1
+  (let [opts {:add-cluster-listener nil
+              :add-cluster-listeners []
+              :add-command-listener nil
+              :add-command-listeners []
+              :add-connection-pool-listener nil
+              :add-connection-pool-listeners []
+              :add-server-listener nil
+              :add-server-listeners []
+              :add-server-monitor-listener nil
+              :add-server-monitor-listeners []
+              :always-use-mbeans true
+              :application-name "app"
+              :codec-registry nil
+              :compressor-list []
               :connect-timeout 1
-              :socket-timeout 1
-              :socket-keep-alive true
-              :auto-connect-retry true
-              :max-auto-connect-retry-time 1
-              :description "Description"
-              :write-concern com.mongodb.WriteConcern/JOURNAL_SAFE
+              :connections-per-host 1
               :cursor-finalizer-enabled true
-              :required-replica-set-name "rs"}]
+              :db-decoder-factory nil
+              :db-encoder-factory nil
+              :description "Description"
+              :heartbeat-connect-timeout 1
+              :heartbeat-frequency 1
+              :heartbeat-socket-timeout 1
+              :local-threshold 1
+              :max-connection-idle-time 1
+              :max-connection-life-time 1
+              :max-wait-time 1
+              :min-connections-per-host 1
+              :min-heartbeat-frequency 1
+              :read-concern nil
+              :read-preference nil
+              :required-replica-set-name "rs"
+              :retry-writes true
+              :server-selection-timeout 1
+              :server-selector nil
+              :socket-keep-alive true
+              :socket-factory nil
+              :socket-timeout 1
+              :ssl-context nil
+              :ssl-enabled true
+              :ssl-invalid-host-name-allowed true
+              :threads-allowed-to-block-for-connection-multiplier 1
+              :write-concern com.mongodb.WriteConcern/JOURNAL_SAFE}]
     (is (instance? com.mongodb.MongoClientOptions$Builder (mg/mongo-options-builder opts)))))
 
 (deftest connect-to-uri-without-db-name
