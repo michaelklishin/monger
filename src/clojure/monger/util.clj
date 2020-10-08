@@ -63,6 +63,22 @@
 (defprotocol GetDocumentId
   (get-id  [input] "Returns document id"))
 
+(defn valid-hexa-string?
+  [s]
+  (org.bson.types.ObjectId/isValid s))
+
+(defn valid-coll-name?
+  [coll]
+  (instance? String coll))
+
+(defn doc-id->str
+  [doc]
+  (if (contains? doc :_id)
+    (let [id (get-id doc)
+          hexa-string (str id)]
+      (and (valid-hexa-string? hexa-string) (assoc doc :_id hexa-string)))
+    doc))
+
 (extend-protocol GetDocumentId
   DBObject
   (get-id
