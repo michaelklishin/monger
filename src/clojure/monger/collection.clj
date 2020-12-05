@@ -467,7 +467,7 @@
 
 
 (defn exists?
-  "Checks weather collection with certain name exists."
+  "Checks whether collection with certain name exists."
   ([^DB db ^String coll]
      (.collectionExists db coll)))
 
