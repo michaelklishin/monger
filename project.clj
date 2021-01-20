@@ -31,8 +31,8 @@
   :mailing-list {:name "clojure-mongodb"
                  :archive "https://groups.google.com/group/clojure-mongodb"
                  :post "clojure-mongodb@googlegroups.com"}
-  :profiles {:1.8    {:dependencies [[org.clojure/clojure "1.8.0"]]}
-             :master {:dependencies [[org.clojure/clojure "1.10.0-master-SNAPSHOT"]]}
+  :profiles {:1.8 {:dependencies [[org.clojure/clojure "1.8.0"]]}
+             :1.9 {:dependencies [[org.clojure/clojure "1.9.0"]]}
              :dev {:resource-paths ["test/resources"]
                    :dependencies  [[clj-time               "0.15.1" :exclusions [org.clojure/clojure]]
                                    [cheshire               "5.8.1" :exclusions [org.clojure/clojure]]
@@ -49,7 +49,7 @@
              ;; only clj-time/JodaTime available, used to test monger.joda-time w/o clojure.data.json
              :dev2 {:resource-paths ["test/resources"]
                     :dependencies  [[clj-time "0.15.1"               :exclusions [org.clojure/clojure]]]}}
-  :aliases {"all" ["with-profile" "dev:dev,1.8:dev,master"]}
+  :aliases {"all" ["with-profile" "dev:dev,1.8:dev,1.9:dev"]}
   :repositories {"sonatype" {:url "https://oss.sonatype.org/content/repositories/releases"
                              :snapshots false
                              :releases {:checksum :fail :update :always}}
