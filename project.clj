@@ -4,9 +4,9 @@
   :min-lein-version "2.5.1"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
-  :dependencies [[org.clojure/clojure        "1.9.0"]
-                 [org.mongodb/mongodb-driver "3.9.1"]
-                 [clojurewerkz/support       "1.1.0"]]
+  :dependencies [[org.clojure/clojure        "1.10.1"]
+                 [org.mongodb/mongodb-driver "3.12.7"]
+                 [clojurewerkz/support       "1.5.0"]]
   :test-selectors {:default     (fn [m]
                                   (and (not (:performance m))
                                        (not (:edge-features m))
