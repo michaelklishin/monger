@@ -145,7 +145,7 @@
            max-wait-time min-connections-per-host min-heartbeat-frequency read-concern read-preference
            required-replica-set-name retry-writes server-selection-timeout server-selector socket-keep-alive 
            socket-factory socket-timeout ssl-context ssl-enabled ssl-invalid-host-name-allowed
-           threads-allowed-to-block-for-connection-multiplier write-concern]}]
+           threads-allowed-to-block-for-connection-multiplier uuid-representation write-concern]}]
   (let [mob (MongoClientOptions$Builder.)]
     (when add-cluster-listener
       (.addClusterListener mob add-cluster-listener))
@@ -238,6 +238,8 @@
       (.sslInvalidHostNameAllowed mob ssl-invalid-host-name-allowed))
     (when threads-allowed-to-block-for-connection-multiplier
       (.threadsAllowedToBlockForConnectionMultiplier mob threads-allowed-to-block-for-connection-multiplier))
+    (when uuid-representation
+      (.uuidRepresentation mob uuid-representation))
     (when write-concern
       (.writeConcern mob write-concern))
     mob))
