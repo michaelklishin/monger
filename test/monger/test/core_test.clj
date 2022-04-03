@@ -80,6 +80,7 @@
               :ssl-enabled true
               :ssl-invalid-host-name-allowed true
               :threads-allowed-to-block-for-connection-multiplier 1
+              :uuid-representation org.bson.UuidRepresentation/STANDARD
               :write-concern com.mongodb.WriteConcern/JOURNAL_SAFE}]
     (is (instance? com.mongodb.MongoClientOptions$Builder (mg/mongo-options-builder opts)))))
 
