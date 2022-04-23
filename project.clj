@@ -4,8 +4,8 @@
   :min-lein-version "2.5.1"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
-  :dependencies [[org.clojure/clojure        "1.10.1"]
-                 [org.mongodb/mongodb-driver "3.12.7"]
+  :dependencies [[org.clojure/clojure        "1.11.1"]
+                 [org.mongodb/mongodb-driver "3.12.11"]
                  [clojurewerkz/support       "1.5.0"]]
   :test-selectors {:default     (fn [m]
                                   (and (not (:performance m))
@@ -31,7 +31,7 @@
   :mailing-list {:name "clojure-mongodb"
                  :archive "https://groups.google.com/group/clojure-mongodb"
                  :post "clojure-mongodb@googlegroups.com"}
-  :profiles {:1.8 {:dependencies [[org.clojure/clojure "1.8.0"]]}
+  :profiles {:1.10 {:dependencies [[org.clojure/clojure "1.10.2"]]}
              :1.9 {:dependencies [[org.clojure/clojure "1.9.0"]]}
              :dev {:resource-paths ["test/resources"]
                    :dependencies  [[clj-time               "0.15.1" :exclusions [org.clojure/clojure]]
@@ -48,8 +48,8 @@
                            :namespaces [#"^monger\.(?!internal)"]}}
              ;; only clj-time/JodaTime available, used to test monger.joda-time w/o clojure.data.json
              :dev2 {:resource-paths ["test/resources"]
-                    :dependencies  [[clj-time "0.15.1"               :exclusions [org.clojure/clojure]]]}}
-  :aliases {"all" ["with-profile" "dev:dev,1.8:dev,1.9:dev"]}
+                    :dependencies  [[clj-time "0.15.2"               :exclusions [org.clojure/clojure]]]}}
+  :aliases {"all" ["with-profile" "dev:dev,1.10:dev,1.9:dev"]}
   :repositories {"sonatype" {:url "https://oss.sonatype.org/content/repositories/releases"
                              :snapshots false
                              :releases {:checksum :fail :update :always}}
