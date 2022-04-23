@@ -130,9 +130,7 @@
   (deftest test-explain-aggregate
     (let [batch [{:state "CA" :price 100}
                  {:state "CA" :price 10}
-                 {:state "IL" :price 50}]
-          expected-keys #{:ok :stages}]
+                 {:state "IL" :price 50}]]
       (mc/insert-batch db coll batch)
-      (let [result (mc/explain-aggregate db coll [{$match {:state "CA"}}])
-            key-in-result? (partial contains? result)]
-        (is (every? key-in-result? expected-keys))))))
+      (let [result (mc/explain-aggregate db coll [{$match {:state "CA"}}])]
+        (is (:ok result))))))
