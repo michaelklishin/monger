@@ -1,0 +1,1 @@
+["^ ","~$purge-collections",["^ ","~:row",14,"~:col",3,"~:fixed-arities",["~#set",[1]],"~:name","^0","~:ns","~$monger.test.full-text-search-test","~:top-ns","^7"],"~$test-basic-full-text-search-query",["^ ","^1",22,"^2",3,"^3",["^4",[0]],"^5","^9","^6","^7","^8","^7"],"~:filename","/Users/antares/Development/ClojureWerkz/monger.git/test/monger/test/full_text_search_test.clj"]

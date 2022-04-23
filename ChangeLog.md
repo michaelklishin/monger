@@ -1,6 +1,26 @@
 ## Changes between 3.5.x and 3.6.0 (unreleased)
 
-No changes yet.
+### UUID Representation Option
+
+Added a new connection option, `:uuid-representation`.
+
+Contributed by @okorz001.
+
+GitHub issue: [#212](https://github.com/michaelklishin/monger/issues/212)
+
+### Operator List Update
+
+For MongoDB 4.x.
+
+Contributed by @mjrb.
+
+GitHub issue: [#196](https://github.com/michaelklishin/monger/pull/196)
+
+### Dependency Update
+
+Contributed by @robhanlon22.
+
+GitHub issue: [#206](https://github.com/michaelklishin/monger/pull/206)
 
 
 ## Changes between 3.1.x and 3.5.0 (Dec 10th, 2018)

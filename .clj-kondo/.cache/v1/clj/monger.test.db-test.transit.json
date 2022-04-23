@@ -1,0 +1,1 @@
+["^ ","~$test-drop-database",["^ ","~:row",14,"~:col",5,"~:fixed-arities",["~#set",[0]],"~:name","^0","~:ns","~$monger.test.db-test","~:top-ns","^7"],"~$test-get-collection-names",["^ ","^1",25,"^2",3,"^3",["^4",[0]],"^5","^9","^6","^7","^8","^7"],"~:filename","/Users/antares/Development/ClojureWerkz/monger.git/test/monger/test/db_test.clj"]
