@@ -109,7 +109,7 @@
 
 
 (defn ^WriteResult insert-batch
-  "Saves documents do collection. You can optionally specify WriteConcern as a third argument."
+  "Saves documents to collection. You can optionally specify WriteConcern as a third argument."
   ([^DB db ^String coll ^List documents]
      (.insert (.getCollection db (name coll))
               ^List (to-db-object documents)
