@@ -32,6 +32,7 @@
 ;; ----------------------------------------------------------------------------------
 
 (ns ^{:doc "Provides various utility functions, primarily for working with document ids."} monger.util
+  (:refer-clojure :exclude [random-uuid])
   (:import java.security.SecureRandom
            java.math.BigInteger
            org.bson.types.ObjectId
