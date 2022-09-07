@@ -12,3 +12,5 @@ todo.org
 .nrepl-*
 .idea/
 *.iml
+/.clj-kondo/.cache
+/.lsp/.cache

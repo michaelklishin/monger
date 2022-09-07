@@ -1,1 +1,0 @@
-["^ ","~$test-creating-and-dropping-indexes",["^ ","~:row",12,"~:col",3,"~:fixed-arities",["~#set",[0]],"~:name","^0","~:ns","~$monger.test.indexing-test","~:top-ns","^7"],"~$test-ttl-collections",["^ ","^1",31,"^2",3,"^3",["^4",[0]],"^5","^9","^6","^7","^8","^7"],"~:filename","/Users/antares/Development/ClojureWerkz/monger.git/test/monger/test/indexing_test.clj"]

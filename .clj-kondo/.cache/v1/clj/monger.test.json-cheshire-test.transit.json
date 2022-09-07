@@ -1,1 +1,0 @@
-["^ ","~$convert-dbobject-to-json",["^ ","~:row",8,"~:col",1,"~:fixed-arities",["~#set",[0]],"~:name","^0","~:ns","~$monger.test.json-cheshire-test","~:top-ns","^7"],"~$convert-bson-timestamp-to-json",["^ ","^1",13,"^2",1,"^3",["^4",[0]],"^5","^9","^6","^7","^8","^7"],"~:filename","/Users/antares/Development/ClojureWerkz/monger.git/test/monger/test/json_cheshire_test.clj"]
