@@ -13,3 +13,4 @@ todo.org
 .idea/
 *.iml
 /.clj-kondo/.cache
+/.lsp/.cache
