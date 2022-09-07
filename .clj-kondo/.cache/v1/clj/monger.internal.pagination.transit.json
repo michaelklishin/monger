@@ -1,1 +1,0 @@
-["^ ","~$offset-for",["^ ","~:row",36,"~:col",1,"~:fixed-arities",["~#set",[2]],"~:name","^0","~:ns","~$monger.internal.pagination","~:top-ns","^7","~:arities",["^ ","~i2",["^ ","~:ret","~:number","~:args",["~#list",["~:int","^>"]]]]],"~:filename","/Users/antares/Development/ClojureWerkz/monger.git/target/classes/monger/internal/pagination.clj"]
