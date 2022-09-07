@@ -46,6 +46,8 @@
 ;; QUERY OPERATORS
 ;;
 
+(declare $gt $gte $lt $lte $all $in $nin $eq $ne $elemMatch $regex $options)
+
 ;; $gt is "greater than" comparator
 ;; $gte is "greater than or equals" comparator
 ;; $gt is "less than" comparator
@@ -103,6 +105,9 @@
 (defoperator $options)
 
 ;; comment on a query predicate
+
+(declare $comment $explain $hint $maxTimeMS $orderBy $query $returnKey $showDiskLoc $natural)
+
 (defoperator $comment)
 (defoperator $explain)
 (defoperator $hint)
@@ -117,6 +122,8 @@
 ;;
 ;; EVALUATION (QUERY)
 ;;
+
+(declare $expr $jsonSchema $where $and $or $nor)
 
 (defoperator $expr)
 (defoperator $jsonSchema)
@@ -159,6 +166,8 @@
 ;;
 ;; ATOMIC MODIFIERS
 ;;
+
+(declare $inc $mul $set $unset $setOnInsert $rename $push $position $each $addToSet $pop $pull $pullAll $bit $bitsAllClear $bitsAllSet $bitsAnyClear $bitsAnySet $exists $mod $size $type $not)
 
 ;; $inc increments one or many fields for the given value, otherwise sets the field to value
 ;;
@@ -261,6 +270,8 @@
 ;;
 ;; Aggregation in 4.2
 ;;
+
+(declare $addFields $bucket $bucketAuto $collStats $facet $geoNear $graphLookup $indexStats $listSessions $lookup $match $merge $out $planCacheStats $project $redact $replaceRoot $replaceWith $sample $limit $skip $unwind $group $sort $sortByCount $currentOp $listLocalSessions $cmp $min $max $avg $stdDevPop $stdDevSamp $sum $let $first $last $abs $add $ceil $divide $exp $floor $ln $log $log10 $multiply $pow $round $sqrt $subtract $trunc $literal $arrayElemAt $arrayToObject $concatArrays $filter $indexOfArray $isArray $map $objectToArray $range $reduce $reverseArray $zip $mergeObjects $allElementsTrue $anyElementsTrue $setDifference $setEquals $setIntersection $setIsSubset $setUnion $strcasecmp $substr $substrBytes $substrCP $toLower $toString $toUpper $concat $indexOfBytes $indexOfCP $ltrim $regexFind $regexFindAll $regexMatch $rtrim $split $strLenBytes $subLenCP $trim $sin $cos $tan $asin $acos $atan $atan2 $asinh $acosh $atanh $radiansToDegrees $degreesToRadians $convert $toBool $toDecimal $toDouble $toInt $toLong $toObjectId $dayOfMonth $dayOfWeek $dayOfYear $hour $minute $month $second $millisecond $week $year $isoDate $dateFromParts $dateFromString $dateToParts $dateToString $isoDayOfWeek $isoWeek $isoWeekYear $toDate $ifNull $cond $switch)
 
 (defoperator $addFields)
 (defoperator $bucket)
@@ -410,6 +421,7 @@
 (defoperator $switch)
 
 ;; Geospatial
+(declare $geoWithin $geoIntersects $near $nearSphere $geometry $maxDistance $minDistance $center $centerSphere $box $polygon $slice)
 (defoperator $geoWithin)
 (defoperator $geoIntersects)
 (defoperator $near)
@@ -425,6 +437,7 @@
 (defoperator $slice)
 
 ;; full text search
+(declare $text $meta $search $language $natural $currentDate $isolated $count)
 (defoperator $text)
 (defoperator $meta)
 (defoperator $search)
