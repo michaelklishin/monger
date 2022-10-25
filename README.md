@@ -111,8 +111,14 @@ Monger is part of the [group of Clojure libraries known as ClojureWerkz](http://
 
 Monger uses [Leiningen 2](https://github.com/technomancy/leiningen/blob/master/doc/TUTORIAL.md). Make sure you have it installed and then run tests against
 supported Clojure versions using
-    
+
     ./bin/ci/before_script.sh
+    lein all do clean, javac, test
+
+Or, if you don't have mongodb installed, you can use docker
+
+    docker-compose up
+    ./bin/ci/before_script_docker.sh
     lein all do clean, javac, test
 
 Then create a branch and make your changes on it. Once you are done with your changes and all tests pass, submit a pull request
