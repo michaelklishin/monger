@@ -110,26 +110,25 @@
 
 (extend-protocol ConvertFromDBObject
   nil
-  (from-db-object [input keywordize] input)
+  (from-db-object [_ _] nil)
 
   Object
-  (from-db-object [input keywordize] input)
+  (from-db-object [input _] input)
 
   Decimal128
-  (from-db-object [^Decimal128 input keywordize]
-    (.bigDecimalValue input)
-    )
+  (from-db-object [^Decimal128 input _]
+    (.bigDecimalValue input))
 
   List
   (from-db-object [^List input keywordize]
-    (vec (map #(from-db-object % keywordize) input)))
+    (mapv #(from-db-object % keywordize) input))
 
   BasicDBList
   (from-db-object [^BasicDBList input keywordize]
-    (vec (map #(from-db-object % keywordize) input)))
+    (mapv #(from-db-object % keywordize) input))
 
   com.mongodb.DBRef
-  (from-db-object [^com.mongodb.DBRef input keywordize]
+  (from-db-object [^com.mongodb.DBRef input _]
     input)
 
   DBObject
@@ -137,12 +136,13 @@
     ;; DBObject provides .toMap, but the implementation in
     ;; subclass GridFSFile unhelpfully throws
     ;; UnsupportedOperationException.
-    (reduce (if keywordize
-              (fn [m ^String k]
-                (assoc m (keyword k) (from-db-object (.get input k) true)))
-              (fn [m ^String k]
-                (assoc m k (from-db-object (.get input k) false))))
-            {} (.keySet input))))
+    (persistent!
+     (reduce (if keywordize
+               (fn [m ^String k]
+                 (assoc! m (keyword k) (from-db-object (.get input k) true)))
+               (fn [m ^String k]
+                 (assoc! m k (from-db-object (.get input k) false))))
+             (transient {}) (.keySet input)))))
 
 
 (defprotocol ConvertToObjectId
