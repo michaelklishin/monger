@@ -490,9 +490,9 @@
 (defn rename
   "Renames collection."
   ([^DB db ^String from, ^String to]
-     (.rename (.getCollection db from) to))
+     (.rename (.getCollection db (name from)) (name to)))
   ([^DB db ^String from ^String to drop-target?]
-     (.rename (.getCollection db from) to drop-target?)))
+     (.rename (.getCollection db (name from)) (name to) drop-target?)))
 
 ;;
 ;; Map/Reduce
@@ -545,7 +545,7 @@
 
   See http://docs.mongodb.org/manual/applications/aggregation/ to learn more."
   [^DB db ^String coll stages & opts]
-  (let [coll (.getCollection db coll)
+  (let [coll (.getCollection db (name coll))
         agg-opts (build-aggregation-options opts)
         pipe (into-array-list (to-db-object stages))
         res (.aggregate coll pipe agg-opts)
@@ -558,7 +558,7 @@
 
   See http://docs.mongodb.org/manual/applications/aggregation/ to learn more."
   [^DB db ^String coll stages & opts]
-  (let [coll (.getCollection db coll)
+  (let [coll (.getCollection db (name coll))
         agg-opts (build-aggregation-options opts)
         pipe (into-array-list (to-db-object stages))
         res (.explainAggregate coll pipe agg-opts)]
