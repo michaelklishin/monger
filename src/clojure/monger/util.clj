@@ -38,7 +38,8 @@
            org.bson.types.ObjectId
            com.mongodb.DBObject
            clojure.lang.IPersistentMap
-           java.util.Map))
+           java.util.Map)
+  (:refer-clojure :exclude [random-uuid]))
 
 ;;
 ;; API
