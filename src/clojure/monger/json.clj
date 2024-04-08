@@ -70,13 +70,19 @@
             (try
               (extend-protocol clojure.data.json/JSONWriter
                 ObjectId
-                (-write [^ObjectId object out]
-                  (clojure.data.json/write (.toString object) out)))
+                (-write
+                  ([^ObjectId object out]
+                   (clojure.data.json/write (.toString object) out))
+                  ([^ObjectId object out options]
+                   (clojure.data.json/write (.toString object) out options))))
 
               (extend-protocol clojure.data.json/JSONWriter
                 BSONTimestamp
-                  (-write [^BSONTimestamp object out]
-                    (clojure.data.json/write {:time (.getTime object) :inc (.getInc object)} out)))
+                (-write
+                  ([^BSONTimestamp object out]
+                   (clojure.data.json/write {:time (.getTime object) :inc (.getInc object)} out))
+                  ([^BSONTimestamp object out options]
+                   (clojure.data.json/write {:time (.getTime object) :inc (.getInc object)} out options))))
 
               (catch Throwable _
                 false))

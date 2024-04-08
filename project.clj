@@ -36,7 +36,7 @@
              :dev {:resource-paths ["test/resources"]
                    :dependencies  [[clj-time               "0.15.1" :exclusions [org.clojure/clojure]]
                                    [cheshire               "5.8.1" :exclusions [org.clojure/clojure]]
-                                   [org.clojure/data.json  "0.2.6" :exclusions [org.clojure/clojure]]
+                                   [org.clojure/data.json  "2.5.0" :exclusions [org.clojure/clojure]]
                                    [org.clojure/tools.cli  "0.4.1" :exclusions [org.clojure/clojure]]
                                    [org.clojure/core.cache "0.7.1" :exclusions [org.clojure/clojure]]
                                    [ring/ring-core         "1.7.1" :exclusions [org.clojure/clojure]]
