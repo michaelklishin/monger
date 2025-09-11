@@ -279,6 +279,15 @@
       {:conn conn :db (.getDB conn dbName)}
       (throw (IllegalArgumentException. "No database name specified in URI. Monger requires a database to be explicitly configured.")))))
 
+(defn connect-with-uri-and-db
+  "Connects to MongoDB using a URI and a db-name, returns the connection and database as a
+   map with :conn and :db."
+  [^String uri-string ^String db-name]
+  (let [uri    (MongoClientURI. uri-string)
+        conn   (MongoClient. uri)
+        db (.getDB conn db-name)]
+    {:conn conn :db db}))
+
 (defn ^com.mongodb.CommandResult command
   "Runs a database command (please check MongoDB documentation for the complete list of commands).
 
