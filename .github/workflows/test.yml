@@ -12,12 +12,6 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
-    services:
-      mongo:
-        image: mongo
-        ports:
-          - 27017:27017
-
     strategy:
       fail-fast: false
       matrix:
@@ -43,35 +37,14 @@ jobs:
         with:
           lein: ${{ matrix.lein-version }}
 
+      - name: Start MongoDB
+        run: docker run -d --name mongo_test -p 27017:27017 mongo
+
+      - name: Wait for MongoDB
+        run: ./bin/ci/wait_for_mongo.sh
+
       - name: Provision MongoDB test users
-        run: |
-          set -eu
-
-          # Use the shell inside the MongoDB service container instead of installing MongoDB tools on the runner.
-          mongo_container='${{ job.services.mongo.id }}'
-
-          for attempt in $(seq 1 30); do
-            if docker exec "$mongo_container" mongosh --quiet --eval 'db.adminCommand({ ping: 1 })' >/dev/null 2>&1; then
-              mongo_shell=mongosh
-              break
-            fi
-
-            if docker exec "$mongo_container" mongo --quiet --eval 'db.adminCommand({ ping: 1 })' >/dev/null 2>&1; then
-              mongo_shell=mongo
-              break
-            fi
-
-            sleep 1
-          done
-
-          if [ -z "${mongo_shell:-}" ]; then
-            echo "Error: Neither mongo nor mongosh shell found in the MongoDB service container."
-            exit 1
-          fi
-
-          for db in monger-test monger-test2 monger-test3 monger-test4; do
-            docker exec "$mongo_container" "$mongo_shell" --eval 'db.createUser({"user": "clojurewerkz/monger", "pwd": "monger", roles: ["dbAdmin"], mechanisms: ["SCRAM-SHA-1"], passwordDigestor: "client"})' "$db"
-          done
+        run: ./bin/ci/before_script_docker.sh
 
       - name: Run tests
         run: lein do clean, javac, test
