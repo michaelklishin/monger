@@ -1,0 +1,50 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        java-version:
+          - 11
+          - 17
+          - 21
+        lein-version:
+          - latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ matrix.java-version }}
+
+      - name: Set up Leiningen
+        uses: DeLaGuardo/setup-clojure@13
+        with:
+          lein: ${{ matrix.lein-version }}
+
+      - name: Start MongoDB
+        run: docker run -d --name mongo_test -p 27017:27017 mongo
+
+      - name: Wait for MongoDB
+        run: ./bin/ci/wait_for_mongo.sh
+
+      - name: Provision MongoDB test users
+        run: ./bin/ci/before_script_docker.sh
+
+      - name: Run tests
+        run: lein do clean, javac, test
